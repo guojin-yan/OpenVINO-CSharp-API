@@ -10,4 +10,3 @@ EXPORTS
 		read_inference_result_F32
 		read_inference_result_I32
 		inference_engine_delet
-
