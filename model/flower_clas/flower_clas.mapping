@@ -1,0 +1,555 @@
+<?xml version="1.0"?>
+<mapping>
+	<map>
+		<framework name="x" output_port_id="x" />
+		<IR name="x" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="batch_norm_0.tmp_3" output_port_id="batch_norm_0.tmp_3" />
+		<IR name="batch_norm_0.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_0.tmp_0" output_port_id="relu_0.tmp_0" />
+		<IR name="relu_0.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_1.tmp_3" output_port_id="batch_norm_1.tmp_3" />
+		<IR name="batch_norm_1.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_1.tmp_0" output_port_id="relu_1.tmp_0" />
+		<IR name="relu_1.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_2.tmp_3" output_port_id="batch_norm_2.tmp_3" />
+		<IR name="batch_norm_2.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_2.tmp_0" output_port_id="relu_2.tmp_0" />
+		<IR name="relu_2.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="pool2d_0.tmp_0" output_port_id="pool2d_0.tmp_0" />
+		<IR name="pool2d_0.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_3.tmp_3" output_port_id="batch_norm_3.tmp_3" />
+		<IR name="batch_norm_3.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_3.tmp_0" output_port_id="relu_3.tmp_0" />
+		<IR name="relu_3.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_4.tmp_3" output_port_id="batch_norm_4.tmp_3" />
+		<IR name="batch_norm_4.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_4.tmp_0" output_port_id="relu_4.tmp_0" />
+		<IR name="relu_4.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_5.tmp_3" output_port_id="batch_norm_5.tmp_3" />
+		<IR name="batch_norm_5.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="batch_norm_6.tmp_3" output_port_id="batch_norm_6.tmp_3" />
+		<IR name="batch_norm_6.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_0" output_port_id="elementwise_add_0" />
+		<IR name="elementwise_add_0" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_5.tmp_0" output_port_id="relu_5.tmp_0" />
+		<IR name="relu_5.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_7.tmp_3" output_port_id="batch_norm_7.tmp_3" />
+		<IR name="batch_norm_7.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_6.tmp_0" output_port_id="relu_6.tmp_0" />
+		<IR name="relu_6.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_8.tmp_3" output_port_id="batch_norm_8.tmp_3" />
+		<IR name="batch_norm_8.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_7.tmp_0" output_port_id="relu_7.tmp_0" />
+		<IR name="relu_7.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_9.tmp_3" output_port_id="batch_norm_9.tmp_3" />
+		<IR name="batch_norm_9.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_1" output_port_id="elementwise_add_1" />
+		<IR name="elementwise_add_1" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_8.tmp_0" output_port_id="relu_8.tmp_0" />
+		<IR name="relu_8.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_10.tmp_3" output_port_id="batch_norm_10.tmp_3" />
+		<IR name="batch_norm_10.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_9.tmp_0" output_port_id="relu_9.tmp_0" />
+		<IR name="relu_9.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_11.tmp_3" output_port_id="batch_norm_11.tmp_3" />
+		<IR name="batch_norm_11.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_10.tmp_0" output_port_id="relu_10.tmp_0" />
+		<IR name="relu_10.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_12.tmp_3" output_port_id="batch_norm_12.tmp_3" />
+		<IR name="batch_norm_12.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_2" output_port_id="elementwise_add_2" />
+		<IR name="elementwise_add_2" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_11.tmp_0" output_port_id="relu_11.tmp_0" />
+		<IR name="relu_11.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_13.tmp_3" output_port_id="batch_norm_13.tmp_3" />
+		<IR name="batch_norm_13.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_12.tmp_0" output_port_id="relu_12.tmp_0" />
+		<IR name="relu_12.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_14.tmp_3" output_port_id="batch_norm_14.tmp_3" />
+		<IR name="batch_norm_14.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_13.tmp_0" output_port_id="relu_13.tmp_0" />
+		<IR name="relu_13.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_15.tmp_3" output_port_id="batch_norm_15.tmp_3" />
+		<IR name="batch_norm_15.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="pool2d_1.tmp_0" output_port_id="pool2d_1.tmp_0" />
+		<IR name="pool2d_1.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_16.tmp_3" output_port_id="batch_norm_16.tmp_3" />
+		<IR name="batch_norm_16.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_3" output_port_id="elementwise_add_3" />
+		<IR name="elementwise_add_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_14.tmp_0" output_port_id="relu_14.tmp_0" />
+		<IR name="relu_14.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_17.tmp_3" output_port_id="batch_norm_17.tmp_3" />
+		<IR name="batch_norm_17.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_15.tmp_0" output_port_id="relu_15.tmp_0" />
+		<IR name="relu_15.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_18.tmp_3" output_port_id="batch_norm_18.tmp_3" />
+		<IR name="batch_norm_18.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_16.tmp_0" output_port_id="relu_16.tmp_0" />
+		<IR name="relu_16.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_19.tmp_3" output_port_id="batch_norm_19.tmp_3" />
+		<IR name="batch_norm_19.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_4" output_port_id="elementwise_add_4" />
+		<IR name="elementwise_add_4" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_17.tmp_0" output_port_id="relu_17.tmp_0" />
+		<IR name="relu_17.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_20.tmp_3" output_port_id="batch_norm_20.tmp_3" />
+		<IR name="batch_norm_20.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_18.tmp_0" output_port_id="relu_18.tmp_0" />
+		<IR name="relu_18.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_21.tmp_3" output_port_id="batch_norm_21.tmp_3" />
+		<IR name="batch_norm_21.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_19.tmp_0" output_port_id="relu_19.tmp_0" />
+		<IR name="relu_19.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_22.tmp_3" output_port_id="batch_norm_22.tmp_3" />
+		<IR name="batch_norm_22.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_5" output_port_id="elementwise_add_5" />
+		<IR name="elementwise_add_5" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_20.tmp_0" output_port_id="relu_20.tmp_0" />
+		<IR name="relu_20.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_23.tmp_3" output_port_id="batch_norm_23.tmp_3" />
+		<IR name="batch_norm_23.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_21.tmp_0" output_port_id="relu_21.tmp_0" />
+		<IR name="relu_21.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_24.tmp_3" output_port_id="batch_norm_24.tmp_3" />
+		<IR name="batch_norm_24.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_22.tmp_0" output_port_id="relu_22.tmp_0" />
+		<IR name="relu_22.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_25.tmp_3" output_port_id="batch_norm_25.tmp_3" />
+		<IR name="batch_norm_25.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_6" output_port_id="elementwise_add_6" />
+		<IR name="elementwise_add_6" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_23.tmp_0" output_port_id="relu_23.tmp_0" />
+		<IR name="relu_23.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_26.tmp_3" output_port_id="batch_norm_26.tmp_3" />
+		<IR name="batch_norm_26.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_24.tmp_0" output_port_id="relu_24.tmp_0" />
+		<IR name="relu_24.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_27.tmp_3" output_port_id="batch_norm_27.tmp_3" />
+		<IR name="batch_norm_27.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_25.tmp_0" output_port_id="relu_25.tmp_0" />
+		<IR name="relu_25.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_28.tmp_3" output_port_id="batch_norm_28.tmp_3" />
+		<IR name="batch_norm_28.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="pool2d_2.tmp_0" output_port_id="pool2d_2.tmp_0" />
+		<IR name="pool2d_2.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_29.tmp_3" output_port_id="batch_norm_29.tmp_3" />
+		<IR name="batch_norm_29.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_7" output_port_id="elementwise_add_7" />
+		<IR name="elementwise_add_7" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_26.tmp_0" output_port_id="relu_26.tmp_0" />
+		<IR name="relu_26.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_30.tmp_3" output_port_id="batch_norm_30.tmp_3" />
+		<IR name="batch_norm_30.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_27.tmp_0" output_port_id="relu_27.tmp_0" />
+		<IR name="relu_27.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_31.tmp_3" output_port_id="batch_norm_31.tmp_3" />
+		<IR name="batch_norm_31.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_28.tmp_0" output_port_id="relu_28.tmp_0" />
+		<IR name="relu_28.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_32.tmp_3" output_port_id="batch_norm_32.tmp_3" />
+		<IR name="batch_norm_32.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_8" output_port_id="elementwise_add_8" />
+		<IR name="elementwise_add_8" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_29.tmp_0" output_port_id="relu_29.tmp_0" />
+		<IR name="relu_29.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_33.tmp_3" output_port_id="batch_norm_33.tmp_3" />
+		<IR name="batch_norm_33.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_30.tmp_0" output_port_id="relu_30.tmp_0" />
+		<IR name="relu_30.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_34.tmp_3" output_port_id="batch_norm_34.tmp_3" />
+		<IR name="batch_norm_34.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_31.tmp_0" output_port_id="relu_31.tmp_0" />
+		<IR name="relu_31.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_35.tmp_3" output_port_id="batch_norm_35.tmp_3" />
+		<IR name="batch_norm_35.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_9" output_port_id="elementwise_add_9" />
+		<IR name="elementwise_add_9" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_32.tmp_0" output_port_id="relu_32.tmp_0" />
+		<IR name="relu_32.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_36.tmp_3" output_port_id="batch_norm_36.tmp_3" />
+		<IR name="batch_norm_36.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_33.tmp_0" output_port_id="relu_33.tmp_0" />
+		<IR name="relu_33.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_37.tmp_3" output_port_id="batch_norm_37.tmp_3" />
+		<IR name="batch_norm_37.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_34.tmp_0" output_port_id="relu_34.tmp_0" />
+		<IR name="relu_34.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_38.tmp_3" output_port_id="batch_norm_38.tmp_3" />
+		<IR name="batch_norm_38.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_10" output_port_id="elementwise_add_10" />
+		<IR name="elementwise_add_10" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_35.tmp_0" output_port_id="relu_35.tmp_0" />
+		<IR name="relu_35.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_39.tmp_3" output_port_id="batch_norm_39.tmp_3" />
+		<IR name="batch_norm_39.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_36.tmp_0" output_port_id="relu_36.tmp_0" />
+		<IR name="relu_36.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_40.tmp_3" output_port_id="batch_norm_40.tmp_3" />
+		<IR name="batch_norm_40.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_37.tmp_0" output_port_id="relu_37.tmp_0" />
+		<IR name="relu_37.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_41.tmp_3" output_port_id="batch_norm_41.tmp_3" />
+		<IR name="batch_norm_41.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_11" output_port_id="elementwise_add_11" />
+		<IR name="elementwise_add_11" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_38.tmp_0" output_port_id="relu_38.tmp_0" />
+		<IR name="relu_38.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_42.tmp_3" output_port_id="batch_norm_42.tmp_3" />
+		<IR name="batch_norm_42.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_39.tmp_0" output_port_id="relu_39.tmp_0" />
+		<IR name="relu_39.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_43.tmp_3" output_port_id="batch_norm_43.tmp_3" />
+		<IR name="batch_norm_43.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_40.tmp_0" output_port_id="relu_40.tmp_0" />
+		<IR name="relu_40.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_44.tmp_3" output_port_id="batch_norm_44.tmp_3" />
+		<IR name="batch_norm_44.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_12" output_port_id="elementwise_add_12" />
+		<IR name="elementwise_add_12" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_41.tmp_0" output_port_id="relu_41.tmp_0" />
+		<IR name="relu_41.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_45.tmp_3" output_port_id="batch_norm_45.tmp_3" />
+		<IR name="batch_norm_45.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_42.tmp_0" output_port_id="relu_42.tmp_0" />
+		<IR name="relu_42.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_46.tmp_3" output_port_id="batch_norm_46.tmp_3" />
+		<IR name="batch_norm_46.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_43.tmp_0" output_port_id="relu_43.tmp_0" />
+		<IR name="relu_43.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_47.tmp_3" output_port_id="batch_norm_47.tmp_3" />
+		<IR name="batch_norm_47.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="pool2d_3.tmp_0" output_port_id="pool2d_3.tmp_0" />
+		<IR name="pool2d_3.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_48.tmp_3" output_port_id="batch_norm_48.tmp_3" />
+		<IR name="batch_norm_48.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_13" output_port_id="elementwise_add_13" />
+		<IR name="elementwise_add_13" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_44.tmp_0" output_port_id="relu_44.tmp_0" />
+		<IR name="relu_44.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_49.tmp_3" output_port_id="batch_norm_49.tmp_3" />
+		<IR name="batch_norm_49.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_45.tmp_0" output_port_id="relu_45.tmp_0" />
+		<IR name="relu_45.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_50.tmp_3" output_port_id="batch_norm_50.tmp_3" />
+		<IR name="batch_norm_50.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_46.tmp_0" output_port_id="relu_46.tmp_0" />
+		<IR name="relu_46.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_51.tmp_3" output_port_id="batch_norm_51.tmp_3" />
+		<IR name="batch_norm_51.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_14" output_port_id="elementwise_add_14" />
+		<IR name="elementwise_add_14" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_47.tmp_0" output_port_id="relu_47.tmp_0" />
+		<IR name="relu_47.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_52.tmp_3" output_port_id="batch_norm_52.tmp_3" />
+		<IR name="batch_norm_52.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_48.tmp_0" output_port_id="relu_48.tmp_0" />
+		<IR name="relu_48.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_53.tmp_3" output_port_id="batch_norm_53.tmp_3" />
+		<IR name="batch_norm_53.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_49.tmp_0" output_port_id="relu_49.tmp_0" />
+		<IR name="relu_49.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="batch_norm_54.tmp_3" output_port_id="batch_norm_54.tmp_3" />
+		<IR name="batch_norm_54.tmp_3" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="elementwise_add_15" output_port_id="elementwise_add_15" />
+		<IR name="elementwise_add_15" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="relu_50.tmp_0" output_port_id="relu_50.tmp_0" />
+		<IR name="relu_50.tmp_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="pool2d_4.tmp_0" output_port_id="pool2d_4.tmp_0" />
+		<IR name="pool2d_4.tmp_0" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="Shape_0" output_port_id="Shape_0" />
+		<IR name="Shape_0" output_port_id="1" />
+	</map>
+	<map>
+		<framework name="Constant_1" output_port_id="Constant_1" />
+		<IR name="Constant_1" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="Constant_2" output_port_id="Constant_2" />
+		<IR name="Constant_2" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="Slice_0" output_port_id="Slice_0" />
+		<IR name="Slice_0" output_port_id="4" />
+	</map>
+	<map>
+		<framework name="Constant_3" output_port_id="Constant_3" />
+		<IR name="Constant_3" output_port_id="0" />
+	</map>
+	<map>
+		<framework name="Concat_0" output_port_id="Concat_0" />
+		<IR name="Concat_0" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="flatten_1.tmp_0" output_port_id="flatten_1.tmp_0" />
+		<IR name="flatten_1.tmp_0" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="linear_1.tmp_0" output_port_id="linear_1.tmp_0" />
+		<IR name="linear_1.tmp_0" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="linear_1.tmp_1" output_port_id="linear_1.tmp_1" />
+		<IR name="linear_1.tmp_1" output_port_id="2" />
+	</map>
+	<map>
+		<framework name="softmax_1.tmp_0" output_port_id="softmax_1.tmp_0" />
+		<IR name="softmax_1.tmp_0" output_port_id="1" />
+	</map>
+</mapping>
