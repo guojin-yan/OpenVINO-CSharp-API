@@ -19,6 +19,12 @@ C#调用OpenVINO™部署Al模型项目开发项目，简称OpenVinoSharp，这�
 
 针对 PaddleClas 、PaddleDetection ，该项目分别使用了飞桨提供的花卉分类模型以及车辆检测模型进行了测试，实现了该模型在三种格式下从模型本地读取、推理数据加载、模型推理、推理结果读取以及推理数据处理一整套Al模型的应用实现。
 
+## 项目方案
+
+![技术方案.drawio](C:/Users/guoji/Desktop/%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88.drawio.png)
+
+
+
 ## 项目文档
 
 想要更详细的了解该项目，请参阅[C#调用OpenVINOTM部署Al模型项目开发](./doc/C#调用OpenVINOTM部署Al模型项目开发.docx)
