@@ -21,7 +21,7 @@ C#调用OpenVINO™部署Al模型项目开发项目，简称OpenVinoSharp，这�
 
 ## 项目方案
 
-![技术方案.drawio](C:/Users/guoji/Desktop/%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88.drawio.png)
+![programme](doc/image/programme.png)
 
 
 
