@@ -10,9 +10,9 @@ namespace text_demo
         {
             DateTime dt1 = System.DateTime.Now;
             // 测试花卉分类模型
-            text_flower_clas();
+            // text_flower_clas();
             // 测试车辆识别模型
-            // text_vehicle_yolov3();
+            text_vehicle_yolov3();
             DateTime dt2 = System.DateTime.Now;
             TimeSpan ts1 = dt2.Subtract(dt1);
             Console.WriteLine(ts1);
@@ -24,12 +24,22 @@ namespace text_demo
         static void text_flower_clas()
         {
             string device_name = "CPU";
-            string model_file = "E:/Text_Model/flowerclas/inference.pdmodel";// //"E:/Text_Model/2021/flower_classifacition_FP32/flowers_rec.xml";//"E:/Text_Model/flowerclas/flower_rec.onnx";
-            string image_file = "E:/Text_dataset/flowers102/jpg/image_00001.jpg";
+
+            // 本地模型地址
+            // 路径中不能包含中文，调试时请将模型放置在没有中文的路径下
+            string model_file_paddle = @"E:\Text_Model\flowerclas\inference.pdmodel"; // paddlepaddle格式
+            string model_file_onnx = @"E:\Text_Model\flowerclas\flower_clas_auto.onnx"; // onnx格式
+            string model_file_ir = @"E:\Text_Model\flowerclas\flower_clas.xml"; // ir格式
+
+            // 测试图片地址
+            string image_file = @"E:\Git_space\C#调用OpenVINO部署Al模型项目开发\database\flower_clas\text_image_08.jpg";
+            // 模型输入节点名
             string input_node_name = "x";
+            // 模型输出节点名
             string output_node_name = "softmax_1.tmp_0";
 
-            InferenceEngine ie = new InferenceEngine(model_file, device_name);
+            // 初始化推理
+            InferenceEngine ie = new InferenceEngine(model_file_paddle, device_name);
 
             // 设置图片输入大小
             ulong[] image_sharp = new ulong[] { 1, 3, 224, 224 };
@@ -64,7 +74,7 @@ namespace text_demo
         /// </summary>
         /// <param name="result">输入数组</param>
         /// <param name="max_num">n</param>
-        /// <returns>中前N个最大的数据的位置</returns>
+        /// <returns>中前N个最大的数据的索引值</returns>
         static int[] find_array_max(float[] result, int max_num)
         {
             int size = result.Length;
@@ -108,7 +118,8 @@ namespace text_demo
         static void text_vehicle_yolov3()
         {
             string device_name = "CPU";
-            string model_file = "E:/Text_Model/vehicle_yolov3_darknet/model.pdmodel";
+            string model_file = @"E:/Text_Model/vehicle_yolov3_darknet/model.pdmodel";
+
             string image_file = "E:/Text_dataset/vehicle_yolov3_darknet/006.jpg";
             string[] input_node_name = new string[] { "image", "scale_factor", "im_shape" };
             string[] output_node_name = new string[] { "multiclass_nms3_0.tmp_2", "multiclass_nms3_0.tmp_0" };
