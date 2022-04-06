@@ -10,9 +10,9 @@ namespace text_demo
         {
             DateTime dt1 = System.DateTime.Now;
             // 测试花卉分类模型
-            // text_flower_clas();
+             text_flower_clas();
             // 测试车辆识别模型
-            text_vehicle_yolov3();
+            //text_vehicle_yolov3();
             DateTime dt2 = System.DateTime.Now;
             TimeSpan ts1 = dt2.Subtract(dt1);
             Console.WriteLine(ts1);
