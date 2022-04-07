@@ -23,7 +23,7 @@ C#调用OpenVINO™部署Al模型项目开发项目，简称OpenVinoSharp，这�
 
 ![programme](doc/image/programme.png)
 
-
+该项目通过C++
 
 ## 项目文档
 
