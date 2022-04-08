@@ -1,12 +1,12 @@
 LIBRARY 
 		"OpenVinoSharp"
 EXPORTS
-		inference_engine_init
+		core_init
 		set_input_image_sharp
 		set_input_data_sharp
 		load_image_input_data
 		load_input_data
-		inference_engine_infer
-		read_inference_result_F32
-		read_inference_result_I32
-		inference_engine_delet
+		core_infer
+		read_infer_result_F32
+		read_infer_result_I32
+		core_delet

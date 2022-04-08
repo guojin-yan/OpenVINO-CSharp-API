@@ -39,7 +39,7 @@ namespace text_demo
             string output_node_name = "softmax_1.tmp_0";
 
             // 初始化推理
-            InferenceEngine ie = new InferenceEngine(model_file_paddle, device_name);
+            Core ie = new Core(model_file_paddle, device_name);
 
             // 设置图片输入大小
             ulong[] image_sharp = new ulong[] { 1, 3, 224, 224 };
@@ -125,7 +125,7 @@ namespace text_demo
             string[] output_node_name = new string[] { "multiclass_nms3_0.tmp_2", "multiclass_nms3_0.tmp_0" };
 
             string[] lable = new string[] { "car ", "truck", "bus", "motorbike", "tricycle", "carplate" };
-            InferenceEngine ie = new InferenceEngine(model_file, device_name);
+            Core ie = new Core(model_file, device_name);
             ulong[] image_sharp = new ulong[] { 1, 3, 608, 608 };
             ie.set_input_sharp(input_node_name[0], image_sharp);
 

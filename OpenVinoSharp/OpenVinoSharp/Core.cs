@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace OpenVinoSharp
 {
-    public partial class InferenceEngine
+    public partial class Core
     {
         private IntPtr IEPtr = new IntPtr();
 
-        public InferenceEngine() { }
-        public InferenceEngine(string model_file, string device_name)
+        public Core() { }
+        public Core(string model_file, string device_name)
         {
 
-            IEPtr = NativeMethods.inference_engine_init(model_file, device_name);
+            IEPtr = NativeMethods.core_init(model_file, device_name);
         }
 
         public void set_input_sharp(string input_node_name, ulong[] input_size)
@@ -43,7 +43,7 @@ namespace OpenVinoSharp
 
         public void inference_engine_infer()
         {
-            IEPtr = NativeMethods.inference_engine_infer(IEPtr);
+            IEPtr = NativeMethods.core_infer(IEPtr);
         }
         public T[] read_inference_result<T>(string output_node_name, int data_size)
         {
@@ -52,14 +52,14 @@ namespace OpenVinoSharp
             if (t is System.Int32)
             {
                 int[] inference_result = new int[data_size];
-                NativeMethods.read_inference_result_I32(IEPtr, output_node_name, data_size, ref inference_result[0]);
+                NativeMethods.read_infer_result_I32(IEPtr, output_node_name, data_size, ref inference_result[0]);
                 result = (T[])Convert.ChangeType(inference_result, typeof(T[]));
                 return result;
             }
             else
             {
                 float[] inference_result = new float[data_size];
-                NativeMethods.read_inference_result_F32(IEPtr, output_node_name, data_size, ref inference_result[0]);
+                NativeMethods.read_infer_result_F32(IEPtr, output_node_name, data_size, ref inference_result[0]);
                 result = (T[])Convert.ChangeType(inference_result, typeof(T[]));
                 return result;
             }
@@ -67,7 +67,7 @@ namespace OpenVinoSharp
 
         public void inference_engine_delet()
         {
-            NativeMethods.inference_engine_delet(IEPtr);
+            NativeMethods.core_delet(IEPtr);
         }
     }
 }

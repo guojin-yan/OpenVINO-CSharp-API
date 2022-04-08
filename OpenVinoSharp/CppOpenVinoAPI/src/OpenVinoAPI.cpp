@@ -89,12 +89,12 @@ void fill_tensor_data_float(ov::Tensor& input_tensor, float* input_data, int dat
 
 
 // @brief 推理核心结构体
-typedef struct openvino_infer_engine {
+typedef struct openvino_core {
     ov::Core core; // core对象
     std::shared_ptr<ov::Model> model_ptr; // 读取模型指针
     ov::CompiledModel compiled_model; // 模型加载到设备对象
     ov::InferRequest infer_request; // 推理请求对象
-} InferEngineStruct;
+} CoreStruct;
 
 
 // @brief 初始化openvino核心结构体，读取本地推理模型，将模型加载到设备，并创建推理请求
@@ -103,13 +103,13 @@ typedef struct openvino_infer_engine {
 // @param model_file_wchar 推理模型本地地址
 // @param device_name_wchar 加载设备名称
 // @return 推理核心结构体指针
-extern "C" __declspec(dllexport) void* __stdcall inference_engine_init(const wchar_t* model_file_wchar, const wchar_t* device_name_wchar) {
+extern "C" __declspec(dllexport) void* __stdcall core_init(const wchar_t* model_file_wchar, const wchar_t* device_name_wchar) {
 
     //读取接口输入参数
     std::string model_file_path = wchar_to_string(model_file_wchar);// 推理模型本地地址
     std::string device_name = wchar_to_string(device_name_wchar);// 加载设备名称
     // 初始化推理核心
-    InferEngineStruct* p = new InferEngineStruct(); // 创建推理引擎指针
+    CoreStruct* p = new CoreStruct(); // 创建推理引擎指针
     p->model_ptr = p->core.read_model(model_file_path); // 读取推理模型
     p->compiled_model = p->core.compile_model(p->model_ptr, "CPU"); // 将模型加载到设备
     p->infer_request = p->compiled_model.create_infer_request(); // 创建推理请求
@@ -123,9 +123,9 @@ extern "C" __declspec(dllexport) void* __stdcall inference_engine_init(const wch
 // @param input_node_name_wchar 输入节点名
 // @param input_size 输入形状数据数组
 // @return 推理核心结构体指针
-extern "C"  __declspec(dllexport) void* __stdcall set_input_image_sharp(void* inference_engine, const wchar_t* input_node_name_wchar, size_t * input_size) {
+extern "C"  __declspec(dllexport) void* __stdcall set_input_image_sharp(void* core_ptr, const wchar_t* input_node_name_wchar, size_t * input_size) {
     // 读取推理模型地址
-    InferEngineStruct* p = (InferEngineStruct*)inference_engine;
+    CoreStruct* p = (CoreStruct*)core_ptr;
     std::string input_node_name = wchar_to_string(input_node_name_wchar);
     // 获取指定节点的tensor
     ov::Tensor input_image_tensor = p->infer_request.get_tensor(input_node_name);
@@ -139,9 +139,9 @@ extern "C"  __declspec(dllexport) void* __stdcall set_input_image_sharp(void* in
 // @param input_node_name_wchar 输入节点名
 // @param input_size 输入形状数据数组
 // @return 推理核心结构体指针
-extern "C"  __declspec(dllexport) void* __stdcall set_input_data_sharp(void* inference_engine, const wchar_t* input_node_name_wchar, size_t * input_size) {
+extern "C"  __declspec(dllexport) void* __stdcall set_input_data_sharp(void* core_ptr, const wchar_t* input_node_name_wchar, size_t * input_size) {
     // 读取推理模型地址
-    InferEngineStruct* p = (InferEngineStruct*)inference_engine;
+    CoreStruct* p = (CoreStruct*)core_ptr;
     std::string input_node_name = wchar_to_string(input_node_name_wchar);
     // 获取指定节点的tensor
     ov::Tensor input_image_tensor = p->infer_request.get_tensor(input_node_name);
@@ -156,9 +156,9 @@ extern "C"  __declspec(dllexport) void* __stdcall set_input_data_sharp(void* inf
 // @param image_data 输入图片数据矩阵
 // @param image_size 图片矩阵长度
 // @return 推理核心结构体指针
-extern "C"  __declspec(dllexport) void* __stdcall load_image_input_data(void* inference_engine, const wchar_t* input_node_name_wchar, uchar * image_data, size_t image_size) {
+extern "C"  __declspec(dllexport) void* __stdcall load_image_input_data(void* core_ptr, const wchar_t* input_node_name_wchar, uchar * image_data, size_t image_size) {
     // 读取推理模型地址
-    InferEngineStruct* p = (InferEngineStruct*)inference_engine;
+    CoreStruct* p = (CoreStruct*)core_ptr;
     std::string input_node_name = wchar_to_string(input_node_name_wchar);
     // 获取输入节点tensor
     ov::Tensor input_image_tensor = p->infer_request.get_tensor(input_node_name);
@@ -192,9 +192,9 @@ extern "C"  __declspec(dllexport) void* __stdcall load_image_input_data(void* in
 // @param input_node_name_wchar 输入节点名
 // @param input_data 输入数据数组
 // @return 推理核心结构体指针
-extern "C"  __declspec(dllexport) void* __stdcall load_input_data(void* inference_engine, const wchar_t* input_node_name_wchar, float* input_data) {
+extern "C"  __declspec(dllexport) void* __stdcall load_input_data(void* core_ptr, const wchar_t* input_node_name_wchar, float* input_data) {
     // 读取推理模型地址
-    InferEngineStruct* p = (InferEngineStruct*)inference_engine;
+    CoreStruct* p = (CoreStruct*)core_ptr;
     std::string input_node_name = wchar_to_string(input_node_name_wchar);
     // 读取指定节点tensor
     ov::Tensor input_image_tensor = p->infer_request.get_tensor(input_node_name);
@@ -208,9 +208,9 @@ extern "C"  __declspec(dllexport) void* __stdcall load_input_data(void* inferenc
 // @brief 对加载好的推理模型进行推理
 // @param inference_engine 推理核心指针
 // @return 推理核心结构体指针
-extern "C"  __declspec(dllexport) void* __stdcall inference_engine_infer(void* inference_engine) {
+extern "C"  __declspec(dllexport) void* __stdcall core_infer(void* core_ptr) {
     // 读取推理模型地址
-    InferEngineStruct* p = (InferEngineStruct*)inference_engine;
+    CoreStruct* p = (CoreStruct*)core_ptr;
     // 模型预测
     p->infer_request.infer();
 
@@ -222,9 +222,9 @@ extern "C"  __declspec(dllexport) void* __stdcall inference_engine_infer(void* i
 // @param output_node_name_wchar 输出节点名
 // @param data_size 数据长度
 // @param [out]  inference_result 推理结果数组
-extern "C"  __declspec(dllexport) void __stdcall read_inference_result_F32(void* inference_engine, const wchar_t* output_node_name_wchar, int data_size, float* inference_result) {
+extern "C"  __declspec(dllexport) void __stdcall read_infer_result_F32(void* core_ptr, const wchar_t* output_node_name_wchar, int data_size, float* inference_result) {
     // 读取推理模型地址
-    InferEngineStruct* p = (InferEngineStruct*)inference_engine;
+    CoreStruct* p = (CoreStruct*)core_ptr;
     std::string output_node_name = wchar_to_string(output_node_name_wchar);
     // 读取指定节点的tensor
     const ov::Tensor& output_tensor = p->infer_request.get_tensor(output_node_name);
@@ -241,9 +241,9 @@ extern "C"  __declspec(dllexport) void __stdcall read_inference_result_F32(void*
 // @param output_node_name_wchar 输出节点名
 // @param data_size 数据长度
 // @param [out]  inference_result 推理结果数组
-extern "C"  __declspec(dllexport) void __stdcall read_inference_result_I32(void* inference_engine, const wchar_t* output_node_name_wchar, int data_size, int* inference_result) {
+extern "C"  __declspec(dllexport) void __stdcall read_infer_result_I32(void* core_ptr, const wchar_t* output_node_name_wchar, int data_size, int* inference_result) {
     // 读取推理模型地址
-    InferEngineStruct* p = (InferEngineStruct*)inference_engine;
+    CoreStruct* p = (CoreStruct*)core_ptr;
     std::string output_node_name = wchar_to_string(output_node_name_wchar);
     // 读取指定节点的tensor
     const ov::Tensor& output_tensor = p->infer_request.get_tensor(output_node_name);
@@ -258,9 +258,9 @@ extern "C"  __declspec(dllexport) void __stdcall read_inference_result_I32(void*
 
 // @brief 删除推理核心结构体指针，释放占用内存
 // @param inference_engine 推理核心指针
-extern "C"  __declspec(dllexport) void __stdcall inference_engine_delet(void* inference_engine) {
+extern "C"  __declspec(dllexport) void __stdcall core_delet(void* core_ptr) {
     //读取推理模型地址
-    InferEngineStruct* p = (InferEngineStruct*)inference_engine;
+    CoreStruct* p = (CoreStruct*)core_ptr;
     // 删除占用内存
     delete p;
 }
