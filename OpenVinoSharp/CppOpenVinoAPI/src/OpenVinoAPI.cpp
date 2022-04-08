@@ -222,7 +222,7 @@ extern "C"  __declspec(dllexport) void* __stdcall core_infer(void* core_ptr) {
 // @param output_node_name_wchar 输出节点名
 // @param data_size 数据长度
 // @param [out]  inference_result 推理结果数组
-extern "C"  __declspec(dllexport) void __stdcall read_infer_result_F32(void* core_ptr, const wchar_t* output_node_name_wchar, int data_size, float* inference_result) {
+extern "C"  __declspec(dllexport) void __stdcall read_infer_result_F32(void* core_ptr, const wchar_t* output_node_name_wchar, int data_size, float* infer_result) {
     // 读取推理模型地址
     CoreStruct* p = (CoreStruct*)core_ptr;
     std::string output_node_name = wchar_to_string(output_node_name_wchar);
@@ -232,8 +232,8 @@ extern "C"  __declspec(dllexport) void __stdcall read_infer_result_F32(void* cor
     const float* results = output_tensor.data<const float>();
     // 将输出结果复制到输出地址指针中
     for (int i = 0; i < data_size; i++) {
-        *inference_result = results[i];
-        inference_result++;
+        *infer_result = results[i];
+        infer_result++;
     }
 }
 // @brief 查询int类型的推理结果
@@ -241,7 +241,7 @@ extern "C"  __declspec(dllexport) void __stdcall read_infer_result_F32(void* cor
 // @param output_node_name_wchar 输出节点名
 // @param data_size 数据长度
 // @param [out]  inference_result 推理结果数组
-extern "C"  __declspec(dllexport) void __stdcall read_infer_result_I32(void* core_ptr, const wchar_t* output_node_name_wchar, int data_size, int* inference_result) {
+extern "C"  __declspec(dllexport) void __stdcall read_infer_result_I32(void* core_ptr, const wchar_t* output_node_name_wchar, int data_size, int* infer_result) {
     // 读取推理模型地址
     CoreStruct* p = (CoreStruct*)core_ptr;
     std::string output_node_name = wchar_to_string(output_node_name_wchar);
@@ -251,8 +251,8 @@ extern "C"  __declspec(dllexport) void __stdcall read_infer_result_I32(void* cor
     const int* results = output_tensor.data<const int>();
     // 将输出结果赋值到输出地址指针中
     for (int i = 0; i < data_size; i++) {
-        *inference_result = results[i];
-        inference_result++;
+        *infer_result = results[i];
+        infer_result++;
     }
 }
 
