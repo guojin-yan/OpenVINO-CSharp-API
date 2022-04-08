@@ -53,17 +53,17 @@ namespace text_demo
             image_size = Convert.ToUInt64(image_data.Length);
             ie.load_input_data(input_node_name, image_data, image_size);
 
-            ie.inference_engine_infer();
+            ie.infer();
 
             float[] result = new float[102];
-            result = ie.read_inference_result<float>(output_node_name, 102);
+            result = ie.read_infer_result<float>(output_node_name, 102);
 
             int[] index = find_array_max(result, 5);
             for (int i = 0; i < 5; i++)
             {
                 Console.WriteLine("the index is {0} , the score is {1} ", index[i], result[index[i]]);
             }
-            ie.inference_engine_delet();
+            ie.delet();
 
 
         }
@@ -149,14 +149,14 @@ namespace text_demo
             float[] im_shape = new float[] { 608, 608 };
             ie.load_input_data(input_node_name[2], im_shape);
 
-            ie.inference_engine_infer();
+            ie.infer();
 
             int[] resule_num = new int[1];
-            resule_num = ie.read_inference_result<int>(output_node_name[0], 1);
+            resule_num = ie.read_infer_result<int>(output_node_name[0], 1);
 
             int result_size = 6 * resule_num[0];
             float[] result = new float[1000];
-            result = ie.read_inference_result<float>(output_node_name[1], result_size);
+            result = ie.read_infer_result<float>(output_node_name[1], result_size);
 
             image = draw_image_resule(image, resule_num[0], result, lable, 0.2f);
 
