@@ -8,16 +8,13 @@ namespace text_demo
     {
         static void Main(string[] args)
         {
-            DateTime dt1 = System.DateTime.Now;
             // 测试花卉分类模型
-             text_flower_clas();
+            // text_flower_clas();
             // 测试车辆识别模型
-            //text_vehicle_yolov3();
-            DateTime dt2 = System.DateTime.Now;
-            TimeSpan ts1 = dt2.Subtract(dt1);
-            Console.WriteLine(ts1);
+            text_vehicle_yolov3();
         }
 
+        #region 花卉分类模型测试
         /// <summary>
         /// 花卉分类模型测试
         /// </summary>
@@ -111,7 +108,9 @@ namespace text_demo
             return index;
         }
 
+        #endregion
 
+        #region 测试车辆类型识别
         /// <summary>
         /// 测试车辆类型识别
         /// </summary>
@@ -120,7 +119,7 @@ namespace text_demo
             string device_name = "CPU";
             string model_file = @"E:/Text_Model/vehicle_yolov3_darknet/model.pdmodel";
 
-            string image_file = "E:/Text_dataset/vehicle_yolov3_darknet/006.jpg";
+            string image_file = "E:/Text_dataset/vehicle_yolov3_darknet/001.jpeg";
             string[] input_node_name = new string[] { "image", "scale_factor", "im_shape" };
             string[] output_node_name = new string[] { "multiclass_nms3_0.tmp_2", "multiclass_nms3_0.tmp_0" };
 
@@ -152,7 +151,7 @@ namespace text_demo
             ie.infer();
 
             int[] resule_num = new int[1];
-            resule_num = ie.read_infer_result<int>(output_node_name[0], 1);
+            resule_num = ie.read_infer_result<System.Int32>(output_node_name[0], 1);
 
             int result_size = 6 * resule_num[0];
             float[] result = new float[1000];
@@ -195,8 +194,7 @@ namespace text_demo
             }
             return image;
         }
-
-
+        #endregion
 
     }
 }
