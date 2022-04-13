@@ -1,0 +1,4 @@
+C++：
+openvino 2022.1
+opencv 4.5.5
+项目配置请参考《C#调用OpenVINOTM部署Al模型项目开发.docx》中的项目配置。

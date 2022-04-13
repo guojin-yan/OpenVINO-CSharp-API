@@ -1,0 +1,3 @@
+openvino 2022.1
+
+python 安装：pip install openvino-dev==2022.1.0
