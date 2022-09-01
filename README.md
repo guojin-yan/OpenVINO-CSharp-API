@@ -27,7 +27,7 @@ C#调用OpenVINO™部署Al模型项目开发项目，简称OpenVinoSharp，这�
 
 ## 项目文档
 
-想要更详细的了解该项目，请参阅[C#调用OpenVINOTM部署Al模型项目开发](./doc/C#调用OpenVINOTM部署Al模型项目开发.docx)
+想要更详细的了解该项目，请参阅[C#调用OpenVINOTM部署Al模型项目开发(AI Model Inference in OpenVINO and C#)](./doc/AI Model Inference in OpenVINO and C#.pdf)
 
 ## 使用环境
 
