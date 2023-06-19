@@ -157,7 +157,7 @@ namespace yolov8
 
                 Cv2.Resize(image, image, new OpenCvSharp.Size(720, 480));
                 Cv2.Resize(result_image, result_image, new OpenCvSharp.Size(720, 480));
-                pictureBox2.Image = new Bitmap(result_image.ToMemoryStream()) as Image;
+                pictureBox2.BackgroundImage = new Bitmap(result_image.ToMemoryStream()) as Image;
             }
             #endregion
 
@@ -207,7 +207,7 @@ namespace yolov8
 
                 Cv2.Resize(image, image, new OpenCvSharp.Size(720, 480));
                 Cv2.Resize(result_image, result_image, new OpenCvSharp.Size(720, 480));
-                pictureBox2.Image = new Bitmap(result_image.ToMemoryStream()) as Image;
+                pictureBox2.BackgroundImage = new Bitmap(result_image.ToMemoryStream()) as Image;
 
             }
 
@@ -251,7 +251,7 @@ namespace yolov8
 
                 Cv2.Resize(image, image, new OpenCvSharp.Size(720, 480));
                 Cv2.Resize(result_image, result_image, new OpenCvSharp.Size(720, 480));
-                pictureBox2.Image = new Bitmap(result_image.ToMemoryStream()) as Image;
+                pictureBox2.BackgroundImage = new Bitmap(result_image.ToMemoryStream()) as Image;
 
 
             }
@@ -298,10 +298,10 @@ namespace yolov8
 
                 Cv2.Resize(image, image, new OpenCvSharp.Size(720, 480));
                 Cv2.Resize(result_image, result_image, new OpenCvSharp.Size(720, 480));
-                pictureBox2.Image = new Bitmap(result_image.ToMemoryStream()) as Image;
+                pictureBox2.BackgroundImage = new Bitmap(result_image.ToMemoryStream()) as Image;
             }
             #endregion
-
+            pictureBox2.BackgroundImageLayout = ImageLayout.Center;
             Console.WriteLine("模型加载时间：{0}\n", model_load.TotalMilliseconds);
             Console.WriteLine("数据加载时间：{0}\n", data_load.TotalMilliseconds);
             Console.WriteLine("模型推理时间：{0}\n", model_infer.TotalMilliseconds);
