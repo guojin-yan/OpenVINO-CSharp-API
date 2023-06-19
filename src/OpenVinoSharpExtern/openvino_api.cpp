@@ -32,9 +32,9 @@ void* core_init(const wchar_t* w_model_dir, const wchar_t* w_device,
     // 初始化推理核心
     CoreStruct* openvino_core = new CoreStruct(); // 创建推理引擎指针
     openvino_core->model_ptr = openvino_core->core.read_model(model_dir); // 读取推理模型
-    if (cache_dir != "") {
-        openvino_core->core.set_property(ov::cache_dir(cache_dir)); // 设置缓存路径
-    }
+    //if (cache_dir != "") {
+    //    openvino_core->core.set_property(ov::cache_dir(cache_dir)); // 设置缓存路径
+    //}
     openvino_core->compiled_model = openvino_core->core.compile_model(openvino_core->model_ptr, device); // 将模型加载到设备
     openvino_core->infer_request = openvino_core->compiled_model.create_infer_request(); // 创建推理请求
     return (void*)openvino_core;

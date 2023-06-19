@@ -1,6 +1,6 @@
 #pragma once
-#include<time.h>
-#include<iostream>
+//#include<time.h>
+//#include<iostream>
 #include<map>
 #include<string>
 #include<vector>
@@ -53,10 +53,5 @@ EXTERN_C __MIDL_DECLSPEC_DLLEXPORT void STDMETHODCALLTYPE read_infer_result_I64(
 
 // @brief 删除推理核心结构体指针，释放占用内存
 EXTERN_C __MIDL_DECLSPEC_DLLEXPORT void STDMETHODCALLTYPE core_delet(void* core_ptr);
-
-
-
-
-
-
-
+// @brief 测试函数
+EXTERN_C __MIDL_DECLSPEC_DLLEXPORT int STDMETHODCALLTYPE test(int a, int b) { return a + b; }

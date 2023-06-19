@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace OpenVinoSharp
 {
-    internal class NativeMethods
+    public class NativeMethods
     {
-        private const string dll_extern ="OpenVinoSharpExtern.dll";
+        private const string dll_extern = "E:\\Git_space\\OpenVinoSharp\\src\\Release\\x64\\OpenVinoSharpExtern.dll";
 
         [DllImport(dll_extern, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static IntPtr core_init(string model_dir, string device, string w_cache_dir);
@@ -38,5 +38,7 @@ namespace OpenVinoSharp
 
         [DllImport(dll_extern, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static void core_delet(IntPtr core);
+        [DllImport(dll_extern, CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static int test(int a, int b);
     }
 }

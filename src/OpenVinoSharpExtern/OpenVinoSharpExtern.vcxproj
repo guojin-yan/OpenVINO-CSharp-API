@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\OpenCV Source\opencv-4.5.5\build\include;E:\OpenCV Source\opencv-4.5.5\build\include\opencv2;C:\Program Files (x86)\Intel\openvino_2022.3.0.9052\runtime\include;C:\Program Files (x86)\Intel\openvino_2022.3.0.9052\runtime\include\ie;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\OpenCV Source\opencv-4.5.5\build\x64\vc15\lib;C:\Program Files (x86)\Intel\openvino_2022.3.0.9052\runtime\lib\intel64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\OpenCV Source\opencv-4.5.5\build\include;E:\OpenCV Source\opencv-4.5.5\build\include\opencv2;C:\Program Files (x86)\Intel\openvino_2023.0.0.10926\runtime\include;C:\Program Files (x86)\Intel\openvino_2023.0.0.10926\runtime\include\ie;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\OpenCV Source\opencv-4.5.5\build\x64\vc15\lib;C:\Program Files (x86)\Intel\openvino_2023.0.0.10926\runtime\lib\intel64\Debug;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)src\$(Configuration)\$(PlatformName)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <TargetName>OpenVinoSharpExtern</TargetName>
@@ -80,8 +80,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)src\$(Configuration)\$(PlatformName)\</OutDir>
     <TargetName>OpenVinoSharpExtern</TargetName>
-    <IncludePath>E:\OpenCV Source\opencv-4.5.5\build\include;E:\OpenCV Source\opencv-4.5.5\build\include\opencv2;C:\Program Files (x86)\Intel\openvino_2022.3.0.9052\runtime\include;C:\Program Files (x86)\Intel\openvino_2022.3.0.9052\runtime\include\ie;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\OpenCV Source\opencv-4.5.5\build\x64\vc15\lib;C:\Program Files (x86)\Intel\openvino_2022.3.0.9052\runtime\lib\intel64\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\OpenCV Source\opencv-4.5.5\build\include;E:\OpenCV Source\opencv-4.5.5\build\include\opencv2;C:\Program Files (x86)\Intel\openvino_2023.0.0.10926\runtime\include;C:\Program Files (x86)\Intel\openvino_2023.0.0.10926\runtime\include\ie;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\OpenCV Source\opencv-4.5.5\build\x64\vc15\lib;C:\Program Files (x86)\Intel\openvino_2023.0.0.10926\runtime\lib\intel64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
