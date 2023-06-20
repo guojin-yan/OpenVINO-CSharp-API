@@ -10,6 +10,9 @@ using System.Windows.Forms;
 using OpenVinoSharp;
 using OpenCvSharp;
 using OpenCvSharp.Dnn;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Net.Mime.MediaTypeNames;
+using yolov8;
 
 namespace yolov8
 {
@@ -22,7 +25,7 @@ namespace yolov8
 
         private void FormModelDeployPlat_Load(object sender, EventArgs e)
         {
-            SetWindows.EmbededFigureWindow("数据显示", panel1);
+            //SetWindows.EmbededFigureWindow("数据显示", panel1);
         }
 
         private void btn_choose_model_path_Click(object sender, EventArgs e)
@@ -34,8 +37,9 @@ namespace yolov8
             //dlg.InitialDirectory = System.Environment.CurrentDirectory;
             //dlg.InitialDirectory = System.IO.Path.GetFullPath(@"..//..//..//..");
             //设置文件过滤效果
-            dlg.Filter = "模型文件(*.pt,*.onnx,*.engine)|*.pt;*.onnx;*.engine";
-            dlg.InitialDirectory = @"E:\Git_space\Csharp_deploy_Yolov8\model";
+            dlg.Filter = "模型文件(*.pt,*.onnx,*.engine,*.xml)|*.pt;*.onnx;*.engine;*.xml";
+            DirectoryInfo path = new DirectoryInfo(Application.StartupPath);
+            dlg.InitialDirectory = path.Parent.Parent.Parent.Parent.Parent.FullName + "\\model";//上 2层目录
             //判断文件对话框是否打开
             if (dlg.ShowDialog() == DialogResult.OK)
             {
@@ -48,12 +52,8 @@ namespace yolov8
             OpenFileDialog dlg = new OpenFileDialog();
             //若要改变对话框标题
             dlg.Title = "选择分类文件";
-            //指定当前目录
-            //dlg.InitialDirectory = System.Environment.CurrentDirectory;
-            //dlg.InitialDirectory = System.IO.Path.GetFullPath(@"..//..//..//..");
-            //设置文件过滤效果
-            dlg.Filter = "分类文件(*.txt)|*.txt";
-            dlg.InitialDirectory = @"E:\Git_space\Csharp_deploy_Yolov8\demo";
+            DirectoryInfo path = new DirectoryInfo(Application.StartupPath);
+            dlg.InitialDirectory = path.Parent.Parent.Parent.Parent.Parent.FullName + "\\dataset\\lable";//上 2层目录
             //判断文件对话框是否打开
             if (dlg.ShowDialog() == DialogResult.OK)
             {
@@ -71,7 +71,8 @@ namespace yolov8
             //dlg.InitialDirectory = System.IO.Path.GetFullPath(@"..//..//..//..");
             //设置文件过滤效果
             dlg.Filter = "图片文件(*.png,*.jpg,*.jepg)|*.png;*.jpg;*.jepg";
-            dlg.InitialDirectory = @"E:\Git_space\Csharp_deploy_Yolov8\demo";
+            DirectoryInfo path = new DirectoryInfo(Application.StartupPath);
+            dlg.InitialDirectory = path.Parent.Parent.Parent.Parent.Parent.FullName + "\\dataset\\image";//上 2层目录
             //判断文件对话框是否打开
             if (dlg.ShowDialog() == DialogResult.OK)
             {
@@ -82,7 +83,7 @@ namespace yolov8
         private void btn_model_deploy_Click(object sender, EventArgs e)
         {
             // 清屏专用
-            Console.Clear();
+            textBox1.Clear();
             string model_path = tb_model_path.Text;
             //model_path = @"E:\Git_space\基于Csharp部署Yolov8\model\yolov8s.engine";
             //model_path = @"E:\Git_space\Csharp_deploy_Yolov8\model\yolov8s.onnx";
@@ -115,7 +116,7 @@ namespace yolov8
             data_load = end.Subtract(begin);
 
 
-
+            Mat result_image = new Mat();
 
             #region 
 
@@ -125,7 +126,7 @@ namespace yolov8
                 float[] factors = new float[2];
                 factors = new float[2];
                 factors[0] = factors[1] = (float)(max_image_length / 640.0);
-                Console.WriteLine("------Yolov8 detection model deploy OpnenVINO-------");
+                textBox1.AppendText("------Yolov8 detection model deploy OpnenVINO-------\r\n");
                 begin = DateTime.Now;
                 Core core = new Core(model_path, "CPU");
                 end = DateTime.Now;
@@ -150,14 +151,9 @@ namespace yolov8
                 core.delet();
 
                 DetectionResult result_pro = new DetectionResult(classer_path, factors);
-                Mat result_image = result_pro.draw_result(result_pro.process_result(result_array), image.Clone());
+                result_image = result_pro.draw_result(result_pro.process_result(result_array), image.Clone());
                 end = DateTime.Now;
                 result_process += end.Subtract(begin);
-
-
-                Cv2.Resize(image, image, new OpenCvSharp.Size(720, 480));
-                Cv2.Resize(result_image, result_image, new OpenCvSharp.Size(720, 480));
-                pictureBox2.BackgroundImage = new Bitmap(result_image.ToMemoryStream()) as Image;
             }
             #endregion
 
@@ -170,9 +166,8 @@ namespace yolov8
                 factors[0] = factors[1] = (float)(max_image_length / 640.0);
                 factors[2] = image.Rows;
                 factors[3] = image.Cols;
-                Console.WriteLine(factors[0]);
 
-                Console.WriteLine("------Yolov8 segmentation model deploy OpnenVINO-------");
+                textBox1.AppendText("------Yolov8 segmentation model deploy OpnenVINO-------\r\n");
                 begin = DateTime.Now;
                 Core core = new Core(model_path, "CPU");
                 end = DateTime.Now;
@@ -200,15 +195,9 @@ namespace yolov8
 
 
                 SegmentationResult result_pro = new SegmentationResult(classer_path, factors);
-                Mat result_image = result_pro.draw_result(result_pro.process_result(det_result_array, proto_result_array), image.Clone());
+                result_image = result_pro.draw_result(result_pro.process_result(det_result_array, proto_result_array), image.Clone());
                 end = DateTime.Now;
                 result_process += end.Subtract(begin);
-
-
-                Cv2.Resize(image, image, new OpenCvSharp.Size(720, 480));
-                Cv2.Resize(result_image, result_image, new OpenCvSharp.Size(720, 480));
-                pictureBox2.BackgroundImage = new Bitmap(result_image.ToMemoryStream()) as Image;
-
             }
 
             #endregion
@@ -217,7 +206,7 @@ namespace yolov8
             else if (rb_yolov8_cls.Checked)
             {
                 float[] result_array = new float[1000];
-                Console.WriteLine("------Yolov8 Classification model deploy OpnenVINO-------\n");
+                textBox1.AppendText("------Yolov8 Classification model deploy OpnenVINO-------\r\n");
                 begin = DateTime.Now;
                 Core core = new Core(model_path, "CPU");
                 end = DateTime.Now;
@@ -244,16 +233,10 @@ namespace yolov8
 
                 ClasResult result_pro = new ClasResult(classer_path);
                 KeyValuePair<string, float> result_cls = result_pro.process_result(result_array);
-                Mat result_image = result_pro.draw_result(result_cls, image.Clone());
+                result_image = result_pro.draw_result(result_cls, image.Clone());
                 end = DateTime.Now;
                 result_process += end.Subtract(begin);
                 Console.WriteLine(result_cls.ToString());
-
-                Cv2.Resize(image, image, new OpenCvSharp.Size(720, 480));
-                Cv2.Resize(result_image, result_image, new OpenCvSharp.Size(720, 480));
-                pictureBox2.BackgroundImage = new Bitmap(result_image.ToMemoryStream()) as Image;
-
-
             }
             #endregion
             #region
@@ -264,7 +247,7 @@ namespace yolov8
                 factors[0] = factors[1] = (float)(max_image_length / 640.0);
 
 
-                Console.WriteLine("------Yolov8 Pose model deploy OpnenVINO-------\n");
+                textBox1.AppendText("------Yolov8 Pose model deploy OpnenVINO-------\r\n");
                 begin = DateTime.Now;
                 Core core = new Core(model_path, "CPU");
                 end = DateTime.Now;
@@ -287,25 +270,19 @@ namespace yolov8
                 result_array = core.read_infer_result<float>("output0", 8400 * 56);
 
                 core.delet();
-
-
-
                 PoseResult result_pro = new PoseResult(factors);
-                Mat result_image = result_pro.draw_result(result_pro.process_result(result_array), image.Clone());
+                result_image = result_pro.draw_result(result_pro.process_result(result_array), image.Clone());
                 end = DateTime.Now;
                 result_process += end.Subtract(begin);
-
-
-                Cv2.Resize(image, image, new OpenCvSharp.Size(720, 480));
-                Cv2.Resize(result_image, result_image, new OpenCvSharp.Size(720, 480));
-                pictureBox2.BackgroundImage = new Bitmap(result_image.ToMemoryStream()) as Image;
             }
             #endregion
             pictureBox2.BackgroundImageLayout = ImageLayout.Center;
-            Console.WriteLine("模型加载时间：{0}\n", model_load.TotalMilliseconds);
-            Console.WriteLine("数据加载时间：{0}\n", data_load.TotalMilliseconds);
-            Console.WriteLine("模型推理时间：{0}\n", model_infer.TotalMilliseconds);
-            Console.WriteLine("结果处理时间：{0}\n", result_process.TotalMilliseconds);
+            Cv2.Resize(result_image, result_image, new OpenCvSharp.Size(937, 569));
+            pictureBox2.BackgroundImage = new Bitmap(result_image.ToMemoryStream()) as Image;
+            textBox1.AppendText(String.Format("模型加载时间：{0}; ", model_load.TotalMilliseconds));
+            textBox1.AppendText(String.Format("数据加载时间：{0};\r\n", data_load.TotalMilliseconds));
+            textBox1.AppendText(String.Format("模型推理时间：{0}; ", model_infer.TotalMilliseconds));
+            textBox1.AppendText(String.Format("结果处理时间：{0};\r\n", result_process.TotalMilliseconds));
 
         }
     }

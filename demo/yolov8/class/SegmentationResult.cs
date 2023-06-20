@@ -188,11 +188,11 @@ namespace yolov8
             for (int i = 0; i < result.length; i++)
             {
                 Cv2.Rectangle(image, result.rects[i], new Scalar(0, 0, 255), 2, LineTypes.Link8);
-                Cv2.Rectangle(image, new Point(result.rects[i].TopLeft.X, result.rects[i].TopLeft.Y - 20),
+                Cv2.Rectangle(image, new Point(result.rects[i].TopLeft.X, result.rects[i].TopLeft.Y + 30),
                     new Point(result.rects[i].BottomRight.X, result.rects[i].TopLeft.Y), new Scalar(0, 255, 255), -1);
                 Cv2.PutText(image, result.classes[i] + "-" + result.scores[i].ToString("0.00"),
-                    new Point(result.rects[i].X, result.rects[i].Y - 10),
-                    HersheyFonts.HersheySimplex, 0.6, new Scalar(0, 0, 0), 1);
+                    new Point(result.rects[i].X, result.rects[i].Y + 25),
+                    HersheyFonts.HersheySimplex, 0.8, new Scalar(0, 0, 0), 2);
                 Cv2.AddWeighted(image, 0.5, result.masks[i], 0.5, 0, masked_img);
             }
             return masked_img;

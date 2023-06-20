@@ -10,7 +10,7 @@ namespace yolov8
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            Console.Title = "数据显示";
+            //Console.Title = "数据显示";
             ApplicationConfiguration.Initialize();
             Application.Run(new FormModelDeployPlat());
         }

@@ -100,11 +100,11 @@ namespace yolov8
             {
                 //Console.WriteLine(result.rects[i]);
                 Cv2.Rectangle(image, result.rects[i], new Scalar(0, 0, 255), 2, LineTypes.Link8);
-                Cv2.Rectangle(image, new Point(result.rects[i].TopLeft.X, result.rects[i].TopLeft.Y - 20),
-                    new Point(result.rects[i].BottomRight.X, result.rects[i].TopLeft.Y), new Scalar(0, 255, 255), -1);
-                Cv2.PutText(image, "person -" + result.scores[i].ToString("0.00"),
-                    new Point(result.rects[i].X, result.rects[i].Y - 10),
-                    HersheyFonts.HersheySimplex, 0.6, new Scalar(0, 0, 0), 1);
+                //Cv2.Rectangle(image, new Point(result.rects[i].TopLeft.X, result.rects[i].TopLeft.Y + 10),
+                //    new Point(result.rects[i].BottomRight.X, result.rects[i].TopLeft.Y), new Scalar(0, 255, 255), -1);
+                //Cv2.PutText(image, result.classes[i] + "-" + result.scores[i].ToString("0.00"),
+                //    new Point(result.rects[i].X, result.rects[i].Y + 10),
+                //    HersheyFonts.HersheySimplex, 0.6, new Scalar(0, 0, 0), 2);
                 draw_poses(result.poses[i], ref image);
             }
             return image;
