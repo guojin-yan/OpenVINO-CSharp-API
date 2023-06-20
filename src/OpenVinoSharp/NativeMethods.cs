@@ -42,3 +42,4 @@ namespace OpenVinoSharp
         public extern static int test(int a, int b);
     }
 }
+

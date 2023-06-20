@@ -13,6 +13,8 @@ using OpenCvSharp.Dnn;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Net.Mime.MediaTypeNames;
 using yolov8;
+using Application = System.Windows.Forms.Application;
+using Image = System.Drawing.Image;
 
 namespace yolov8
 {

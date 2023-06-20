@@ -2,17 +2,26 @@
 
 ## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">更新日志
 
-- #### 🔥 **2023.1.23 ：发布 OpenVinoSharp 2.0**
+#### 🔥 **2023.6.19 ：发布 OpenVinoSharp 2.1**
 
-  - 🗳 **OpenVinoSharp 库：**
-    - 基于OpenVinoSharp 1.0 以及使用中所出现的问题，将一些问题进行了修改；
-    - 增加数据处理方式。
+- 🗳 **OpenVinoSharp 库：**
+  - 升级OpenVinoSharp 支持OpenVINO 2023.0 版本
+- 💡  **技术文档：**
+  - 无
+- 🛹**应用案例：**
+  - 增加Yolov8-det、Yolov8-seg、Yolov8-pose和Yolov8-cls模型测试案例
 
-  - 🔮 **NuGet包：**
-    - 制作并发布NuGet包，包括**OpenVinoSharp.win**  、**OpenVinoSharp.win.simplify**  两个安装包。
+#### 🔥 **2023.1.23 ：发布 OpenVinoSharp 2.0**
 
-  - 💡  **技术文档：**
-    - 无
+- 🗳 **OpenVinoSharp 库：**
+  - 基于OpenVinoSharp 1.0 以及使用中所出现的问题，将一些问题进行了修改；
+  - 增加数据处理方式。
+
+- 🔮 **NuGet包：**
+  - 制作并发布NuGet包，包括**OpenVinoSharp.win**  、**OpenVinoSharp.win.simplify**  两个安装包。
+
+- 💡  **技术文档：**
+  - 无
 
 
 
