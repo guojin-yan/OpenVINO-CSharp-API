@@ -7,9 +7,11 @@
 - 🗳 **OpenVinoSharp 库：**
   - 升级OpenVinoSharp 支持OpenVINO 2023.0 版本
 - 💡  **技术文档：**
-  - 无
+  - 增加《基于C#和OpenVINO2023.0部署Yolov8全系列模型》技术文档
 - 🛹**应用案例：**
   - 增加Yolov8-det、Yolov8-seg、Yolov8-pose和Yolov8-cls模型测试案例
+- 🔮 **NuGet包：**
+  - 制作并发布NuGet包，包括**OpenVinoSharp.win 2.1.1**  安装包，包含OpenVINO 2023.0 依赖项。
 
 #### 🔥 **2023.1.23 ：发布 OpenVinoSharp 2.0**
 
@@ -18,7 +20,7 @@
   - 增加数据处理方式。
 
 - 🔮 **NuGet包：**
-  - 制作并发布NuGet包，包括**OpenVinoSharp.win**  、**OpenVinoSharp.win.simplify**  两个安装包。
+  - 制作并发布NuGet包，包括**OpenVinoSharp.win**  安装包。
 
 - 💡  **技术文档：**
   - 无
@@ -213,3 +215,4 @@ using OpenVinoSharp;
         <td>删除内存地址</td>
         <td rowspan="1"></td>
 	</tr>
+
