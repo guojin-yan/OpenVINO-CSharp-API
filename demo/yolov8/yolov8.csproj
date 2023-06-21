@@ -10,10 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.7.0.20230115" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\OpenVinoSharp\OpenVinoSharp.csproj" />
+    <PackageReference Include="OpenVinoSharp.win" Version="2.1.0" />
   </ItemGroup>
 
 </Project>
