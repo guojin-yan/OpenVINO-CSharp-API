@@ -217,7 +217,7 @@
             // btn_model_deploy
             // 
             btn_model_deploy.Font = new Font("思源黑体 CN", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            btn_model_deploy.Location = new Point(752, 153);
+            btn_model_deploy.Location = new Point(733, 147);
             btn_model_deploy.Margin = new Padding(4);
             btn_model_deploy.Name = "btn_model_deploy";
             btn_model_deploy.Size = new Size(148, 45);

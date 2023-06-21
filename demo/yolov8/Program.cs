@@ -1,3 +1,5 @@
+using OpenCvSharp;
+
 namespace yolov8
 {
     internal static class Program
@@ -12,7 +14,8 @@ namespace yolov8
             // see https://aka.ms/applicationconfiguration.
             //Console.Title = "Êý¾ÝÏÔÊ¾";
             ApplicationConfiguration.Initialize();
-            Application.Run(new FormModelDeployPlat());
+            //Application.Run(new FormModelDeployPlat());
+            Application.Run(new FormTestTime());
         }
     }
 }
