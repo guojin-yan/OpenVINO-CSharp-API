@@ -53,19 +53,11 @@
 
 ### OpenVinoSharp NuGet包安装
 
-##### （1）下载NuGet包
+&emsp;使用Visual Studio自带的NuGet管理包，搜索OpenVinoSharp.win，找到对应的包，并将其安装到项目中。目前最新版2.1.0之后的版本支持OpenVINO2023.0版本，并且包含OpenVINO所需要的依赖项，用户无需在进行安装OpenVINO，安装NuGet包后就可直接使用。
 
-&emsp;使用Visual Studio自带的NuGet管理包，搜索OpenVinoSharp.win，找到对应的包，并将其安装到项目中。
+<img title="nuget" src="https://s2.loli.net/2023/06/24/ieXuhIrYJNWjt3s.png" alt="" width="500">
 
-<img title="nuget" src="https://s2.loli.net/2023/02/09/vpkBefE3bSlGuVU.png" alt="" width="500">
 
-##### （2）复制依赖项
-
-&emsp;由于项目依赖较多的外部依赖项，因此为了方便使用，此处提供了所需的依赖。
-
-&emsp;打开下载的NuGet下载路径，路径一般为``C:\Users\(用户名)\.nuget\packages\``，并找到``openvinosharp.win``，将``external lib``文件夹中的所有文件复制到程序运行目录中。
-
-<img title="nuget" src="https://s2.loli.net/2023/02/09/CpdNnRMXJhUz19Y.png" alt="" width="500">
 
 
 
@@ -215,4 +207,3 @@ using OpenVinoSharp;
         <td>删除内存地址</td>
         <td rowspan="1"></td>
 	</tr>
-
