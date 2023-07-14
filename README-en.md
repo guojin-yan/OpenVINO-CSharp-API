@@ -1,59 +1,59 @@
-![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞OpenVINO%20wrapper%20for%20.NET💞&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
+![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞OpenVINO wrapper for .NET💞&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit Board&pulls=1&stargazers=1&theme=Light)
 
-## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">更新日志
+## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">Update 
 
-#### 🔥 **2023.6.19 ：发布 OpenVinoSharp 2.1**
+#### 🔥 **2023.6.19 ：Release  OpenVinoSharp 2.1**
 
-- 🗳 **OpenVinoSharp 库：**
-  - 升级OpenVinoSharp 支持OpenVINO 2023.0 版本
-- 💡  **技术文档：**
-  - 增加《基于C#和OpenVINO2023.0部署Yolov8全系列模型》技术文档
-- 🛹**应用案例：**
-  - 增加Yolov8-det、Yolov8-seg、Yolov8-pose和Yolov8-cls模型测试案例
-- 🔮 **NuGet包：**
-  - 制作并发布NuGet包，包括**OpenVinoSharp.win 2.1.1**  安装包，包含OpenVINO 2023.0 依赖项。
+- 🗳 **OpenVinoSharp ：**
+  - Upgrade OpenVinoSharp to support OpenVino 2023.0 version.
+- 💡  **Technical documentation：**
+  - Add Technical documentation Deploying Yolov8 Series Models Based on C # and OpenVINO2023.0.
+- 🛹**Application Cases：**
+  - Add Yolov8-det, Yolov8-seg, Yolov8-pose, and Yolov8-cls model test cases.
+- 🔮 **NuGet：**
+  - Create and publish NuGet packages, including the **OpenVinoSharp. win 2.1.1** installation package, which includes OpenVino 2023.0 dependencies.
 
-#### 🔥 **2023.1.23 ：发布 OpenVinoSharp 2.0**
+#### 🔥 **2023.1.23 ：Release OpenVinoSharp 2.0**
 
-- 🗳 **OpenVinoSharp 库：**
-  - 基于OpenVinoSharp 1.0 以及使用中所出现的问题，将一些问题进行了修改；
-  - 增加数据处理方式。
+- 🗳 **OpenVinoSharp ：**
+  - Based on OpenVinoSharp 1.0 and the issues encountered during use, some issues have been modified;
+  - Add data processing methods.
 
-- 🔮 **NuGet包：**
-  - 制作并发布NuGet包，包括**OpenVinoSharp.win**  安装包。
+- 🔮 **NuGet：**
+  - Create and publish NuGet packages, including the **OpenVinoSharp. win** installation package.
 
-- 💡  **技术文档：**
+- 💡  **Technical documentation：**
   - 无
 
 
 
-## <img title="更新日志" src="https://s2.loli.net/2023/01/26/Zs1VFUT4BGQgfE9.png" alt="" width="40"> 简介
+## <img title="更新日志" src="https://s2.loli.net/2023/01/26/Zs1VFUT4BGQgfE9.png" alt="" width="40"> Introduction
 
-&emsp;    [OpenVINO™](www.openvino.ai)是一个用于优化和部署深度学习模型的开源工具包，是英特尔基于自身现有的硬件平台开发的一种可以加快高性能计算机视觉和深度学习视觉应用开发速度工具套件，用于快速开发应用程序和解决方案，以解决各种任务（包括人类视觉模拟、自动语音识别、自然语言处理和推荐系统等）。
+&emsp;    [OpenVINO™](www.openvino.ai)is an open source toolkit for optimizing and deploying deep learning models. It is a tool suite developed by Intel based on its existing hardware platform that can speed up the development of high-performance computer vision and deep learning visual applications. It is used to quickly develop applications and solutions to solve various tasks (including human visual simulation, automatic speech recognition, Natural language processing, recommendation systems, etc.).
 
-&emsp;    官方发行的[OpenVINO™](www.openvino.ai)未提供C#编程语言接口，因此在使用时无法实现在C#中利用[OpenVINO™](www.openvino.ai)进行模型部署。在该项目中，利用动态链接库功能，调用官方依赖库，实现在C#中部署深度学习模型，为方便使用，在该项目中提供了NuGet包方便使用，为了方便大家再此基础上进行开发，该项目提供了详细的技术文档。
+&emsp;    Officially released  [OpenVINO™](www.openvino.ai) does not provide a C # programming language interface, so it is not possible to utilize [OpenVINO™](www.openvino.ai) in C # during use for model deployment. In this project, the Dynamic-link library function is used to call the official dependency library to deploy the deep learning model in C #. For the convenience of use, NuGet package is provided in this project. For the convenience of development on this basis, the project provides detailed Technical documentation.
 
 <img title="更新日志" src="https://s2.loli.net/2023/01/26/LdbeOYGgwZvHcBQ.png" alt="" width="300">
 
-## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet包
+## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet
 
-### 托管库
+### Managed Library
 
 | Package               | Description                                                  | Link                                                         |
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **OpenVinoSharp.win** | OpenVinoSharp core libraries，附带完整的OpenCV 4.5.5、OpenVINO 2022.3依赖库 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVinoSharp.win.svg)](https://www.nuget.org/packages/OpenVinoSharp.win/) |
+| **OpenVinoSharp.win** | OpenVinoSharp core libraries with complete OpenCV 4.5.5 and OpenVino 2022.3 dependency libraries | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVinoSharp.win.svg)](https://www.nuget.org/packages/OpenVinoSharp.win/) |
 
 
 
-## <img title="安装" src="https://s2.loli.net/2023/01/26/bm6WsE5cfoVvj7i.png" alt="" width="50"> 安装
+## <img title="安装" src="https://s2.loli.net/2023/01/26/bm6WsE5cfoVvj7i.png" alt="" width="50"> Install
 
-### OpenVINO安装
+### OpenVINO Install
 
-&emsp;OpenVINO安装，请参考[openvino_installation.md](.\docs\openvino_installation.md)安装指导文档。
+For OpenVINO installation, please refer to the installation guide document for [openvino installation. md](.  docs  openvino installation. md).
 
-### OpenVinoSharp NuGet包安装
+### OpenVinoSharp NuGet Install
 
-&emsp;使用Visual Studio自带的NuGet管理包，搜索OpenVinoSharp.win，找到对应的包，并将其安装到项目中。目前最新版2.1.1之后的版本支持OpenVINO2023.0版本，并且包含OpenVINO所需要的依赖项，用户无需在进行安装OpenVINO，安装NuGet包后就可直接使用。
+    Using the NuGet management package that comes with Visual Studio, search for OpenVinoSharp.win, find the corresponding package, and install it into the project. The latest version after 2.1.1 supports OpenVINO2023.0 and includes the required dependencies for OpenVINO. Users do not need to install OpenVINO and can use it directly after installing the NuGet package.
 
 <img title="nuget" src="https://s2.loli.net/2023/06/24/ieXuhIrYJNWjt3s.png" alt="" width="500">
 
@@ -66,7 +66,7 @@
 
 ## <img title="API文档" src="https://s2.loli.net/2023/02/09/zVyS1Z6dm45n2RB.png" alt="" width="30">技术文档
 
-&emsp;由于该项目是基于作者自身使用需求开发，结合常见模型部署方式封装的API函数，因此为了满足其他开发者的需求，此处公开详细的技术文档，如有需求，可以自行根据技术文档[openvinosharp_documents](.\docs\openvinosharp_documents.md)修改。
+&emsp;  Since the project is developed based on the author's own use requirements and combined with API functions encapsulated by common model deployment methods, in order to meet the needs of other developers, detailed Technical documentation are disclosed here. If there is a need, you can modify it according to the Technical documentation [openvinosharp_documents](.\docs\openvinosharp_documents.md).
 
 
 
@@ -94,7 +94,7 @@
 
 
 
-## <img title="API文档" src="https://s2.loli.net/2023/01/26/CNgHGrJ2DyvsaP4.png" alt="" width="50">API文档
+## <img title="API文档" src="https://s2.loli.net/2023/07/14/SFJb8U7hsiV1e5Y.png" alt="" width="50">API文档
 
 ### 命名空间
 
