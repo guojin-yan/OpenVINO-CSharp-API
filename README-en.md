@@ -90,121 +90,122 @@ For OpenVINO installation, please refer to the installation guide document for [
 
 
 
-## <img title="" src="https://user-images.githubusercontent.com/48054808/157835345-f5d24128-abaf-4813-b793-d2e5bdc70e5a.png" alt="" width="40"> 许可证书
+## <img title="" src="https://user-images.githubusercontent.com/48054808/157835345-f5d24128-abaf-4813-b793-d2e5bdc70e5a.png" alt="" width="40"> License 
 
-本项目的发布受[Apache 2.0 license](LICENSE)许可认证。
+The release of this project is certified under the [Apache 2.0 ](LICENSE) license.
 
 
 
-## <img title="API文档" src="https://s2.loli.net/2023/07/14/SFJb8U7hsiV1e5Y.png" alt="" width="50">API文档
+## <img title="API文档" src="https://s2.loli.net/2023/07/14/SFJb8U7hsiV1e5Y.png" alt="" width="50">API document
 
-### 命名空间
+### Namespace
 
 ```c#
 using OpenVinoSharp;
 ```
 
-### 模型推理API
+### API
 
 <table>
 	<tr>
-	    <th width="7%" align="center" bgcolor=#FF7A68>序号</th>
+	    <th width="7%" align="center" bgcolor=#FF7A68>Num</th>
 	    <th width="35%" colspan="2" align="center" bgcolor=#FF7A68>API</th>
-	    <th width="43%" align="center" bgcolor=#FF7A68>参数解释</th>  
-        <th width="15%" align="center" bgcolor=#FF7A68>说明</th>
+	    <th width="43%" align="center" bgcolor=#FF7A68>Parameter Description</th>  
+        <th width="15%" align="center" bgcolor=#FF7A68>Explain</th>
 	</tr >
 	<tr >
 	    <td rowspan="4" align="center">1</td>
-	    <td align="center">方法</td>
+	    <td align="center">Method</td>
         <td>Core()</td>
-        <td>构造函数</td>
-        <td rowspan="4">初始化推理核心，读取本地模型，加载到设备，并创建推理通道</td>
+        <td>Constructor</td>
+        <td rowspan="4">Initialize the inference core, read the local model, load it onto the device, and create the inference channel</td>
 	</tr>
     <tr >
-	    <td rowspan="3" align="center">参数</td>
+	    <td rowspan="3" align="center">Param</td>
         <td><font color=blue>string</font> model</td>
-        <td>模型路径</td>
+        <td>Model Path</td>
 	</tr>
     <tr >
         <td><font color=blue>string</font> device</td>
-        <td>设备名称</td>
+        <td>Device Name</td>
 	</tr>
     <tr >
         <td><font color=blue>string</font> cache_dir</td>
-        <td>缓存路径</td>
+        <td>Cache Path</td>
 	</tr>
 	<tr >
 	    <td rowspan="3" align="center">2</td>
-	    <td align="center">方法</td>
+	    <td align="center">Method</td>
         <td><font color=blue>void</font> set_input_shape()</td>
-        <td>设置输入节点形状</td>
-        <td rowspan="3">根据节点维度设置</td>
+        <td>Set input node shape</td>
+        <td rowspan="3">Set according to node dimensions</td>
 	</tr>
     <tr >
-	    <td rowspan="2" align="center">参数</td>
+	    <td rowspan="2" align="center">Param</td>
         <td><font color=blue>string</font> node_name</td>
-        <td>节点名称</td>
+        <td>Node name</td>
 	</tr>
     <tr >
         <td><font color=blue>int[]</font> input_shape</td>
-        <td>形状数组</td>
+        <td>Shape array</td>
 	</tr>
 	<tr >
 	    <td rowspan="6" align="center">3</td>
-	    <td align="center">方法</td>
+	    <td align="center">Method</td>
         <td><font color=blue>void</font> load_input_data()</td>
-        <td>设置图片/普通输入数据</td>
-        <td rowspan="6">方法重载</td>
+        <td>Set Image/Normal Input Data</td>
+        <td rowspan="6">Method overload</td>
 	</tr>
     <tr >
-	    <td rowspan="2" align="center">参数</td>
+	    <td rowspan="2" align="center">Param</td>
         <td><font color=blue>string</font> node_name</td>
-        <td>输入节点名称</td>
+        <td>Input node name.</td>
 	</tr>
     <tr >
         <td><font color=blue>float[]</font> input_data</td>
-        <td>输入数据</td>
+        <td>Input data.</td>
 	</tr>
     <tr >
-	    <td rowspan="3" align="center">参数</td>
+	    <td rowspan="3" align="center">Param</td>
         <td><font color=blue>string</font> node_name</td>
-        <td>输入节点名称</td>
+        <td>Input node name</td>
 	</tr>
     <tr >
         <td><font color=blue>byte[]</font> image_data</td>
-        <td>图片数据</td>
+        <td>Image data</td>
 	</tr>
     <tr >
         <td><font color=blue>int</font> type</td>
-        <td>数据处理类型：<br>type = 0: 均值方差归一化、常规缩放<br>type = 1: 普通归一化(1/255)、常规缩放<br>type = 2: 不归一化、常规缩放<br>type = 0: 均值方差归一化、仿射变换<br>type = 1: 普通归一化(1/255)、仿射变换<br>type = 2: 不归一化、仿射变换</td>
+        <td>Data processing type：<br>type = 0: Normalization of mean variance and conventional scaling<br>type = 1: Normal normalization (1/255), regular scaling<br>type = 2: Non normalization, regular scaling<br>type = 0: Normalization of mean variance, Affine transformation<br>type = 1: Normal normalization (1/255), Affine transformation<br>type = 2: Non normalization, Affine transformation</td>
 	</tr>
 	<tr >
 	    <td rowspan="1" align="center">4</td>
-	    <td align="center">方法</td>
+	    <td align="center">Method</td>
         <td><font color=blue>void</font> infer()</td>
-        <td>模型推理</td>
+        <td>Model-based reasoning</td>
         <td rowspan="1"></td>
 	</tr>
 	<tr >
 	    <td rowspan="3" align="center">5</td>
-	    <td align="center">方法</td>
+	    <td align="center">Method</td>
         <td><font color=blue>void</font> <font color=green>T</font>[] read_infer_result &lt<font color=green>T</font>&gt()</td>
-        <td>读取推理结果数据</td>
-        <td rowspan="3">支持读取Float32、Int32、Int64格式数据</td>
+        <td>Read inference result data</td>
+        <td rowspan="3">Supports reading data in Float32, Int32, and Int64 formats</td>
 	</tr>
     <tr >
-	    <td rowspan="2" align="center">参数</td>
+	    <td rowspan="2" align="center">Param</td>
         <td><font color=blue>string</font> output_name</td>
-        <td>输出节点名</td>
+        <td>Output Node Name</td>
 	</tr>
     <tr >
         <td><font color=blue>int</font> data_size</td>
-        <td>输出数据长度</td>
+        <td>Output data length</td>
 	</tr>
 	<tr >
 	    <td rowspan="1" align="center">6</td>
-	    <td align="center">方法</td>
+	    <td align="center">Method</td>
         <td><font color=blue>void</font> delet()</td>
-        <td>删除内存地址</td>
+        <td>Delete Memory Address</td>
         <td rowspan="1"></td>
 	</tr>
+
