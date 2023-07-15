@@ -1,4 +1,4 @@
-![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞OpenVINO%20wrapper%20for%20.NET💞&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
+![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for%20.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
 
 简体中文| [English](README-en.md)
 
@@ -35,7 +35,7 @@
 
 &emsp;    官方发行的[OpenVINO™](www.openvino.ai)未提供C#编程语言接口，因此在使用时无法实现在C#中利用[OpenVINO™](www.openvino.ai)进行模型部署。在该项目中，利用动态链接库功能，调用官方依赖库，实现在C#中部署深度学习模型，为方便使用，在该项目中提供了NuGet包方便使用，为了方便大家再此基础上进行开发，该项目提供了详细的技术文档。
 
-<img title="更新日志" src="https://s2.loli.net/2023/01/26/LdbeOYGgwZvHcBQ.png" alt="" width="300" class="center">
+<div align=center><span><img src="https://s2.loli.net/2023/01/26/LdbeOYGgwZvHcBQ.png" height=300/></span></div>
 
 ## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet包
 
@@ -57,7 +57,7 @@
 
 &emsp;使用Visual Studio自带的NuGet管理包，搜索OpenVinoSharp.win，找到对应的包，并将其安装到项目中。目前最新版2.1.1之后的版本支持OpenVINO2023.0版本，并且包含OpenVINO所需要的依赖项，用户无需在进行安装OpenVINO，安装NuGet包后就可直接使用。
 
-<img title="nuget" src="https://s2.loli.net/2023/06/24/ieXuhIrYJNWjt3s.png" alt="" width="300" class="center">
+<div align=center><span><img src="https://s2.loli.net/2023/06/24/ieXuhIrYJNWjt3s.png" height=300/></span></div>
 
 
 

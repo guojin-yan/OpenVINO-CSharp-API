@@ -1,4 +1,4 @@
-![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞OpenVINO%20wrapper%20for520.NET💞&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit Board&pulls=1&stargazers=1&theme=Light)
+![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for520.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
 
  [简体中文](README.md) | English
 
@@ -35,7 +35,9 @@
 
 &emsp;    Officially released  [OpenVINO™](www.openvino.ai) does not provide a C # programming language interface, so it is not possible to utilize [OpenVINO™](www.openvino.ai) in C # during use for model deployment. In this project, the Dynamic-link library function is used to call the official dependency library to deploy the deep learning model in C #. For the convenience of use, NuGet package is provided in this project. For the convenience of development on this basis, the project provides detailed Technical documentation.
 
-<img title="更新日志" src="https://s2.loli.net/2023/01/26/LdbeOYGgwZvHcBQ.png" alt="" width="300" class="center">
+<div align=center><span><img src="https://s2.loli.net/2023/01/26/LdbeOYGgwZvHcBQ.png" height=300/></span></div>
+
+
 
 ## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet
 
@@ -57,11 +59,7 @@ For OpenVINO installation, please refer to the installation guide document for [
 
     Using the NuGet management package that comes with Visual Studio, search for OpenVinoSharp.win, find the corresponding package, and install it into the project. The latest version after 2.1.1 supports OpenVINO2023.0 and includes the required dependencies for OpenVINO. Users do not need to install OpenVINO and can use it directly after installing the NuGet package.
 
-<img title="nuget" src="https://s2.loli.net/2023/06/24/ieXuhIrYJNWjt3s.png" alt="" width="300" class="center">
-
-
-
-
+<div align=center><span><img src="https://s2.loli.net/2023/06/24/ieXuhIrYJNWjt3s.png" height=300/></span></div>
 
 
 
