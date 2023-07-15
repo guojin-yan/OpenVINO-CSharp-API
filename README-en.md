@@ -1,5 +1,7 @@
 ![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞OpenVINO wrapper for .NET💞&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit Board&pulls=1&stargazers=1&theme=Light)
 
+ [简体中文](README.md) | English
+
 ## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">Update 
 
 #### 🔥 **2023.6.19 ：Release  OpenVinoSharp 2.1**
@@ -206,4 +208,3 @@ using OpenVinoSharp;
         <td>删除内存地址</td>
         <td rowspan="1"></td>
 	</tr>
-
