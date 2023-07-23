@@ -14,7 +14,7 @@ namespace yolov8_simple_demo
 
     public class Yolov8Det
     {
-        public static void yolov8_det(string image_path, string model_path,string classer_path, string device = "AUTO") {
+        public static void run(string model_path, string image_path, string classer_path, string device = "AUTO") {
 
             DateTime begin = DateTime.Now;
             DateTime end = DateTime.Now;
@@ -76,5 +76,6 @@ namespace yolov8_simple_demo
             Cv2.WaitKey(0);
 
         }
+   
     }
 }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "yolov8_simple_demo": {
+      "commandName": "Project",
+      "commandLineArgs": " E:\\Git_space\\OpenVinoSharp\\model\\yolov8s-cls.xml E:\\Git_space\\OpenVinoSharp\\dataset\\image\\demo_7.jpg  E:\\Git_space\\OpenVinoSharp\\dataset\\lable\\ImageNet_lable.txt"
+    }
+  }
+}

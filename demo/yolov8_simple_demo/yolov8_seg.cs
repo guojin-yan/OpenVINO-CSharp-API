@@ -9,7 +9,7 @@ using Yolov8;
 
 namespace yolov8_simple_demo
 {
-    public class Yolov8Cls
+    public class Yolov8Seg
     {
         public static void run(string model_path, string image_path, string classer_path, string device = "AUTO")
         {
@@ -18,7 +18,7 @@ namespace yolov8_simple_demo
             DateTime end = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0);
 
-            Console.WriteLine("----Yolov8 Classification model deploy OpnenVinoSharp-----\r\n");
+            Console.WriteLine("----Yolov8 Segmentation model deploy OpnenVinoSharp-----\r\n");
             begin = DateTime.Now;
             // Initialize Core, loading and building model.
             Core core = new Core(model_path, device);
@@ -43,6 +43,12 @@ namespace yolov8_simple_demo
             ts = end.Subtract(begin);
             Console.WriteLine("[ INFO ] Reading image file: {0}.", image_path);
             Console.WriteLine("[ INFO ] Reading and loading image time: {0} ms", ts.TotalMilliseconds);
+
+
+            float[] factors = new float[4];
+            factors[0] = factors[1] = (float)(max_image_length / 640.0);
+            factors[2] = image.Rows;
+            factors[3] = image.Cols;
             begin = DateTime.Now;
             // Model data infer
             core.infer();
@@ -51,12 +57,14 @@ namespace yolov8_simple_demo
             Console.WriteLine("[ INFO ] Infering model time: {0} ms", ts.TotalMilliseconds);
             begin = DateTime.Now;
             // Read inference results
-            float[] result_array = core.read_infer_result<float>("output0", 1000);
+            float[] det_result_array = core.read_infer_result<float>("output0", 8400 * 116);
+            float[] proto_result_array = core.read_infer_result<float>("output1", 32 * 160 * 160);
+
             // Initialize data processing class
-            ClasResult result_pro = new ClasResult(classer_path);
+            SegmentationResult result_pro = new SegmentationResult(classer_path, factors);
+
             // Get result images
-            KeyValuePair<string, float> result_cls = result_pro.process_result(result_array);
-            Mat result_image = result_pro.draw_result(result_cls, image.Clone());
+            Mat result_image = result_pro.draw_result(result_pro.process_result(det_result_array, proto_result_array), image.Clone());
             end = DateTime.Now;
             ts = end.Subtract(begin);
             Console.WriteLine("[ INFO ] Result processing time: {0} ms", ts.TotalMilliseconds);
@@ -71,5 +79,6 @@ namespace yolov8_simple_demo
             Cv2.WaitKey(0);
 
         }
+
     }
 }
