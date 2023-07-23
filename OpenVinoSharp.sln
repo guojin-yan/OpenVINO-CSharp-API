@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "yolov5", "demo\yolov5\yolov
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "yolov8", "demo\yolov8\yolov8.csproj", "{CDCF3740-DB4B-4ACE-9C9B-54A868060CFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "yolov8_simple_demo", "demo\yolov8_simple_demo\yolov8_simple_demo.csproj", "{413C88B0-7CB7-4888-823D-16BFBB31B73A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,18 @@ Global
 		{CDCF3740-DB4B-4ACE-9C9B-54A868060CFF}.Release|x64.Build.0 = Release|Any CPU
 		{CDCF3740-DB4B-4ACE-9C9B-54A868060CFF}.Release|x86.ActiveCfg = Release|Any CPU
 		{CDCF3740-DB4B-4ACE-9C9B-54A868060CFF}.Release|x86.Build.0 = Release|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Debug|x64.Build.0 = Debug|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Debug|x86.Build.0 = Debug|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Release|x64.ActiveCfg = Release|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Release|x64.Build.0 = Release|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Release|x86.ActiveCfg = Release|Any CPU
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +113,7 @@ Global
 		{C84B44ED-F4D8-4D93-9921-3ACFB4F8A415} = {F356A12B-B90D-4855-81FE-8AF44295B452}
 		{3EBF6236-285C-42D2-9559-1EBAF28C186D} = {9F124BF1-941C-4EC7-BF32-DEC7D01CB660}
 		{CDCF3740-DB4B-4ACE-9C9B-54A868060CFF} = {9F124BF1-941C-4EC7-BF32-DEC7D01CB660}
+		{413C88B0-7CB7-4888-823D-16BFBB31B73A} = {9F124BF1-941C-4EC7-BF32-DEC7D01CB660}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3768469E-B0E3-4195-A7CA-671399460C0A}
