@@ -1,4 +1,4 @@
-[简体中文](yolov8_simple_demo.md)| English
+[简体中文](README.md)| English
 
 # Yolov8 Model Deployment Example
 

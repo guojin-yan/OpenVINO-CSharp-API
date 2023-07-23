@@ -1,4 +1,4 @@
-简体中文| [English](yolov8_simple_demo-en.md)
+简体中文| [English](README-en.md)
 
 # Yolov8 模型部署示例
 
