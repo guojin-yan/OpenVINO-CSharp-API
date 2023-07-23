@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenVinoSharp", "src\OpenVinoSharp\OpenVinoSharp.csproj", "{A261B521-E5FD-440E-A9BB-D120DD448E30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_openvinosharp", "test\test_openvinosharp\test_openvinosharp.csproj", "{BEE2C369-03A3-4BA4-8C88-D8BF45DF17EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A261B521-E5FD-440E-A9BB-D120DD448E30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A261B521-E5FD-440E-A9BB-D120DD448E30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A261B521-E5FD-440E-A9BB-D120DD448E30}.Debug|x64.ActiveCfg = Debug|x64
+		{A261B521-E5FD-440E-A9BB-D120DD448E30}.Debug|x64.Build.0 = Debug|x64
+		{A261B521-E5FD-440E-A9BB-D120DD448E30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A261B521-E5FD-440E-A9BB-D120DD448E30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A261B521-E5FD-440E-A9BB-D120DD448E30}.Release|x64.ActiveCfg = Release|x64
+		{A261B521-E5FD-440E-A9BB-D120DD448E30}.Release|x64.Build.0 = Release|x64
+		{BEE2C369-03A3-4BA4-8C88-D8BF45DF17EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEE2C369-03A3-4BA4-8C88-D8BF45DF17EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEE2C369-03A3-4BA4-8C88-D8BF45DF17EB}.Debug|x64.ActiveCfg = Debug|x64
+		{BEE2C369-03A3-4BA4-8C88-D8BF45DF17EB}.Debug|x64.Build.0 = Debug|x64
+		{BEE2C369-03A3-4BA4-8C88-D8BF45DF17EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEE2C369-03A3-4BA4-8C88-D8BF45DF17EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEE2C369-03A3-4BA4-8C88-D8BF45DF17EB}.Release|x64.ActiveCfg = Release|x64
+		{BEE2C369-03A3-4BA4-8C88-D8BF45DF17EB}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26D31CCE-2B57-4891-8ECC-5031281210D9}
+	EndGlobalSection
+EndGlobal
