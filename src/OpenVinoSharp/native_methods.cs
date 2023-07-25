@@ -35,7 +35,10 @@ namespace OpenVinoSharp
         public extern static int ov_core_read_model_from_memory(IntPtr core, string model_path, IntPtr weights, ref IntPtr model);
         [DllImport(dll_extern, EntryPoint = "ov_core_compile_model", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static int ov_core_compile_model(IntPtr core, IntPtr model, ref sbyte device_name, ulong property_args_size, ref IntPtr compiled_model);
-       
+        [DllImport(dll_extern, EntryPoint = "ov_core_get_versions_by_device_name", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static int ov_core_get_versions_by_device_name(IntPtr core, ref sbyte device_name, IntPtr versions);
+        [DllImport(dll_extern, EntryPoint = "ov_core_versions_free", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static int ov_core_versions_free(IntPtr versions);
         #endregion
 
 
@@ -77,5 +80,15 @@ namespace OpenVinoSharp
         [DllImport(dll_extern, EntryPoint = "ov_tensor_data", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static int ov_tensor_data(IntPtr tensor, ref IntPtr data );
         #endregion
+
+        #region ov_shape.h
+
+        [DllImport(dll_extern, EntryPoint = "ov_shape_create", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static int ov_shape_create(long rank, ref long dims, IntPtr shape);
+        [DllImport(dll_extern, EntryPoint = "ov_shape_free", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static int ov_shape_free(IntPtr shape);
+      
+        #endregion
+
     }
 }

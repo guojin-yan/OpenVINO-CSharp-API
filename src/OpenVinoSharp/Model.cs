@@ -16,7 +16,7 @@ namespace OpenVinoSharp
         }
         public void free() 
         {
-            ov_status_e status = (ov_status_e)NativeMethods.ov_model_free(ptr);
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_model_free(ptr);
         }
     }
 }
