@@ -15,7 +15,7 @@ namespace OpenVinoSharp
     /// <ingroup>ov_runtime_c#_api</ingroup>
     public class Tensor
     {
-        private IntPtr ptr;
+        private IntPtr ptr = IntPtr.Zero;
         public IntPtr Ptr { get { return ptr; } set { ptr = value; } }
 
         /// <summary>
@@ -26,7 +26,30 @@ namespace OpenVinoSharp
         {
             this.ptr = ptr;
         }
-
+        /// <summary>
+        /// Tensor's destructor
+        /// </summary>
+        ~Tensor()
+        {
+            dispose();
+        }
+        /// <summary>
+        /// Release unmanaged resources
+        /// </summary>
+        public void dispose()
+        {
+            if (ptr == IntPtr.Zero)
+            {
+                return;
+            }
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core free error!");
+                return;
+            }
+            ptr = IntPtr.Zero;
+        }
         /// <summary>
         /// Get tensor shape
         /// </summary>

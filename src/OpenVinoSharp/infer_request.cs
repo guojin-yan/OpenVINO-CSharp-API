@@ -13,7 +13,7 @@ namespace OpenVinoSharp
     /// <ingroup>ov_runtime_c#_api</ingroup>
     public class InferRequest
     {
-        private IntPtr ptr;
+        private IntPtr ptr = IntPtr.Zero;
         public IntPtr Ptr { get { return ptr; } set { ptr = value; } }
    
         /// <summary>
@@ -23,6 +23,30 @@ namespace OpenVinoSharp
         public InferRequest(IntPtr ptr)
         {
             this.ptr = ptr;
+        }
+        /// <summary>
+        /// InferRequest's destructor
+        /// </summary>
+        ~InferRequest()
+        {
+            dispose();
+        }
+        /// <summary>
+        /// Release unmanaged resources
+        /// </summary>
+        public void dispose()
+        {
+            if (ptr == IntPtr.Zero)
+            {
+                return;
+            }
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core free error!");
+                return;
+            }
+            ptr = IntPtr.Zero;
         }
         /// <summary>
         ///  Gets an input/output tensor for inference by tensor name.

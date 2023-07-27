@@ -16,7 +16,7 @@ namespace OpenVinoSharp
     /// </remark>
     public class Core
     {
-        private IntPtr ptr;
+        private IntPtr ptr = IntPtr.Zero;
         public IntPtr Ptr { get { return ptr; } set { ptr = value; } }
 
         /// <summary>
@@ -43,6 +43,27 @@ namespace OpenVinoSharp
                 System.Diagnostics.Debug.WriteLine("Core init error!");
             }
             
+        }
+        /// <summary>
+        /// Core's destructor
+        /// </summary>
+        ~Core() { dispose(); }
+        /// <summary>
+        /// Release unmanaged resources
+        /// </summary>
+        public void dispose()
+        {
+            if (ptr == IntPtr.Zero)
+            {
+                return;
+            }
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core free error!");
+                return;
+            }
+            ptr = IntPtr.Zero;
         }
         /// <summary>
         /// Returns device plugins version information.
@@ -79,19 +100,7 @@ namespace OpenVinoSharp
             }
             return value;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public void free() 
-        {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core free error!");
-                return;
-            }
-            ptr = IntPtr.Zero;
-        }
+
 
         /// <summary>
         /// Reads models from IR / ONNX / PDPD / TF / TFLite file formats.

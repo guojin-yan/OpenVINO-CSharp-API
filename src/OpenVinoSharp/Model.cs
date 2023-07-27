@@ -8,15 +8,32 @@ namespace OpenVinoSharp
 {
     public class Model
     {
-        public IntPtr ptr;
+        public IntPtr ptr = IntPtr.Zero;
         public IntPtr Ptr { get { return ptr; } set { ptr = value; } }
         public Model(IntPtr ptr)
         {
             Ptr = ptr;
         }
-        public void free() 
+        /// <summary>
+        /// Model's destructor
+        /// </summary>
+        ~Model() { dispose(); }
+        /// <summary>
+        /// Release unmanaged resources
+        /// </summary>
+        public void dispose()
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_model_free(ptr);
+            if (ptr == IntPtr.Zero)
+            {
+                return;
+            }
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core free error!");
+                return;
+            }
+            ptr = IntPtr.Zero;
         }
     }
 }

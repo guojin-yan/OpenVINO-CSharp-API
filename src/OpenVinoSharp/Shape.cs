@@ -41,7 +41,7 @@ namespace OpenVinoSharp
         }
 
         public ov_shape shape;
-        private IntPtr ptr;
+        private IntPtr ptr = IntPtr.Zero;
         public IntPtr Ptr { get { return ptr; } set { ptr = value; } }
         /// <summary>
         /// Constructs Shape from the initialized IntPtr.
@@ -94,13 +94,29 @@ namespace OpenVinoSharp
                 System.Diagnostics.Debug.WriteLine("Shape init error!");
             }
         }
+        /// <summary>
+        /// Shape's destructor
+        /// </summary>
         ~Shape() 
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_shape_free(ptr);
+            dispose();
+        }
+        /// <summary>
+        /// Release unmanaged resources
+        /// </summary>
+        public void dispose()
+        {
+            if (ptr == IntPtr.Zero)
+            {
+                return;
+            }
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Shape free error!");
+                System.Diagnostics.Debug.WriteLine("Core free error!");
+                return;
             }
+            ptr = IntPtr.Zero;
         }
         /// <summary>
         /// Convert shape to string.

@@ -27,7 +27,30 @@ namespace OpenVinoSharp
         {
             this.ptr = ptr;
         }
-
+        /// <summary>
+        /// CompiledModel()'s destructor
+        /// </summary>
+        ~CompiledModel()
+        {
+            dispose();
+        }
+        /// <summary>
+        /// Release unmanaged resources
+        /// </summary>
+        public void dispose()
+        {
+            if (ptr == IntPtr.Zero)
+            {
+                return;
+            }
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core free error!");
+                return;
+            }
+            ptr = IntPtr.Zero;
+        }
         /// <summary>
         /// Creates an inference request object used to infer the compiled model.
         /// The created request has allocated input and output tensors (which can be changed later).
