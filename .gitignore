@@ -6,6 +6,7 @@
 # custom
 *.dll
 cache.json
+others/
 # User-specific files
 *.rsuser
 *.suo
