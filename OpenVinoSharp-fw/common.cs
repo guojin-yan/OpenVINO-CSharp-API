@@ -11,7 +11,7 @@ namespace OpenVinoSharp
     /// </summary>
     public enum ExceptionStatus : int
      {
-        OK = 0,  //!< SUCCESS!
+        OK = 0,  //!< SUCCESS
         // map exception to C++ interface
         GENERAL_ERROR = -1,       //!< GENERAL_ERROR
         NOT_IMPLEMENTED = -2,     //!< NOT_IMPLEMENTED

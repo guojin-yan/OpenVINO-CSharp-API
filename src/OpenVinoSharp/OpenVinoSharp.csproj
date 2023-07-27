@@ -1,12 +1,60 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Platforms>AnyCPU;x64</Platforms>
+    <TargetFrameworks>net6.0;net5.0;net48</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
+    <PackageId>OpenVinoSharp.win</PackageId>
+    
+    <Title>OpenVinoSharp</Title>
+    
+    <Version>3.0.114</Version>
+    
+    <Authors>Guojin Yan</Authors>
+    
+    <Company>Guojin Yan</Company>
+    
+    <Product>OpenVinoSharp</Product>
+    
+    <Description>基于C#平台调用OpenVINO套件部署深度学习模型。
+Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
+    
+    <PackageProjectUrl>https://github.com/guojin-yan/OpenVinoSharp</PackageProjectUrl>
+    
+    <RepositoryUrl>https://github.com/guojin-yan/OpenVinoSharp</RepositoryUrl>
+    
+    <RepositoryType>git</RepositoryType>
+    
+    <PackageOutputPath>../../nuget</PackageOutputPath>
+    
+    <NeutralLanguage>zh</NeutralLanguage>
+    
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include=".\openvino2023.0\*.*">
+      <Pack>true</Pack>
+      <PackagePath>build/openvino2023.0/%(Filename)%(Extension)</PackagePath>
+    </None>
+    
+    <None Include="OpenVinoSharp.win.targets">
+      <Pack>true</Pack>
+      <PackagePath>build/</PackagePath>
+    </None>
+  </ItemGroup>
+  
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <DefineConstants>$(DefineConstants);DOTNET_FRAMEWORK;</DefineConstants>
+  </PropertyGroup>
+
 
 </Project>
