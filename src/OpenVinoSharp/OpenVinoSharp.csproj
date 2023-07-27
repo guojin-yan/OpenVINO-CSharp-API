@@ -1,60 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!--生成多框架库-->
     <TargetFrameworks>net6.0;net5.0;net48</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
     <PackageId>OpenVinoSharp.win</PackageId>
-    
+    <!--设置NuGet包信息-->
     <Title>OpenVinoSharp</Title>
-    
-    <Version>3.0.115</Version>
-    
+    <Version>3.0.117</Version>
     <Authors>Guojin Yan</Authors>
-    
     <Company>Guojin Yan</Company>
-    
     <Product>OpenVinoSharp</Product>
-    
     <Description>基于C#平台调用OpenVINO套件部署深度学习模型。
 Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
-    
     <PackageProjectUrl>https://github.com/guojin-yan/OpenVinoSharp</PackageProjectUrl>
-    
     <RepositoryUrl>https://github.com/guojin-yan/OpenVinoSharp</RepositoryUrl>
-    
     <RepositoryType>git</RepositoryType>
-    
     <PackageOutputPath>../../nuget</PackageOutputPath>
-    
     <NeutralLanguage>zh</NeutralLanguage>
-    
     <PackageIcon>openvinosharp.png</PackageIcon>
-    
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    
     <PackageReleaseNotes>该版本为OpenVinoSharp3.0 预发行版本，功能还未完善，如使用中有问题，欢迎与我沟通联系。
-This version is a pre release version of OpenVinoSharp3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
-    
+This version is a pre release version of OpenVinoSharp3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes> 
   </PropertyGroup>
 
+
+  <!--添加编译文件-->
   <ItemGroup>
-    <None Include=".\openvino2023.0\*.*">
+    <None Include=".\build\OpenVinoSharp.win.targets">
       <Pack>true</Pack>
-      <PackagePath>build/openvino2023.0/%(Filename)%(Extension)</PackagePath>
+      <PackagePath>build\</PackagePath>
     </None>
-    <None Include="..\..\nuget\openvinosharp.png">
+    <None Include=".\build\openvino2023.0\*.*">
+      <Pack>true</Pack>
+      <PackagePath>build\openvino2023.0\%(Filename)%(Extension)</PackagePath>
+    </None>
+    <None Include="..\..\nuget\openvinosharp.png" Link="build\openvinosharp.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\nuget\README.md">
+    <None Include="..\..\nuget\README.md" Link="build\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
-    </None>
-    
-    <None Include="OpenVinoSharp.win.targets">
-      <Pack>true</Pack>
-      <PackagePath>build/</PackagePath>
     </None>
   </ItemGroup>
   
@@ -66,7 +54,7 @@ This version is a pre release version of OpenVinoSharp3.0 and its features are n
     <Reference Include="Microsoft.CSharp" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
-
+  
   <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
     <DefineConstants>$(DefineConstants);DOTNET_FRAMEWORK;</DefineConstants>
   </PropertyGroup>
