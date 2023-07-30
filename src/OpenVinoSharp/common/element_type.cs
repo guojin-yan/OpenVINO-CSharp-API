@@ -8,8 +8,13 @@ using System.Xml.Linq;
 
 namespace OpenVinoSharp
 {
+    public class OvType : element.Type
+    {
+        public OvType(ElementType t) : base(t){} 
+    };
     namespace element
-    {  
+    {
+ 
         /// <summary>
         /// Enum to define possible element types
         /// </summary>
@@ -59,8 +64,9 @@ namespace OpenVinoSharp
         /// </summary>
         /// <ingroup>ov_element_c#_api</ingroup>
         public class Type {
-            private Type_t m_type = Type_t.undefined ;
+            protected Type_t m_type = Type_t.undefined ;
             public Type(Type_t t) { m_type = t; }
+            public Type(ElementType t) { m_type = (Type_t)t; }
             public Type(Type t) {
                 m_type = t.m_type;
             } 
@@ -68,6 +74,9 @@ namespace OpenVinoSharp
                 new Type(type_from_string(type));
             }
 
+            public ElementType get_type() {
+                return (ElementType)m_type;
+            }
 
             public string c_type_string()
             {

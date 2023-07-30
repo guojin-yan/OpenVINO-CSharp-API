@@ -22,6 +22,11 @@ namespace OpenVinoSharp
         /// </summary>
         public string description;
 
+        public Version(string buildNumber, string description) {
+            this.buildNumber = buildNumber;
+            this.description = description;
+        }
+
         /// <summary>
         /// Convert Version to output string
         /// </summary>

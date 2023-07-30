@@ -11,29 +11,84 @@ namespace OpenVinoSharp
     /// </summary>
     public enum ExceptionStatus : int
      {
-        OK = 0,  //!< SUCCESS!
+        /// <summary>
+        /// SUCCESS!
+        /// </summary>
+        OK = 0,
         // map exception to C++ interface
-        GENERAL_ERROR = -1,       //!< GENERAL_ERROR
-        NOT_IMPLEMENTED = -2,     //!< NOT_IMPLEMENTED
-        NETWORK_NOT_LOADED = -3,  //!< NETWORK_NOT_LOADED
-        PARAMETER_MISMATCH = -4,  //!< PARAMETER_MISMATCH
-        NOT_FOUND = -5,           //!< NOT_FOUND
-        OUT_OF_BOUNDS = -6,       //!< OUT_OF_BOUNDS
+        /// <summary>
+        /// GENERAL_ERROR
+        /// </summary>
+        GENERAL_ERROR = -1,
+        /// <summary>
+        /// NOT_IMPLEMENTED
+        /// </summary>
+        NOT_IMPLEMENTED = -2,
+        /// <summary>
+        /// NETWORK_NOT_LOADED
+        /// </summary>
+        NETWORK_NOT_LOADED = -3,
+        /// <summary>
+        ///  PARAMETER_MISMATCH
+        /// </summary>
+        PARAMETER_MISMATCH = -4,
+        /// <summary>
+        /// NOT_FOUND
+        /// </summary>
+        NOT_FOUND = -5,
+        /// <summary>
+        /// OUT_OF_BOUNDS
+        /// </summary>
+        OUT_OF_BOUNDS = -6,
 
         // exception not of std::exception derived type was thrown
-        UNEXPECTED = -7,          //!< UNEXPECTED
-        REQUEST_BUSY = -8,        //!< REQUEST_BUSY
-        RESULT_NOT_READY = -9,    //!< RESULT_NOT_READY
-        NOT_ALLOCATED = -10,      //!< NOT_ALLOCATED
-        INFER_NOT_STARTED = -11,  //!< INFER_NOT_STARTED
-        NETWORK_NOT_READ = -12,   //!< NETWORK_NOT_READ
-        INFER_CANCELLED = -13,    //!< INFER_CANCELLED
+        /// <summary>
+        /// UNEXPECTED
+        /// </summary>
+        UNEXPECTED = -7,
+        /// <summary>
+        /// REQUEST_BUSY
+        /// </summary>
+        REQUEST_BUSY = -8,
+        /// <summary>
+        /// RESULT_NOT_READY
+        /// </summary>
+        RESULT_NOT_READY = -9,
+        /// <summary>
+        /// NOT_ALLOCATED
+        /// </summary>
+        NOT_ALLOCATED = -10,
+        /// <summary>
+        /// INFER_NOT_STARTED
+        /// </summary>
+        INFER_NOT_STARTED = -11,
+        /// <summary>
+        /// NETWORK_NOT_READ
+        /// </summary>
+        NETWORK_NOT_READ = -12,
+        /// <summary>
+        /// INFER_CANCELLED
+        /// </summary>
+        INFER_CANCELLED = -13,
 
         // exception in C wrapper
-        INVALID_C_PARAM = -14,         //!< INVALID_C_PARAM
-        UNKNOWN_C_ERROR = -15,         //!< UNKNOWN_C_ERROR
-        NOT_IMPLEMENT_C_METHOD = -16,  //!< NOT_IMPLEMENT_C_METHOD
-        UNKNOW_EXCEPTION = -17,        //!< UNKNOW_EXCEPTION
+
+        /// <summary>
+        /// INVALID_C_PARAM
+        /// </summary>
+        INVALID_C_PARAM = -14,
+        /// <summary>
+        /// UNKNOWN_C_ERROR
+        /// </summary>
+        UNKNOWN_C_ERROR = -15,
+        /// <summary>
+        /// NOT_IMPLEMENT_C_METHOD
+        /// </summary>
+        NOT_IMPLEMENT_C_METHOD = -16,
+        /// <summary>
+        /// UNKNOW_EXCEPTION
+        /// </summary>
+        UNKNOW_EXCEPTION = -17,
     }
 
     /// <summary>
@@ -41,24 +96,78 @@ namespace OpenVinoSharp
     /// </summary>
     public enum ElementType : uint
     {
-        UNDEFINED = 0U,  //!< Undefined element type
-        DYNAMIC,         //!< Dynamic element type
-        BOOLEAN,         //!< boolean element type
-        BF16,            //!< bf16 element type
-        F16,             //!< f16 element type
-        F32,             //!< f32 element type
-        F64,             //!< f64 element type
-        I4,              //!< i4 element type
-        I8,              //!< i8 element type
-        I16,             //!< i16 element type
-        I32,             //!< i32 element type
-        I64,             //!< i64 element type
-        U1,              //!< binary element type
-        U4,              //!< u4 element type
-        U8,              //!< u8 element type
-        U16,             //!< u16 element type
-        U32,             //!< u32 element type
-        U64,             //!< u64 element type
+        /// <summary>
+        /// Undefined element type
+        /// </summary>
+        UNDEFINED = 0U,
+        /// <summary>
+        ///  Dynamic element type
+        /// </summary>
+        DYNAMIC,
+        /// <summary>
+        /// boolean element type
+        /// </summary>
+        BOOLEAN,
+        /// <summary>
+        /// bf16 element type
+        /// </summary>
+        BF16,
+        /// <summary>
+        /// f16 element type
+        /// </summary>
+        F16,
+        /// <summary>
+        /// f32 element type
+        /// </summary>
+        F32,
+        /// <summary>
+        /// f64 element type
+        /// </summary>
+        F64,
+        /// <summary>
+        /// i4 element type
+        /// </summary>
+        I4,
+        /// <summary>
+        /// i8 element type
+        /// </summary>
+        I8,
+        /// <summary>
+        /// i16 element type
+        /// </summary>
+        I16,
+        /// <summary>
+        /// i32 element type
+        /// </summary>
+        I32,
+        /// <summary>
+        /// i64 element type
+        /// </summary>
+        I64,
+        /// <summary>
+        /// binary element type
+        /// </summary>
+        U1,
+        /// <summary>
+        /// u4 element type
+        /// </summary>
+        U4,
+        /// <summary>
+        /// u8 element type
+        /// </summary>
+        U8,
+        /// <summary>
+        /// u16 element type
+        /// </summary>
+        U16,
+        /// <summary>
+        /// u32 element type
+        /// </summary>
+        U32,
+        /// <summary>
+        /// u64 element type
+        /// </summary>
+        U64,
     };
 
 }
