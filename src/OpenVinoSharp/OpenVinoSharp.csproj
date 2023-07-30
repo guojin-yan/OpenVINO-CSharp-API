@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <!--生成多框架库;-->
-    <TargetFrameworks>net6.0;net5.0;net48</TargetFrameworks>
+    <TargetFrameworks>net6.0;net48</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
     <PackageId>OpenVinoSharp.win</PackageId>
     <!--设置NuGet包信息-->
     <Title>OpenVinoSharp</Title>
-    <Version>3.0.117</Version>
+    <Version>3.0.119</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVinoSharp</Product>
@@ -57,6 +57,7 @@ This version is a pre release version of OpenVinoSharp3.0 and its features are n
   
   
   <ItemGroup>
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.8.0.20230708" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
   

@@ -127,7 +127,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_size(m_ptr, ref size);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Tensor get_shape error : " + status.ToString());
+                System.Diagnostics.Debug.WriteLine("Tensor get_size error : " + status.ToString());
             }
             return size;
         }
@@ -137,7 +137,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_byte_size(m_ptr, ref size);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Tensor get_shape error : " + status.ToString());
+                System.Diagnostics.Debug.WriteLine("Tensor get_byte_size error : " + status.ToString());
             }
             return size;
         }
