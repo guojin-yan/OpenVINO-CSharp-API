@@ -7,6 +7,8 @@
 *.dll
 cache.json
 others/
+hello_classification/
+
 # User-specific files
 *.rsuser
 *.suo
