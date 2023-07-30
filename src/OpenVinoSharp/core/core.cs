@@ -40,7 +40,8 @@ namespace OpenVinoSharp
             status = (ExceptionStatus)NativeMethods.ov_core_create(ref ptr);
             if (status != 0) {
                 ptr = IntPtr.Zero;
-                System.Diagnostics.Debug.WriteLine("Core init error!");
+
+                System.Diagnostics.Debug.WriteLine("Core init error : " + status.ToString());
             }
             
         }
@@ -57,12 +58,8 @@ namespace OpenVinoSharp
             {
                 return;
             }
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core free error!");
-                return;
-            }
+            NativeMethods.ov_core_free(ptr);
+    
             ptr = IntPtr.Zero;
         }
         /// <summary>
@@ -83,7 +80,7 @@ namespace OpenVinoSharp
             status = (ExceptionStatus)NativeMethods.ov_core_get_versions_by_device_name(ptr, ref c_device_name[0], ptr_core_version_s);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Core get_versions() error!");
+                System.Diagnostics.Debug.WriteLine("Core get_versions() error : " + status.ToString());
                 return new KeyValuePair<string, Version>();
             }
             var temp1 = Marshal.PtrToStructure(ptr_core_version_s, typeof(CoreVersionList));
@@ -95,7 +92,7 @@ namespace OpenVinoSharp
             status = (ExceptionStatus)NativeMethods.ov_core_versions_free(ptr_core_version_s);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Core get_versions() error!");
+                System.Diagnostics.Debug.WriteLine("Core get_versions() error : " + status.ToString());
                 return new KeyValuePair<string, Version>();
             }
             return value;
@@ -127,7 +124,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_read_model_unicode(ptr, model_path, bin_path, ref model_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Core read_model() error!");
+                System.Diagnostics.Debug.WriteLine("Core read_model() error : " + status.ToString());
                 return new Model(IntPtr.Zero);
             }
 
@@ -151,10 +148,10 @@ namespace OpenVinoSharp
             
             IntPtr compiled_model_ptr = new IntPtr();
             sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_compile_model(ptr, model.ptr, ref c_device[0], property_args_size, ref compiled_model_ptr);
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_compile_model(ptr, model.m_ptr, ref c_device[0], property_args_size, ref compiled_model_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Core compiled_model() error!");
+                System.Diagnostics.Debug.WriteLine("Core compiled_model() error : " + status.ToString());
                 return new CompiledModel(IntPtr.Zero);
             }
             return new CompiledModel(compiled_model_ptr);

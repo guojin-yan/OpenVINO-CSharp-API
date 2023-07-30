@@ -1,4 +1,5 @@
 ﻿using OpenVinoSharp.element;
+using OpenVinoSharp.preprocess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,8 @@ namespace OpenVinoSharp
     /// <ingroup>ov_runtime_c#_api</ingroup>
     public class Tensor
     {
-        private IntPtr ptr = IntPtr.Zero;
-        public IntPtr Ptr { get { return ptr; } set { ptr = value; } }
+        private IntPtr m_ptr = IntPtr.Zero;
+        public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
 
         /// <summary>
         /// Constructs Tensor from the initialized std::shared_ptr
@@ -24,8 +25,28 @@ namespace OpenVinoSharp
         /// <param name="ptr"></param>
         public Tensor(IntPtr ptr)
         {
-            this.ptr = ptr;
+            if (ptr == IntPtr.Zero)
+            {
+                System.Diagnostics.Debug.WriteLine("Tensor init error : ptr is null!");
+                return;
+            }
+            this.m_ptr = ptr;
         }
+
+        public Tensor(element.Type type, Shape shape, OvMat mat) 
+        {
+            int l =mat.mat_data.Length;
+            IntPtr data = Marshal.AllocHGlobal(l);
+            Marshal.Copy(mat.mat_data, 0, data, (int)mat.mat_data_size);
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)type.get_type(), shape.shape, data, ref m_ptr);
+            if (status != 0)
+            {
+                m_ptr = IntPtr.Zero;
+                System.Diagnostics.Debug.WriteLine("Tensor init error : " + status.ToString());
+            }
+        }
+
         /// <summary>
         /// Tensor's destructor
         /// </summary>
@@ -38,17 +59,12 @@ namespace OpenVinoSharp
         /// </summary>
         public void dispose()
         {
-            if (ptr == IntPtr.Zero)
+            if (m_ptr == IntPtr.Zero)
             {
                 return;
             }
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core free error!");
-                return;
-            }
-            ptr = IntPtr.Zero;
+            NativeMethods.ov_core_free(m_ptr);
+            m_ptr = IntPtr.Zero;
         }
         /// <summary>
         /// Get tensor shape
@@ -58,9 +74,13 @@ namespace OpenVinoSharp
         {
             int l = Marshal.SizeOf(typeof(Shape.ov_shape));
             IntPtr shape_ptr = Marshal.AllocHGlobal(l);
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_shape(ptr, shape_ptr);
-            Console.WriteLine("Tensor get_shape: " + status);
-            
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_shape(m_ptr, shape_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Tensor get_shape error : {0}!", status.ToString());
+                shape_ptr= IntPtr.Zero;
+            }
+
             return new Shape(shape_ptr);
         }
         /// <summary>
@@ -70,8 +90,12 @@ namespace OpenVinoSharp
         public element.Type get_element_type() 
         {
             uint type = 100;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_element_type(ptr, out type);
-            Console.WriteLine("Tensor get_element_type(): " + status);
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_element_type(m_ptr, out type);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Tensor get_element_type error : {0}!", status.ToString());
+                type = 0;
+            }
             element.Type t = new element.Type((Type_t)type);
             return t;
         }
@@ -85,18 +109,38 @@ namespace OpenVinoSharp
         {
             int length = data.Length;
             IntPtr data_ptr = new IntPtr();
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_data(ptr, ref data_ptr);
-            System.Diagnostics.Debug.WriteLine("Tensor set_data(): " + status);
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_data(m_ptr, ref data_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Tensor dispose error : " + status.ToString());
+            }
             Marshal.Copy(data, 0, data_ptr, length);
         }
-        public float[] get_data(int length)
+        public T[] get_data<T>(int length)
         {
             IntPtr data_ptr = new IntPtr();
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_data(ptr, ref data_ptr);
-            System.Diagnostics.Debug.WriteLine("Tensor set_data(): " + status);
-            float[] data = new float[length];
-            Marshal.Copy(data_ptr, data, 0, length);
-            return data;
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_data(m_ptr, ref data_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Tensor dispose error : " + status.ToString());
+            }
+            string t = typeof(T).ToString();
+            T[] result = new T[length];
+            if (t == "System.Byte")
+            {
+                byte[] data = new byte[length];
+                Marshal.Copy(data_ptr, data, 0, length);
+                result = (T[])Convert.ChangeType(data, typeof(T[]));
+                return result;
+            }
+            else
+            {
+                float[] data = new float[length];
+                Marshal.Copy(data_ptr, data, 0, length);
+                result = (T[])Convert.ChangeType(data, typeof(T[]));
+                return result;
+            }
         }
+
     }
 }

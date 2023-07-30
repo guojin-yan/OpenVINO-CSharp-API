@@ -5,7 +5,7 @@ namespace OpenVinoSharp
 {    /// <summary>
      /// Global functions under ov namespace
      /// </summary>
-    public class ov
+    public class Ov
     {
         /// <summary>
         /// Get version of OpenVINO.
@@ -23,13 +23,11 @@ namespace OpenVinoSharp
             }
             var temp = Marshal.PtrToStructure(ptr, typeof(Version));
             Version version = (Version)temp;
+            string build = String.Copy(version.buildNumber);
+            string description = String.Copy(version.description);
+            Version new_version = new Version(build, description);
             status = (ExceptionStatus)NativeMethods.ov_version_free(ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("ov get_openvino_version() error!");
-                return new Version();
-            }
-            return version;
+            return new_version;
         }
     }
 }

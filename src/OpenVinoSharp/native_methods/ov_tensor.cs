@@ -9,7 +9,8 @@ namespace OpenVinoSharp
 {
     public partial class NativeMethods
     {
-
+        [DllImport(dll_extern, EntryPoint = "ov_tensor_create_from_host_ptr", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static int ov_tensor_create_from_host_ptr(uint type, Shape.ov_shape shape, IntPtr host_ptr, ref IntPtr tensor);
         [DllImport(dll_extern, EntryPoint = "ov_tensor_get_shape", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static int ov_tensor_get_shape(IntPtr tensor, IntPtr shape);
         [DllImport(dll_extern, EntryPoint = "ov_tensor_get_element_type", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]

@@ -41,15 +41,20 @@ namespace OpenVinoSharp
         }
 
         public ov_shape shape;
-        private IntPtr ptr = IntPtr.Zero;
-        public IntPtr Ptr { get { return ptr; } set { ptr = value; } }
+        private IntPtr m_ptr = IntPtr.Zero;
+        public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
         /// <summary>
         /// Constructs Shape from the initialized IntPtr.
         /// </summary>
         /// <param name="ptr">Initialized IntPtr</param>
         public Shape(IntPtr ptr)
         {
-            this.ptr = ptr;
+            if (ptr == IntPtr.Zero) 
+            {
+                System.Diagnostics.Debug.WriteLine("Shape init error : ptr is null!");
+                return;
+            }
+            this.m_ptr = ptr;
             var temp = Marshal.PtrToStructure(ptr, typeof(ov_shape));
             shape = (ov_shape)temp;
             long[] dims = shape.get_dims();
@@ -69,11 +74,15 @@ namespace OpenVinoSharp
             {
                 this.Add(axis_lengths[i]);
             }
+            int l = Marshal.SizeOf(typeof(Shape.ov_shape));
+            m_ptr = Marshal.AllocHGlobal(l);
             ExceptionStatus status = 
-                (ExceptionStatus)NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths.ToArray()[0], ptr);
+                (ExceptionStatus)NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths.ToArray()[0], m_ptr);
+            var temp = Marshal.PtrToStructure(m_ptr, typeof(ov_shape));
+            shape = (ov_shape)temp;
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Shape init error!");
+                System.Diagnostics.Debug.WriteLine("Shape init error : {0}!", status.ToString());
             }
         }
         /// <summary>
@@ -87,11 +96,15 @@ namespace OpenVinoSharp
             {
                 this.Add(axis_lengths[i]);
             }
+            int l = Marshal.SizeOf(typeof(Shape.ov_shape));
+            m_ptr = Marshal.AllocHGlobal(l);
             ExceptionStatus status =
-                (ExceptionStatus)NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths[0], ptr);
+                (ExceptionStatus)NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths[0], m_ptr);
+            var temp = Marshal.PtrToStructure(m_ptr, typeof(ov_shape));
+            shape = (ov_shape)temp;
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Shape init error!");
+                System.Diagnostics.Debug.WriteLine("Shape init error : {0}!", status.ToString());
             }
         }
         /// <summary>
@@ -106,17 +119,12 @@ namespace OpenVinoSharp
         /// </summary>
         public void dispose()
         {
-            if (ptr == IntPtr.Zero)
+            if (m_ptr == IntPtr.Zero)
             {
                 return;
             }
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core free error!");
-                return;
-            }
-            ptr = IntPtr.Zero;
+           NativeMethods.ov_core_free(m_ptr);
+            m_ptr = IntPtr.Zero;
         }
         /// <summary>
         /// Convert shape to string.

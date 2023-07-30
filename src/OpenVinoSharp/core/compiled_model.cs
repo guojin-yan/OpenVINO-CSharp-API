@@ -43,12 +43,8 @@ namespace OpenVinoSharp
             {
                 return;
             }
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_free(ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core free error!");
-                return;
-            }
+            NativeMethods.ov_core_free(ptr);
+
             ptr = IntPtr.Zero;
         }
         /// <summary>
