@@ -8,7 +8,7 @@
     <PackageId>OpenVinoSharp.win</PackageId>
     <!--设置NuGet包信息-->
     <Title>OpenVinoSharp</Title>
-    <Version>3.0.119</Version>
+    <Version>3.0.120</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVinoSharp</Product>
