@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "yolov8": {
+      "commandName": "Project",
+      "commandLineArgs": "det E:\\GitSpace\\OpenVinoSharp\\model\\yolov8s.xml E:\\GitSpace\\OpenVinoSharp\\dataset\\image\\demo_2.jpg CPU E:\\GitSpace\\OpenVinoSharp\\dataset\\lable\\COCO_lable.txt"
+    }
+  }
+}

@@ -18,59 +18,35 @@ namespace yolov8
             Console.WriteLine("Description : {0}", version.description);
             Console.WriteLine("Build number: {0}", version.buildNumber);
 
-            //string device_name = "AUTO";
-            //if (args.Length > 4)
-            //{
-            //    device_name = args[4];
-            //    Console.WriteLine("Set inference device  {0}.", args[4]);
-            //}
-            //else
-            //{
-            //    Console.WriteLine("No inference device specified, default device set to AUTO.");
-            //}
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Please enter the complete command parameters: <type> <>model_path> <image_path> <device_name> <lable_path>");
+            }
+            string device_name = "AUTO";
+            if (args.Length > 3)
+            {
+                device_name = args[3];
+                Console.WriteLine("Set inference device  {0}.", args[3]);
+            }
+            else
+            {
+                Console.WriteLine("No inference device specified, default device set to AUTO.");
+            }
+            string lable = String.Empty;
+            if (args.Length > 4) 
+            {
+                lable = args[4];
+            }
 
-            //if (args[0] == "det")
-            //{
-            //    //Yolov8Det.run(args[1], args[2], args[3], device_name);
-            //}
-            //else if (args[0] == "seg")
-            //{
-            //    //Yolov8Seg.run(args[1], args[2], args[3], device_name);
-            //}
-            //else if (args[0] == "pose")
-            //{
-            //    //Yolov8Pose.run(args[1], args[2], args[3], device_name);
-            //}
-            //else if (args[0] == "cls")
-            //{
-            //    //Yolov8Cls.run(args[1], args[2], args[3], device_name);
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Please specify the model prediction type, such as 'det'、'seg'、'pose'、'cls'");
-            //}
+            if (args[0] == "det" || args[0] == "seg"|| args[0] == "pose"|| args[0] == "cls")
+            {
+                yolov8_infer(args[0], args[1], args[2], device_name, lable);
+            }
+            else
+            {
+                Console.WriteLine("Please specify the model prediction type, such as 'det'、'seg'、'pose'、'cls'");
+            }
 
-
-            //yolov8_infer("det", "E:\\GitSpace\\OpenVinoSharp\\model\\yolov8s.xml",
-            //    "E:\\GitSpace\\OpenVinoSharp\\dataset\\image\\demo_2.jpg", 
-            //    "CPU",
-            //    @"E:\GitSpace\OpenVinoSharp\dataset\lable\COCO_lable.txt");
-
-
-            yolov8_infer("seg", "E:\\GitSpace\\OpenVinoSharp\\model\\yolov8s-seg.xml",
-                            "E:\\GitSpace\\OpenVinoSharp\\dataset\\image\\demo_2.jpg",
-                            "CPU",
-                            @"E:\GitSpace\OpenVinoSharp\dataset\lable\COCO_lable.txt");
-
-            //yolov8_infer("pose", "E:\\GitSpace\\OpenVinoSharp\\model\\yolov8s-pose.xml",
-            //                "E:\\GitSpace\\OpenVinoSharp\\dataset\\image\\demo_9.jpg",
-            //                "CPU",
-            //                @"E:\GitSpace\OpenVinoSharp\dataset\lable\COCO_lable.txt");
-
-            //yolov8_infer("cls", "E:\\GitSpace\\OpenVinoSharp\\model\\yolov8s-cls.xml",
-            //    "E:\\GitSpace\\OpenVinoSharp\\dataset\\image\\demo_7.jpg",
-            //    "CPU",
-            //    @"E:\GitSpace\OpenVinoSharp\dataset\lable\COCO_lable.txt");
         }
 
         static void yolov8_infer(string flg, string model_path,  string image_path, string device, string classer_path) 
@@ -113,8 +89,7 @@ namespace yolov8
             infer_request.infer();
 
             // -------- Step 9. Process output --------
-
-
+            Console.WriteLine();
             if (flg == "det")
             {
                 Tensor output_tensor = infer_request.get_output_tensor();
@@ -125,10 +100,16 @@ namespace yolov8
                 Result result = process.process_det_result(output_data);
                 process.read_class_names(classer_path);
 
-                Mat result_image = process.draw_det_result(result, image);
                 process.print_result(result);
-                Cv2.ImShow("result", result_image);
-                Cv2.WaitKey(0);
+
+                if (classer_path != String.Empty)
+                {
+                    process.read_class_names(classer_path);
+                    Mat result_image = process.draw_det_result(result, image);
+                    Cv2.ImShow("result", result_image);
+                    Cv2.WaitKey(0);
+                }
+
             }
             else if (flg == "seg")
             {
@@ -142,12 +123,17 @@ namespace yolov8
 
                 ResultProcess process = new ResultProcess(factors, 80);
                 Result result = process.process_seg_result(output_data_det, output_data_pro);
-                process.read_class_names(classer_path);
-
-                Mat result_image = process.draw_seg_result(result, image);
+               
                 process.print_result(result);
-                Cv2.ImShow("result", result_image);
-                Cv2.WaitKey(0);
+
+                if (classer_path != String.Empty) 
+                {
+                    process.read_class_names(classer_path);
+                    Mat result_image = process.draw_seg_result(result, image);
+                    Cv2.ImShow("result", result_image);
+                    Cv2.WaitKey(0);
+                }
+
             }
             else if (flg == "pose")
             {
@@ -157,7 +143,7 @@ namespace yolov8
 
                 ResultProcess process = new ResultProcess(factors, 80);
                 Result result = process.process_pose_result(output_data);
-                
+
 
                 Mat result_image = process.draw_pose_result(result, image, 0.2);
                 process.print_result(result);
