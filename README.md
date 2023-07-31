@@ -14,7 +14,14 @@
 
 ## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">更新日志
 
+#### 🔥 **2023.6.19 ：发布 OpenVinoSharp 3.0**
 
+- 🗳 **OpenVinoSharp 库：**
+  - 升级OpenVinoSharp 2.0 到 OpenVinoSharp 3.0 版本，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。
+- 🛹**应用案例：**
+  - OpenVinoSharp部署Yolov8模型实例。
+- 🔮 **NuGet包：**
+  - 制作并发布NuGet包，发布**OpenVinoSharp.win 3.0.120**  ，包含OpenVINO 2023.0 依赖项。
 
 ## <img title="更新日志" src="https://s2.loli.net/2023/01/26/Zs1VFUT4BGQgfE9.png" alt="" width="40"> 简介
 
@@ -41,9 +48,7 @@
 
 ## <img title="安装" src="https://s2.loli.net/2023/01/26/bm6WsE5cfoVvj7i.png" alt="" width="50"> 安装
 
-&emsp;    该项目已经打包成NuGet程序包并发布到NuGet平台，用户可以通过Visual Studio的NuGet程序包功能安装下载，当前最先版本为3.0.1版本。
-
-<div align=center><span><img src="https://s2.loli.net/2023/07/27/OdEMVKmeZ8JYuxn.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/07/31/UFAgRbBuhcsqOEv.png" height=500/></span></div>
 
 &emsp;    如果使用dotnet编译，可以通过以下方式安装：
 
@@ -82,7 +87,13 @@ namespace test
 }
 ```
 
-项目中所封装的类、对象例如Core、Model、Tensor等，董事通过调用 C api 接口实现，具有非托管资源，需要调用**dispose()**方法处理，否则就会出现内存泄漏。
+项目中所封装的类、对象例如Core、Model、Tensor等，通过调用 C api 接口实现，具有非托管资源，需要调用**dispose()**方法处理，否则就会出现内存泄漏。
+
+
+
+## <img title="" src="https://s2.loli.net/2023/02/09/2ApTvzLDwlYS6Ks.png" alt="" width="40"> 应用案例
+
+[OpenVinoSharp部署Yolov8模型实例](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0/demos/yolov8)
 
 ## 🎖 贡献
 

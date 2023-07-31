@@ -12,9 +12,16 @@
 
 ## This is OpenVinoSharp 3.0 version, which is still under construction and its features are not yet fully developed. If there are any issues during use, please feel free to contact me. If you are interested in this project, you can also join our development.🥰🥰🥰
 
-## Update log
+## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">Update log
 
+#### 🔥 **2023.6.19 ： release OpenVinoSharp 3.0**
 
+- 🗳 **OpenVinoSharp ：**
+  - Upgrade OpenVinoSharp 2.0 to OpenVinoSharp 3.0, changing from refactoring the C++API to directly reading OpenVino ™  The official C API makes the application more flexible and supports a richer range of functions.
+- 🛹**Application Cases：**
+  - OpenVinoSharp Deployment Yolov8 Model Example。
+- 🔮 **NuGe：**
+  - Create and publish NuGet package, release * * OpenVinoSharp. win 3.0.120 * *, including OpenVino 2023.0 dependencies.
 
 ## <img title="更新日志" src="https://s2.loli.net/2023/01/26/Zs1VFUT4BGQgfE9.png" alt="" width="40"> Introduction
 
@@ -41,7 +48,7 @@
 
 &emsp;   The project has been packaged into a NuGet package and published to the NuGet platform. Users can install and download it through the NuGet package feature of Visual Studio. The current earliest version is version 3.0.1.
 
-<div align=center><span><img src="https://s2.loli.net/2023/07/27/OdEMVKmeZ8JYuxn.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/07/31/UFAgRbBuhcsqOEv.png" height=500/></span></div>
 
 &emsp;    If you use dotnet compilation, you can install it in the following ways:
 
@@ -81,6 +88,10 @@ namespace test
 ```
 
 The classes and objects encapsulated in the project, such as Core, Model, Tensor, are implemented by the directors by calling the C api interface. They have unmanaged resources and need to call the **dispose() ** method for processing. Otherwise, Memory leak will occur.
+
+## <img title="" src="https://s2.loli.net/2023/02/09/2ApTvzLDwlYS6Ks.png" alt="" width="40"> Application Cases
+
+[OpenVinoSharp Deployment Yolov8 Model Example](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0/demos/yolov8)
 
 ## 🎖 Contribute
 
