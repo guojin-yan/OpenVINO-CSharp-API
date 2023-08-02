@@ -89,7 +89,7 @@ namespace OpenVinoSharp
             var temp2 = Marshal.PtrToStructure(core_version_s.core_version, typeof(CoreVersion));
             CoreVersion core_version = (CoreVersion)temp2;
             KeyValuePair<string, Version> value = new KeyValuePair<string, Version>(core_version.device_name, core_version.version);
-            status = (ExceptionStatus)NativeMethods.ov_core_versions_free(ptr_core_version_s);
+            NativeMethods.ov_core_versions_free(ptr_core_version_s);
             if (status != 0)
             {
                 System.Diagnostics.Debug.WriteLine("Core get_versions() error : " + status.ToString());
