@@ -8,101 +8,98 @@
         <img src="https://img.shields.io/badge/Framework-.NET5.0%2C%20.NET6.0%2C%20.NET48-pink.svg">
     </a>    
 
-简体中文| [English](README-en.md)
+[简体中文](README-cn.md) | English
 
-## 这是OpenVinoSharp 3.0 版本，该版本还在建设中，功能还未完善，如使用中有问题，欢迎与我沟通联系。如果对该项目感兴趣，也可以加入到我们的开发中来。🥰🥰🥰🥰
+## This is OpenVinoSharp 3.0 version, which is still under construction and its features are not yet fully developed. If there are any issues during use, please feel free to contact me. If you are interested in this project, you can also join our development.🥰🥰🥰
 
-## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">更新日志
+## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">Update log
 
-#### 🔥 **2023.6.19 ：发布 OpenVinoSharp 3.0**
+#### 🔥 **2023.6.19 ： release OpenVinoSharp 3.0**
 
-- 🗳 **OpenVinoSharp 库：**
-  - 升级OpenVinoSharp 2.0 到 OpenVinoSharp 3.0 版本，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。
-- 🛹**应用案例：**
-  - OpenVinoSharp部署Yolov8模型实例。
-- 🔮 **NuGet包：**
-  - 制作并发布NuGet包，发布**OpenVinoSharp.win 3.0.120**  ，包含OpenVINO 2023.0 依赖项。
+- 🗳 **OpenVinoSharp ：**
+  - Upgrade OpenVinoSharp 2.0 to OpenVinoSharp 3.0, changing from refactoring the C++API to directly reading OpenVino ™  The official C API makes the application more flexible and supports a richer range of functions.
+- 🛹**Application Cases：**
+  - OpenVinoSharp Deployment Yolov8 Model Example。
+- 🔮 **NuGe：**
+  - Create and publish NuGet package, release * * OpenVinoSharp. win 3.0.120 * *, including OpenVino 2023.0 dependencies.
 
-## <img title="更新日志" src="https://s2.loli.net/2023/01/26/Zs1VFUT4BGQgfE9.png" alt="" width="40"> 简介
+## <img title="更新日志" src="https://s2.loli.net/2023/01/26/Zs1VFUT4BGQgfE9.png" alt="" width="40"> Introduction
 
-&emsp;    英特尔发行版 [OpenVINO™](www.openvino.ai)工具套件基于oneAPI 而开发，可以加快高性能计算机视觉和深度学习视觉应用开发速度工具套件，适用于从边缘到云的各种英特尔平台上，帮助用户更快地将更准确的真实世界结果部署到生产系统中。通过简化的开发工作流程， OpenVINO™可赋能开发者在现实世界中部署高性能应用程序和算法。
-&emsp;    在推理后端，得益于  OpenVINO™ 工具套件提供的“一次编写，任意部署”的特性，转换后的模型能够在不同的英特尔硬件平台上运行，而无需重新构建，有效简化了构建与迁移过程。可以说，如果开发者希望在英特尔平台上实现最佳的推理性能，并具备多平台适配和兼容性，  OpenVINO™ 是不可或缺的部署工具首选。 OpenVINO™最新版本2023.0，引入了一系列旨在增强开发人员体验的新功能、改进和弃用，突出亮点是通过最大限度地减少离线转换、扩大模型支持和推进硬件优化来改善开发者之旅。
+&emsp;    Intel Distribution [OpenVINO ™](www.openvino. ai) The tool suite is developed based on oneAPI, which can accelerate the development of high-performance computer vision and deep learning visual applications. The tool suite is applicable to various Intel platforms from the edge to the cloud, helping users deploy more accurate real-world results to production systems more quickly. By simplifying the development workflow, OpenVINO ™ Enable developers to deploy high-performance applications and algorithms in the real world.
+&emsp;    On the inference backend, thanks to OpenVINO ™  The tool suite provides the feature of "write once, deploy any", and the converted model can run on different Intel hardware platforms without the need to rebuild, effectively simplifying the construction and migration process. It can be said that if developers want to achieve the best inference performance on the Intel platform and have multi-platform adaptation and compatibility, OpenVINO ™  It is an indispensable deployment tool of choice. OpenVINO ™ The latest version 2023.0 introduces a series of new features, improvements, and deprecations aimed at enhancing the developer experience, highlighting the improvement of the developer journey by minimizing offline conversions, expanding model support, and promoting hardware optimization.
 
-&emsp;    然而 OpenVINO™未提供C#语言接口，这对在C#中使用 OpenVINO™带来了很多麻烦，对此推出了 OpenVinoSharp，旨在推动 OpenVINO™在C#领域的应用，目前OpenVinoSharp已经更新迭代起到3.0版本，相比于之前版本，OpenVinoSharp 3.0 版本做了较大程度上的更新，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。OpenVinoSharp 3.0 API 接口多参考 OpenVINO™ C++ API 实现，因此在使用时更加接近C++ API，这对熟悉使用C++ API的朋友会更加友好。
 
-&emsp;
 
 <div align=center><span><img src="https://s2.loli.net/2023/01/26/LdbeOYGgwZvHcBQ.png" height=300/></span></div>
 
+&emsp; However, OpenVINO ™ No C # language interface provided, which is beneficial for using OpenVINO in C # ™ Bringing a lot of trouble, OpenVinoSharp was launched to promote OpenVino ™ In the application of C #, OpenVinoSharp has been updated and iterated to version 3.0. Compared to the previous version, OpenVinoSharp version 3.0 has undergone a significant update, changing from refactoring the C++API to directly reading OpenVino ™  The official C API makes the application more flexible and supports a richer range of functions. OpenVinoSharp 3.0 API interface with multiple references to OpenVino ™  C++API implementation, therefore it is closer to the C++API when used, which will be more friendly to friends who are familiar with using the C++API.
 
+## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet
 
-## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet包
-
-### 托管库
+### Managed Library
 
 | Package               | Description                                                  | Link                                                         |
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **OpenVinoSharp.win** | OpenVinoSharp core libraries，附带完整的OpenVINO 2023.0依赖库 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVinoSharp.win.svg)](https://www.nuget.org/packages/OpenVinoSharp.win/) |
+| **OpenVinoSharp.win** | OpenVinoSharp core libraries，Comes with a complete OpenVINO 2023.0 dependency library | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVinoSharp.win.svg)](https://www.nuget.org/packages/OpenVinoSharp.win/) |
 
 
 
-## <img title="安装" src="https://s2.loli.net/2023/01/26/bm6WsE5cfoVvj7i.png" alt="" width="50"> 安装
+## <img title="安装" src="https://s2.loli.net/2023/01/26/bm6WsE5cfoVvj7i.png" alt="" width="50"> Installation
+
+&emsp;   The project has been packaged into a NuGet package and published to the NuGet platform. Users can install and download it through the NuGet package feature of Visual Studio. The current earliest version is version 3.0.1.
 
 <div align=center><span><img src="https://s2.loli.net/2023/07/31/UFAgRbBuhcsqOEv.png" height=500/></span></div>
 
-&emsp;    如果使用dotnet编译，可以通过以下方式安装：
+&emsp;    If you use dotnet compilation, you can install it in the following ways:
 
 ```
 dotnet add package OpenVinoSharp.win --version 3.0.115
 ```
 
-&emsp;    **说明：**目前**.NETFramework 4.8**版本安装使用会出在问题，因此在项目生成后，需要将程序目录下openvino2023.0文件夹中的除**opencv_c.dll**文件移动到程序目录下，如图所示。
+&emsp;    **Note: ** Currently, there may be issues with the installation and use the **. NET Framework 4.8**. Therefore, after the project is generated, it is necessary to move the files except for **openvino_c.dll** from the openvino2023.0 folder in the program directory to the program directory, as shown in the figure.
 
 <div align=center><span><img src="https://s2.loli.net/2023/07/27/yNAUTqfw8azXg6i.png" height=500/></span></div>
 
 
 
-## 🏷使用方法
+## 🏷Usage
 
-如果你不知道如何使用，可以参考我们项目案例，或者通过下面代码简单了解使用方法。
+If you don't know how to use it, you can refer to our project case or simply learn the usage method through the following code.
 
 ```c#
-using OpenVinoSharp;  // 引用命名空间
+using OpenVinoSharp;  // using namespace.
 namespace test 
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Core core = new Core();  // 初始化 Core 核心
-            Model model = core.read_model("./model.xml");  // 读取模型文件
-            CompiledModel compiled_model = core.compiled_model(model, "AUTO");  // 将模型加载到设备
-            InferRequest infer_request = compiled_model.create_infer_request();  // 创建推理通道
-            Tensor input_tensor = infer_request.get_tensor("images");  // 获取输入节点Tensor
-            infer_request.infer();  // 模型推理
-            Tensor output_tensor = infer_request.get_tensor("output0");  // 获取输出节点Tensor
-            core.free();  // 清理 Core 非托管内存
+            Core core = new Core();  // Initialize Core
+            Model model = core.read_model("./model.xml");  // Read model.
+            CompiledModel compiled_model = core.compiled_model(model, "AUTO");  // Load model onto device
+            InferRequest infer_request = compiled_model.create_infer_request();  // Create infer request.
+            Tensor input_tensor = infer_request.get_tensor("images");  // Get input node of Tensor.
+            infer_request.infer();  // infer
+            Tensor output_tensor = infer_request.get_tensor("output0");  // Get output node of Tensor.
+            core.free();  // Clean Core Unmanaged Memory
         }
     }
 }
 ```
 
-项目中所封装的类、对象例如Core、Model、Tensor等，通过调用 C api 接口实现，具有非托管资源，需要调用**dispose()**方法处理，否则就会出现内存泄漏。
+The classes and objects encapsulated in the project, such as Core, Model, Tensor, are implemented by the directors by calling the C api interface. They have unmanaged resources and need to call the **dispose() ** method for processing. Otherwise, Memory leak will occur.
+
+## <img title="" src="https://s2.loli.net/2023/02/09/2ApTvzLDwlYS6Ks.png" alt="" width="40"> Application Cases
+
+[OpenVinoSharp Deployment Yolov8 Model Example](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0/demos/yolov8)
+
+## 🎖 Contribute
+
+&emsp; If you are interested in OpenVINO ™  Interested in using C # and contributing to the open source community, welcome to join us and develop OpenVinoSharp together.
+&emsp; If you have any ideas or improvement ideas for this project, please feel free to contact us for guidance on our work.
 
 
+## <img title="" src="https://user-images.githubusercontent.com/48054808/157835345-f5d24128-abaf-4813-b793-d2e5bdc70e5a.png" alt="" width="40"> License
 
-## <img title="" src="https://s2.loli.net/2023/02/09/2ApTvzLDwlYS6Ks.png" alt="" width="40"> 应用案例
-
-[OpenVinoSharp部署Yolov8模型实例](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0/demos/yolov8)
-
-## 🎖 贡献
-
-&emsp;    如果您对OpenVINO™ 在C#使用感兴趣，有兴趣对开源社区做出自己的贡献，欢迎加入我们，一起开发OpenVinoSharp。
-
-&emsp;    如果你对该项目有一些想法或改进思路，欢迎联系我们，指导下我们的工作。
-
-
-## <img title="" src="https://user-images.githubusercontent.com/48054808/157835345-f5d24128-abaf-4813-b793-d2e5bdc70e5a.png" alt="" width="40"> 许可证书
-
-本项目的发布受[Apache 2.0 license](LICENSE)许可认证。
+The release of this project is certified under the [Apache 2.0 license](LICENSE) .
 
