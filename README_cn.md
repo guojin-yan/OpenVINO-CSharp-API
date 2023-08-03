@@ -12,31 +12,21 @@
 
 ## 这是OpenVinoSharp 3.0 版本，该版本还在建设中，功能还未完善，如使用中有问题，欢迎与我沟通联系。如果对该项目感兴趣，也可以加入到我们的开发中来。🥰🥰🥰🥰
 
-## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">更新日志
-
-#### 🔥 **2023.6.19 ：发布 OpenVinoSharp 3.0**
-
-- 🗳 **OpenVinoSharp 库：**
-  - 升级OpenVinoSharp 2.0 到 OpenVinoSharp 3.0 版本，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。
-- 🛹**应用案例：**
-  - OpenVinoSharp部署Yolov8模型实例。
-- 🔮 **NuGet包：**
-  - 制作并发布NuGet包，发布**OpenVinoSharp.win 3.0.120**  ，包含OpenVINO 2023.0 依赖项。
-
-## <img title="更新日志" src="https://s2.loli.net/2023/01/26/Zs1VFUT4BGQgfE9.png" alt="" width="40"> 简介
-
-&emsp;    英特尔发行版 [OpenVINO™](www.openvino.ai)工具套件基于oneAPI 而开发，可以加快高性能计算机视觉和深度学习视觉应用开发速度工具套件，适用于从边缘到云的各种英特尔平台上，帮助用户更快地将更准确的真实世界结果部署到生产系统中。通过简化的开发工作流程， OpenVINO™可赋能开发者在现实世界中部署高性能应用程序和算法。
-&emsp;    在推理后端，得益于  OpenVINO™ 工具套件提供的“一次编写，任意部署”的特性，转换后的模型能够在不同的英特尔硬件平台上运行，而无需重新构建，有效简化了构建与迁移过程。可以说，如果开发者希望在英特尔平台上实现最佳的推理性能，并具备多平台适配和兼容性，  OpenVINO™ 是不可或缺的部署工具首选。 OpenVINO™最新版本2023.0，引入了一系列旨在增强开发人员体验的新功能、改进和弃用，突出亮点是通过最大限度地减少离线转换、扩大模型支持和推进硬件优化来改善开发者之旅。
-
-&emsp;    然而 OpenVINO™未提供C#语言接口，这对在C#中使用 OpenVINO™带来了很多麻烦，对此推出了 OpenVinoSharp，旨在推动 OpenVINO™在C#领域的应用，目前OpenVinoSharp已经更新迭代起到3.0版本，相比于之前版本，OpenVinoSharp 3.0 版本做了较大程度上的更新，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。OpenVinoSharp 3.0 API 接口多参考 OpenVINO™ C++ API 实现，因此在使用时更加接近C++ API，这对熟悉使用C++ API的朋友会更加友好。
-
-&emsp;
-
-<div align=center><span><img src="https://s2.loli.net/2023/01/26/LdbeOYGgwZvHcBQ.png" height=300/></span></div>
 
 
+# 📚 简介
 
-## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet包
+[OpenVINO™ ](www.openvino.ai)是一个用于优化和部署 AI 推理的开源工具包。
+
+- 提升深度学习在计算机视觉、自动语音识别、自然语言处理和其他常见任务中的性能
+- 使用流行框架（如TensorFlow，PyTorch等）训练的模型
+- 减少资源需求，并在从边缘到云的一系列英特尔®平台上高效部署
+
+&emsp;    然而 OpenVINO™未提供C#语言接口，这对在C#中使用 OpenVINO™带来了很多麻烦，因此基于OpenVINO™工具套件推出了 OpenVINOSharp，旨在推动 OpenVINO™在C#领域的应用。
+
+&emsp;    目前OpenVinoSharp已经更新迭代起到3.0版本，相比于之前版本，OpenVinoSharp 3.0 版本做了较大程度上的更新，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。OpenVinoSharp 3.0 API 接口多参考 OpenVINO™ C++ API 实现，因此在使用时更加接近C++ API，这对熟悉使用C++ API的朋友会更加友好。
+
+# <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet包
 
 ### 托管库
 
@@ -46,19 +36,11 @@
 
 
 
-## <img title="安装" src="https://s2.loli.net/2023/01/26/bm6WsE5cfoVvj7i.png" alt="" width="50"> 安装
+# <img title="安装" src="https://s2.loli.net/2023/01/26/bm6WsE5cfoVvj7i.png" alt="" width="50"> 如何安装
 
-<div align=center><span><img src="https://s2.loli.net/2023/07/31/UFAgRbBuhcsqOEv.png" height=500/></span></div>
+以下文章提供了OpenVINOSharp在不同平台的安装方法，可以根据自己使用平台进行安装。
 
-&emsp;    如果使用dotnet编译，可以通过以下方式安装：
-
-```
-dotnet add package OpenVinoSharp.win --version 3.0.115
-```
-
-&emsp;    **说明：**目前**.NETFramework 4.8**版本安装使用会出在问题，因此在项目生成后，需要将程序目录下openvino2023.0文件夹中的除**opencv_c.dll**文件移动到程序目录下，如图所示。
-
-<div align=center><span><img src="https://s2.loli.net/2023/07/27/yNAUTqfw8azXg6i.png" height=500/></span></div>
+- [Windows](docs/cn/windows_install.md)
 
 
 
@@ -94,6 +76,23 @@ namespace test
 ## <img title="" src="https://s2.loli.net/2023/02/09/2ApTvzLDwlYS6Ks.png" alt="" width="40"> 应用案例
 
 [OpenVinoSharp部署Yolov8模型实例](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0/demos/yolov8)
+
+
+
+## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">更新日志
+
+#### 🔥 **2023.6.19 ：发布 OpenVinoSharp 3.0**
+
+- 🗳 **OpenVinoSharp 库：**
+  - 升级OpenVinoSharp 2.0 到 OpenVinoSharp 3.0 版本，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。
+- 🛹**应用案例：**
+  - OpenVinoSharp部署Yolov8模型实例。
+- 🔮 **NuGet包：**
+  - 制作并发布NuGet包，发布**OpenVinoSharp.win 3.0.120**  ，包含OpenVINO 2023.0 依赖项。
+
+## 
+
+
 
 ## 🎖 贡献
 
