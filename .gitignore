@@ -9,6 +9,8 @@ cache.json
 others/
 hello_classification/
 
+*.docx
+
 # User-specific files
 *.rsuser
 *.suo
