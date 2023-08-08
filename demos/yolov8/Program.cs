@@ -88,6 +88,17 @@ namespace yolov8
 
             infer_request.infer();
 
+            // time test
+            //DateTime start = DateTime.Now;
+            //for (int i = 0; i < 10; ++i)
+            //{
+            //    infer_request.infer();
+            //}
+            //DateTime end = DateTime.Now;
+            //TimeSpan ts = end.Subtract(start);
+            //Console.WriteLine("[INFO] infer time: {0}", ts.TotalMilliseconds / 10);
+
+
             // -------- Step 9. Process output --------
             Console.WriteLine();
             if (flg == "det")
