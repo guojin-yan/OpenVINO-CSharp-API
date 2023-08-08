@@ -17,7 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenVINOSharp", "src\OpenVI
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tutorial_examples", "tutorial_examples", "{9FE4DAB4-B697-4D9C-9D5A-A96985950C31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlxBoard_deploy_yolov8", "tutorial_examples\AlxBoard_deploy_yolov8\AlxBoard_deploy_yolov8.csproj", "{CE8198D1-5CE4-405A-92D6-2F0B44F527E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlxBoard_deploy_yolov8", "tutorial_examples\AlxBoard_deploy_yolov8\AlxBoard_deploy_yolov8.csproj", "{CE8198D1-5CE4-405A-92D6-2F0B44F527E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{662EFFE7-5E28-4D7C-BE5A-05080FE0ECA5}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		README_cn.md = README_cn.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
