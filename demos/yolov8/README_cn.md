@@ -38,13 +38,13 @@
 
 &emsp;    项目中使用的OpenVINO™相关组件已经封装到OpenVinoSharp中，无需安装在单独安装OpenVINO™。
 
-## 依赖安装
+## 项目依赖
 
 &emsp;    项目中所有依赖项均可以通过NuGet 包安装：
 
 - **OpenVinoSharp**
 
-&emsp;    可以通过Visual Studio 自带的 NuGet 工具进行安装，或者直接下项目配置中直接加入下面代码，
+&emsp;    可以通过Visual Studio 自带的 NuGet 工具进行安装
 
 <div align=center><span><img src="https://s2.loli.net/2023/07/31/UFAgRbBuhcsqOEv.png" height=300/></span></div>
 
@@ -54,36 +54,9 @@
 dotnet add package OpenVinoSharp.win
 ```
 
-## 构建
+## 模型获取
 
-将源码**Program.cs**添加到当前项目中，并按照上面要求添加相关的NuGet包。
-
-<div align=center><span><img src="https://s2.loli.net/2023/07/31/Bal8QopgDmbePAJ.png" height=300/></span></div>
-
-项目可以通过Visual Studio构建和编译，只需要通过右击项目->生成即可。
-
-如果项目通过**dotnet**编译，依次运行以下命令：
-
-```
-dotnet add package OpenVinoSharp.win # 添加OpenVinoSharp包
-dotnet build  # 编译项目
-```
-
-项目编译后，会在``\bin\Debug\net6.0``目录下生成可执行文件。
-
-## 运行
-
-```
-dotnet run <type> <path_to_model> <image_to_path> <device_name> <path_to_lable>
-```
-
-如果需要运行示例，需要同时指定模型预测类型、模型路径、图片文件路径，预测类型输入包括：'det'、'seg'、'pose'、'cls'四种类型；默认推理设备设置为'AUTO'，对于'det'、'seg'预测，可以设置<path_to_lable>参数，如果设置该参数，会将结果绘制到图片上，如果未设置，指挥姐姐过打印出来。
-
-**模型文件可以通过以下方式获取：**
-
-### 模型获取
-
-项目中所使用的模型全部由**ultralytics**平台下载，下面是下载示例：
+&emsp;    项目中所使用的模型全部由**ultralytics**平台下载，下面是下载示例：
 
 1. 安装ultralytics
 
@@ -108,19 +81,139 @@ dotnet run <type> <path_to_model> <image_to_path> <device_name> <path_to_lable>
    mo -input_model yolov8s.onnx
    ```
 
+## 快速构建
+
+&emsp;    目前已经实现Window环境下的快速实现，环境安装请参考[Windows 安装 OpenVINOSharp](./../../docs/cn/windows_install.md)。
+
+&emsp;    Linux环境还在开发中。
+
+- **下载源码**
+
+  代码仓中已经提供了完整的项目代码和模型文件，通过Git下载项目源码。
+  
+  ```
+  git clone https://github.com/guojin-yan/OpenVINOSharp.git
+  cd OpenVINOSharp
+  ```
+
+- **Visual Studio 编译**
+
+&emsp;    如果使用Visual Studio 编译，可以通过解决方案打开``OpenVinoSharp.sln`` 解决方案，并按照[项目依赖](##项目依赖)中的方式安装项目依赖，然后项目中会增加``openvino2023.0``文件夹。
+
+<div align=center><span><img src="https://s2.loli.net/2023/07/31/Bal8QopgDmbePAJ.png" height=100/></span></div>
+
+&emsp;    最后项目构建和编译，只需要通过右击项目->生成即可。
+
+- **dotnet编译**
+
+&emsp;    如果项目通过dotnet编译，依次运行以下命令：
+
+```
+cd demos\yolov8
+dotnet add package OpenVinoSharp.win # 添加OpenVinoSharp包
+dotnet build  # 编译项目
+```
+
+&emsp;    项目编译后，会在``\bin\Debug\net6.0``目录下生成可执行文件。
+
+## 运行
+
+- **Visual Studio  运行**
+
+  在 Visual Studio 平台运行该项目需要修改``Properties\launchSettings.json``文件指定程序命令行输入，``launchSettings.json`` 文件内容如下所示，在使用时需要添加命令行\<args>即可即可。
+
+  ```json
+  {
+    "profiles": {
+      "yolov8": {
+        "commandName": "Project",
+        "commandLineArgs": "<args>"
+      }
+    }
+  }
+  ```
+
+  添加命令行内容后，重新生成项目并运行即可。
+
+  \<args>参数主要内容如下：
+
+  ```shell
+  <type> <path_to_model> <image_to_path> <device_name> <path_to_lable>
+  ```
+
+  运行示例时，需要同时指定模型预测类型、模型路径、图片文件路径参数，预测类型输入包括： 'det'、'seg'、'pose'、'cls'四种类型；默认推理设备设置为'AUTO'，对于'det'、'seg'预测，可以设置<path_to_lable>参数，如果设置该参数，会将结果绘制到图片上，如果未设置，会通过控制台打印出来
+
+  - Yolov8-det 模型推理参数为：
+
+    ```shell
+    det ./../../../../../model/yolov8/yolov8s.xml ./../../../../../dataset/image/demo_2.jpg CPU ./../../../../../dataset/lable/COCO_lable.txt
+    ```
+
+  - Yolov8-cls 模型推理参数为：
+
+    ```shell
+    cls ./../../../../../model/yolov8/yolov8s-cls.xml ./../../../../../dataset/image/demo_7.jpg CPU 
+    ```
+
+  - Yolov8-pose 模型推理参数为：
+
+    ```shell
+    pose ./../../../../../model/yolov8/yolov8s-pose.xml ./../../../../../dataset/image/demo_9.jpg CPU 
+    ```
+
+  - Yolov8-seg 模型推理参数为：
+
+    ```shell
+    seg ./../../../../../model/yolov8/yolov8s-seg.xml ./../../../../../dataset/image/demo_2.jpg CPU ./../../../../../dataset/lable/COCO_lable.txt
+    ```
+
+- **dotnet运行**
+
+  如果通过dotnet运行，只需要运行以下命令即可
+
+  ```shell
+  dotnet run <args>
+  ```
+
+  \<args>参数设置如下：
+
+  - Yolov8-det 模型推理参数为：
+
+    ```shell
+    det ./../../model/yolov8/yolov8s.xml ./../../dataset/image/demo_2.jpg CPU ./../../dataset/lable/COCO_lable.txt
+    ```
+
+  - Yolov8-cls 模型推理参数为：
+
+    ```shell
+    cls ./../../model/yolov8/yolov8s-cls.xml ./../../dataset/image/demo_7.jpg CPU 
+    ```
+
+  - Yolov8-pose 模型推理参数为：
+
+    ```shell
+    pose ./../../model/yolov8/yolov8s-pose.xml ./../../dataset/image/demo_9.jpg CPU 
+    ```
+
+  - Yolov8-seg 模型推理参数为：
+
+    ```shell
+    seg ./../../model/yolov8\\yolov8s-seg.xml ./../../dataset/image/demo_2.jpg CPU ./../../dataset/lable/COCO_lable.txt
+    ```
+
 ### 结果展示
 
 程序运行会输出模型推理信息和推理结果:
 
 #### Yolov8-det 模型推理结果
 
-```
-E:\GitSpace\OpenVinoSharp\demos\yolov8>dotnet run det E:\GitSpace\OpenVinoSharp\model\yolov8s.xml E:\GitSpace\OpenVinoSharp\dataset\image\demo_2.jpg CPU E:\GitSpace\OpenVinoSharp\dataset\lable\COCO_lable.txt
+```shell
+PS E:\Git_space\OpenVinoSharp\demos\yolov8> dotnet run det ./../../model/yolov8/yolov8s.xml ./../../dataset/image/demo_2.jpg CPU ./../../dataset/lable/COCO_lable.txt
 ---- OpenVINO INFO----
 Description : OpenVINO Runtime
 Build number: 2023.0.1-11005-fa1c41994f3-releases/2023/0
 Set inference device  CPU.
-[INFO] Loading model files: E:\GitSpace\OpenVinoSharp\model\yolov8s.xml
+[INFO] Loading model files: ./../../model/yolov8/yolov8s.xml
 [INFO] model name: torch_jit
 [INFO]    inputs:
 [INFO]      input name: images
@@ -130,7 +223,8 @@ Set inference device  CPU.
 [INFO]      output name: output0
 [INFO]      output type: f32
 [INFO]      output shape: Shape : [1, 84, 8400]
-[INFO] Read image  files: E:\GitSpace\OpenVinoSharp\dataset\image\demo_2.jpg
+[INFO] Read image  files: ./../../dataset/image/demo_2.jpg
+
 
   Detection  result :
 
@@ -143,13 +237,13 @@ Set inference device  CPU.
 
 #### Yolov8-pose 模型推理结果
 
-```
-E:\GitSpace\OpenVinoSharp\demos\yolov8>dotnet run pose E:\GitSpace\OpenVinoSharp\model\yolov8s-pose.xml E:\GitSpace\OpenVinoSharp\dataset\image\demo_9.jpg CPU
+```shell
+PS E:\Git_space\OpenVinoSharp\demos\yolov8> dotnet run pose ./../../model/yolov8/yolov8s-pose.xml ./../../dataset/image/demo_9.jpg CPU
 ---- OpenVINO INFO----
 Description : OpenVINO Runtime
 Build number: 2023.0.1-11005-fa1c41994f3-releases/2023/0
 Set inference device  CPU.
-[INFO] Loading model files: E:\GitSpace\OpenVinoSharp\model\yolov8s-pose.xml
+[INFO] Loading model files: ./../../model/yolov8/yolov8s-pose.xml
 [INFO] model name: torch_jit
 [INFO]    inputs:
 [INFO]      input name: images
@@ -159,7 +253,8 @@ Set inference device  CPU.
 [INFO]      output name: output0
 [INFO]      output type: f32
 [INFO]      output shape: Shape : [1, 56, 8400]
-[INFO] Read image  files: E:\GitSpace\OpenVinoSharp\dataset\image\demo_9.jpg
+[INFO] Read image  files: ./../../dataset/image/demo_9.jpg
+
 
  Classification  result :
 
@@ -170,13 +265,13 @@ Set inference device  CPU.
 
 #### Yolov8-seg 模型推理结果
 
-```
-E:\GitSpace\OpenVinoSharp\demos\yolov8>dotnet run seg E:\GitSpace\OpenVinoSharp\model\yolov8s-seg.xml E:\GitSpace\OpenVinoSharp\dataset\image\demo_2.jpg CPU E:\GitSpace\OpenVinoSharp\dataset\lable\COCO_lable.txt
+```shell
+PS E:\Git_space\OpenVinoSharp\demos\yolov8> dotnet run seg ./../../model/yolov8\\yolov8s-seg.xml ./../../dataset/image/demo_2.jpg CPU ./../../dataset/lable/COCO_lable.txt
 ---- OpenVINO INFO----
 Description : OpenVINO Runtime
 Build number: 2023.0.1-11005-fa1c41994f3-releases/2023/0
 Set inference device  CPU.
-[INFO] Loading model files: E:\GitSpace\OpenVinoSharp\model\yolov8s-seg.xml
+[INFO] Loading model files: ./../../model/yolov8\\yolov8s-seg.xml
 [INFO] model name: torch_jit
 [INFO]    inputs:
 [INFO]      input name: images
@@ -186,7 +281,8 @@ Set inference device  CPU.
 [INFO]      output name: output0
 [INFO]      output type: f32
 [INFO]      output shape: Shape : [1, 116, 8400]
-[INFO] Read image  files: E:\GitSpace\OpenVinoSharp\dataset\image\demo_2.jpg
+[INFO] Read image  files: ./../../dataset/image/demo_2.jpg
+
 
   Segmentation  result :
 
@@ -201,13 +297,13 @@ Set inference device  CPU.
 
 #### Yolov8-cls 模型推理结果
 
-```
-E:\GitSpace\OpenVinoSharp\demos\yolov8>dotnet run cls E:\GitSpace\OpenVinoSharp\model\yolov8s-cls.xml E:\GitSpace\OpenVinoSharp\dataset\image\demo_7.jpg CPU
+```shell
+PS E:\Git_space\OpenVinoSharp\demos\yolov8> dotnet run cls ./../../model/yolov8/yolov8s-cls.xml ./../../dataset/image/demo_7.jpg CPU
 ---- OpenVINO INFO----
 Description : OpenVINO Runtime
 Build number: 2023.0.1-11005-fa1c41994f3-releases/2023/0
 Set inference device  CPU.
-[INFO] Loading model files: E:\GitSpace\OpenVinoSharp\model\yolov8s-cls.xml
+[INFO] Loading model files: ./../../model/yolov8/yolov8s-cls.xml
 [INFO] model name: torch_jit
 [INFO]    inputs:
 [INFO]      input name: images
@@ -217,13 +313,14 @@ Set inference device  CPU.
 [INFO]      output name: output0
 [INFO]      output type: f32
 [INFO]      output shape: Shape : [1, 1000]
-[INFO] Read image  files: E:\GitSpace\OpenVinoSharp\dataset\image\demo_7.jpg
+[INFO] Read image  files: ./../../dataset/image/demo_7.jpg
+
 
  Classification Top 10 result :
 
 classid probability
 ------- -----------
-294     0.992171
+294     0.992172
 269     0.002861
 296     0.002111
 295     0.000714
