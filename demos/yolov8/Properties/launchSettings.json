@@ -2,9 +2,9 @@
   "profiles": {
     "yolov8": {
       "commandName": "Project",
-      //"commandLineArgs": "det ./../../../../../model/yolov8/yolov8s.xml ./../../../../../dataset/image/demo_2.jpg CPU ./../../../../../dataset/lable/COCO_lable.txt"
-      "commandLineArgs": "cls ./../../../../../model/yolov8/yolov8s-cls.xml ./../../../../../dataset/image/demo_7.jpg CPU "
-      //"commandLineArgs": "cls ./../../../../../model/yolov8/yolov8s-cls.xml ./../../../../../dataset/image/demo_7.jpg CPU ",
+      "commandLineArgs": "det ./../../../../../model/yolov8/yolov8s.xml ./../../../../../dataset/image/demo_2.jpg CPU ./../../../../../dataset/lable/COCO_lable.txt"
+      //"commandLineArgs": "cls ./../../../../../model/yolov8/yolov8s-cls.xml ./../../../../../dataset/image/demo_7.jpg CPU "
+      //"commandLineArgs": "pose ./../../../../../model/yolov8/yolov8s-pose.xml ./../../../../../dataset/image/demo_9.jpg CPU ",
       //"commandLineArgs": "seg ./../../../../../model/yolov8\\yolov8s-seg.xml ./../../../../../dataset/image/demo_2.jpg CPU ./../../../../../dataset/lable/COCO_lable.txt"
     }
   }
