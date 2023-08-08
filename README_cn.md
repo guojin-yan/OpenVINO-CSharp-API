@@ -22,11 +22,11 @@
 - 使用流行框架（如TensorFlow，PyTorch等）训练的模型
 - 减少资源需求，并在从边缘到云的一系列英特尔®平台上高效部署
 
-&emsp;    然而 OpenVINO™未提供C#语言接口，这对在C#中使用 OpenVINO™带来了很多麻烦，因此基于OpenVINO™工具套件推出了 OpenVINOSharp，旨在推动 OpenVINO™在C#领域的应用。
+&emsp;    然而 OpenVINO™未提供C#语言接口，这对在C#中使用 OpenVINO™带来了很多麻烦，因此基于OpenVINO™工具套件推出了 OpenVINOSharp，旨在推动 OpenVINO™在C#领域的应用。OpenVINOSharp 由于是基于 OpenVINO™ 开发，所支持的平台与OpenVINO™ 一致，具体信息可以参考 OpenVINO™。
 
-&emsp;    目前OpenVinoSharp已经更新迭代起到3.0版本，相比于之前版本，OpenVinoSharp 3.0 版本做了较大程度上的更新，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。OpenVinoSharp 3.0 API 接口多参考 OpenVINO™ C++ API 实现，因此在使用时更加接近C++ API，这对熟悉使用C++ API的朋友会更加友好。
+&emsp;    目前 OpenVinoSharp 已经更新迭代起到3.0版本，相比于之前版本，OpenVinoSharp 3.0 版本做了较大程度上的更新，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。
 
-# <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet包
+# <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet 包
 
 ### 托管库
 
@@ -34,19 +34,23 @@
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | **OpenVinoSharp.win** | OpenVinoSharp core libraries，附带完整的OpenVINO 2023.0依赖库 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVinoSharp.win.svg)](https://www.nuget.org/packages/OpenVinoSharp.win/) |
 
-
-
-# <img title="安装" src="https://s2.loli.net/2023/01/26/bm6WsE5cfoVvj7i.png" alt="" width="50"> 如何安装
+# ⚙ 如何安装
 
 以下文章提供了OpenVINOSharp在不同平台的安装方法，可以根据自己使用平台进行安装。
 
 - [Windows](docs/cn/windows_install.md)
 
+- [Linux](docs/cn/linux_install.md)
 
+## 🏷开始使用
 
-## 🏷使用方法
+- **快速体验**
 
-如果你不知道如何使用，可以参考我们项目案例，或者通过下面代码简单了解使用方法。
+  [使用OpenVINOSharp部署Yolov8全系列模型](demos/yolov8/README_cn.md)
+
+- **使用方法**
+
+如果你不知道如何使用，通过下面代码简单了解使用方法。
 
 ```c#
 using OpenVinoSharp;  // 引用命名空间
@@ -73,13 +77,15 @@ namespace test
 
 
 
-## <img title="" src="https://s2.loli.net/2023/02/09/2ApTvzLDwlYS6Ks.png" alt="" width="40"> 应用案例
-
-[OpenVinoSharp部署Yolov8模型实例](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0/demos/yolov8)
+## 💻 应用案例
 
 
 
-## <img title="更新日志" src="https://s2.loli.net/2023/01/26/RJ1znO78bygCcKj.png" alt="" width="40">更新日志
+## 🗂 API 文档
+
+
+
+## 🔃 更新日志
 
 #### 🔥 **2023.6.19 ：发布 OpenVinoSharp 3.0**
 
@@ -89,8 +95,6 @@ namespace test
   - OpenVinoSharp部署Yolov8模型实例。
 - 🔮 **NuGet包：**
   - 制作并发布NuGet包，发布**OpenVinoSharp.win 3.0.120**  ，包含OpenVINO 2023.0 依赖项。
-
-## 
 
 
 
