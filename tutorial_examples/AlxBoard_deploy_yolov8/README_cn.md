@@ -10,8 +10,6 @@
 https://github.com/guojin-yan/OpenVINOSharp/blob/openvinosharp3.0/tutorial_examples/AlxBoard_deploy_yolov8/Program.cs
 ```
 
-
-
 ## 一、英特尔开发套件 AIxBoard 介绍
 
 <div align=center><span><img src="https://s2.loli.net/2023/08/01/nvUgJ7Hwaj5cm12.png" height=300/></span></div>
@@ -454,13 +452,20 @@ Set inference device  GPU.0.
 
 ## 六、模型运行时间
 
-AIxBoard开发板板载了英特尔赛扬N5105 CPU以及英特尔11代集成显卡，此处对CPU、GPU的推理情况做了一个简单测试，主要检测了模型推理时间，如表所示.
+&emsp;    AIxBoard开发板板载了英特尔赛扬N5105 CPU以及英特尔11代集成显卡，此处对CPU、GPU的推理情况做了一个简单测试，主要检测了模型推理时间，并使用英特尔幻影峡谷进行了同步测试，测试结果如表所示.
 
-|   Device    |   CPU   |   GPU   |
-| :---------: | :-----: | :-----: |
-| Yolov8-det  | 586.3ms | 83.1ms  |
-| Yolov8-seg  | 795.6ms | 112.5ms |
-| Yolov8-pose | 609.8ms | 95.1ms  |
-| Yolov8-cls  | 33.1ms  |  9.2ms  |
+|   Device    | CPU: N5105 | GPU: Intel 11th 集显 | CPU: i7-1165G7 | GPU: lntel(R) Iris(R) Xe Graphics |
+| :---------: | :--------: | :------------------: | :------------: | :-------------------------------: |
+| Yolov8-det  |  586.3ms   |        83.1ms        |    127.1ms     |              19.5ms               |
+| Yolov8-seg  |  795.6ms   |       112.5ms        |    140.1ms     |              25.0ms               |
+| Yolov8-pose |  609.8ms   |        95.1ms        |    117.2ms     |              23.3ms               |
+| Yolov8-cls  |   33.1ms   |        9.2ms         |     6.1ms      |               2.7ms               |
 
-可以看出，英特尔赛扬N5105 CPU在模型推理英特尔赛扬N5105 CPU
+&emsp;    可以看出，英特尔赛扬N5105 CPU在模型推理性能是十分强大的，且搭配的英特尔11代集成显卡，将推理速度提升了6倍左右，针对Yolov8模型，平均处理速度可以达到10FPs。而相比于幻影峡谷的推理速度，AIxBoard开发板推理性能大约为其五分之一，这相比一般的开发板，AIxBoard开发板的算力还是十分强大的。
+
+## 七、总结
+
+&emsp;    在该项目中，我们基于Ubutn 20.04 系统，成功实现了在C#环境下调用OpenVINO™部署深度学习模型，验证了在Linux环境下OpenVINOSharp项目的的可行性，这对后面在Linux环境下开发OpenVINOSharp具有很重要的意义。
+
+&emsp;    除此之外，我们还使用OpenVINOSharp检验了AIxBoard开发板的模型推理能力，最总针对Yolov8模型，平均处理速度可以达到10FPs，这对目前大多数开发板来说，已经达到了很高的推理速度。后续我还会将继续使用OpenVINOSharp在AIxBoard开发板部署更多的深度学习模型。
+
