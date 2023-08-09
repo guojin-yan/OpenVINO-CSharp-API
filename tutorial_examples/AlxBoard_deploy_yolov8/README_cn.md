@@ -256,8 +256,6 @@ cd AlxBoard_deploy_yolov8
 
   如果输出内容中没有``no found``的，说明不缺少依赖，如果存在，则需要安装缺少的依赖项才可以正常使用。
 
-
-
 &emsp;    添加完项目依赖以及NuGet Package后，项目的配置文件内容为：
 
 ```properties
