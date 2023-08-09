@@ -12,7 +12,7 @@
 
 ## This is OpenVINOSharp 3.0 version, which is still under construction and its features are not yet fully developed. If there are any issues during use, please feel free to contact me. If you are interested in this project, you can also join our development.🥰🥰🥰
 
-# 📚 What is OpenVINOSharp ?
+## 📚 What is OpenVINOSharp ?
 
 [OpenVINO™](www.openvino.ai)  is an open-source toolkit for optimizing and deploying AI inference.
 
@@ -24,7 +24,7 @@
 
 &emsp;    Currently, OpenVINOSharp has been updated and iterated to version 3.0. Compared to the previous version, OpenVinoSharp version 3.0 has undergone a significant update, replacing the original refactoring of the C++API with directly reading OpenVINO\™  The official C API makes the application more flexible and supports a richer range of functions.
 
-# <img title="NuGet" src="https://s2.loli.net/2023/08/08/jE6BHu59L4WXQFg.png" alt="" width="40">NuGet Package
+## <img title="NuGet" src="https://s2.loli.net/2023/08/08/jE6BHu59L4WXQFg.png" alt="" width="40">NuGet Package
 
 ### Managed Library
 
@@ -32,7 +32,7 @@
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | **OpenVinoSharp.win** | OpenVinoSharp core libraries，comes with a complete OpenVINO 2023.0 dependency library | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVinoSharp.win.svg)](https://www.nuget.org/packages/OpenVinoSharp.win/) |
 
-# ⚙ How to install OpenVINOSharp?
+## ⚙ How to install OpenVINOSharp?
 
 The following article provides installation methods for OpenVINOSharp on different platforms, which can be installed according to your own platform.
 
@@ -96,7 +96,6 @@ If you want to learn more information, you can refer to: [OpenVINOSharp API Docu
 
 &emsp; If you are interested in OpenVINO ™  Interested in using C # and contributing to the open source community, welcome to join us and develop OpenVinoSharp together.
 &emsp; If you have any ideas or improvement ideas for this project, please feel free to contact us for guidance on our work.
-
 
 ## <img title="" src="https://s2.loli.net/2023/08/08/cijB2K9aDvthEQA.png" alt="" width="40"> License
 

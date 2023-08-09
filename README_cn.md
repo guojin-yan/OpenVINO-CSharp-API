@@ -14,7 +14,7 @@
 
 
 
-# 📚 简介
+## 📚 简介
 
 [OpenVINO™ ](www.openvino.ai)是一个用于优化和部署 AI 推理的开源工具包。
 
@@ -26,7 +26,7 @@
 
 &emsp;    目前 OpenVinoSharp 已经更新迭代起到3.0版本，相比于之前版本，OpenVinoSharp 3.0 版本做了较大程度上的更新，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。
 
-# <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet 包
+## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet 包
 
 ### 托管库
 
@@ -34,7 +34,7 @@
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | **OpenVinoSharp.win** | OpenVinoSharp core libraries，附带完整的OpenVINO 2023.0依赖库 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVinoSharp.win.svg)](https://www.nuget.org/packages/OpenVinoSharp.win/) |
 
-# ⚙ 如何安装
+## ⚙ 如何安装
 
 以下文章提供了OpenVINOSharp在不同平台的安装方法，可以根据自己使用平台进行安装。
 
@@ -105,7 +105,6 @@ namespace test
 &emsp;    如果您对OpenVINO™ 在C#使用感兴趣，有兴趣对开源社区做出自己的贡献，欢迎加入我们，一起开发OpenVinoSharp。
 
 &emsp;    如果你对该项目有一些想法或改进思路，欢迎联系我们，指导下我们的工作。
-
 
 ## <img title="" src="https://user-images.githubusercontent.com/48054808/157835345-f5d24128-abaf-4813-b793-d2e5bdc70e5a.png" alt="" width="40"> 许可证书
 
