@@ -72,9 +72,9 @@ namespace test
 
 The classes and objects encapsulated in the project, such as Core, Model, Tensor, etc., are implemented by calling the C API interface and have unmanaged resources. They need to be handled by calling the **dispose() ** method, otherwise memory leakage may occur.
 
-## 💻 Industrial tutorial examples
+## 💻 Tutorial Examples
 
-
+- [Using OpenVinoSharp to Deploy the Yolov8 Model on the AIxBoard](tutorial_examples/AlxBoard_deploy_yolov8/README.md)
 
 ## 🗂 API Reference
 

@@ -79,7 +79,7 @@ namespace test
 
 ## 💻 应用案例
 
-
+- [爱克斯开发板使用OpenVinoSharp部署Yolov8模型](tutorial_examples/AlxBoard_deploy_yolov8/README_cn.md)
 
 ## 🗂 API 文档
 
