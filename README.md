@@ -7,7 +7,8 @@
     <a >
         <img src="https://img.shields.io/badge/Framework-.NET5.0%2C%20.NET6.0%2C%20.NET48-pink.svg">
     </a>    
-[简体中文](README_cn.md) | English
+</p>
+
 [简体中文](README_cn.md) | English
 
 ## This is OpenVINOSharp 3.0 version, which is still under construction and its features are not yet fully developed. If there are any issues during use, please feel free to contact me. If you are interested in this project, you can also join our development.🥰🥰🥰
