@@ -10,10 +10,10 @@ namespace OpenVinoSharp
     /// <para>This class represents an OpenVINO runtime Core entity.</para>
     /// <ingroupe>ov_runtime_c#_api</ingroupe>
     /// </summary>
-    /// <remark>User applications can create several Core class instances, but in this case the underlying plugins
+    /// <remarks>User applications can create several Core class instances, but in this case the underlying plugins
     /// are created multiple times and not shared between several Core instances.The recommended way is to have
     /// a single Core instance per application.
-    /// </remark>
+    /// </remarks>
     public class Core
     {
         private IntPtr ptr = IntPtr.Zero;
