@@ -78,7 +78,8 @@ The classes and objects encapsulated in the project, such as Core, Model, Tensor
 
 ## 🗂 API Reference
 
-
+If you want to learn more information, you can refer to: [OpenVINOSharp API Documented](help/index. html)
+(API Documented is under construction)
 
 ## 🔃 Update log
 

@@ -83,7 +83,9 @@ namespace test
 
 ## 🗂 API 文档
 
+如果想了解更多信息，可以参阅：[OpenVINOSharp API Documented](help/index.html)
 
+(API Documented 正在建设中)
 
 ## 🔃 更新日志
 
