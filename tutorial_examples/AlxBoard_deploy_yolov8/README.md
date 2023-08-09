@@ -1,3 +1,15 @@
+![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for%20.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
+
+<p align="center">    
+    <a href="./LICENSE.txt">
+        <img src="https://img.shields.io/github/license/guojin-yan/openvinosharp.svg">
+    </a>    
+    <a >
+        <img src="https://img.shields.io/badge/Framework-.NET5.0%2C%20.NET6.0%2C%20.NET48-pink.svg">
+    </a>    
+
+[简体中文](README_cn.md) | English
+
 # Using OpenVinoSharp to Deploy the Yolov8 Model on the AIxBoard
 
 &emsp;    Intel Distribution [OpenVINO™](www.openvino.ai)  tool kit is developed based on the oneAPI, which can accelerate the development speed of high-performance computer vision and deep learning visual applications. It is suitable for various Intel platforms from the edge to the cloud, helping users deploy more accurate real-world results into production systems faster. By simplifying the development workflow, OpenVINO ™ Enable developers to deploy high-performance applications and algorithms in the real world.
