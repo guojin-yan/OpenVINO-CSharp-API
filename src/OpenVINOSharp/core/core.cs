@@ -120,8 +120,18 @@ namespace OpenVinoSharp
         public Model read_model(string model_path, string bin_path = "") 
         {
             IntPtr model_ptr = new IntPtr();
-            string extension = System.IO.Path.GetExtension(model_path);//扩展名
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_read_model_unicode(ptr, model_path, bin_path, ref model_ptr);
+            sbyte[] c_model_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
+            ExceptionStatus status;
+            if (bin_path == "") {
+                sbyte c_bin_path = new sbyte();
+                status = (ExceptionStatus)NativeMethods.ov_core_read_model(ptr, ref c_model_path[0], ref c_bin_path, ref model_ptr);
+            } 
+            else
+            {
+                sbyte[] c_bin_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(bin_path));
+                status = (ExceptionStatus)NativeMethods.ov_core_read_model(ptr, ref c_model_path[0], ref c_bin_path[0], ref model_ptr);
+            }
+            
             if (status != 0)
             {
                 System.Diagnostics.Debug.WriteLine("Core read_model() error : " + status.ToString());
