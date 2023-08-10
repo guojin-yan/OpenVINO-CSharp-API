@@ -8,47 +8,152 @@ using System.Xml.Linq;
 
 namespace OpenVinoSharp
 {
+    /// <summary>
+    /// The class of data type, mainly used for model data types. 
+    /// </summary>
+    /// <remarks>
+    /// OvType inherits from element. Type
+    /// </remarks>
     public class OvType : element.Type
     {
-        public OvType(ElementType t) : base(t){} 
+        /// <summary>
+        /// OvType constructor, initializing element. Type
+        /// </summary>
+        /// <param name="t">ElementType data</param>
+        public OvType(ElementType t) : base(t) { }
+        /// <summary>
+        /// OvType copy constructor, initializing element. Type
+        /// </summary>
+        /// <param name="t">OvType data</param>
+        public OvType(OvType t) : base(t.m_type) { }
+        /// <summary>
+        /// OvType constructor, initializing element.Type through data type string
+        /// </summary>
+        /// <param name="type">data type string</param>
+        public OvType(string type) : base (type) { }
+
     };
     namespace element
     {
- 
+
         /// <summary>
         /// Enum to define possible element types
-        /// </summary>
         /// <ingroup>ov_element_c#_api</ingroup>
+        /// </summary>
         public enum Type_t
         {
-            undefined,  //!< Undefined element type
-            dynamic,    //!< Dynamic element type
-            boolean,    //!< boolean element type
-            bf16,       //!< bf16 element type
-            f16,        //!< f16 element type
-            f32,        //!< f32 element type
-            f64,        //!< f64 element type
-            i4,         //!< i4 element type
-            i8,         //!< i8 element type
-            i16,        //!< i16 element type
-            i32,        //!< i32 element type
-            i64,        //!< i64 element type
-            u1,         //!< binary element type
-            u4,         //!< u4 element type
-            u8,         //!< u8 element type
-            u16,        //!< u16 element type
-            u32,        //!< u32 element type
-            u64         //!< u64 element type
+            /// <summary>
+            /// Undefined element type
+            /// </summary>
+            undefined,
+            /// <summary>
+            /// Dynamic element type
+            /// </summary>
+            dynamic,
+            /// <summary>
+            ///  boolean element type
+            /// </summary>
+            boolean,
+            /// <summary>
+            ///  bf16 element type
+            /// </summary>
+            bf16,
+            /// <summary>
+            /// f16 element type
+            /// </summary>
+            f16, 
+            /// <summary>
+            /// f32 element type
+            /// </summary>
+            f32,
+            /// <summary>
+            /// f64 element type
+            /// </summary>
+            f64,
+            /// <summary>
+            /// i4 element type
+            /// </summary>
+            i4,
+            /// <summary>
+            /// i8 element type
+            /// </summary>
+            i8,
+            /// <summary>
+            /// i16 element type
+            /// </summary>
+            i16,
+            /// <summary>
+            /// i32 element type
+            /// </summary>
+            i32,
+            /// <summary>
+            ///  i64 element type
+            /// </summary>
+            i64,
+            /// <summary>
+            ///  binary element type
+            /// </summary>
+            u1,
+            /// <summary>
+            /// u4 element type
+            /// </summary>
+            u4,
+            /// <summary>
+            ///  u8 element type
+            /// </summary>
+            u8,
+            /// <summary>
+            /// u16 element type
+            /// </summary>
+            u16,
+            /// <summary>
+            /// u32 element type
+            /// </summary>
+            u32,
+            /// <summary>
+            /// u64 element type
+            /// </summary>
+            u64
         };
 
+        /// <summary>
+        /// [struct] Type information storage struct.
+        /// </summary>
         struct TypeInfo
         {
+            /// <summary>
+            /// data length.
+            /// </summary>
             public ulong m_bitwidth;
+            /// <summary>
+            /// real number flag
+            /// </summary>
             public bool m_is_real;
+            /// <summary>
+            /// signed number flag
+            /// </summary>
             public bool m_is_signed;
+            /// <summary>
+            /// quantize number flag
+            /// </summary>
             public bool m_is_quantized;
+            /// <summary>
+            /// type name full name string 
+            /// </summary>
             public string m_cname;
+            /// <summary>
+            /// type name abbreviation string 
+            /// </summary>
             public string m_type_name;
+            /// <summary>
+            /// Structure constructor
+            /// </summary>
+            /// <param name="bitwidth">data length.</param>
+            /// <param name="is_real">real number flag</param>
+            /// <param name="is_signed">signed number flag</param>
+            /// <param name="is_quantized">quantize number flag</param>
+            /// <param name="cname"> type name full name string</param>
+            /// <param name="type_name">type name abbreviation string</param>
             public TypeInfo(ulong bitwidth, bool is_real, bool is_signed, bool is_quantized, string cname, string type_name) 
             { 
                 m_bitwidth = bitwidth;
@@ -61,83 +166,146 @@ namespace OpenVinoSharp
         }
         /// <summary>
         /// Base class to define element type
-        /// </summary>
         /// <ingroup>ov_element_c#_api</ingroup>
+        /// </summary>
         public class Type {
+            /// <summary>
+            /// data type, defined based on Type_t.
+            /// </summary>
             protected Type_t m_type = Type_t.undefined ;
+            /// <summary>
+            /// OvType constructor, by Type_t initialize the Type class
+            /// </summary>
+            /// <param name="t">Type_t data</param>
             public Type(Type_t t) { m_type = t; }
+            /// <summary>
+            /// OvType constructor, by ElementType initialize the Type class
+            /// </summary>
+            /// <param name="t">ElementType data</param>
             public Type(ElementType t) { m_type = (Type_t)t; }
+            /// <summary>
+            /// OvType copy constructor, by Type initialize the Type class
+            /// </summary>
+            /// <param name="t">Type data</param>
             public Type(Type t) {
                 m_type = t.m_type;
-            } 
+            }
+            /// <summary>
+            /// OvType constructor, initializing element.Type through data type string
+            /// </summary>
+            /// <param name="type">data type string</param>
             public Type(string type) {
                 new Type(type_from_string(type));
             }
-
+            /// <summary>
+            /// Get data type.
+            /// </summary>
+            /// <returns>ElementType type</returns>
             public ElementType get_type() {
                 return (ElementType)m_type;
             }
-
+            /// <summary>
+            /// Get type full name string.
+            /// </summary>
+            /// <returns>full name string</returns>
             public string c_type_string()
             {
                 return get_type_info(m_type).m_cname;
             }
-
+            /// <summary>
+            /// Get data type length.
+            /// </summary>
+            /// <returns>type length</returns>
             public ulong size()
             {
                 return (bitwidth() + 7) >> 3;
             }
-
+            /// <summary>
+            /// Get type number.
+            /// </summary>
+            /// <returns>type number</returns>
             public ulong hash()
             {
                 return (ulong)(m_type);
             }
-
+            /// <summary>
+            /// Get abbreviated name.
+            /// </summary>
+            /// <returns>abbreviated name</returns>
             public string get_type_name()
             {
                 return to_string();
             }
-
+            /// <summary>
+            /// Determine whether it is a real number
+            /// </summary>
+            /// <returns>true: is real; false: not real</returns>
             public bool is_integral()
             {
                 return !is_real();
             }
-
+            /// <summary>
+            /// Convert data type to string
+            /// </summary>
+            /// <returns> data type string</returns>
             public string to_string()
             {
                 return get_type_info(m_type).m_type_name;
             }
-
+            /// <summary>
+            /// Determine whether the current data type is static.
+            /// </summary>
+            /// <returns>true : is static; false : not static</returns>
             public bool is_static()
             {
                 return get_type_info(m_type).m_bitwidth != 0;
             }
-
+            /// <summary>
+            /// Determine whether the current data type is real.
+            /// </summary>
+            /// <returns>true : is real; false : not real</returns>
             public bool is_real()
             {
                 return get_type_info(m_type).m_is_real;
             }
-
+            /// <summary>
+            /// Determine whether the current data type is integral number.
+            /// </summary>
+            /// <returns>true : is integral number; false : not integral number</returns>
             public bool is_integral_number()
             {
                 return is_integral() && (m_type != Type_t.boolean);
             }
-
+            /// <summary>
+            /// Determine whether the current data type is signed.
+            /// </summary>
+            /// <returns>true : is signed; false : not signed</returns>
             public bool is_signed()
             {
                 return get_type_info(m_type).m_is_signed;
             }
-
+            /// <summary>
+            /// Determine whether the current data is of quantum type
+            /// </summary>
+            /// <returns>true : is quantized; false : not quantized</returns>
             public bool is_quantized()
             {
                 return get_type_info(m_type).m_is_quantized;
             }
-
-            public ulong bitwidth() {
-            return get_type_info(m_type).m_bitwidth;
+            /// <summary>
+            /// Obtain the size of the current data type
+            /// </summary>
+            /// <returns>the size of the current data type</returns>
+            public ulong bitwidth()
+            {
+                return get_type_info(m_type).m_bitwidth;
             }
 
-
+            /// <summary>
+            /// Get the current type of the Type_ Info
+            /// </summary>
+            /// <param name="type">Type_t</param>
+            /// <returns>TypeInfo data</returns>
             TypeInfo get_type_info(element.Type_t type)
             {
                 switch (type)
@@ -182,7 +350,11 @@ namespace OpenVinoSharp
                         return new TypeInfo(100000, false, false, false, "default", "default");
                 }
             }
-
+            /// <summary>
+            /// Convert type string to Type class
+            /// </summary>
+            /// <param name="type">type string</param>
+            /// <returns>Type class</returns>
             Type type_from_string(string type)
             {
                 if (type == "f16" || type == "FP16")
@@ -261,21 +433,9 @@ namespace OpenVinoSharp
                 {
                     return new Type(Type_t.undefined);
                 }
-            }
-
-           
-        
-        
-        
-        
+            }    
         };
 
        
-    }
-
-      
-
-    internal class element_type
-    {
     }
 }
