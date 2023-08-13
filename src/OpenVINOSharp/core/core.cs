@@ -56,9 +56,9 @@ namespace OpenVinoSharp
         {
             ExceptionStatus status;
             if (!String.IsNullOrEmpty(xml_config_file)) {
-                status = (ExceptionStatus)NativeMethods.ov_core_create_with_config(xml_config_file, ref ptr);
+                status = NativeMethods.ov_core_create_with_config(xml_config_file, ref ptr);
             }
-            status = (ExceptionStatus)NativeMethods.ov_core_create(ref ptr);
+            status = NativeMethods.ov_core_create(ref ptr);
             if (status != 0) {
                 ptr = IntPtr.Zero;
 
@@ -98,7 +98,7 @@ namespace OpenVinoSharp
             int l = Marshal.SizeOf(typeof(CoreVersionList));
             IntPtr ptr_core_version_s = Marshal.AllocHGlobal(l);
             sbyte[] c_device_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            status = (ExceptionStatus)NativeMethods.ov_core_get_versions_by_device_name(ptr, ref c_device_name[0], ptr_core_version_s);
+            status = NativeMethods.ov_core_get_versions_by_device_name(ptr, ref c_device_name[0], ptr_core_version_s);
             if (status != 0)
             {
                 System.Diagnostics.Debug.WriteLine("Core get_versions() error : " + status.ToString());
@@ -145,12 +145,12 @@ namespace OpenVinoSharp
             ExceptionStatus status;
             if (bin_path == "") {
                 sbyte c_bin_path = new sbyte();
-                status = (ExceptionStatus)NativeMethods.ov_core_read_model(ptr, ref c_model_path[0], ref c_bin_path, ref model_ptr);
+                status = NativeMethods.ov_core_read_model(ptr, ref c_model_path[0], ref c_bin_path, ref model_ptr);
             } 
             else
             {
                 sbyte[] c_bin_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(bin_path));
-                status = (ExceptionStatus)NativeMethods.ov_core_read_model(ptr, ref c_model_path[0], ref c_bin_path[0], ref model_ptr);
+                status = NativeMethods.ov_core_read_model(ptr, ref c_model_path[0], ref c_bin_path[0], ref model_ptr);
             }
             
             if (status != 0)
@@ -159,6 +159,29 @@ namespace OpenVinoSharp
                 return new Model(IntPtr.Zero);
             }
 
+            return new Model(model_ptr);
+        }
+
+        /// <summary>
+        /// Reads models from IR / ONNX / PDPD / TF / TFLite formats.
+        /// </summary>
+        /// <param name="model_path">String with a model in IR / ONNX / PDPD / TF / TFLite format.</param>
+        /// <param name="weights">Shared pointer to a constant tensor with weights.</param>
+        /// <note>
+        /// Created model object shares the weights with the @p weights object.
+        /// Thus, do not create @p weights on temporary data that can be freed later, since the model constant data will point to an invalid memory.
+        /// </note>
+        /// <returns>A model.</returns>
+        public Model read_model(string model_path, Tensor weights) 
+        {
+            IntPtr model_ptr = new IntPtr();
+            sbyte[] c_model_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
+            ExceptionStatus status = NativeMethods.ov_core_read_model_from_memory(ptr, ref c_model_path[0], weights.Ptr, ref model_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core read_model() error : " + status.ToString());
+                return new Model(IntPtr.Zero);
+            }
             return new Model(model_ptr);
         }
 
