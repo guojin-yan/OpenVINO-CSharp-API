@@ -11,4 +11,9 @@ using System.Threading.Tasks;
 /// </summary>
 namespace OpenVINOSharp
 {
+    /// <summary>
+    /// OpenVINO wrapper for .NET. 
+    /// Define elements in OpenVINO
+    /// </summary>
+    namespace element { }
 }
