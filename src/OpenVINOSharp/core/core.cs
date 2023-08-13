@@ -186,7 +186,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        ///     Creates a compiled model from a source model object.
+        /// Creates a compiled model from a source model object.
         /// </summary>
         /// <param name="model">Model object acquired from Core::read_model.</param>
         /// <param name="device_name">Name of a device to load a model to.</param>
@@ -197,7 +197,7 @@ namespace OpenVinoSharp
         /// Users can create as many compiled models as they need and use
         /// them simultaneously (up to the limitation of the hardware resources).
         /// </remarks>
-        public CompiledModel compiled_model(Model model, string device_name, ulong property_args_size = 0) 
+        public CompiledModel compiled_model(Model model, string device_name = "AUTO", ulong property_args_size = 0) 
         {
             
             IntPtr compiled_model_ptr = new IntPtr();
