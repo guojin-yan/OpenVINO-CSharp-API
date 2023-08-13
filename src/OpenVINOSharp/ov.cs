@@ -26,7 +26,7 @@ namespace OpenVinoSharp
             string build = String.Copy(version.buildNumber);
             string description = String.Copy(version.description);
             Version new_version = new Version(build, description);
-            status = (ExceptionStatus)NativeMethods.ov_version_free(ptr);
+            NativeMethods.ov_version_free(ptr);
             return new_version;
         }
     }
