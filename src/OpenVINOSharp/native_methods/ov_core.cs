@@ -138,8 +138,8 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_core_read_model_from_memory", 
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_core_read_model_from_memory(IntPtr core, 
-            string model_path, 
+        public extern static ExceptionStatus ov_core_read_model_from_memory(IntPtr core,
+            ref sbyte model_path, 
             IntPtr weights, 
             ref IntPtr model);
 
