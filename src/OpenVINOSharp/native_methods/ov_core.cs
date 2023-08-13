@@ -246,11 +246,12 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_core_import_model",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_core_import_model(IntPtr core,
-                     ref sbyte content,
-                     ulong content_size,
-                     ref sbyte device_name,
-                     ref IntPtr compiled_model);
+        public extern static ExceptionStatus ov_core_import_model(
+            IntPtr core,
+            ref sbyte content,
+            ulong content_size,
+            ref sbyte device_name,
+            ref IntPtr compiled_model);
 
 
         /// <summary>
