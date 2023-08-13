@@ -16,8 +16,29 @@ namespace OpenVinoSharp
     /// </remarks>
     public class Core
     {
+        /// <summary>
+        /// [private]Core class pointer.
+        /// </summary>
         private IntPtr ptr = IntPtr.Zero;
+        /// <summary>
+        /// [public]Core class pointer.
+        /// </summary>
         public IntPtr Ptr { get { return ptr; } set { ptr = value; } }
+
+        /// <summary>
+        /// Represent all available devices.
+        /// </summary>
+        struct ov_available_devices_t
+        {
+            /// <summary>
+            ///  devices' name
+            /// </summary>
+            IntPtr devices;
+            /// <summary>
+            /// devices' number
+            /// </summary>
+            ulong size;
+        }
 
         /// <summary>
         ///  Constructs an OpenVINO Core instance with devices and their plugins description.
