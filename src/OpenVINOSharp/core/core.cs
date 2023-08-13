@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Contexts;
+using System.Web.UI.WebControls;
 
 
 namespace OpenVinoSharp
@@ -33,11 +35,11 @@ namespace OpenVinoSharp
             /// <summary>
             ///  devices' name
             /// </summary>
-            IntPtr devices;
+            public IntPtr devices;
             /// <summary>
             /// devices' number
             /// </summary>
-            ulong size;
+            public ulong size;
         }
 
         /// <summary>
@@ -189,20 +191,18 @@ namespace OpenVinoSharp
         /// Creates a compiled model from a source model object.
         /// </summary>
         /// <param name="model">Model object acquired from Core::read_model.</param>
-        /// <param name="device_name">Name of a device to load a model to.</param>
-        /// <param name="property_args_size">Optional map of pairs: (property name, property value) relevant only for t
-        /// his load operation.</param>
         /// <returns>A compiled model.</returns>
         /// <remarks>
         /// Users can create as many compiled models as they need and use
         /// them simultaneously (up to the limitation of the hardware resources).
         /// </remarks>
-        public CompiledModel compiled_model(Model model, string device_name = "AUTO", ulong property_args_size = 0) 
+        public CompiledModel compiled_model(Model model)
         {
-            
+
             IntPtr compiled_model_ptr = new IntPtr();
+            string device_name = "AUTO";
             sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_core_compile_model(ptr, model.m_ptr, ref c_device[0], property_args_size, ref compiled_model_ptr);
+            ExceptionStatus status = NativeMethods.ov_core_compile_model(ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr);
             if (status != 0)
             {
                 System.Diagnostics.Debug.WriteLine("Core compiled_model() error : " + status.ToString());
@@ -211,5 +211,114 @@ namespace OpenVinoSharp
             return new CompiledModel(compiled_model_ptr);
         }
 
+        /// <summary>
+        /// Creates and loads a compiled model from a source model to the default OpenVINO device selected by the AUTO
+        /// </summary>
+        /// <param name="model">Model object acquired from Core::read_model.</param>
+        /// <param name="device_name">Name of a device to load a model to.</param>
+        /// <returns>A compiled model.</returns>
+        /// <remarks>
+        /// Users can create as many compiled models as they need and use
+        /// them simultaneously (up to the limitation of the hardware resources).
+        /// </remarks>
+        public CompiledModel compiled_model(Model model, string device_name) 
+        {
+            
+            IntPtr compiled_model_ptr = new IntPtr();
+            sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
+            ExceptionStatus status = NativeMethods.ov_core_compile_model(ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core compiled_model() error : " + status.ToString());
+                return new CompiledModel(IntPtr.Zero);
+            }
+            return new CompiledModel(compiled_model_ptr);
+        }
+
+        /// <summary>
+        /// Reads and loads a compiled model from the IR/ONNX/PDPD file to the default OpenVINO device selected by the AUTO plugin.
+        /// </summary>
+        /// <param name="model_path">Path to a model.</param>
+        /// <remarks>
+        /// This can be more efficient than using the Core::read_model + Core::compile_model(model_in_memory_object) flow, 
+        /// especially for cases when caching is enabled and a cached model is availab
+        /// </remarks>
+        /// <returns> A compiled model.</returns>
+        public CompiledModel compiled_model(string model_path)
+        {
+            IntPtr compiled_model_ptr = new IntPtr();
+            string device_name = "AUTO";
+            sbyte[] c_model = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
+            sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
+            ExceptionStatus status = NativeMethods.ov_core_compile_model_from_file(ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core compiled_model() error : " + status.ToString());
+                return new CompiledModel(IntPtr.Zero);
+            }
+            return new CompiledModel(compiled_model_ptr);
+        }
+
+
+        /// <summary>
+        /// Reads a model and creates a compiled model from the IR/ONNX/PDPD file.
+        /// </summary>
+        /// <param name="model_path">Path to a model.</param>
+        /// <param name="device_name">Name of a device to load a model to.</param>
+        /// <remarks>
+        /// This can be more efficient than using the Core::read_model + Core::compile_model(model_in_memory_object) flow, 
+        /// especially for cases when caching is enabled and a cached model is availab
+        /// </remarks>
+        /// <returns>A compiled model.</returns>
+        public CompiledModel compiled_model(string model_path, string device_name) 
+        {
+            IntPtr compiled_model_ptr = new IntPtr();
+            sbyte[] c_model = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
+            sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
+            ExceptionStatus status = NativeMethods.ov_core_compile_model_from_file(ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core compiled_model() error : " + status.ToString());
+                return new CompiledModel(IntPtr.Zero);
+            }
+            return new CompiledModel(compiled_model_ptr);
+        }
+
+
+        /// <summary>
+        /// Returns devices available for inference.
+        /// Core objects go over all registered plugins and ask about available devices.
+        /// </summary>
+        /// <returns>A vector of devices. The devices are returned as { CPU, GPU.0, GPU.1, GNA }.</returns>
+        /// <remarks>
+        /// If there is more than one device of a specific type, they are enumerated with the .# suffix.
+        /// Such enumerated device can later be used as a device name in all Core methods like Core::compile_model,
+        /// Core::query_model, Core::set_property and so on.
+        /// </remarks>
+        List<string> get_available_devices() 
+        {
+            int l = Marshal.SizeOf(typeof(ov_available_devices_t));
+            IntPtr devices_ptr = Marshal.AllocHGlobal(l);
+            ExceptionStatus status = NativeMethods.ov_core_get_available_devices(ptr, devices_ptr);
+
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Core get_available_devices() error : " + status.ToString());
+                return new List<string>();
+            }
+
+            var temp1 = Marshal.PtrToStructure(devices_ptr, typeof(ov_available_devices_t));
+
+            ov_available_devices_t devices_s = (ov_available_devices_t)temp1;
+            IntPtr[] devices_ptrs = new IntPtr[devices_s.size];
+            Marshal.Copy(devices_s.devices, devices_ptrs, 0, (int)devices_s.size);
+            List<string> devices = new List<string>();
+            for (int i = 0; i < (int)devices_s.size; ++i)
+            {
+                devices.Add(Marshal.PtrToStringAnsi(devices_ptrs[i]));
+            }
+            NativeMethods.ov_available_devices_free(devices_ptr);
+            return devices;
+        }
     }
 }
