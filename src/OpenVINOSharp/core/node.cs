@@ -65,6 +65,19 @@ namespace OpenVinoSharp
             return new Shape(shape_ptr);
         }
 
+        public PartialShape get_partial_shape()
+        {
+            int l = Marshal.SizeOf(typeof(PartialShape.ov_partial_shape));
+            IntPtr shape_ptr = Marshal.AllocHGlobal(l);
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_port_get_partial_shape(ptr, shape_ptr);
+            if (status != 0)
+            {
+                shape_ptr = IntPtr.Zero;
+                System.Diagnostics.Debug.WriteLine("Node get_partial_shape error : {0}!", status.ToString());
+            }
+            return new PartialShape(shape_ptr);
+        }
+
         public string get_name()
         {
             ExceptionStatus status;
