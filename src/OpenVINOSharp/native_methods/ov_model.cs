@@ -242,7 +242,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_model_reshape_input_by_name(
             IntPtr model,
             ref sbyte tensor_name,
-            ov_partial_shape partial_shape);
+            PartialShape.ov_partial_shape partial_shape);
 
         /// <summary>
         /// Do reshape in model for one node(port 0).
@@ -253,8 +253,8 @@ namespace OpenVinoSharp
         [DllImport(dll_extern, EntryPoint = "ov_model_reshape_single_input",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_model_reshape_single_input(
-            IntPtr model, 
-            ov_partial_shape partial_shape);
+            IntPtr model,
+            PartialShape.ov_partial_shape partial_shape);
 
         /// <summary>
         /// Do reshape in model with a list of (port id, partial shape).
