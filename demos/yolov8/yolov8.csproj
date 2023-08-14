@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.8.0.20230708" />
-    <PackageReference Include="OpenVinoSharp.win" Version="3.0.121.1" />
+    <PackageReference Include="OpenVinoSharp.win" Version="3.0.120" />
   </ItemGroup>
 
 </Project>
