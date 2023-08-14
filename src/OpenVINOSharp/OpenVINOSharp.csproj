@@ -8,7 +8,7 @@
     <PackageId>OpenVinoSharp.win</PackageId>
     <!--设置NuGet包信息-->
     <Title>OpenVinoSharp</Title>
-    <Version>3.0.120</Version>
+    <Version>3.0.121.1</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVinoSharp</Product>
@@ -22,7 +22,8 @@ Based on the C # platform, call the OpenVINO suite to deploy a deep learning mod
     <PackageIcon>openvinosharp.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>该版本为OpenVinoSharp3.0 预发行版本，功能还未完善，如使用中有问题，欢迎与我沟通联系。
-This version is a pre release version of OpenVinoSharp3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes> 
+This version is a pre release version of OpenVinoSharp3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
+    <RootNamespace>OpenVinoSharp</RootNamespace> 
   </PropertyGroup>
 
 
@@ -60,7 +61,7 @@ This version is a pre release version of OpenVinoSharp3.0 and its features are n
   
   
   <ItemGroup>
-    <None Update="build\OpenVINOSharp.win.targets">
+    <None Include="build\OpenVINOSharp.win.targets">
       <Pack>true</Pack>
       <PackagePath>build\</PackagePath>
     </None>
