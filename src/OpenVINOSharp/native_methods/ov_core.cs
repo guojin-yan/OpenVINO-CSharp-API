@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 
 namespace OpenVinoSharp
 {
@@ -13,7 +12,7 @@ namespace OpenVinoSharp
 
         /// <summary>
         /// Get version of OpenVINO.
-        /// </summary>Status code of the operation: OK(0) for success.
+        /// </summary>
         /// <param name="version">a pointer to the version</param>
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version", 
