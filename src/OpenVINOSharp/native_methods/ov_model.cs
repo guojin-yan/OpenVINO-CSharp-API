@@ -226,7 +226,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_model_reshape(
             IntPtr model,
             IntPtr[] tensor_names,
-            IntPtr partial_shapes,
+            ref PartialShape.ov_partial_shape partial_shapes,
             ulong size);
 
 
