@@ -11,8 +11,18 @@ namespace OpenVinoSharp
 {
     public class Model
     {
+        /// <summary>
+        /// [private]Model class pointer.
+        /// </summary>
         public IntPtr m_ptr = IntPtr.Zero;
+        /// <summary>
+        /// [public]Model class pointer.
+        /// </summary>
         public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        /// <param name="ptr">Model pointer.</param>
         public Model(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
@@ -39,11 +49,15 @@ namespace OpenVinoSharp
             m_ptr = IntPtr.Zero;
         }
 
+        /// <summary>
+        /// Gets the friendly name for a model.
+        /// </summary>
+        /// <returns>The friendly name for a model.</returns>
         public string get_friendly_name() 
         {
 
             IntPtr s_ptr = IntPtr.Zero;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_model_get_friendly_name(m_ptr, ref s_ptr);
+            ExceptionStatus status = NativeMethods.ov_model_get_friendly_name(m_ptr, ref s_ptr);
             if (status != 0)
             {
                 System.Diagnostics.Debug.WriteLine("Model get_type error : {0}!", status.ToString());
@@ -52,69 +66,396 @@ namespace OpenVinoSharp
 
             return ss;
         }
+        /// <summary>
+        /// Get single input port of model, which only support single input model.
+        /// </summary>
+        /// <returns>The input port of model.</returns>
+        public Node get_input()
+        {
+            IntPtr port_ptr = IntPtr.Zero;
+            ExceptionStatus status = NativeMethods.ov_model_input(m_ptr, ref port_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model get_input() error!");
+            }
+            return new Node(port_ptr, Node.NodeType.e_const);
+        }
 
+        /// <summary>
+        /// Get an input port of model by name.
+        /// </summary>
+        /// <param name="tensor_name">input tensor name (string).</param>
+        /// <returns>The input port of model.</returns>
+        public Node get_input(string tensor_name)
+        {
+            IntPtr port_ptr = IntPtr.Zero;
+            sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
+            ExceptionStatus status = NativeMethods.ov_model_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model get_input() error!");
+            }
+            return new Node(port_ptr, Node.NodeType.e_const);
+        }
+
+        /// <summary>
+        /// Get an input port of model by port index.
+        /// </summary>
+        /// <param name="index">input tensor index.</param>
+        /// <returns>The input port of model.</returns>
+        public Node get_input(ulong index)
+        {
+            IntPtr port_ptr = IntPtr.Zero;
+            ExceptionStatus status = NativeMethods.ov_model_input_by_index(m_ptr, index, ref port_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model get_input() error!");
+            }
+            return new Node(port_ptr, Node.NodeType.e_const);
+        }
+
+        /// <summary>
+        /// Get an single output port of model, which only support single output model.
+        /// </summary>
+        /// <returns>The output port of model.</returns>
+        public Node get_output()
+        {
+            IntPtr port_ptr = IntPtr.Zero;
+            ExceptionStatus status = NativeMethods.ov_model_output(m_ptr, ref port_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model get_output() error!");
+            }
+            return new Node(port_ptr, Node.NodeType.e_const);
+        }
+        /// <summary>
+        /// Get an output port of model by name.
+        /// </summary>
+        /// <param name="tensor_name">output tensor name (string).</param>
+        /// <returns>The output port of model.</returns>
+        public Node get_output(string tensor_name)
+        {
+            IntPtr port_ptr = IntPtr.Zero;
+            sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
+            ExceptionStatus status = NativeMethods.ov_model_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model get_output() error!");
+            }
+            return new Node(port_ptr, Node.NodeType.e_const);
+        }
+        /// <summary>
+        /// Get an output port of model by port index.
+        /// </summary>
+        /// <param name="index">input tensor index.</param>
+        /// <returns>The output port of model.</returns>
+        public Node get_output(ulong index)
+        {
+            IntPtr port_ptr = IntPtr.Zero;
+            ExceptionStatus status = NativeMethods.ov_model_output_by_index(m_ptr, index, ref port_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model get_output() error!");
+            }
+            return new Node(port_ptr, Node.NodeType.e_const);
+        }
+        /// <summary>
+        /// Get a const single input port of model, which only support single input model.
+        /// </summary>
+        /// <returns>The const input port of model.</returns>
         public Node get_const_input()
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_model_const_input(m_ptr, ref port_ptr);
+            ExceptionStatus status = NativeMethods.ov_model_const_input(m_ptr, ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_type error!");
+                System.Diagnostics.Debug.WriteLine("Model get_const_input() error!");
             }
             return new Node(port_ptr,Node.NodeType.e_const);
         }
+        /// <summary>
+        /// Get a const input port of model by name.
+        /// </summary>
+        /// <param name="tensor_name">input tensor name (string).</param>
+        /// <returns>The const input port of model.</returns>
         public Node get_const_input(string tensor_name)
         {
             IntPtr port_ptr = IntPtr.Zero;
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_model_const_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
+            ExceptionStatus status = NativeMethods.ov_model_const_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_type error!");
+                System.Diagnostics.Debug.WriteLine("Model get_const_input() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
+        /// <summary>
+        /// Get a const input port of model by port index.
+        /// </summary>
+        /// <param name="index">input tensor index.</param>
+        /// <returns>The const input port of model.</returns>
         public Node get_const_input(ulong index)
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_model_const_input_by_index(m_ptr, index, ref port_ptr);
+            ExceptionStatus status = NativeMethods.ov_model_const_input_by_index(m_ptr, index, ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_type error!");
+                System.Diagnostics.Debug.WriteLine("Model get_const_input() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
+        /// <summary>
+        /// Get a single const output port of model, which only support single output model..
+        /// </summary>
+        /// <returns>The const output port of model.</returns>
         public Node get_const_output()
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_model_const_output(m_ptr, ref port_ptr);
+            ExceptionStatus status = NativeMethods.ov_model_const_output(m_ptr, ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_type error!");
+                System.Diagnostics.Debug.WriteLine("Model  get_const_output() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
+        /// <summary>
+        /// Get a const output port of model by port index.
+        /// </summary>
+        /// <param name="tensor_name">output tensor name (string).</param>
+        /// <returns>The const output port of model.</returns>
         public Node get_const_output(string tensor_name)
         {
             IntPtr port_ptr = IntPtr.Zero;
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_model_const_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
+            ExceptionStatus status = NativeMethods.ov_model_const_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_type error!");
+                System.Diagnostics.Debug.WriteLine("Model  get_const_output() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
+        /// <summary>
+        /// Get a const output port of model by name.
+        /// </summary>
+        /// <param name="index">output tensor index.</param>
+        /// <returns>The const output port of model.</returns>
         public Node get_const_output(ulong index)
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_model_const_output_by_index(m_ptr, index, ref port_ptr);
+            ExceptionStatus status = NativeMethods.ov_model_const_output_by_index(m_ptr, index, ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_type error!");
+                System.Diagnostics.Debug.WriteLine("Model  get_const_output() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
+
+        /// <summary>
+        /// Get single input of model, which only support single input model.
+        /// </summary>
+        /// <returns>The input of model.</returns>
+        public Input input() 
+        {
+            Node node = get_input();
+            return new Input(node, 0);
+        }
+        /// <summary>
+        /// Get an input of model by port index.
+        /// </summary>
+        /// <param name="index">input tensor index.</param>
+        /// <returns>The input of model.</returns>
+        public Input input(ulong index) 
+        {
+            Node node = get_input(index);
+            return new Input(node, index);
+        }
+        /// <summary>
+        /// Get an input of model by name.
+        /// </summary>
+        /// <param name="tensor_name">input tensor name (string).</param>
+        /// <returns>The input of model.</returns>
+        public Input input(string tensor_name)
+        {
+            Node node = get_input(tensor_name);
+            return new Input(node, 0);
+        }
+
+        /// <summary>
+        /// Get single const input of model, which only support single input model.
+        /// </summary>
+        /// <returns>The const input of model.</returns>
+        public Input const_input()
+        {
+            Node node = get_const_input();
+            return new Input(node, 0);
+        }
+        /// <summary>
+        /// Get an const input of model by port index.
+        /// </summary>
+        /// <param name="index">input tensor index.</param>
+        /// <returns>The const input of model.</returns>
+        public Input const_input(ulong index)
+        {
+            Node node = get_const_input(index);
+            return new Input(node, index);
+        }
+        /// <summary>
+        /// Get an const input of model by name.
+        /// </summary>
+        /// <param name="tensor_name">input tensor name (string).</param>
+        /// <returns>The const input of model.</returns>
+        public Input const_input(string tensor_name)
+        {
+            Node node = get_const_input(tensor_name);
+            return new Input(node, 0);
+        }
+
+
+
+        /// <summary>
+        /// Get single input of model, which only support single input model.
+        /// </summary>
+        /// <returns>The input of model.</returns>
+        public Input output()
+        {
+            Node node = get_output();
+            return new Input(node, 0);
+        }
+        /// <summary>
+        /// Get an output of model by port index.
+        /// </summary>
+        /// <param name="index">output tensor index.</param>
+        /// <returns>The output of model.</returns>
+        public Input output(ulong index)
+        {
+            Node node = get_output(index);
+            return new Input(node, index);
+        }
+        /// <summary>
+        /// Get an output of model by name.
+        /// </summary>
+        /// <param name="tensor_name">output tensor name (string).</param>
+        /// <returns>The output of model.</returns>
+        public Input output(string tensor_name)
+        {
+            Node node = get_output(tensor_name);
+            return new Input(node, 0);
+        }
+
+        /// <summary>
+        /// Get single const output of model, which only support single output model.
+        /// </summary>
+        /// <returns>The const output of model.</returns>
+        public Input const_output()
+        {
+            Node node = get_const_output();
+            return new Input(node, 0);
+        }
+        /// <summary>
+        /// Get an const output of model by port index.
+        /// </summary>
+        /// <param name="index">output tensor index.</param>
+        /// <returns>The const output of model.</returns>
+        public Input const_output(ulong index)
+        {
+            Node node = get_const_output(index);
+            return new Input(node, index);
+        }
+        /// <summary>
+        /// Get an const output of model by name.
+        /// </summary>
+        /// <param name="tensor_name">output tensor name (string).</param>
+        /// <returns>The const output of model.</returns>
+        public Input const_output(string tensor_name)
+        {
+            Node node = get_const_output(tensor_name);
+            return new Input(node, 0);
+        }
+        /// <summary>
+        /// Get the input size of model.
+        /// </summary>
+        /// <returns>The input size.</returns>
+        public ulong get_inputs_size() 
+        {
+            ulong input_size = 0;
+            ExceptionStatus status = NativeMethods.ov_model_inputs_size(m_ptr, ref input_size);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model  get_intputs_size() error!");
+            }
+            return input_size;
+        }
+        /// <summary>
+        /// Get the output size of model.
+        /// </summary>
+        /// <returns>The output size.</returns>
+        public ulong get_outputs_size()
+        {
+            ulong output_size = 0;
+            ExceptionStatus status = NativeMethods.ov_model_outputs_size(m_ptr, ref output_size);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model  get_outputs_size() error!");
+            }
+            return output_size;
+        }
+
+        /// <summary>
+        /// Get all input of model.
+        /// </summary>
+        /// <returns>All input of model.</returns>
+        List<Input> inputs() 
+        {
+            ulong input_size = get_inputs_size();
+            List<Input> inputs = new List<Input>();
+            for (ulong index = 0; index < input_size; ++index) 
+            {
+                inputs.Add(input(index));
+            }
+            return inputs;
+        }
+
+        /// <summary>
+        /// Get all output of model
+        /// </summary>
+        /// <returns>All output of model</returns>
+        List<Input> outputs()
+        {
+            ulong output_size = get_outputs_size();
+            List<Input> outputs = new List<Input>();
+            for (ulong index = 0; index < output_size; ++index)
+            {
+                outputs.Add(output(index));
+            }
+            return outputs;
+        }
+        /// <summary>
+        /// The ops defined in the model is dynamic shape.
+        /// </summary>
+        /// <returns>true if any of the ops defined in the model is dynamic shape..</returns>
+        bool is_dynamic() 
+        {
+            return NativeMethods.ov_model_is_dynamic(m_ptr);
+        }
+
+
+        /// <summary>
+        /// Do reshape in model with partial shape for a specified name.
+        /// </summary>
+        /// <param name="tensor_names">The tensor name of input tensor.</param>
+        /// <param name="partial_shapes">A PartialShape.</param>
+        void reshape(string[] tensor_names, PartialShape.ov_partial_shape[] partial_shapes)
+        { 
+            IntPtr[] tensor_names_ptr = new IntPtr[tensor_names.Length];
+            for (int i = 0; i < tensor_names.Length; ++i) 
+            { 
+                IntPtr p = Marshal.StringToHGlobalAnsi(tensor_names[i]);
+                tensor_names_ptr[i] = p;
+            }
+            ExceptionStatus status = NativeMethods.ov_model_reshape(m_ptr, tensor_names_ptr, 
+                ref partial_shapes[0], (ulong)tensor_names.Length);
+        }
+
     }
 
     
