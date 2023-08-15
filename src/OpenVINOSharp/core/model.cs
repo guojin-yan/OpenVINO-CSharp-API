@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static OpenCvSharp.FileStorage;
 
 namespace OpenVinoSharp
 {
@@ -404,7 +405,7 @@ namespace OpenVinoSharp
         /// Get all input of model.
         /// </summary>
         /// <returns>All input of model.</returns>
-        List<Input> inputs() 
+        public List<Input> inputs() 
         {
             ulong input_size = get_inputs_size();
             List<Input> inputs = new List<Input>();
@@ -419,7 +420,7 @@ namespace OpenVinoSharp
         /// Get all output of model
         /// </summary>
         /// <returns>All output of model</returns>
-        List<Input> outputs()
+        public List<Input> outputs()
         {
             ulong output_size = get_outputs_size();
             List<Input> outputs = new List<Input>();
@@ -433,7 +434,7 @@ namespace OpenVinoSharp
         /// The ops defined in the model is dynamic shape.
         /// </summary>
         /// <returns>true if any of the ops defined in the model is dynamic shape..</returns>
-        bool is_dynamic() 
+        public bool is_dynamic() 
         {
             return NativeMethods.ov_model_is_dynamic(m_ptr);
         }
@@ -442,18 +443,96 @@ namespace OpenVinoSharp
         /// <summary>
         /// Do reshape in model with partial shape for a specified name.
         /// </summary>
-        /// <param name="tensor_names">The tensor name of input tensor.</param>
-        /// <param name="partial_shapes">A PartialShape.</param>
-        void reshape(string[] tensor_names, PartialShape.ov_partial_shape[] partial_shapes)
-        { 
-            IntPtr[] tensor_names_ptr = new IntPtr[tensor_names.Length];
-            for (int i = 0; i < tensor_names.Length; ++i) 
-            { 
-                IntPtr p = Marshal.StringToHGlobalAnsi(tensor_names[i]);
-                tensor_names_ptr[i] = p;
+        /// <param name="partial_shapes">The list of input tensor names and PartialShape.</param>
+        public void reshape(Dictionary<string, PartialShape> partial_shapes)
+        {
+            if (1 == partial_shapes.Count)
+            {
+                IntPtr[] tensor_names_ptr = new IntPtr[partial_shapes.Count];
+                Ov.ov_partial_shape[] shapes = new Ov.ov_partial_shape[partial_shapes.Count];
+                int i = 0;
+                foreach (var partial_shape in partial_shapes)
+                {
+                    IntPtr p = Marshal.StringToHGlobalAnsi(partial_shape.Key);
+                    tensor_names_ptr[i] = p;
+                    shapes[i] = partial_shape.Value.get_partial_shape();
+                }
+                ExceptionStatus status = NativeMethods.ov_model_reshape(m_ptr, tensor_names_ptr,
+                    ref shapes[0], (ulong)partial_shapes.Count);
+                if (status != 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
+                }
             }
-            ExceptionStatus status = NativeMethods.ov_model_reshape(m_ptr, tensor_names_ptr, 
-                ref partial_shapes[0], (ulong)tensor_names.Length);
+            else 
+            {
+                foreach (var partial_shape in partial_shapes) 
+                {
+                    sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(partial_shape.Key));
+                    ExceptionStatus status = NativeMethods.ov_model_reshape_input_by_name(m_ptr, ref c_tensor_name[0],
+                        partial_shape.Value.get_partial_shape());
+                    if (status != 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
+                    }
+                }
+
+            }
+        }
+        /// <summary>
+        /// Do reshape in model for one node(port 0).
+        /// </summary>
+        /// <param name="partial_shape">A PartialShape.</param>
+        public void reshape(PartialShape partial_shape) 
+        {
+            ExceptionStatus status = NativeMethods.ov_model_reshape_single_input(m_ptr, partial_shape.get_partial_shape());
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
+            }
+        }
+        /// <summary>
+        /// Do reshape in model with a list of (port id, partial shape).
+        /// </summary>
+        /// <param name="partial_shapes">The list of input port id and PartialShape.</param>
+        public void reshape(Dictionary<ulong, PartialShape> partial_shapes)
+        {
+            ulong[] indexs = new ulong[partial_shapes.Count];
+            Ov.ov_partial_shape[] shapes = new Ov.ov_partial_shape[partial_shapes.Count];
+            int i = 0;
+            foreach (var partial_shape in partial_shapes)
+            {
+                indexs[i] = partial_shape.Key;
+                shapes[i] = partial_shape.Value.get_partial_shape();
+            }
+            ExceptionStatus status = NativeMethods.ov_model_reshape_by_port_indexes(m_ptr, ref indexs[0],
+                ref shapes[0], (ulong)partial_shapes.Count);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
+            }
+
+        }
+        /// <summary>
+        /// Do reshape in model with a list of (ov_output_port_t, partial shape).
+        /// </summary>
+        /// <param name="partial_shapes">The list of input node and PartialShape.</param>
+        public void reshape(Dictionary<Node, PartialShape> partial_shapes)
+        {
+            IntPtr[] nodes_ptr = new IntPtr[partial_shapes.Count];
+            Ov.ov_partial_shape[] shapes = new Ov.ov_partial_shape[partial_shapes.Count];
+            int i = 0;
+            foreach (var partial_shape in partial_shapes)
+            {
+                nodes_ptr[i] = partial_shape.Key.Ptr; 
+                shapes[i] = partial_shape.Value.get_partial_shape();
+            }
+            ExceptionStatus status = NativeMethods.ov_model_reshape_by_ports(m_ptr, ref nodes_ptr[0],
+                ref shapes[0], (ulong)partial_shapes.Count);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
+            }
         }
 
     }
