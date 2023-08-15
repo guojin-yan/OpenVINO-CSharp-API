@@ -5,25 +5,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using ov_rank = OpenVinoSharp.Ov.ov_rank;
 namespace OpenVinoSharp
 {
     
     public partial class NativeMethods
     {
-        /// <summary>
-        /// This is a structure interface equal to ov::Rank
-        /// </summary>
-        public struct ov_rank
-        {
-            /// <summary>
-            /// The lower inclusive limit for the Rank.
-            /// </summary>
-            long min;
-            /// <summary>
-            /// The upper inclusive limit for the Rank.
-            /// </summary>
-            long max;
-        };
+
         /// <summary>
         /// Check this rank whether is dynamic
         /// </summary>

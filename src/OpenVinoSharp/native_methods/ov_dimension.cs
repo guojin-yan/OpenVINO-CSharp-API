@@ -5,25 +5,14 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using ov_dimension = OpenVinoSharp.Ov.ov_dimension;
+
 namespace OpenVinoSharp
 {
     public partial class NativeMethods
     {
 
-        /// <summary>
-        /// This is a structure interface equal to ov::Dimension
-        /// </summary>
-        public struct ov_dimension
-        {
-            /// <summary>
-            /// The lower inclusive limit for the dimension.
-            /// </summary>
-            long min;
-            /// <summary>
-            /// The upper inclusive limit for the dimension.
-            /// </summary>
-            long max;
-        };
+      
 
         /// <summary>
         /// Check this dimension whether is dynamic

@@ -6,6 +6,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
+using ov_shape = OpenVinoSharp.Ov.ov_shape;
+
 namespace OpenVinoSharp
 {
 
@@ -15,30 +17,7 @@ namespace OpenVinoSharp
     /// <ingroup>ov_runtime_c#_api</ingroup>
     public class Shape : List<long>
     {
-        /// <summary>
-        /// Reprents a static shape.
-        /// </summary>
-        public struct ov_shape
-        {
-            /// <summary>
-            /// the rank of shape
-            /// </summary>
-            public long rank;
-            /// <summary>
-            /// the dims of shape
-            /// </summary>
-            public IntPtr dims_ptr;
-            /// <summary>
-            /// Get the dims of shape
-            /// </summary>
-            /// <returns>the dims of shape</returns>
-            public long[] get_dims()
-            {
-                long[] dims = new long[rank];
-                Marshal.Copy(dims_ptr, dims, 0, (int)rank);
-                return dims;
-            }
-        }
+
 
         public ov_shape shape;
         private IntPtr m_ptr = IntPtr.Zero;
@@ -74,7 +53,7 @@ namespace OpenVinoSharp
             {
                 this.Add(axis_lengths[i]);
             }
-            int l = Marshal.SizeOf(typeof(Shape.ov_shape));
+            int l = Marshal.SizeOf(typeof(ov_shape));
             m_ptr = Marshal.AllocHGlobal(l);
             ExceptionStatus status = 
                 (ExceptionStatus)NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths.ToArray()[0], m_ptr);
@@ -96,7 +75,7 @@ namespace OpenVinoSharp
             {
                 this.Add(axis_lengths[i]);
             }
-            int l = Marshal.SizeOf(typeof(Shape.ov_shape));
+            int l = Marshal.SizeOf(typeof(ov_shape));
             m_ptr = Marshal.AllocHGlobal(l);
             ExceptionStatus status =
                 (ExceptionStatus)NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths[0], m_ptr);

@@ -261,7 +261,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="model">A pointer to the ov_model_t.</param>
         /// <param name="port_indexes">The array of port indexes.</param>
-        /// <param name="partial_shape">A PartialShape list.</param>
+        /// <param name="partial_shapes">A PartialShape list.</param>
         /// <param name="size">The item count in the list.</param>
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_model_reshape_by_port_indexes",
@@ -269,7 +269,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_model_reshape_by_port_indexes(
             IntPtr model,
             ref ulong port_indexes,
-            IntPtr partial_shape,
+            ref PartialShape.ov_partial_shape partial_shapes,
             ulong size);
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_model_reshape_by_ports(
             IntPtr model,
             ref IntPtr output_ports,
-            IntPtr partial_shapes,
+            ref PartialShape.ov_partial_shape partial_shapes,
             ulong size);
 
         /// <summary>
