@@ -79,7 +79,7 @@ namespace OpenVinoSharp
             {
                 System.Diagnostics.Debug.WriteLine("Model get_input() error!");
             }
-            return new Node(port_ptr, Node.NodeType.e_const);
+            return new Node(port_ptr, Node.NodeType.e_nomal);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace OpenVinoSharp
             {
                 System.Diagnostics.Debug.WriteLine("Model get_input() error!");
             }
-            return new Node(port_ptr, Node.NodeType.e_const);
+            return new Node(port_ptr, Node.NodeType.e_nomal);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace OpenVinoSharp
             {
                 System.Diagnostics.Debug.WriteLine("Model get_input() error!");
             }
-            return new Node(port_ptr, Node.NodeType.e_const);
+            return new Node(port_ptr, Node.NodeType.e_nomal);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace OpenVinoSharp
             {
                 System.Diagnostics.Debug.WriteLine("Model get_output() error!");
             }
-            return new Node(port_ptr, Node.NodeType.e_const);
+            return new Node(port_ptr, Node.NodeType.e_nomal);
         }
         /// <summary>
         /// Get an output port of model by name.
@@ -143,7 +143,7 @@ namespace OpenVinoSharp
             {
                 System.Diagnostics.Debug.WriteLine("Model get_output() error!");
             }
-            return new Node(port_ptr, Node.NodeType.e_const);
+            return new Node(port_ptr, Node.NodeType.e_nomal);
         }
         /// <summary>
         /// Get an output port of model by port index.
@@ -158,7 +158,7 @@ namespace OpenVinoSharp
             {
                 System.Diagnostics.Debug.WriteLine("Model get_output() error!");
             }
-            return new Node(port_ptr, Node.NodeType.e_const);
+            return new Node(port_ptr, Node.NodeType.e_nomal);
         }
         /// <summary>
         /// Get a const single input port of model, which only support single input model.
