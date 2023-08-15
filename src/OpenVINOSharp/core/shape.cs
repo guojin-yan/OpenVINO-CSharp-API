@@ -17,10 +17,17 @@ namespace OpenVinoSharp
     /// <ingroup>ov_runtime_c#_api</ingroup>
     public class Shape : List<long>
     {
-
-
+        /// <summary>
+        /// [struct] The shape ov_shape
+        /// </summary>
         public ov_shape shape;
+        /// <summary>
+        /// [private]Shape class pointer.
+        /// </summary>
         private IntPtr m_ptr = IntPtr.Zero;
+        /// <summary>
+        /// [public]Shape class pointer.
+        /// </summary>
         public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
         /// <summary>
         /// Constructs Shape from the initialized IntPtr.
@@ -56,7 +63,7 @@ namespace OpenVinoSharp
             int l = Marshal.SizeOf(typeof(ov_shape));
             m_ptr = Marshal.AllocHGlobal(l);
             ExceptionStatus status = 
-                (ExceptionStatus)NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths.ToArray()[0], m_ptr);
+                NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths.ToArray()[0], m_ptr);
             var temp = Marshal.PtrToStructure(m_ptr, typeof(ov_shape));
             shape = (ov_shape)temp;
             if (status != 0)
@@ -78,7 +85,7 @@ namespace OpenVinoSharp
             int l = Marshal.SizeOf(typeof(ov_shape));
             m_ptr = Marshal.AllocHGlobal(l);
             ExceptionStatus status =
-                (ExceptionStatus)NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths[0], m_ptr);
+                NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths[0], m_ptr);
             var temp = Marshal.PtrToStructure(m_ptr, typeof(ov_shape));
             shape = (ov_shape)temp;
             if (status != 0)
@@ -111,6 +118,10 @@ namespace OpenVinoSharp
         /// <returns>shape string</returns>
         public string to_string() 
         {
+            if (this.Count < 1) 
+            {
+                return "NULL";
+            }
             string s = "Shape : [";
             foreach(var i in this)
             {
