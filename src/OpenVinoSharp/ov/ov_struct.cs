@@ -75,11 +75,11 @@ namespace OpenVinoSharp
             /// <summary>
             /// The lower inclusive limit for the Rank.
             /// </summary>
-            long min;
+            public long min;
             /// <summary>
             /// The upper inclusive limit for the Rank.
             /// </summary>
-            long max;
+            public long max;
         };
 
         /// <summary>
@@ -90,11 +90,74 @@ namespace OpenVinoSharp
             /// <summary>
             /// The lower inclusive limit for the dimension.
             /// </summary>
-            long min;
+            public long min;
             /// <summary>
             /// The upper inclusive limit for the dimension.
             /// </summary>
-            long max;
+            public long max;
+        };
+
+        /// <summary>
+        /// Represents basic inference profiling information per operation.
+        /// </summary>
+        /// <remarks> 
+        /// If the operation is executed using tiling, the sum time per each tile is indicated as the total execution time. 
+        /// Due to parallel execution, the total execution time for all nodes might be greater than the total inference time.
+        /// </remarks>
+        public struct ProfilingInfo
+        {
+            /// <summary>
+            /// Defines the general status of a node.
+            /// </summary>
+            public enum Status
+            {
+                /// <summary>
+                /// A node is not executed.
+                /// </summary>
+                NOT_RUN,
+                /// <summary>
+                /// A node is optimized out during graph optimization phase.
+                /// </summary>
+                OPTIMIZED_OUT,
+                /// <summary>
+                /// A node is executed.
+                /// </summary>
+                EXECUTED
+            };
+            /// <summary>
+            /// The absolute time, in microseconds, that the node ran (in total).
+            /// </summary>
+            public ulong real_time;
+            /// <summary>
+            /// The net host CPU time that the node ran.
+            /// </summary>
+            public ulong cpu_time;
+            /// <summary>
+            /// Name of a node.
+            /// </summary>
+            public string node_name;
+            /// <summary>
+            /// Execution type of a unit.
+            /// </summary>
+            public string exec_type;
+            /// <summary>
+            /// Node type.
+            /// </summary>
+            public string node_type;
+        };
+        /// <summary>
+        /// A list of profiling info data
+        /// </summary>
+        public struct ov_profiling_info_list
+        {
+            /// <summary>
+            /// The list of ProfilingInfo
+            /// </summary>
+            public IntPtr profiling_infos;
+            /// <summary>
+            /// he list size
+            /// </summary>
+            public ulong size;
         };
 
     }
