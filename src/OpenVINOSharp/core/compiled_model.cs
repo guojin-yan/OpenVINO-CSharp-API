@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.UI;
 
 namespace OpenVinoSharp
 {
@@ -243,10 +242,10 @@ namespace OpenVinoSharp
         /// </remarks>
         /// <returns>Compiled model output.</returns>
         /// <exception cref="">If a model has more than one output, this method throws ov::Exception.</exception>
-        public Input output()
+        public Output output()
         {
             Node node = get_output();
-            return new Input(node, 0);
+            return new Output(node, 0);
         }
         /// <summary>
         /// Gets output of a compiled model identified by @p index.
@@ -255,10 +254,10 @@ namespace OpenVinoSharp
         /// <param name="index">Index of output.</param>
         /// <returns>Compiled model output.</returns>
         /// <exception cref="">The method throws ov::Exception if output with the specified index @p index is not found.</exception>
-        public Input output(ulong index)
+        public Output output(ulong index)
         {
             Node node = get_output(index);
-            return new Input(node, index);
+            return new Output(node, index);
         }
         /// <summary>
         /// Gets output of a compiled model identified by @p tensor_name.
@@ -267,10 +266,10 @@ namespace OpenVinoSharp
         /// <param name="tensor_name">Output tensor name.</param>
         /// <returns>Compiled model output.</returns>
         /// <exception cref="">The method throws ov::Exception if output with the specified tensor name @p tensor_name is not found.</exception>
-        public Input output(string tensor_name)
+        public Output output(string tensor_name)
         {
             Node node = get_output(tensor_name);
-            return new Input(node, 0);
+            return new Output(node, 0);
         }
 
         /// <summary>
@@ -300,10 +299,10 @@ namespace OpenVinoSharp
         /// Outputs contain information about output tensors such as tensor shape, names, and element type.
         /// </remarks>
         /// <returns>List of model outputs.</returns>
-        public List<Input> outputs()
+        public List<Output> outputs()
         {
             ulong output_size = get_outputs_size();
-            List<Input> outputs = new List<Input>();
+            List<Output> outputs = new List<Output>();
             for (ulong index = 0; index < output_size; ++index)
             {
                 outputs.Add(output(index));
