@@ -390,7 +390,7 @@ namespace OpenVinoSharp
         /// to create this CompiledModel.
         /// </summary>
         /// <returns>A context.</returns>
-        RemoteContext get_context() {
+        public RemoteContext get_context() {
             IntPtr context_ptr = IntPtr.Zero;
             ExceptionStatus status = NativeMethods.ov_compiled_model_get_context(m_ptr, ref context_ptr);
             if (status != 0)
