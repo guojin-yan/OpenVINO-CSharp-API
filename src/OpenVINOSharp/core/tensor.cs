@@ -16,13 +16,19 @@ namespace OpenVinoSharp
     /// <ingroup>ov_runtime_c#_api</ingroup>
     public class Tensor
     {
+        /// <summary>
+        /// [private]Tensor class pointer.
+        /// </summary>
         private IntPtr m_ptr = IntPtr.Zero;
+        /// <summary>
+        /// [public]Tensor class pointer.
+        /// </summary>
         public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
 
         /// <summary>
-        /// Constructs Tensor from the initialized std::shared_ptr
+        /// Constructs Tensor from the initialized pointer.
         /// </summary>
-        /// <param name="ptr"></param>
+        /// <param name="ptr">Tensor pointer.</param>
         public Tensor(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
@@ -33,6 +39,12 @@ namespace OpenVinoSharp
             this.m_ptr = ptr;
         }
 
+        /// <summary>
+        /// Constructs Tensor using element type ,shape and image data. 
+        /// </summary>
+        /// <param name="type">Tensor element type</param>
+        /// <param name="shape">Tensor shape</param>
+        /// <param name="mat">Image data</param>
         public Tensor(element.Type type, Shape shape, OvMat mat) 
         {
             int l =mat.mat_data.Length;
@@ -46,11 +58,48 @@ namespace OpenVinoSharp
                 System.Diagnostics.Debug.WriteLine("Tensor init error : " + status.ToString());
             }
         }
+        /// <summary>
+        /// Constructs Tensor using element type and shape. Wraps allocated host memory.
+        /// </summary>
+        /// <remarks>Does not perform memory allocation internally.</remarks>
+        /// <param name="type">Tensor element type</param>
+        /// <param name="shape">Tensor shape</param>
+        /// <param name="host_ptr">Pointer to pre-allocated host memory</param>
+        public Tensor(element.Type type, Shape shape, IntPtr host_ptr)
+        {
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)type.get_type(), shape.shape, host_ptr, ref m_ptr);
+            if (status != 0)
+            {
+                m_ptr = IntPtr.Zero;
+                System.Diagnostics.Debug.WriteLine("Tensor init error : " + status.ToString());
+            }
+        }
 
+        /// <summary>
+        /// Constructs Tensor using element type and shape. Allocate internal host storage using default allocator
+        /// </summary>
+        /// <param name="type">Tensor element type</param>
+        /// <param name="shape">Tensor shape</param>
         public Tensor(element.Type type, Shape shape)
         {
             ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_create
                 ((uint)type.get_type(), shape.shape, ref m_ptr);
+            if (status != 0)
+            {
+                m_ptr = IntPtr.Zero;
+                System.Diagnostics.Debug.WriteLine("Tensor init error : " + status.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Default copy constructor
+        /// </summary>
+        /// <param name="tensor">other Tensor object</param>
+        public Tensor(Tensor tensor) 
+        {
+            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)tensor.get_element_type().get_type(), tensor.get_shape().shape, tensor.data(), ref m_ptr);
             if (status != 0)
             {
                 m_ptr = IntPtr.Zero;
