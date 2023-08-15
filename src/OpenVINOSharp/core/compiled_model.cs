@@ -83,7 +83,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_input(m_ptr, ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_input() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel get_input() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
@@ -100,7 +100,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_input() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel get_input() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
@@ -116,7 +116,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_input_by_index(m_ptr, index, ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_input() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel get_input() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
@@ -131,7 +131,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_output(m_ptr, ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_output() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel get_output() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
@@ -147,7 +147,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_output() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel get_output() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
@@ -162,7 +162,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_output_by_index(m_ptr, index, ref port_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model get_output() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel get_output() error!");
             }
             return new Node(port_ptr, Node.NodeType.e_const);
         }
@@ -176,7 +176,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_inputs_size(m_ptr, ref input_size);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model  get_intputs_size() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel get_intputs_size() error!");
             }
             return input_size;
         }
@@ -190,7 +190,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_outputs_size(m_ptr, ref output_size);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model  get_outputs_size() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel get_outputs_size() error!");
             }
             return output_size;
         }
@@ -320,13 +320,13 @@ namespace OpenVinoSharp
         /// are selected for optimal inference.
         /// </remarks>
         /// <returns></returns>
-        Model get_runtime_model()
+        public Model get_runtime_model()
         { 
             IntPtr model_ptr = IntPtr.Zero;
             ExceptionStatus status = NativeMethods.ov_compiled_model_get_runtime_model(m_ptr, ref model_ptr);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model  get_runtime_model() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel  get_runtime_model() error!");
             }
             return new Model(model_ptr);
         }
@@ -342,7 +342,7 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_export_model(m_ptr, ref c_model_path[0]);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model  export_model() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel  export_model() error!");
             }
         }
 
@@ -357,8 +357,47 @@ namespace OpenVinoSharp
             ExceptionStatus status = NativeMethods.ov_compiled_model_set_property(m_ptr, property_key, property_value);
             if (status != 0)
             {
-                System.Diagnostics.Debug.WriteLine("Model  export_model() error!");
+                System.Diagnostics.Debug.WriteLine("CompiledModel  export_model() error!");
             }
+        }
+        /// <summary>
+        /// Gets properties for current compiled model
+        /// </summary>
+        /// <remarks>
+        /// The method is responsible for extracting information that affects compiled model inference. 
+        /// The list of supported configuration values can be extracted via CompiledModel::get_property 
+        /// with the ov::supported_properties key, but some of these keys cannot be changed dynamically, 
+        /// for example, ov::device::id cannot be changed if a compiled model has already been compiled 
+        /// for a particular device.
+        /// </remarks>
+        /// <param name="property_key">Property key, can be found in openvino/runtime/properties.hpp.</param>
+        /// <returns>Property value.</returns>
+        public string get_property(string property_key) 
+        {
+            sbyte[] c_property_key = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(property_key));
+            IntPtr property_value_ptr = IntPtr.Zero;
+            ExceptionStatus status = NativeMethods.ov_compiled_model_get_property(m_ptr, ref c_property_key[0], 
+                ref property_value_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("CompiledModel  export_model() error!");
+            }
+            return Marshal.PtrToStringAnsi(property_value_ptr);
+        }
+
+        /// <summary>
+        /// Returns pointer to device-specific shared context on a remote accelerator device that was used 
+        /// to create this CompiledModel.
+        /// </summary>
+        /// <returns>A context.</returns>
+        RemoteContext get_context() {
+            IntPtr context_ptr = IntPtr.Zero;
+            ExceptionStatus status = NativeMethods.ov_compiled_model_get_context(m_ptr, ref context_ptr);
+            if (status != 0)
+            {
+                System.Diagnostics.Debug.WriteLine("CompiledModel  export_model() error!");
+            }
+            return new RemoteContext(context_ptr);
         }
     }
 }
