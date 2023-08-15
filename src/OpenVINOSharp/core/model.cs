@@ -430,6 +430,36 @@ namespace OpenVinoSharp
             }
             return outputs;
         }
+
+        /// <summary>
+        /// Get all const input of model.
+        /// </summary>
+        /// <returns>All input of model.</returns>
+        public List<Input> const_inputs()
+        {
+            ulong input_size = get_inputs_size();
+            List<Input> inputs = new List<Input>();
+            for (ulong index = 0; index < input_size; ++index)
+            {
+                inputs.Add(const_input(index));
+            }
+            return inputs;
+        }
+
+        /// <summary>
+        /// Get all const output of model
+        /// </summary>
+        /// <returns>All output of model</returns>
+        public List<Input> const_outputs()
+        {
+            ulong output_size = get_outputs_size();
+            List<Input> outputs = new List<Input>();
+            for (ulong index = 0; index < output_size; ++index)
+            {
+                outputs.Add(const_output(index));
+            }
+            return outputs;
+        }
         /// <summary>
         /// The ops defined in the model is dynamic shape.
         /// </summary>
