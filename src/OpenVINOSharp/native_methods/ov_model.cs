@@ -226,7 +226,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_model_reshape(
             IntPtr model,
             IntPtr[] tensor_names,
-            ref PartialShape.ov_partial_shape partial_shapes,
+            ref Ov.ov_partial_shape partial_shapes,
             ulong size);
 
 
@@ -242,7 +242,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_model_reshape_input_by_name(
             IntPtr model,
             ref sbyte tensor_name,
-            PartialShape.ov_partial_shape partial_shape);
+            Ov.ov_partial_shape partial_shape);
 
         /// <summary>
         /// Do reshape in model for one node(port 0).
@@ -254,7 +254,7 @@ namespace OpenVinoSharp
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_model_reshape_single_input(
             IntPtr model,
-            PartialShape.ov_partial_shape partial_shape);
+            Ov.ov_partial_shape partial_shape);
 
         /// <summary>
         /// Do reshape in model with a list of (port id, partial shape).
@@ -269,7 +269,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_model_reshape_by_port_indexes(
             IntPtr model,
             ref ulong port_indexes,
-            ref PartialShape.ov_partial_shape partial_shapes,
+            ref Ov.ov_partial_shape partial_shapes,
             ulong size);
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_model_reshape_by_ports(
             IntPtr model,
             ref IntPtr output_ports,
-            ref PartialShape.ov_partial_shape partial_shapes,
+            ref Ov.ov_partial_shape partial_shapes,
             ulong size);
 
         /// <summary>

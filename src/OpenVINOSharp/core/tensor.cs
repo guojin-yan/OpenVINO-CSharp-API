@@ -93,7 +93,7 @@ namespace OpenVinoSharp
         /// <returns>A tensor shape</returns>
         public Shape get_shape() 
         {
-            int l = Marshal.SizeOf(typeof(Shape.ov_shape));
+            int l = Marshal.SizeOf(typeof(Ov.ov_shape));
             IntPtr shape_ptr = Marshal.AllocHGlobal(l);
             ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_shape(m_ptr, shape_ptr);
             if (status != 0)

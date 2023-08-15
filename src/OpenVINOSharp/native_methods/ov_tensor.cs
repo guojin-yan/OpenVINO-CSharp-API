@@ -12,18 +12,18 @@ namespace OpenVinoSharp
         [DllImport(dll_extern, EntryPoint = "ov_tensor_create_from_host_ptr", 
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static int ov_tensor_create_from_host_ptr(
-            uint type, 
-            Shape.ov_shape shape, 
+            uint type,
+            Ov.ov_shape shape, 
             IntPtr host_ptr, 
             ref IntPtr tensor);
 
         [DllImport(dll_extern, EntryPoint = "ov_tensor_create",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_create(uint type, Shape.ov_shape shape, ref IntPtr tensor);
+        public extern static int ov_tensor_create(uint type, Ov.ov_shape shape, ref IntPtr tensor);
 
             [DllImport(dll_extern, EntryPoint = "ov_tensor_set_shape",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_set_shape(IntPtr tensor, Shape.ov_shape shape);
+        public extern static int ov_tensor_set_shape(IntPtr tensor, Ov.ov_shape shape);
 
         [DllImport(dll_extern, EntryPoint = "ov_tensor_get_shape",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
