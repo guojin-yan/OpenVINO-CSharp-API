@@ -416,20 +416,6 @@ namespace OpenVinoSharp
             return inputs;
         }
         /// <summary>
-        /// Get all const input of model.
-        /// </summary>
-        /// <returns>All const input of model.</returns>
-        public List<Input> const_inputs()
-        {
-            ulong input_size = get_inputs_size();
-            List<Input> inputs = new List<Input>();
-            for (ulong index = 0; index < input_size; ++index)
-            {
-                inputs.Add(const_input(index));
-            }
-            return inputs;
-        }
-        /// <summary>
         /// Get all output of model
         /// </summary>
         /// <returns>All output of model</returns>
