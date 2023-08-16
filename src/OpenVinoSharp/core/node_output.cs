@@ -37,7 +37,7 @@ namespace OpenVinoSharp
         /// The element type of the output referred to by this output handle.
         /// </summary>
         /// <returns>The element type of the output.</returns>
-        public OvType get_element_type() { return m_node.get_type() as OvType; }
+        public OvType get_element_type() { return m_node.get_element_type() as OvType; }
         /// <summary>
         /// The shape of the output referred to by this output handle.
         /// </summary>
