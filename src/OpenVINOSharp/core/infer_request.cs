@@ -17,9 +17,16 @@ namespace OpenVinoSharp
     /// <ingroup>ov_runtime_c#_api</ingroup>
     public class InferRequest
     {
-        private IntPtr m_ptr = IntPtr.Zero;
+        /// <summary>
+        /// [private]InferRequest class pointer.
+        /// </summary>
+        public IntPtr m_ptr = IntPtr.Zero;
+
+        /// <summary>
+        /// [public]InferRequest class pointer.
+        /// </summary>
         public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
-   
+
         /// <summary>
         /// Constructs InferRequest from the initialized IntPtr.
         /// </summary>
