@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -126,8 +127,12 @@ namespace OpenVinoSharp
             NativeMethods.ov_tensor_free(m_ptr);
             m_ptr = IntPtr.Zero;
         }
-
-        void set_shape(Shape shape) 
+        /// <summary>
+        /// Set new shape for tensor, deallocate/allocate if new total size is bigger than previous one.
+        /// </summary>
+        /// <exception cref="">Memory allocation may happen</exception>
+        /// <param name="shape"> A new shape</param>
+        public void set_shape(Shape shape) 
         {
             ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_set_shape(m_ptr, shape.shape);
             if (status != 0)
@@ -157,7 +162,7 @@ namespace OpenVinoSharp
         /// Get tensor element type
         /// </summary>
         /// <returns>A tensor element type</returns>
-        public element.Type get_element_type() 
+        public OvType get_element_type() 
         {
             uint type = 100;
             ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_element_type(m_ptr, out type);
@@ -167,9 +172,13 @@ namespace OpenVinoSharp
                 type = 0;
             }
             element.Type t = new element.Type((Type_t)type);
-            return t;
+            return t as OvType;
         }
 
+        /// <summary>
+        /// Returns the total number of elements (a product of all the dims or 1 for scalar).
+        /// </summary>
+        /// <returns>The total number of elements.</returns>
         public ulong get_size() 
         {
             ulong size = 0;
@@ -180,6 +189,11 @@ namespace OpenVinoSharp
             }
             return size;
         }
+
+        /// <summary>
+        /// Returns the size of the current Tensor in bytes.
+        /// </summary>
+        /// <returns>Tensor's size in bytes</returns>
         public ulong get_byte_size()
         {
             ulong size = 0;
@@ -190,6 +204,23 @@ namespace OpenVinoSharp
             }
             return size;
         }
+
+        /// <summary>
+        /// Copy tensor, destination tensor should have the same element type and shape
+        /// </summary>
+        /// <typeparam name="T">Data type.</typeparam>
+        /// <param name="dst">destination tensor</param>
+        public void copy_to<T>(Tensor dst) 
+        {
+            ulong length = this.get_size();
+            T[] data = this.get_data<T>((int)length);
+            dst.set_data<T>(data);
+        }
+
+        /// <summary>
+        /// Provides an access to the underlaying host memory.
+        /// </summary>
+        /// <returns>A host pointer to tensor memory.</returns>
         public IntPtr data()
         {
             IntPtr data_ptr = new IntPtr();
@@ -197,7 +228,11 @@ namespace OpenVinoSharp
             return data_ptr;
         }
 
-
+        /// <summary>
+        /// Load the specified type of data into the underlying host memory.
+        /// </summary>
+        /// <typeparam name="T">data type</typeparam>
+        /// <param name="input_data">Data to be loaded.</param>
         public void set_data<T>(T[] input_data)
         {
             IntPtr data_ptr = new IntPtr();
@@ -245,6 +280,13 @@ namespace OpenVinoSharp
                 Console.WriteLine("Data format error, not supported. Only double, flaot, int, long, shaort and byte data formats are supported");
             }
         }
+
+        /// <summary>
+        /// Read data of the specified type from the underlying host memory.
+        /// </summary>
+        /// <typeparam name="T">Type of data read.</typeparam>
+        /// <param name="length">The length of the read data.</param>
+        /// <returns>Read data.</returns>
         public T[] get_data<T>(int length)
         {
             IntPtr data_ptr = new IntPtr();
