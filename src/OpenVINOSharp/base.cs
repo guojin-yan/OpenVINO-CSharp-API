@@ -13,7 +13,22 @@ namespace OpenVINOSharp
 {
     /// <summary>
     /// OpenVINO wrapper for .NET. 
-    /// Define elements in OpenVINO
+    /// Define elements in OpenVINO.
     /// </summary>
     namespace element { }
+
+    /// <summary>
+    /// Mainly defined the data processing methods in OpenVINO.
+    /// </summary>
+    namespace preprocess { }
+
+    /// <summary>
+    /// Processing methods for main common models.
+    /// </summary>
+    namespace model {
+        /// <summary>
+        /// The processing methods of the main Yolov8 model.
+        /// </summary>
+        namespace Yolov8 { }
+    }
 }
