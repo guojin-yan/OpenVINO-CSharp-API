@@ -9,10 +9,21 @@ namespace OpenVinoSharp
 {
     public partial class NativeMethods
     {
-        [DllImport(dll_extern, EntryPoint = "ov_get_error_info", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        /// <summary>
+        /// Print the error info.
+        /// </summary>
+        /// <param name="status">a status code.</param>
+        /// <returns>error info.</returns>
+        [DllImport(dll_extern, EntryPoint = "ov_get_error_info", 
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static string ov_get_error_info(int status);
 
-        [DllImport(dll_extern, EntryPoint = "ov_free", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        /// <summary>
+        /// free char
+        /// </summary>
+        /// <param name="content">The pointer to the char to free.</param>
+        [DllImport(dll_extern, EntryPoint = "ov_free", 
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_free(ref char content);
 
     }
