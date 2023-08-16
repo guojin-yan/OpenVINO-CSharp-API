@@ -30,6 +30,9 @@ namespace OpenVinoSharp
         /// </summary>
         public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
 
+        /// <summary>
+        /// The struct of ov_partial_shape
+        /// </summary>
         public ov_partial_shape shape;
 
         /// <summary>
