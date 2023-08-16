@@ -21,8 +21,6 @@ namespace OpenVinoSharp
     /// </remarks>
     public class PartialShape
     {
-
-
         /// <summary>
         /// [private]Core class pointer.
         /// </summary>
@@ -34,6 +32,10 @@ namespace OpenVinoSharp
 
         public ov_partial_shape shape;
 
+        /// <summary>
+        /// Constructing partialShape by pointer.
+        /// </summary>
+        /// <param name="ptr"></param>
         public PartialShape(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
@@ -44,9 +46,12 @@ namespace OpenVinoSharp
             this.m_ptr = ptr;
             var temp = Marshal.PtrToStructure(ptr, typeof(ov_partial_shape));
             shape = (ov_partial_shape)temp;
-            //~~~~~~~~~~~~~~~~~~
         }
 
+        /// <summary>
+        /// Get ov_partial_shape
+        /// </summary>
+        /// <returns>return ov_partial_shape.</returns>
         public ov_partial_shape get_partial_shape() { 
             return shape;
         }
