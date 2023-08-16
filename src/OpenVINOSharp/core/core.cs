@@ -167,10 +167,10 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="model_path">String with a model in IR / ONNX / PDPD / TF / TFLite format.</param>
         /// <param name="weights">Shared pointer to a constant tensor with weights.</param>
-        /// <note>
+        /// <remarks>
         /// Created model object shares the weights with the @p weights object.
         /// Thus, do not create @p weights on temporary data that can be freed later, since the model constant data will point to an invalid memory.
-        /// </note>
+        /// </remarks>
         /// <returns>A model.</returns>
         public Model read_model(string model_path, Tensor weights) 
         {
@@ -293,7 +293,7 @@ namespace OpenVinoSharp
         /// Such enumerated device can later be used as a device name in all Core methods like Core::compile_model,
         /// Core::query_model, Core::set_property and so on.
         /// </remarks>
-        List<string> get_available_devices() 
+        public List<string> get_available_devices() 
         {
             int l = Marshal.SizeOf(typeof(ov_available_devices_t));
             IntPtr devices_ptr = Marshal.AllocHGlobal(l);

@@ -75,7 +75,8 @@ namespace OpenVinoSharp
         /// Sets an input/output tensor to infer.
         /// </summary>
         /// <param name="node">Node of the input or output tensor.</param>
-        /// <param name="tensor"></param>
+        /// <param name="tensor">Reference to a tensor. The element_type and shape of a tensor must match 
+        /// the model's input/output element_type and size.</param>
         public void set_tensor(Node node, Tensor tensor)
         {
             ExceptionStatus status;
