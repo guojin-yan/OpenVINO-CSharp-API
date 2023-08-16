@@ -158,11 +158,11 @@ namespace OpenVinoSharp.preprocess
         /// <example>
         /// when user data has 'NHWC' layout (example is RGB image, [1, 224, 224, 3]) but model expects
         /// planar input image ('NCHW', [1, 3, 224, 224]). Preprocessing may look like this:
-        /// <c>
+        /// <code>
         /// var proc = PrePostProcessor(model);
         /// proc.input().tensor().set_layout("NHWC"); // User data is NHWC
         /// proc.input().preprocess().convert_layout("NCHW")) // model expects input as NCHW
-        /// </c>
+        /// </code>
         /// </example>
         public PreProcessSteps convert_layout(Layout layout)
         {
@@ -186,10 +186,10 @@ namespace OpenVinoSharp.preprocess
         /// <example>
         /// when user data has 'NCHW' layout (example is [1, 3, 224, 224] RGB order) but model expects
         /// BGR planes order. Preprocessing may look like this:
-        /// <c>
+        /// <code>
         /// var proc = PrePostProcessor(function);
         /// proc.input().preprocess().convert_layout({0, 3, 1, 2});
-        /// </c>
+        /// </code>
         /// </example>
         public PreProcessSteps reverse_channels()
         {
