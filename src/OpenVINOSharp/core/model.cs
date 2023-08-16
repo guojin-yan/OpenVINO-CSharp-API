@@ -10,6 +10,9 @@ using static OpenCvSharp.FileStorage;
 
 namespace OpenVinoSharp
 {
+    /// <summary>
+    /// A user-defined model
+    /// </summary>
     public class Model
     {
         /// <summary>
