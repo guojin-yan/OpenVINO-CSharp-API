@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace OpenVinoSharp.model.Yolov8
 {
+    /// <summary>
+    /// Key point data
+    /// </summary>
     public class Result
     {
         /// <summary>
@@ -45,11 +48,11 @@ namespace OpenVinoSharp.model.Yolov8
         public List<PoseData> poses = new List<PoseData>();
 
         /// <summary>
-        /// 物体检测
+        /// object detection
         /// </summary>
-        /// <param name="score">预测分数</param>
-        /// <param name="rect">识别框</param>
-        /// <param name="cla">识别类</param>
+        /// <param name="score">Predictiveness scores</param>
+        /// <param name="rect">Identification box</param>
+        /// <param name="cla">Identification class</param>
         public void add(float score, Rect rect, int cla)
         {
             scores.Add(score);
@@ -59,10 +62,10 @@ namespace OpenVinoSharp.model.Yolov8
         /// <summary>
         /// 物体分割
         /// </summary>
-        /// <param name="score">预测分数</param>
-        /// <param name="rect">识别框</param>
-        /// <param name="cla">识别类</param>
-        /// <param name="mask">语义分割结果</param>
+        /// <param name="score">Predictiveness scores</param>
+        /// <param name="rect">Identification box </param>
+        /// <param name="cla">Identification class</param>
+        /// <param name="mask">Semantic segmentation results</param>
         public void add(float score, Rect rect, int cla, Mat mask)
         {
             scores.Add(score);
@@ -71,11 +74,11 @@ namespace OpenVinoSharp.model.Yolov8
             masks.Add(mask);
         }
         /// <summary>
-        /// 关键点预测
+        /// Key point prediction
         /// </summary>
-        /// <param name="score">预测分数</param>
-        /// <param name="rect">识别框</param>
-        /// <param name="pose">关键点数据</param>
+        /// <param name="score">Predictiveness scores</param>
+        /// <param name="rect">Identification box</param>
+        /// <param name="pose">Key point data</param>
         public void add(float score, Rect rect, PoseData pose)
         {
             scores.Add(score);
@@ -88,9 +91,19 @@ namespace OpenVinoSharp.model.Yolov8
     /// </summary>
     public struct PoseData
     {
+        /// <summary>
+        /// Key point prediction score
+        /// </summary>
         public float[] score;
+        /// <summary>
+        /// Key point prediction results.
+        /// </summary>
         public List<Point> point;
-
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        /// <param name="data">Key point prediction results.</param>
+        /// <param name="scales">Image scaling ratio.</param>
         public PoseData(float[] data, float[] scales)
         {
             score = new float[data.Length];
@@ -102,6 +115,10 @@ namespace OpenVinoSharp.model.Yolov8
                 this.score[i] = data[3 * i + 2];
             }
         }
+        /// <summary>
+        /// Convert PoseData to string.
+        /// </summary>
+        /// <returns>PoseData string.</returns>
         public string to_string() 
         {
             string[] point_str = new string[] { "Nose", "Left Eye", "Right Eye", "Left Ear", "Right Ear", 
@@ -116,6 +133,9 @@ namespace OpenVinoSharp.model.Yolov8
         }
     }
 
+    /// <summary>
+    /// Yolov8 model inference result processing method.
+    /// </summary>
     public class ResultProcess 
     {
         /// <summary>
@@ -589,7 +609,10 @@ namespace OpenVinoSharp.model.Yolov8
 
             }
         }
-
+        /// <summary>
+        /// Print and output image classification results
+        /// </summary>
+        /// <param name="result">classification results</param>
         public void print_result(KeyValuePair<int, float>[] result)
         {
             Console.WriteLine("\n Classification Top 10 result : \n");
@@ -600,7 +623,10 @@ namespace OpenVinoSharp.model.Yolov8
                 Console.WriteLine("{0}     {1}", result[i].Key.ToString("0"), result[i].Value.ToString("0.000000"));
             }
         }
-
+        /// <summary>
+        /// Print out image prediction results
+        /// </summary>
+        /// <param name="result">prediction results</param>
         public void print_result(Result result)
         {
             if (result.poses.Count != 0) 
