@@ -6,10 +6,29 @@ using System.Threading.Tasks;
 
 namespace OpenVinoSharp.preprocess
 {
+    /// <summary>
+    /// Class holding postprocessing information for one output
+    /// From postprocessing pipeline perspective, each output can be represented as:
+    ///    - Model's output info,  (OutputInfo::model)
+    ///    - Postprocessing steps applied to user's input (OutputInfo::postprocess)
+    ///    - User's desired output parameter information, which is a final one after preprocessing (OutputInfo::tensor)
+    /// </summary>
     public class OutputInfo
     {
-        private IntPtr m_ptr = IntPtr.Zero;
+        /// <summary>
+        /// [private]OutputInfo class pointer.
+        /// </summary>
+        public IntPtr m_ptr = IntPtr.Zero;
+
+        /// <summary>
+        /// [public]OutputInfo class pointer.
+        /// </summary>
         public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
+
+        /// <summary>
+        /// Default construction through OutputInfo pointer.
+        /// </summary>
+        /// <param name="ptr">OutputInfo pointer.</param>
         public OutputInfo(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
@@ -19,7 +38,13 @@ namespace OpenVinoSharp.preprocess
             }
             this.m_ptr = ptr;
         }
+        /// <summary>
+        /// Default destructor
+        /// </summary>
         ~OutputInfo() { dispose(); }
+        /// <summary>
+        /// Release unmanaged resources
+        /// </summary>
         public void dispose()
         {
             if (m_ptr == IntPtr.Zero)
@@ -30,10 +55,14 @@ namespace OpenVinoSharp.preprocess
             m_ptr = IntPtr.Zero;
         }
 
+        /// <summary>
+        /// Get current output tensor information with ability to change specific data
+        /// </summary>
+        /// <returns>Reference to current output tensor structure</returns>
         public OutputTensorInfo tensor()
         {
             IntPtr output_tensor_ptr = IntPtr.Zero;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_preprocess_output_info_get_tensor_info(
+            ExceptionStatus status = NativeMethods.ov_preprocess_output_info_get_tensor_info(
                 m_ptr, ref output_tensor_ptr);
             if (status != 0)
             {
