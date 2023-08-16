@@ -61,7 +61,13 @@ namespace OpenVinoSharp
                 dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ov_dimension)));
             }
 #else
+            /// <summary>
+            /// The rank
+            /// </summary>
             public ov_rank rank;
+            /// <summary>
+            /// The dimension
+            /// </summary>
             public IntPtr dims;
 #endif
         }
