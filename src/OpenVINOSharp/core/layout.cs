@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenVinoSharp.core
+namespace OpenVinoSharp
 {
     /// <summary>
     /// ov::Layout represents the text information of tensor's dimensions/axes. E.g. layout `NCHW` means that 4D
