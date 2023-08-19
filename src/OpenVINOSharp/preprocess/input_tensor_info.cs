@@ -1,4 +1,4 @@
-﻿using OpenVinoSharp.core;
+﻿using OpenVinoSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
