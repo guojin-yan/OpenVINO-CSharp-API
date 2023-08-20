@@ -233,7 +233,7 @@ cd AlxBoard_deploy_yolov8
   export LD_LIBRARY_PATH=/opt/intel/openvino_2023.0/runtime/lib/intel64
   ```
 
-### 3. 添加OpenCvSharp
+### 3. add OpenCvSharp
 
 - **Install NuGet Package**
 
