@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-using ov_dimension = OpenVinoSharp.Ov.ov_dimension;
+using Dimension = OpenVinoSharp.Ov.Dimension;
 
 namespace OpenVinoSharp
 {
@@ -21,7 +21,7 @@ namespace OpenVinoSharp
         /// <returns>Boolean, true is dynamic and false is static.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_dimension_is_dynamic",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static bool ov_dimension_is_dynamic(ov_dimension dim);
+        public extern static bool ov_dimension_is_dynamic(Dimension dim);
 
     }
 }

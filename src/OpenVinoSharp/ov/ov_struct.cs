@@ -51,14 +51,14 @@ namespace OpenVinoSharp
             /// <summary>
             /// The dimension
             /// </summary>
-            public IntPtr dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ov_dimension)));
+            public IntPtr dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Dimension)));
             /// <summary>
             /// Default Constructor
             /// </summary>
             public ov_partial_shape()
             {
                 rank = new ov_rank();
-                dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ov_dimension)));
+                dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Dimension)));
             }
 #else
             /// <summary>
@@ -91,7 +91,7 @@ namespace OpenVinoSharp
         /// <summary>
         /// This is a structure interface equal to ov::Dimension
         /// </summary>
-        public struct ov_dimension
+        public struct Dimension
         {
             /// <summary>
             /// The lower inclusive limit for the dimension.

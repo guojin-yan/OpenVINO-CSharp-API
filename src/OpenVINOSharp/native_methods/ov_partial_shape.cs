@@ -26,7 +26,7 @@ namespace OpenVinoSharp
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_partial_shape_create(
             long rank, 
-            ref Ov.ov_dimension dims,
+            ref Ov.Dimension dims,
             IntPtr partial_shape_obj);
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace OpenVinoSharp
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_partial_shape_create_dynamic(
             Ov.ov_rank rank,
-            ref Ov.ov_dimension dims,
+            ref Ov.Dimension dims,
             IntPtr partial_shape_obj);
 
         /// <summary>

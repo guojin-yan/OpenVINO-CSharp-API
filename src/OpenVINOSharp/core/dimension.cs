@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ov_dimension = OpenVinoSharp.Ov.ov_dimension;
+using Dimension = OpenVinoSharp.Ov.Dimension;
 
 namespace OpenVinoSharp
 {
@@ -18,7 +18,7 @@ namespace OpenVinoSharp
         /// <summary>
         /// The ov_dimension struct.
         /// </summary>
-        ov_dimension m_dimension;
+        Dimension m_dimension;
         /// <summary>
         ///  Construct a static dimension.
         /// </summary>
@@ -43,7 +43,7 @@ namespace OpenVinoSharp
         /// Get ov_dimension struct.
         /// </summary>
         /// <returns>Return ov_dimension struct.</returns>
-        ov_dimension get_dimension() 
+        Dimension get_dimension() 
         {
             return m_dimension;
         }
