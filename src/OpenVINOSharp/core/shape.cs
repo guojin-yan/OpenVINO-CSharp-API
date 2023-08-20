@@ -122,13 +122,13 @@ namespace OpenVinoSharp
             {
                 return "NULL";
             }
-            string s = "Shape : [";
+            string s = "Shape : {";
             foreach(var i in this)
             {
                 s += i.ToString() + ", ";
             }
             s = s.Substring(0, s.Length - 2);
-            s += "]";
+            s += "}";
             return s;
         }
     }

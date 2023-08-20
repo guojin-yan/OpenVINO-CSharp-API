@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-using Rank = OpenVinoSharp.Ov.Rank;
+using ov_rank = OpenVinoSharp.Ov.ov_rank;
 namespace OpenVinoSharp
 {
     
@@ -19,6 +19,6 @@ namespace OpenVinoSharp
         /// <returns>The return value.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_rank_is_dynamic",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static bool ov_rank_is_dynamic(Rank rank);
+        public extern static bool ov_rank_is_dynamic(ov_rank rank);
     }
 }

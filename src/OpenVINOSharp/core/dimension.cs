@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dimension = OpenVinoSharp.Ov.Dimension;
+using static OpenVinoSharp.Ov;
+using ov_dimension = OpenVinoSharp.Ov.ov_dimension;
 
 namespace OpenVinoSharp
 {
@@ -18,7 +19,7 @@ namespace OpenVinoSharp
         /// <summary>
         /// The ov_dimension struct.
         /// </summary>
-        Dimension m_dimension;
+        ov_dimension m_dimension;
         /// <summary>
         ///  Construct a static dimension.
         /// </summary>
@@ -28,7 +29,14 @@ namespace OpenVinoSharp
             m_dimension.min = dimension;
             m_dimension.max = dimension;
         }
-
+        /// <summary>
+        /// Construct a dynamic dimension with ov_dimension struct.
+        /// </summary>
+        /// <param name="dimension">The ov_dimension struct.</param>
+        public Dimension(ov_dimension dimension)
+        {
+            m_dimension = dimension;
+        }
         /// <summary>
         /// Construct a dynamic dimension with bounded range
         /// </summary>
@@ -43,9 +51,34 @@ namespace OpenVinoSharp
         /// Get ov_dimension struct.
         /// </summary>
         /// <returns>Return ov_dimension struct.</returns>
-        Dimension get_dimension() 
+        public ov_dimension get_dimension() 
         {
             return m_dimension;
+        }
+        /// <summary>
+        /// Get max.
+        /// </summary>
+        /// <returns>Dimension max.</returns>
+        public long get_max()
+        {
+            return m_dimension.max;
+        }
+
+        /// <summary>
+        /// Get min.
+        /// </summary>
+        /// <returns>Dimension min.</returns>
+        public long get_min()
+        {
+            return m_dimension.min;
+        }
+        /// <summary>
+        /// Check this dimension whether is dynamic
+        /// </summary>
+        /// <returns>Boolean, true is dynamic and false is static.</returns>
+        public bool is_dynamic() 
+        {
+            return NativeMethods.ov_dimension_is_dynamic(m_dimension);
         }
     }
 }
