@@ -151,10 +151,8 @@ namespace OpenVinoSharp
         {
             ExceptionStatus status = 0;
             uint data_type = 0;
-            if (node_type == NodeType.e_const)
-            {
-                status = NativeMethods.ov_port_get_element_type(m_ptr, ref data_type);
-            }
+
+            status = NativeMethods.ov_port_get_element_type(m_ptr, ref data_type);
             if (status != 0)
             {
                 System.Diagnostics.Debug.WriteLine("Node get_type error : {0}!", status.ToString());

@@ -8,12 +8,13 @@
     <PackageId>OpenVinoSharp.win</PackageId>
     <!--设置NuGet包信息-->
     <Title>OpenVinoSharp</Title>
-    <Version>3.0.121.1</Version>
+    <Version>3.0.122-test-2</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVinoSharp</Product>
     <Description>基于C#平台调用OpenVINO套件部署深度学习模型。
-Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
+Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.
+目前版本为测试版本，会存在相关的问题，待后续更新会修改相应的错误；如有其他问题请联系作者解决。</Description>
     <PackageProjectUrl>https://github.com/guojin-yan/OpenVinoSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/guojin-yan/OpenVinoSharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

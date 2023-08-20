@@ -171,8 +171,8 @@ namespace OpenVinoSharp
                 System.Diagnostics.Debug.WriteLine("Tensor get_element_type error : " + status.ToString());
                 type = 0;
             }
-            element.Type t = new element.Type((Type_t)type);
-            return t as OvType;
+            OvType t = new OvType((ElementType)type);
+            return t;
         }
 
         /// <summary>
