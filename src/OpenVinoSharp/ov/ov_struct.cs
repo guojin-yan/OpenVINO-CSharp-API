@@ -47,7 +47,7 @@ namespace OpenVinoSharp
             /// <summary>
             /// The rank
             /// </summary>
-            public ov_rank rank;
+            public Rank rank;
             /// <summary>
             /// The dimension
             /// </summary>
@@ -57,14 +57,14 @@ namespace OpenVinoSharp
             /// </summary>
             public ov_partial_shape()
             {
-                rank = new ov_rank();
+                rank = new Rank();
                 dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Dimension)));
             }
 #else
             /// <summary>
             /// The rank
             /// </summary>
-            public ov_rank rank;
+            public Rank rank;
             /// <summary>
             /// The dimension
             /// </summary>
@@ -76,7 +76,7 @@ namespace OpenVinoSharp
         /// <summary>
         /// This is a structure interface equal to ov::Rank
         /// </summary>
-        public struct ov_rank
+        public struct Rank
         {
             /// <summary>
             /// The lower inclusive limit for the Rank.

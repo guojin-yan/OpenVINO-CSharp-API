@@ -46,7 +46,7 @@ namespace OpenVinoSharp
         [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_partial_shape_create_dynamic(
-            Ov.ov_rank rank,
+            Ov.Rank rank,
             ref Ov.Dimension dims,
             IntPtr partial_shape_obj);
 

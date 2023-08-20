@@ -51,6 +51,9 @@ namespace OpenVinoSharp
             shape = (ov_partial_shape)temp;
         }
 
+        public PartialShape(Dimension[] dimension) { 
+        }
+
         /// <summary>
         /// Get ov_partial_shape
         /// </summary>
