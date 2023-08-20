@@ -320,60 +320,60 @@ namespace OpenVinoSharp
         /// Get single input of model, which only support single input model.
         /// </summary>
         /// <returns>The input of model.</returns>
-        public Input output()
+        public Output output()
         {
             Node node = get_output();
-            return new Input(node, 0);
+            return new Output(node, 0);
         }
         /// <summary>
         /// Get an output of model by port index.
         /// </summary>
         /// <param name="index">output tensor index.</param>
         /// <returns>The output of model.</returns>
-        public Input output(ulong index)
+        public Output output(ulong index)
         {
             Node node = get_output(index);
-            return new Input(node, index);
+            return new Output(node, index);
         }
         /// <summary>
         /// Get an output of model by name.
         /// </summary>
         /// <param name="tensor_name">output tensor name (string).</param>
         /// <returns>The output of model.</returns>
-        public Input output(string tensor_name)
+        public Output output(string tensor_name)
         {
             Node node = get_output(tensor_name);
-            return new Input(node, 0);
+            return new Output(node, 0);
         }
 
         /// <summary>
         /// Get single const output of model, which only support single output model.
         /// </summary>
         /// <returns>The const output of model.</returns>
-        public Input const_output()
+        public Output const_output()
         {
             Node node = get_const_output();
-            return new Input(node, 0);
+            return new Output(node, 0);
         }
         /// <summary>
         /// Get an const output of model by port index.
         /// </summary>
         /// <param name="index">output tensor index.</param>
         /// <returns>The const output of model.</returns>
-        public Input const_output(ulong index)
+        public Output const_output(ulong index)
         {
             Node node = get_const_output(index);
-            return new Input(node, index);
+            return new Output(node, index);
         }
         /// <summary>
         /// Get an const output of model by name.
         /// </summary>
         /// <param name="tensor_name">output tensor name (string).</param>
         /// <returns>The const output of model.</returns>
-        public Input const_output(string tensor_name)
+        public Output const_output(string tensor_name)
         {
             Node node = get_const_output(tensor_name);
-            return new Input(node, 0);
+            return new Output(node, 0);
         }
         /// <summary>
         /// Get the input size of model.
@@ -422,10 +422,10 @@ namespace OpenVinoSharp
         /// Get all output of model
         /// </summary>
         /// <returns>All output of model</returns>
-        public List<Input> outputs()
+        public List<Output> outputs()
         {
             ulong output_size = get_outputs_size();
-            List<Input> outputs = new List<Input>();
+            List<Output> outputs = new List<Output>();
             for (ulong index = 0; index < output_size; ++index)
             {
                 outputs.Add(output(index));
@@ -452,10 +452,10 @@ namespace OpenVinoSharp
         /// Get all const output of model
         /// </summary>
         /// <returns>All output of model</returns>
-        public List<Input> const_outputs()
+        public List<Output> const_outputs()
         {
             ulong output_size = get_outputs_size();
-            List<Input> outputs = new List<Input>();
+            List<Output> outputs = new List<Output>();
             for (ulong index = 0; index < output_size; ++index)
             {
                 outputs.Add(const_output(index));
