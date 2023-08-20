@@ -194,7 +194,7 @@ namespace OpenVinoSharp
         /// Users can create as many compiled models as they need and use
         /// them simultaneously (up to the limitation of the hardware resources).
         /// </remarks>
-        public CompiledModel compiled_model(Model model)
+        public CompiledModel compile_model(Model model)
         {
 
             IntPtr compiled_model_ptr = new IntPtr();
@@ -219,7 +219,7 @@ namespace OpenVinoSharp
         /// Users can create as many compiled models as they need and use
         /// them simultaneously (up to the limitation of the hardware resources).
         /// </remarks>
-        public CompiledModel compiled_model(Model model, string device_name) 
+        public CompiledModel compile_model(Model model, string device_name) 
         {
             
             IntPtr compiled_model_ptr = new IntPtr();
@@ -242,7 +242,7 @@ namespace OpenVinoSharp
         /// especially for cases when caching is enabled and a cached model is availab
         /// </remarks>
         /// <returns> A compiled model.</returns>
-        public CompiledModel compiled_model(string model_path)
+        public CompiledModel compile_model(string model_path)
         {
             IntPtr compiled_model_ptr = new IntPtr();
             string device_name = "AUTO";
@@ -268,7 +268,7 @@ namespace OpenVinoSharp
         /// especially for cases when caching is enabled and a cached model is availab
         /// </remarks>
         /// <returns>A compiled model.</returns>
-        public CompiledModel compiled_model(string model_path, string device_name) 
+        public CompiledModel compile_model(string model_path, string device_name) 
         {
             IntPtr compiled_model_ptr = new IntPtr();
             sbyte[] c_model = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
