@@ -8,7 +8,6 @@ namespace OpenVinoSharp
         /// <summary>
         /// Reprents a static shape.
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
         public struct ov_shape
         {
             /// <summary>
@@ -41,9 +40,10 @@ namespace OpenVinoSharp
         /// <para> Static rank, and static dimensions on all axes.
         /// (Informal notation examples: `{1,2,3,4}`, `{6}`, `{}`)</para>
         /// </remarks>
-        [StructLayout(LayoutKind.Sequential)]
         public struct ov_partial_shape
         {
+
+#if NET7_0_OR_GREATER || NET6_0_OR_GREATER
             /// <summary>
             /// The rank
             /// </summary>
@@ -51,15 +51,31 @@ namespace OpenVinoSharp
             /// <summary>
             /// The dimension
             /// </summary>
-            ///[MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            public ov_dimension[] dims;
+            public IntPtr dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Dimension)));
+            /// <summary>
+            /// Default Constructor
+            /// </summary>
+            public ov_partial_shape()
+            {
+                rank = new ov_dimension();
+                dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Dimension)));
+            }
+#else
+            /// <summary>
+            /// The rank
+            /// </summary>
+            public ov_dimension rank;
+            /// <summary>
+            /// The dimension
+            /// </summary>
+            public IntPtr dims;
+#endif
         }
 
 
         /// <summary>
         /// This is a structure interface equal to ov::Rank
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
         public struct ov_rank
         {
             /// <summary>
@@ -75,7 +91,6 @@ namespace OpenVinoSharp
         /// <summary>
         /// This is a structure interface equal to ov::Dimension
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
         public struct ov_dimension
         {
             /// <summary>
@@ -95,7 +110,6 @@ namespace OpenVinoSharp
         /// If the operation is executed using tiling, the sum time per each tile is indicated as the total execution time. 
         /// Due to parallel execution, the total execution time for all nodes might be greater than the total inference time.
         /// </remarks>
-        [StructLayout(LayoutKind.Sequential)]
         public struct ProfilingInfo
         {
             /// <summary>
@@ -140,8 +154,6 @@ namespace OpenVinoSharp
         /// <summary>
         /// A list of profiling info data
         /// </summary>
-
-        [StructLayout(LayoutKind.Sequential)]
         public struct ov_profiling_info_list
         {
             /// <summary>
