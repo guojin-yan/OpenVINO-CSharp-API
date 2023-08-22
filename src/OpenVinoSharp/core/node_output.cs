@@ -24,6 +24,20 @@ namespace OpenVinoSharp
             m_index = index;
         }
         /// <summary>
+        /// Default deconstruction.
+        /// </summary>
+        ~Output()
+        {
+            dispose();
+        }
+        /// <summary>
+        /// Release unmanaged resources.
+        /// </summary>
+        public void dispose()
+        {
+            m_node.dispose();
+        }
+        /// <summary>
         /// Get the node referred to by this output handle.
         /// </summary>
         /// <returns>The ouput node</returns>
