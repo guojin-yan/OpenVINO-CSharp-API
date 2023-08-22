@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{662E
 		README_cn.md = README_cn.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_openvinosharp_api", "tests\test_openvinosharp_api\test_openvinosharp_api.csproj", "{C6D9EC94-2440-4E99-9262-CAC3A6518444}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,14 @@ Global
 		{CE8198D1-5CE4-405A-92D6-2F0B44F527E5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CE8198D1-5CE4-405A-92D6-2F0B44F527E5}.Release|x64.ActiveCfg = Release|Any CPU
 		{CE8198D1-5CE4-405A-92D6-2F0B44F527E5}.Release|x64.Build.0 = Release|Any CPU
+		{C6D9EC94-2440-4E99-9262-CAC3A6518444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6D9EC94-2440-4E99-9262-CAC3A6518444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6D9EC94-2440-4E99-9262-CAC3A6518444}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C6D9EC94-2440-4E99-9262-CAC3A6518444}.Debug|x64.Build.0 = Debug|Any CPU
+		{C6D9EC94-2440-4E99-9262-CAC3A6518444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6D9EC94-2440-4E99-9262-CAC3A6518444}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6D9EC94-2440-4E99-9262-CAC3A6518444}.Release|x64.ActiveCfg = Release|Any CPU
+		{C6D9EC94-2440-4E99-9262-CAC3A6518444}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +84,7 @@ Global
 		{71B89B1F-8F03-41D1-9869-FE7CAD8AC750} = {B0C13DE7-38D5-4551-B852-71C2DAA1A348}
 		{4FC44639-8856-498E-886E-C09E484E8655} = {DCFCA0E4-2267-42D0-894E-88DCE18927E8}
 		{CE8198D1-5CE4-405A-92D6-2F0B44F527E5} = {9FE4DAB4-B697-4D9C-9D5A-A96985950C31}
+		{C6D9EC94-2440-4E99-9262-CAC3A6518444} = {3737D82A-86E9-4D03-81D3-030E2F9BF006}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26D31CCE-2B57-4891-8ECC-5031281210D9}
