@@ -60,15 +60,21 @@ namespace OpenVinoSharp
             Dimension rank_tmp = new Dimension(shape.rank);
 
             if (!rank_tmp.is_dynamic()){
-                dimensions = new Dimension[rank_tmp.get_min()];
-                for (int i = 0; i < rank_tmp.get_min(); ++i) 
+                rank = rank_tmp;
+                IntPtr[] d_ptr = new IntPtr[rank.get_max()];
+                Marshal.Copy(shape.dims, d_ptr, 0, (int)rank.get_min());
+
+                dimensions = new Dimension[rank.get_min()];
+                for (int i = 0; i < rank.get_min(); ++i) 
                 {
-                    Dimension dim = new Dimension((Ov.ov_dimension)shape.dims[i]);
+                    var temp1 = Marshal.PtrToStructure(ptr, typeof(Ov.ov_dimension));
+                    Dimension dim = new Dimension((Ov.ov_dimension)temp1);
                     dimensions[i] = dim;
                 }
             }
-             rank = rank_tmp;
-
+            else {
+                rank = rank_tmp;
+            }
         }
         /// <summary>
         /// Constructing partial shape by dimensions.
@@ -199,12 +205,17 @@ namespace OpenVinoSharp
         {
             ov_partial_shape partial_shape = new ov_partial_shape();
             partial_shape.rank = rank.get_dimension();
-            Ov.ov_dimension[] ds = new Ov.ov_dimension[rank.get_max()];
+            int l = Marshal.SizeOf(typeof(Ov.ov_dimension));
+            IntPtr[] ds_ptr = new IntPtr[rank.get_max()];
             for (int i = 0; i < rank.get_max(); ++i) {
-                ds[i] = dimensions[i].get_dimension();
+                IntPtr ptr = Marshal.AllocHGlobal(l);
+                Marshal.StructureToPtr(dimensions[i], ptr, false);
+                ds_ptr[i] = ptr;
             }
-           
-            partial_shape.dims = ds;
+            
+            IntPtr d_ptr = Marshal.AllocHGlobal((int)(l * rank.get_max()));
+            Marshal.Copy(ds_ptr, 0, d_ptr, (int)rank.get_max());
+            partial_shape.dims = d_ptr;
             return partial_shape;
         }
         /// <summary>
@@ -266,7 +277,7 @@ namespace OpenVinoSharp
             {
                 for (int i = 0; i < rank.get_max(); ++i) 
                 {
-                    if (!dimensions[i].is_dynamic())
+                    if (dimensions[i].is_dynamic())
                     {
                         s += "?,";
                     }
