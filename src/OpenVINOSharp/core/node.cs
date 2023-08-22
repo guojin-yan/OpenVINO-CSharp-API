@@ -113,7 +113,8 @@ namespace OpenVinoSharp
         {
             int l = Marshal.SizeOf(typeof(Ov.ov_partial_shape));
             IntPtr shape_ptr = Marshal.AllocHGlobal(l);
-            ExceptionStatus status = NativeMethods.ov_port_get_partial_shape(m_ptr, shape_ptr);
+            Ov.ov_partial_shape shape = new Ov.ov_partial_shape();
+            ExceptionStatus status = NativeMethods.ov_port_get_partial_shape(m_ptr, ref shape);
             if (status != 0)
             {
                 shape_ptr = IntPtr.Zero;

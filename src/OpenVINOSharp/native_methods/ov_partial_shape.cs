@@ -22,7 +22,7 @@ namespace OpenVinoSharp
         /// Static rank, and static dimensions on all axes.
         ///     Examples: `{ 1,2,3,4}` or `{6}` or `{}`</remarks>
         /// <returns>Status code of the operation: OK(0) for success.</returns>
-        [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
+        [DllImport(dll_extern, EntryPoint = "ov_partial_shape_create",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_partial_shape_create(
             long rank, 
@@ -43,7 +43,7 @@ namespace OpenVinoSharp
         /// Static rank, and static dimensions on all axes.
         ///     Examples: `{ 1,2,3,4}` or `{6}` or `{}`</remarks>
         /// <returns>Status code of the operation: OK(0) for success.</returns>
-        [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
+        [DllImport(dll_extern, EntryPoint = "ov_partial_shape_create_dynamic",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_partial_shape_create_dynamic(
             Ov.ov_dimension rank,
@@ -57,7 +57,7 @@ namespace OpenVinoSharp
         /// <param name="dims">support dynamic and static dimension.</param>
         /// <param name="partial_shape_obj">The pointer of partial shape</param>
         /// <returns>Status code of the operation: OK(0) for success.</returns>
-        [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
+        [DllImport(dll_extern, EntryPoint = "ov_partial_shape_create_static",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_partial_shape_create_static(
             long rank, 
@@ -68,7 +68,7 @@ namespace OpenVinoSharp
         /// Release internal memory allocated in partial shape.
         /// </summary>
         /// <param name="partial_shape">The object's internal memory will be released.</param>
-        [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
+        [DllImport(dll_extern, EntryPoint = "ov_partial_shape_free",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_partial_shape_free(IntPtr partial_shape);
 
@@ -78,7 +78,7 @@ namespace OpenVinoSharp
         /// <param name="partial_shape">The partial_shape pointer.</param>
         /// <param name="shape">The shape pointer.</param>
         /// <returns>Status code of the operation: OK(0) for success.</returns>
-        [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
+        [DllImport(dll_extern, EntryPoint = "ov_partial_shape_to_shape",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_partial_shape_to_shape(
             Ov.ov_partial_shape partial_shape, 
@@ -90,7 +90,7 @@ namespace OpenVinoSharp
         /// <param name="shape">The shape.</param>
         /// <param name="partial_shape">The partial_shape pointer.</param>
         /// <returns>Status code of the operation: OK(0) for success.</returns>
-        [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
+        [DllImport(dll_extern, EntryPoint = "ov_shape_to_partial_shape",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_shape_to_partial_shape(
             Ov.ov_shape shape, 
@@ -101,7 +101,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="partial_shape">The partial_shape.</param>
         /// <returns>Status code of the operation: OK(0) for success.</returns>
-        [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
+        [DllImport(dll_extern, EntryPoint = "ov_partial_shape_is_dynamic",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static bool ov_partial_shape_is_dynamic(Ov.ov_partial_shape partial_shape);
 
@@ -110,7 +110,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="partial_shape">The partial_shape pointer.</param>
         /// <returns>A string reprensts partial_shape's content.</returns>
-        [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
+        [DllImport(dll_extern, EntryPoint = "ov_partial_shape_to_string",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static string ov_partial_shape_to_string(Ov.ov_partial_shape partial_shape);
     }

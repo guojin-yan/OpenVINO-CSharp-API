@@ -54,7 +54,7 @@ namespace OpenVinoSharp
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_port_get_partial_shape(
             IntPtr port, 
-            IntPtr partial_shape);
+            ref Ov.ov_partial_shape partial_shape);
 
         /// <summary>
         /// Get the tensor type of port.
