@@ -478,7 +478,7 @@ namespace OpenVinoSharp
         /// <param name="partial_shapes">The list of input tensor names and PartialShape.</param>
         public void reshape(Dictionary<string, PartialShape> partial_shapes)
         {
-            if (1 == partial_shapes.Count)
+            if (1 != partial_shapes.Count)
             {
                 IntPtr[] tensor_names_ptr = new IntPtr[partial_shapes.Count];
                 Ov.ov_partial_shape[] shapes = new Ov.ov_partial_shape[partial_shapes.Count];
@@ -501,8 +501,9 @@ namespace OpenVinoSharp
                 foreach (var partial_shape in partial_shapes) 
                 {
                     sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(partial_shape.Key));
+                    Ov.ov_partial_shape shape = partial_shape.Value.get_partial_shape();
                     ExceptionStatus status = NativeMethods.ov_model_reshape_input_by_name(m_ptr, ref c_tensor_name[0],
-                        partial_shape.Value.get_partial_shape());
+                        shape);
                     if (status != 0)
                     {
                         System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
