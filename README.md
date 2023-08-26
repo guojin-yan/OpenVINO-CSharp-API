@@ -11,7 +11,7 @@
 
 [简体中文](README_cn.md) | English
 
-## This is OpenVINOSharp 3.0 version, which is still under construction and its features are not yet fully developed. If there are any issues during use, please feel free to contact me. If you are interested in this project, you can also join our development.🥰🥰🥰
+## This is OpenVINOSharp 3.0 version, which is still under construction and its features are not yet fully developed. If there are any issues during use, please feel free to contact me. If you are interested in this project, you can also join our development.🥰🥰🥰🥰🥰
 
 ## 📚 What is OpenVINOSharp ?
 
