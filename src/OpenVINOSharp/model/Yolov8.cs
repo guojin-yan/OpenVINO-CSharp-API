@@ -413,9 +413,9 @@ namespace OpenVinoSharp.model.Yolov8
 
                 // Split size after scaling
                 int mx1 = Math.Max(0, (int)((box_x1 / scales[0]) * 0.25));
-                int mx2 = Math.Max(0, (int)((box_x2 / scales[0]) * 0.25));
+                int mx2 = Math.Min(159, (int)((box_x2 / scales[0]) * 0.25));
                 int my1 = Math.Max(0, (int)((box_y1 / scales[1]) * 0.25));
-                int my2 = Math.Max(0, (int)((box_y2 / scales[1]) * 0.25));
+                int my2 = Math.Min(150, (int)((box_y2 / scales[1]) * 0.25));
                 // Crop Split Region
                 Mat mask_roi = new Mat(reshape_mask, new OpenCvSharp.Range(my1, my2), new OpenCvSharp.Range(mx1, mx2));
                 // Convert the segmented area to the actual size of the image
