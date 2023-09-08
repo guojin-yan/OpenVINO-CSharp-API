@@ -10,7 +10,7 @@ namespace test_openvinosharp_api
     {
         static void Main(string[] args)
         {
-            string model_path = "E:\\GitSpace\\OpenVinoSharp\\model\\yolov8\\yolov8s-cls.xml";
+            string model_path = "./../../../../../model\\yolov8\\yolov8s-cls.xml";
             Core core = new Core(); // 初始化推理核心
             Model model = core.read_model(model_path); // 读取本地模型
             CompiledModel compiled_model = core.compile_model(model, "AUTO"); // 便哟模型到指定设备
@@ -36,7 +36,7 @@ namespace test_openvinosharp_api
             Console.WriteLine("Input tensor shape: {0}", input_tensor.get_shape().to_string());
             Console.WriteLine("Input tensor size: {0}", input_tensor.get_size());
             // 读取并处理输入数据
-            Mat image = Cv2.ImRead(@"E:\GitSpace\OpenVinoSharp\dataset\image\demo_7.jpg");
+            Mat image = Cv2.ImRead(@"./../../../../../dataset\image\demo_7.jpg");
             Mat input_mat = new Mat();
             input_mat = CvDnn.BlobFromImage(image, 1.0 / 255.0, new Size(224, 224), 0, true, false);
             // 加载推理数据
@@ -72,9 +72,11 @@ namespace test_openvinosharp_api
             Console.WriteLine("\n Classification Top 10 result : \n");
             Console.WriteLine("classid probability");
             Console.WriteLine("------- -----------");
+
+            string[] labelNames=core.GetLabelNames();
             for (int i = 0; i < 10; ++i)
             {
-                Console.WriteLine("{0}     {1}", cls[i].Key.ToString("0"), cls[i].Value.ToString("0.000000"));
+                Console.WriteLine("{0}  {2}   {1}", cls[i].Key.ToString("0"), cls[i].Value.ToString("0.000000"), labelNames[cls[i].Key]);                
             }
             // 销毁非托管内存
             output_tensor.dispose();

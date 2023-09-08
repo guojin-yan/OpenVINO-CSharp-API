@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 
 namespace OpenVinoSharp
@@ -39,6 +42,16 @@ namespace OpenVinoSharp
             /// </summary>
             public ulong size;
         }
+
+        string[] labelNames = null;
+        /// <summary>
+        /// 返回标签名字数组
+        /// </summary>
+        public string[] GetLabelNames()
+        {
+            return labelNames;
+        }
+
 
         /// <summary>
         ///  Constructs an OpenVINO Core instance with devices and their plugins description.
@@ -140,6 +153,7 @@ namespace OpenVinoSharp
         /// </remarks>
         public Model read_model(string model_path, string bin_path = "") 
         {
+            readLabelNames(model_path);
             IntPtr model_ptr = new IntPtr();
             sbyte[] c_model_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
             ExceptionStatus status;
@@ -158,8 +172,28 @@ namespace OpenVinoSharp
                 System.Diagnostics.Debug.WriteLine("Core read_model() error : " + status.ToString());
                 return new Model(IntPtr.Zero);
             }
-
             return new Model(model_ptr);
+        }
+
+
+        private void readLabelNames(string model_path)
+        {
+            try
+            {
+                if (System.IO.Path.GetExtension(model_path) == ".xml")
+                {
+                    XElement xe = XElement.Load(model_path);
+                    string tempnames = xe.Elements("rt_info").First().Elements("framework").First().Elements("names").First().Attribute("value").Value;
+                    string pattern = @"(?<=\')(\D+)(?=\')";
+                    MatchCollection matches = Regex.Matches(tempnames, pattern);
+                    labelNames = new string[matches.Count];
+                    for (int i = 0; i < matches.Count; i++)
+                    {
+                        labelNames[i] = matches[i].Value;
+                    }
+                }
+            }
+            catch { }
         }
 
         /// <summary>
