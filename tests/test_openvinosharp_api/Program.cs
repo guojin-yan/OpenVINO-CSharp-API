@@ -10,7 +10,7 @@ namespace test_openvinosharp_api
     {
         static void Main(string[] args)
         {
-            string model_path = "./../../../../../model\\yolov8\\yolov8s-cls.xml";
+            string model_path = "./../../../../../model\\yolov8\\yolov8s-cls.onnx";
             Core core = new Core(); // 初始化推理核心
             Model model = core.read_model(model_path); // 读取本地模型
             CompiledModel compiled_model = core.compile_model(model, "AUTO"); // 便哟模型到指定设备
