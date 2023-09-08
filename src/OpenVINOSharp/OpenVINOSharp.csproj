@@ -55,6 +55,7 @@ This version is a pre release version of OpenVinoSharp3.0 and its features are n
   
   
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.24.3" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.8.0.20230708" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.8.0.20230708" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />

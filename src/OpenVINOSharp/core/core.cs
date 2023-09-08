@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -180,17 +182,32 @@ namespace OpenVinoSharp
         {
             try
             {
-                if (System.IO.Path.GetExtension(model_path) == ".xml")
+
+                string extName = System.IO.Path.GetExtension(model_path);
+
+                string tempnames = null;
+                switch(extName)
                 {
-                    XElement xe = XElement.Load(model_path);
-                    string tempnames = xe.Elements("rt_info").First().Elements("framework").First().Elements("names").First().Attribute("value").Value;
-                    string pattern = @"(?<=\')(\D+)(?=\')";
-                    MatchCollection matches = Regex.Matches(tempnames, pattern);
-                    labelNames = new string[matches.Count];
-                    for (int i = 0; i < matches.Count; i++)
-                    {
-                        labelNames[i] = matches[i].Value;
-                    }
+                    case ".xml":
+                        XElement xe = XElement.Load(model_path);
+                        tempnames = xe.Elements("rt_info").First().Elements("framework").First().Elements("names").First().Attribute("value").Value;
+                        break;
+                    case ".onnx":
+                        var data = File.OpenRead(model_path);
+                        Onnx.ModelProto model = Onnx.ModelProto.Parser.ParseFrom(data);
+                        var dict = model.MetadataProps.ToDictionary(kv => kv.Key, kv => kv.Value);
+                        tempnames = dict["names"];
+                        break;
+                    default:
+                        break;
+                }
+                string pattern = @"(?<=\')(\D+)(?=\')";
+                MatchCollection matches = Regex.Matches(tempnames, pattern);
+                labelNames = new string[matches.Count];
+                labelNames = new string[matches.Count];
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    labelNames[i] = matches[i].Value;
                 }
             }
             catch { }
