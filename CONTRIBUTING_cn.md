@@ -1,14 +1,14 @@
-# 🏅为 OpenVINOSharp 做贡献
+# 🏅为 OpenVINO™ C# API 做贡献
 
-&emsp;   欢迎大家对我们提出宝贵意见🥰！我们期待大家为 OpenVINOSharp 做出贡献，可以通过以下方式：
+&emsp;   欢迎大家对我们提出宝贵意见🥰！我们期待大家为 OpenVINO™ C# API 做出贡献，可以通过以下方式：
 
 - **⁉报告错误/问题**
 
-  如果您在 OpenVINOSharp 或其组件中遇到错误行为，您可以在 GitHub 问题跟踪器中[创建新问题](https://github.com/guojin-yan/OpenVINOSharp/issues)。
+  如果您在 OpenVINO™ C# API 或其组件中遇到错误行为，您可以在 GitHub 问题跟踪器中[创建新问题](https://github.com/guojin-yan/OpenVINOSharp/issues)。
 
 - **🔖提出新的产品和功能**
 
-  如果你对 OpenVINOSharp 有相关建议或想分享您的想法，您可以打开一个新的[ Discussions](https://github.com/guojin-yan/OpenVINOSharp/discussions/landing) GitHub 讨论。 如果您的想法已经明确定义，您还可以创建一个功能请求问题，在这两种情况下，请提供详细说明，包括用例、优势和潜在挑战。
+  如果你对 OpenVINO™ C# API 有相关建议或想分享您的想法，您可以打开一个新的[ Discussions](https://github.com/guojin-yan/OpenVINOSharp/discussions/landing) GitHub 讨论。 如果您的想法已经明确定义，您还可以创建一个功能请求问题，在这两种情况下，请提供详细说明，包括用例、优势和潜在挑战。
 
 - 🎯**修复代码错误或开发新功能**
 
@@ -16,7 +16,7 @@
 
 - 🕹**成为维护者**
 
-  如果你对 OpenVINOSharp 感兴趣，并接受该项目工作，有余力协助 OpenVINOSharp 库开发，可以与我联系[guojin_yjs@cumt.edu.cn](mailto:guojin_yjs@cumt.edu.cn)。
+  如果你对 OpenVINO™ C# API 感兴趣，并接受该项目工作，有余力协助 OpenVINO™ C# API 库开发，可以与我联系[guojin_yjs@cumt.edu.cn](mailto:guojin_yjs@cumt.edu.cn)。
 
 
 

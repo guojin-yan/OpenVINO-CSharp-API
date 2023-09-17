@@ -34,6 +34,10 @@ This version is a pre release version of OpenVINO™ C# API 3.0 and its features
       <Pack>true</Pack>
       <PackagePath>build\openvino2023.0\%(Filename)%(Extension)</PackagePath>
     </None>
+    <None Include="..\..\nuget\csharp.png" Link="build\csharp.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\..\nuget\README.md" Link="build\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

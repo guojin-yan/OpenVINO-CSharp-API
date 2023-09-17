@@ -1,14 +1,14 @@
-# 🏅Contributing to OpenVINOSharp 
+# 🏅Contributing to OpenVINO™ C# API 
 
-&emsp;   Welcome everyone to give us valuable feedback🥰!  We look forward to everyone contributing to OpenVINOSharp by:
+&emsp;   Welcome everyone to give us valuable feedback🥰!  We look forward to everyone contributing to OpenVINO™ C# API by:
 
 - **⁉Report debug / issues**
 
-  If you encounter incorrect behavior in OpenVINOSharp or its components, you can create a new issue in the [GitHub Issue Tracker](https://github.com/guojin-yan/OpenVINOSharp/issues).
+  If you encounter incorrect behavior in OpenVINO™ C# API or its components, you can create a new issue in the [GitHub Issue Tracker](https://github.com/guojin-yan/OpenVINOSharp/issues).
 
 - **🔖Propose new products and features**
 
-  If you have any suggestions or want to share your thoughts on OpenVINOSharp, you can open a new GitHub [Discussions](https://github.com/guojin-yan/OpenVINOSharp/discussions/landing) . If your idea is clearly defined, you can also create a feature request question. In both cases, please provide detailed explanations, including use cases, advantages, and potential challenges.
+  If you have any suggestions or want to share your thoughts on OpenVINO™ C# API, you can open a new GitHub [Discussions](https://github.com/guojin-yan/OpenVINOSharp/discussions/landing) . If your idea is clearly defined, you can also create a feature request question. In both cases, please provide detailed explanations, including use cases, advantages, and potential challenges.
 
 - 🎯**Fix debug or develop new features**
 
@@ -16,7 +16,7 @@
 
 - 🕹**Becoming a maintainer**
 
-  If you are interested in OpenVINOSharp and accept the project work, and have the spare time to assist in the development of the OpenVINOSharp library, you can contact me by [guojin_yjs@cumt.edu.cn](mailto:guojin_yjs@cumt.edu.cn)。
+  If you are interested in OpenVINO™ C# API and accept the project work, and have the spare time to assist in the development of the OpenVINO™ C# API library, you can contact me by [guojin_yjs@cumt.edu.cn](mailto:guojin_yjs@cumt.edu.cn)。
 
 
 
