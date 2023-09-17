@@ -17,7 +17,7 @@ namespace OpenVinoSharp
         /// <returns>a status code, return OK if successful</returns>
         [DllImport(dll_extern, EntryPoint = "ov_layout_create", 
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_layout_create(
+        public extern static ExceptionStatus ov_layout_create(
             ref sbyte layout_desc, 
             ref IntPtr layout);
 
