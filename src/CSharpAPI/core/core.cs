@@ -52,19 +52,20 @@ namespace OpenVinoSharp
         ///     <para>1. (dynamic build) default `plugins.xml` file located in the same folder as OpenVINO runtime shared library;</para>
         ///     <para>2. (static build) statically defined configuration.In this case path to the.xml file is ignored.</para>
         ///  </param>
-        public Core(string xml_config_file = null) 
+        public Core(string xml_config_file = null)
         {
-            ExceptionStatus status;
-            if (!String.IsNullOrEmpty(xml_config_file)) {
-                status = NativeMethods.ov_core_create_with_config(xml_config_file, ref m_ptr);
+            if (!String.IsNullOrEmpty(xml_config_file))
+            {
+                HandleException.handler(
+                    NativeMethods.ov_core_create_with_config(xml_config_file, ref m_ptr));
             }
-            status = NativeMethods.ov_core_create(ref m_ptr);
-            if (status != 0) {
-                m_ptr = IntPtr.Zero;
+            else
+            {
+                HandleException.handler(
+                NativeMethods.ov_core_create(ref m_ptr));
+            }
 
-                System.Diagnostics.Debug.WriteLine("Core init error : " + status.ToString());
-            }
-            
+
         }
         /// <summary>
         /// Core's destructor
@@ -80,7 +81,7 @@ namespace OpenVinoSharp
                 return;
             }
             NativeMethods.ov_core_free(m_ptr);
-    
+
             m_ptr = IntPtr.Zero;
         }
         /// <summary>
@@ -94,28 +95,23 @@ namespace OpenVinoSharp
         /// </remarks>
         public KeyValuePair<string, Version> get_versions(string device_name)
         {
+            if (string.IsNullOrEmpty(device_name))
+            {
+                throw new ArgumentNullException(nameof(device_name));
+            }
             ExceptionStatus status;
             int l = Marshal.SizeOf(typeof(CoreVersionList));
             IntPtr ptr_core_version_s = Marshal.AllocHGlobal(l);
             sbyte[] c_device_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            status = NativeMethods.ov_core_get_versions_by_device_name(m_ptr, ref c_device_name[0], ptr_core_version_s);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core get_versions() error : " + status.ToString());
-                return new KeyValuePair<string, Version>();
-            }
+            HandleException.handler(
+                NativeMethods.ov_core_get_versions_by_device_name(m_ptr, ref c_device_name[0], ptr_core_version_s));
             var temp1 = Marshal.PtrToStructure(ptr_core_version_s, typeof(CoreVersionList));
-
             CoreVersionList core_version_s = (CoreVersionList)temp1;
             var temp2 = Marshal.PtrToStructure(core_version_s.core_version, typeof(CoreVersion));
             CoreVersion core_version = (CoreVersion)temp2;
             KeyValuePair<string, Version> value = new KeyValuePair<string, Version>(core_version.device_name, core_version.version);
             NativeMethods.ov_core_versions_free(ptr_core_version_s);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core get_versions() error : " + status.ToString());
-                return new KeyValuePair<string, Version>();
-            }
+
             return value;
         }
 
@@ -138,25 +134,26 @@ namespace OpenVinoSharp
         ///     <para>TF(*.pb)</para>
         ///     <para>TFLite(*.tflite)</para>
         /// </remarks>
-        public Model read_model(string model_path, string bin_path = "") 
+        public Model read_model(string model_path, string bin_path = "")
         {
+            if (string.IsNullOrEmpty(model_path))
+            {
+                throw new ArgumentNullException(nameof(model_path));
+            }
             IntPtr model_ptr = new IntPtr();
             sbyte[] c_model_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
-            ExceptionStatus status;
-            if (bin_path == "") {
+
+            if (bin_path == "")
+            {
                 sbyte c_bin_path = new sbyte();
-                status = NativeMethods.ov_core_read_model(m_ptr, ref c_model_path[0], ref c_bin_path, ref model_ptr);
-            } 
+                HandleException.handler(
+                    NativeMethods.ov_core_read_model(m_ptr, ref c_model_path[0], ref c_bin_path, ref model_ptr));
+            }
             else
             {
                 sbyte[] c_bin_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(bin_path));
-                status = NativeMethods.ov_core_read_model(m_ptr, ref c_model_path[0], ref c_bin_path[0], ref model_ptr);
-            }
-            
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core read_model() error : " + status.ToString());
-                return new Model(IntPtr.Zero);
+                HandleException.handler(
+                    NativeMethods.ov_core_read_model(m_ptr, ref c_model_path[0], ref c_bin_path[0], ref model_ptr));
             }
 
             return new Model(model_ptr);
@@ -172,16 +169,20 @@ namespace OpenVinoSharp
         /// Thus, do not create @p weights on temporary data that can be freed later, since the model constant data will point to an invalid memory.
         /// </remarks>
         /// <returns>A model.</returns>
-        public Model read_model(string model_path, Tensor weights) 
+        public Model read_model(string model_path, Tensor weights)
         {
+            if (string.IsNullOrEmpty(model_path))
+            {
+                throw new ArgumentNullException(nameof(model_path));
+            }
+            if (weights == null)
+            {
+                throw new ArgumentNullException(nameof(weights));
+            }
             IntPtr model_ptr = new IntPtr();
             sbyte[] c_model_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
-            ExceptionStatus status = NativeMethods.ov_core_read_model_from_memory(m_ptr, ref c_model_path[0], weights.Ptr, ref model_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core read_model() error : " + status.ToString());
-                return new Model(IntPtr.Zero);
-            }
+            HandleException.handler(
+                NativeMethods.ov_core_read_model_from_memory(m_ptr, ref c_model_path[0], weights.Ptr, ref model_ptr));
             return new Model(model_ptr);
         }
 
@@ -196,16 +197,15 @@ namespace OpenVinoSharp
         /// </remarks>
         public CompiledModel compile_model(Model model)
         {
-
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
             IntPtr compiled_model_ptr = new IntPtr();
             string device_name = "AUTO";
             sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            ExceptionStatus status = NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core compiled_model() error : " + status.ToString());
-                return new CompiledModel(IntPtr.Zero);
-            }
+            HandleException.handler(
+                NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr));
             return new CompiledModel(compiled_model_ptr);
         }
 
@@ -219,17 +219,20 @@ namespace OpenVinoSharp
         /// Users can create as many compiled models as they need and use
         /// them simultaneously (up to the limitation of the hardware resources).
         /// </remarks>
-        public CompiledModel compile_model(Model model, string device_name) 
+        public CompiledModel compile_model(Model model, string device_name)
         {
-            
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+            if (string.IsNullOrEmpty(device_name))
+            {
+                throw new ArgumentNullException(nameof(device_name));
+            }
             IntPtr compiled_model_ptr = new IntPtr();
             sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            ExceptionStatus status = NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core compiled_model() error : " + status.ToString());
-                return new CompiledModel(IntPtr.Zero);
-            }
+            HandleException.handler(
+                NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr));
             return new CompiledModel(compiled_model_ptr);
         }
 
@@ -244,16 +247,16 @@ namespace OpenVinoSharp
         /// <returns> A compiled model.</returns>
         public CompiledModel compile_model(string model_path)
         {
+            if (string.IsNullOrEmpty(model_path))
+            {
+                throw new ArgumentNullException(nameof(model_path));
+            }
             IntPtr compiled_model_ptr = new IntPtr();
             string device_name = "AUTO";
             sbyte[] c_model = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
             sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            ExceptionStatus status = NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core compiled_model() error : " + status.ToString());
-                return new CompiledModel(IntPtr.Zero);
-            }
+            HandleException.handler(
+                NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr));
             return new CompiledModel(compiled_model_ptr);
         }
 
@@ -268,17 +271,21 @@ namespace OpenVinoSharp
         /// especially for cases when caching is enabled and a cached model is availab
         /// </remarks>
         /// <returns>A compiled model.</returns>
-        public CompiledModel compile_model(string model_path, string device_name) 
+        public CompiledModel compile_model(string model_path, string device_name)
         {
+            if (string.IsNullOrEmpty(model_path))
+            {
+                throw new ArgumentNullException(nameof(model_path));
+            }
+            if (string.IsNullOrEmpty(device_name))
+            {
+                throw new ArgumentNullException(nameof(device_name));
+            }
             IntPtr compiled_model_ptr = new IntPtr();
             sbyte[] c_model = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
             sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            ExceptionStatus status = NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core compiled_model() error : " + status.ToString());
-                return new CompiledModel(IntPtr.Zero);
-            }
+            HandleException.handler(
+                NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr));
             return new CompiledModel(compiled_model_ptr);
         }
 
@@ -293,17 +300,12 @@ namespace OpenVinoSharp
         /// Such enumerated device can later be used as a device name in all Core methods like Core::compile_model,
         /// Core::query_model, Core::set_property and so on.
         /// </remarks>
-        public List<string> get_available_devices() 
+        public List<string> get_available_devices()
         {
             int l = Marshal.SizeOf(typeof(ov_available_devices_t));
             IntPtr devices_ptr = Marshal.AllocHGlobal(l);
-            ExceptionStatus status = NativeMethods.ov_core_get_available_devices(m_ptr, devices_ptr);
-
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Core get_available_devices() error : " + status.ToString());
-                return new List<string>();
-            }
+            HandleException.handler(
+                NativeMethods.ov_core_get_available_devices(m_ptr, devices_ptr));
 
             var temp1 = Marshal.PtrToStructure(devices_ptr, typeof(ov_available_devices_t));
 
@@ -320,3 +322,4 @@ namespace OpenVinoSharp
         }
     }
 }
+
