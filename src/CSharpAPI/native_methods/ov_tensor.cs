@@ -19,7 +19,7 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_tensor_create_from_host_ptr", 
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_create_from_host_ptr(
+        public extern static ExceptionStatus ov_tensor_create_from_host_ptr(
             uint type,
             Ov.ov_shape shape, 
             IntPtr host_ptr, 
@@ -34,7 +34,7 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_tensor_create",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_create(
+        public extern static ExceptionStatus ov_tensor_create(
             uint type, 
             Ov.ov_shape shape, 
             ref IntPtr tensor);
@@ -46,7 +46,7 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_tensor_set_shape",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_set_shape(
+        public extern static ExceptionStatus ov_tensor_set_shape(
                 IntPtr tensor, 
                 Ov.ov_shape shape);
 
@@ -58,7 +58,7 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_tensor_get_shape",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_get_shape(
+        public extern static ExceptionStatus ov_tensor_get_shape(
             IntPtr tensor, 
             IntPtr shape);
 
@@ -70,7 +70,7 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_tensor_get_element_type",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_get_element_type(
+        public extern static ExceptionStatus ov_tensor_get_element_type(
             IntPtr tensor, 
             out uint type);
 
@@ -82,7 +82,7 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_tensor_get_size",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_get_size(
+        public extern static ExceptionStatus ov_tensor_get_size(
             IntPtr tensor, 
             ref ulong elements_size);
 
@@ -94,7 +94,7 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_tensor_get_byte_size",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_get_byte_size(
+        public extern static ExceptionStatus ov_tensor_get_byte_size(
             IntPtr tensor,
             ref ulong byte_size);
 
@@ -106,7 +106,7 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_tensor_data", 
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int ov_tensor_data(
+        public extern static ExceptionStatus ov_tensor_data(
             IntPtr tensor, 
             ref IntPtr data);
 
