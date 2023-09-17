@@ -1,4 +1,4 @@
-![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for%20.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
+![OpenVINO™ C# API](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for%20.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
 
 <p align="center">    
     <a href="./LICENSE.txt">
@@ -10,13 +10,13 @@
 
 [简体中文](README_cn.md) | English
 
-# Using OpenVinoSharp to Deploy the Yolov8 Model on the AIxBoard
+# Using OpenVINO™ C# API to Deploy the Yolov8 Model on the AIxBoard
 
 &emsp;    Intel Distribution [OpenVINO™](www.openvino.ai)  tool kit is developed based on the oneAPI, which can accelerate the development speed of high-performance computer vision and deep learning visual applications. It is suitable for various Intel platforms from the edge to the cloud, helping users deploy more accurate real-world results into production systems faster. By simplifying the development workflow, OpenVINO ™ Enable developers to deploy high-performance applications and algorithms in the real world.
 
-&emsp;    C# is a secure, stable, simple, and elegant object-oriented programming language derived from C and C++. C# combines the simple visual operations of VB with the high running efficiency of C++, making it the preferred language for. NET development with its powerful operational capabilities, elegant syntax style, innovative language features, and convenient support for component oriented programming. However, OpenVINO™ No C# language interface provided, which is beneficial for using OpenVINO™ in C # This has caused a lot of trouble. In our previous work, we launched [OpenVinoSharp](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0) to promote OpenVino™ The application in the C # field has been successfully implemented and used on the Window platform. In this article, we will introduce how to implement OpenVinoSharp on an AIxBoard development board based on a Linux system.
+&emsp;    C# is a secure, stable, simple, and elegant object-oriented programming language derived from C and C++. C# combines the simple visual operations of VB with the high running efficiency of C++, making it the preferred language for. NET development with its powerful operational capabilities, elegant syntax style, innovative language features, and convenient support for component oriented programming. However, OpenVINO™ No C# language interface provided, which is beneficial for using OpenVINO™ in C # This has caused a lot of trouble. In our previous work, we launched [OpenVINO™ C# API](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0) to promote OpenVino™ The application in the C # field has been successfully implemented and used on the Window platform. In this article, we will introduce how to implement OpenVINO™ C# API on an AIxBoard development board based on a Linux system.
 
-&emsp;    The code used in the project has been uploaded to the OpenVinoSharp repository, and the GitHub website is:
+&emsp;    The code used in the project has been uploaded to the OpenVINO™ C# API repository, and the GitHub website is:
 
 ```
 https://github.com/guojin-yan/OpenVINOSharp/blob/openvinosharp3.0/tutorial_examples/AlxBoard_deploy_yolov8/Program.cs
@@ -186,9 +186,9 @@ cd AlxBoard_deploy_yolov8
 
 &emsp;    创建完项目后，将[AlxBoard_deploy_yolov8](https://github.com/guojin-yan/OpenVINOSharp/blob/openvinosharp3.0/tutorial_examples/AlxBoard_deploy_yolov8/Program.cs)的代码内容替换到创建的项目中的**Program.cs**文件中.
 
-### 2. Add OpenVINOSharp Dependency
+### 2. Add OpenVINO™ C# API Dependency
 
-&emsp;    Due to the fact that OpenVINOSharp is currently in the development phase and has not yet created a Linux version of NuGet Package, it is necessary to use it as a project reference by downloading the project source code.
+&emsp;    Due to the fact that OpenVINO™ C# API is currently in the development phase and has not yet created a Linux version of NuGet Package, it is necessary to use it as a project reference by downloading the project source code.
 
 - **Download source code**
 
@@ -204,12 +204,12 @@ cd AlxBoard_deploy_yolov8
   ```
   Program--
   		|-AlxBoard_deploy_yolov8
-  		|-OpenVINOSharp
+  		|-OpenVINO-CSharp-API
   ```
 
 - **Modify OpenVINO ™ Dependency**
 
-  Due to the OpenVINO™ dependency of the project source code being different from the settings in this article, it is necessary to modify the path of the OpenVINO™ dependency, mainly by modifying the ``OpenVINOSharp/src/OpenVINOSharp/native_methods/ov_base.cs``. The modifications are as follows:
+  Due to the OpenVINO™ dependency of the project source code being different from the settings in this article, it is necessary to modify the path of the OpenVINO™ dependency, mainly by modifying the ``OpenVINO™ C# API/src/OpenVINO™ C# API/native_methods/ov_base.cs``. The modifications are as follows:
 
   ```
   private const string dll_extern = "./openvino2023.0/openvino_c.dll";
@@ -219,10 +219,10 @@ cd AlxBoard_deploy_yolov8
 
 - **Add Project Dependency**
 
-  Enter the following command in Terminal to add OpenVINOSharp to AlxBoard_ Deploy_ Yolov8 project reference.
+  Enter the following command in Terminal to add OpenVINO™ C# API to AlxBoard_ Deploy_ Yolov8 project reference.
 
   ```
-  dotnet add reference ./../OpenVINOSharp/src/OpenVINOSharp/OpenVINOSharp.csproj
+  dotnet add reference ./../OpenVINO-CSharp-API/src/OpenVINOSharp/OpenVINOSharp.csproj
   ```
 
 - **Add environment variables**
@@ -294,7 +294,7 @@ cd AlxBoard_deploy_yolov8
 
 ## Ⅴ. Run AlxBoard_deploy_yolov8 Project
 
-&emsp;    The models and files used in the project testing can be found in OpenVINOSharp, so we will test them using the models and files in the OpenVINOSharp repository.
+&emsp;    The models and files used in the project testing can be found in OpenVINO™ C# API, so we will test them using the models and files in the OpenVINO™ C# API repository.
 
 &emsp;    To run through Dotnet, simply run the following command
 

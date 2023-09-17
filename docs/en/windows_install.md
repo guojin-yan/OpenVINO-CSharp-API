@@ -1,6 +1,6 @@
-# Windows Installation OpenVINOSharp
+# Windows Installation OpenVINO™ C# API
 
-&emsp;    OpenVINOSharp is mainly based on OpenVINO™  Developed with C #, supports Windows 10/11 version, and has been tested under x64 architecture.
+&emsp;    OpenVINO™ C# API is mainly based on OpenVINO™  Developed with C #, supports Windows 10/11 version, and has been tested under x64 architecture.
 
 ## C# Environmental Configuration
 
@@ -10,9 +10,9 @@
 
 - [.NET Framework installation guide - .NET Framework | Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/framework/install/)
 
-## OpenVINOSharp Installation
+## OpenVINO™ C# API Installation
 
-&emsp;    Due to the convenience of developing the C # language in the Windows environment, OpenVINOSharp's NuGet Package has been developed, which can be installed directly through the C # NuGet Package during use. When packaging NuGet Package, also include OpenVINO ™  The officially compiled Dongta Link Library file is packaged into the NuGet Package, so you only need to add OpenVINOSharp here to use it. The following demonstrates the installation under two different compilation methods:
+&emsp;    Due to the convenience of developing the C # language in the Windows environment, OpenVINO™ C# API's NuGet Package has been developed, which can be installed directly through the C # NuGet Package during use. When packaging NuGet Package, also include OpenVINO ™  The officially compiled Dongta Link Library file is packaged into the NuGet Package, so you only need to add OpenVINO™ C# API here to use it. The following demonstrates the installation under two different compilation methods:
 
 - **Visual Studio Platform**
 
@@ -22,7 +22,7 @@
 
 - **dotnet**
 
-&emsp;    Dotnet is a compilation platform for the C # language, which can quickly compile C # projects from the command line. If using dotnet compilation, OpenVINOSharp can be installed by:
+&emsp;    Dotnet is a compilation platform for the C # language, which can quickly compile C # projects from the command line. If using dotnet compilation, OpenVINO™ C# API can be installed by:
 
 ```
 dotnet add package OpenVinoSharp.win

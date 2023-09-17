@@ -15,15 +15,15 @@
     <Description>基于C#平台调用OpenVINO套件部署深度学习模型。
 Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.
 目前版本为测试版本，会存在相关的问题，待后续更新会修改相应的错误；如有其他问题请联系作者解决。</Description>
-    <PackageProjectUrl>https://github.com/guojin-yan/OpenVinoSharp</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/guojin-yan/OpenVinoSharp</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <NeutralLanguage>zh</NeutralLanguage>
-    <PackageIcon>openvinosharp.png</PackageIcon>
+    <PackageIcon>csharp.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>该版本为OpenVinoSharp3.0 预发行版本，功能还未完善，如使用中有问题，欢迎与我沟通联系。
-This version is a pre release version of OpenVinoSharp3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
+    <PackageReleaseNotes>该版本为OpenVINO™ C# API 3.0 预发行版本，功能还未完善，如使用中有问题，欢迎与我沟通联系。
+This version is a pre release version of OpenVINO™ C# API 3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
     <RootNamespace>OpenVinoSharp</RootNamespace> 
   </PropertyGroup>
 
@@ -33,10 +33,6 @@ This version is a pre release version of OpenVinoSharp3.0 and its features are n
     <None Include=".\build\openvino2023.0\*.*">
       <Pack>true</Pack>
       <PackagePath>build\openvino2023.0\%(Filename)%(Extension)</PackagePath>
-    </None>
-    <None Include="..\..\nuget\openvinosharp.png" Link="build\openvinosharp.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
     </None>
     <None Include="..\..\nuget\README.md" Link="build\README.md">
       <Pack>True</Pack>
@@ -58,14 +54,6 @@ This version is a pre release version of OpenVinoSharp3.0 and its features are n
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.8.0.20230708" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.8.0.20230708" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-  </ItemGroup>
-  
-  
-  <ItemGroup>
-    <None Include="build\OpenVINOSharp.win.targets">
-      <Pack>true</Pack>
-      <PackagePath>build\</PackagePath>
-    </None>
   </ItemGroup>
   
   

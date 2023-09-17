@@ -1,11 +1,11 @@
-![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for%20.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
+![OpenVINO™ C# API](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for%20.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
 
 [简体中文](README_cn.md) | English
 
-# OpenVinoSharp Deployment Yolov8 Model Example
+# OpenVINO™ C# API Deployment Yolov8 Model Example
 
-&emsp;    OpenVinoSharp version 3.0 has undergone significant updates compared to version 2.0, changing from refactoring the C++API to directly reading OpenVino ™  The official C API makes the application more flexible and supports a richer range of functions. OpenVinoSharp 3.0 API interface with multiple references to OpenVino ™  C++API implementation, therefore it is closer to the C++API when used, which will be more friendly to friends who are familiar with using the C++API.
-&emsp; This example demonstrates how to deploy the Yolov8 full series model using the OpenVinoSharp 3.0 API.
+&emsp;    OpenVINO™ C# API version 3.0 has undergone significant updates compared to version 2.0, changing from refactoring the C++API to directly reading OpenVino ™  The official C API makes the application more flexible and supports a richer range of functions. OpenVINO™ C# API 3.0 API interface with multiple references to OpenVino ™  C++API implementation, therefore it is closer to the C++API when used, which will be more friendly to friends who are familiar with using the C++API.
+&emsp; This example demonstrates how to deploy the Yolov8 full series model using the OpenVINO™ C# API 3.0 API.
 &emsp; This example supports the full range of Yolov8 models, as well as official pre training models and personal training models.
 &emsp; The following C # APIs will be mainly used in the example:
 
@@ -34,13 +34,13 @@
 ## How It Works
 
 &emsp;    When the project runs, the sample program will read the user specified path model, test images, and category files to prepare relevant data for model inference testing; Load the specified model and image into OpenVINO ™  Reasoning the core and performing synchronous reasoning, then loading the obtained reasoning data into a custom Yolov8 data processing class for result processing.
-&emsp;    OpenVINO used in the project ™ The relevant components have been encapsulated in OpenVinoSharp, and there is no need to install OpenVino separately ™。
+&emsp;    OpenVINO used in the project ™ The relevant components have been encapsulated in OpenVINO™ C# API, and there is no need to install OpenVino separately ™。
 
 ## Project Dependency
 
 &emsp;    All dependencies in the project can be installed through the **NuGet** package:
 
-- **OpenVinoSharp**
+- **OpenVINO™ C# API**
 
 &emsp;     You can install it through the NuGet tool that comes with Visual Studio, 
 
@@ -81,7 +81,7 @@ dotnet add package OpenVinoSharp.win
 
 ## Building
 
-&emsp;    Currently, rapid implementation in the Window environment has been achieved. Please refer to the installation of the environment for reference[Windows Installation OpenVINOSharp](./../../docs/en/windows_install.md)
+&emsp;    Currently, rapid implementation in the Window environment has been achieved. Please refer to the installation of the environment for reference[Windows Installation OpenVINO™ C# API](./../../docs/en/windows_install.md)
 
 &emsp;   The Linux environment is still under development.
 
@@ -96,7 +96,7 @@ dotnet add package OpenVinoSharp.win
 
 - **Visual Studio compile**
 
-&emsp;    If compiling using Visual Studio, you can open the ``OpenVinoSharp. sln`` solution through the solution and install the project dependencies as described in [Project Dependencies](##Project Dependency). The ```openvino2023.0``` folder will then be added to the project.
+&emsp;    If compiling using Visual Studio, you can open the ``OpenVINO™ C# API. sln`` solution through the solution and install the project dependencies as described in [Project Dependencies](##Project Dependency). The ```openvino2023.0``` folder will then be added to the project.
 
 <div align=center><span><img src="https://s2.loli.net/2023/07/31/Bal8QopgDmbePAJ.png" height=100/></span></div>
 

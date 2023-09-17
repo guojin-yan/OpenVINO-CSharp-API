@@ -1,4 +1,4 @@
-![OpenVinoSharp](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for%20.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
+![OpenVINO™ C# API](https://socialify.git.ci/guojin-yan/OpenVinoSharp/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for%20.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
 
 <p align="center">    
     <a href="./LICENSE.txt">
@@ -10,11 +10,11 @@
 
 简体中文| [English](README.md)
 
-# 爱克斯开发板使用OpenVinoSharp部署Yolov8模型
+# 爱克斯开发板使用OpenVINO™ C# API部署Yolov8模型
 
 &emsp;    英特尔发行版 [OpenVINO™](www.openvino.ai)工具套件基于oneAPI 而开发，可以加快高性能计算机视觉和深度学习视觉应用开发速度工具套件，适用于从边缘到云的各种英特尔平台上，帮助用户更快地将更准确的真实世界结果部署到生产系统中。通过简化的开发工作流程， OpenVINO™可赋能开发者在现实世界中部署高性能应用程序和算法。
 
-&emsp;    C#是由C和C++衍生出来的一种安全的、稳定的、简单的、优雅的面向对象编程语言。C#综合了VB简单的可视化操作和C++的高运行效率，以其强大的操作能力、优雅的语法风格、创新的语言特性和便捷的面向组件编程的支持成为.NET开发的首选语言。然而 OpenVINO™未提供C#语言接口，这对在C#中使用 OpenVINO™带来了很多麻烦，在之前的工作中，我们推出了[OpenVinoSharp](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0)，旨在推动 OpenVINO™在C#领域的应用，目前已经成功在Window平台实现使用。在本文中，我们将介绍如何在 AIxBoard开发板上基于Linux系统实现OpenVinoSharp。
+&emsp;    C#是由C和C++衍生出来的一种安全的、稳定的、简单的、优雅的面向对象编程语言。C#综合了VB简单的可视化操作和C++的高运行效率，以其强大的操作能力、优雅的语法风格、创新的语言特性和便捷的面向组件编程的支持成为.NET开发的首选语言。然而 OpenVINO™未提供C#语言接口，这对在C#中使用 OpenVINO™带来了很多麻烦，在之前的工作中，我们推出了[OpenVINO™ C# API](https://github.com/guojin-yan/OpenVinoSharp/tree/openvinosharp3.0)，旨在推动 OpenVINO™在C#领域的应用，目前已经成功在Window平台实现使用。在本文中，我们将介绍如何在 AIxBoard开发板上基于Linux系统实现OpenVinoSharp。
 
 &emsp;    项目中所使用的代码已上传至OpenVinoSharp仓库中，GitHub网址为：
 
@@ -186,7 +186,7 @@ cd AlxBoard_deploy_yolov8
 
 &emsp;    创建完项目后，将[AlxBoard_deploy_yolov8](https://github.com/guojin-yan/OpenVINOSharp/blob/openvinosharp3.0/tutorial_examples/AlxBoard_deploy_yolov8/Program.cs)的代码内容替换到创建的项目中的**Program.cs**文件中.
 
-### 2. 添加 OpenVINOSharp 依赖
+### 2. 添加 OpenVINO™ C# API 依赖
 
 &emsp;    由于OpenVINOSharp 当前正处于开发阶段，还未创建Linux版本的NuGet Package，因此需要通过下载项目源码以项目引用的方式使用。
 
@@ -219,7 +219,7 @@ cd AlxBoard_deploy_yolov8
 
 - **添加项目依赖**
 
-  在Terminal输入以下命令，即可将OpenVINOSharp添加到AlxBoard_deploy_yolov8项目引用中。
+  在Terminal输入以下命令，即可将OpenVINO™ C# API添加到AlxBoard_deploy_yolov8项目引用中。
 
   ```
   dotnet add reference ./../OpenVINOSharp/src/OpenVINOSharp/OpenVINOSharp.csproj
@@ -294,7 +294,7 @@ cd AlxBoard_deploy_yolov8
 
 ## 五、运行AlxBoard_deploy_yolov8 项目
 
-&emsp;    该项目测试所使用的模型与文件都可以在OpenVINOSharp中找到，因此下面我们通过OpenVINOSharp 仓库下的模型与文件进行测试。
+&emsp;    该项目测试所使用的模型与文件都可以在OpenVINO™ C# API中找到，因此下面我们通过OpenVINO™ C# API 仓库下的模型与文件进行测试。
 
 &emsp;    通过dotnet运行，只需要运行以下命令即可
 
@@ -475,7 +475,7 @@ Set inference device  GPU.0.
 
 ## 七、总结
 
-&emsp;    在该项目中，我们基于Ubutn 20.04 系统，成功实现了在C#环境下调用OpenVINO™部署深度学习模型，验证了在Linux环境下OpenVINOSharp项目的的可行性，这对后面在Linux环境下开发OpenVINOSharp具有很重要的意义。
+&emsp;    在该项目中，我们基于Ubutn 20.04 系统，成功实现了在C#环境下调用OpenVINO™部署深度学习模型，验证了在Linux环境下OpenVINO™ C# API项目的的可行性，这对后面在Linux环境下开发OpenVINO™ C# API具有很重要的意义。
 
-&emsp;    除此之外，我们还使用OpenVINOSharp检验了AIxBoard开发板的模型推理能力，最总针对Yolov8模型，平均处理速度可以达到10FPs，这对目前大多数开发板来说，已经达到了很高的推理速度。后续我还会将继续使用OpenVINOSharp在AIxBoard开发板部署更多的深度学习模型。
+&emsp;    除此之外，我们还使用OpenVINO™ C# API检验了AIxBoard开发板的模型推理能力，最总针对Yolov8模型，平均处理速度可以达到10FPs，这对目前大多数开发板来说，已经达到了很高的推理速度。后续我还会将继续使用OpenVINO™ C# API在AIxBoard开发板部署更多的深度学习模型。
 

@@ -1,6 +1,6 @@
-# Windows 安装 OpenVINOSharp
+# Windows 安装 OpenVINO™ C# API
 
-&emsp;    OpenVINOSharp 主要基于 OpenVINO™ 和 C# 开发，支持 Windows 10/11版本，目前已经在 x64 架构下完成测试。
+&emsp;    OpenVINO™ C# API 主要基于 OpenVINO™ 和 C# 开发，支持 Windows 10/11版本，目前已经在 x64 架构下完成测试。
 
 ## C# 环境配置
 
@@ -10,9 +10,9 @@
 
 - [.NET Framework 安装指南 - .NET Framework | Microsoft Learn](https://learn.microsoft.com/zh-cn/dotnet/framework/install/)
 
-## OpenVINOSharp 安装
+## OpenVINO™ C# API 安装
 
-&emsp;    由于在Windows环境下开发C#语言比较方便，因此目前开发了 OpenVINOSharp 的 NuGet Package ，在使用时直接通过 C# 的 NuGet Package进行安装即可。在打包NuGet Package时，同时将OpenVINO™ 官方编译的东塔链接库文件一并打包到NuGet Package中，因此此处只需要添加OpenVINOSharp即可使用。下面演示两种不同编译方式情况下的安装：
+&emsp;    由于在Windows环境下开发C#语言比较方便，因此目前开发了 OpenVINO™ C# API 的 NuGet Package ，在使用时直接通过 C# 的 NuGet Package进行安装即可。在打包NuGet Package时，同时将OpenVINO™ 官方编译的东塔链接库文件一并打包到NuGet Package中，因此此处只需要添加OpenVINO™ C# API即可使用。下面演示两种不同编译方式情况下的安装：
 
 - **Visual Studio 平台**
 
@@ -22,7 +22,7 @@
 
 - **dotnet**
 
-&emsp;    dotnet是C#语言的编译平台，可以通过命令行快速编译C#项目，如果使用dotnet编译，可以通过以下方式安装OpenVINOSharp：
+&emsp;    dotnet是C#语言的编译平台，可以通过命令行快速编译C#项目，如果使用dotnet编译，可以通过以下方式安装OpenVINO™ C# API：
 
 ```
 dotnet add package OpenVinoSharp.win
