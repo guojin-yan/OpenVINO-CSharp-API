@@ -5,13 +5,13 @@
     <TargetFrameworks>net6.0;net48</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
-    <PackageId>OpenVinoSharp.win</PackageId>
+    <PackageId>OpenVINO.CSharp.win</PackageId>
     <!--设置NuGet包信息-->
-    <Title>OpenVinoSharp</Title>
-    <Version>3.0.122-test-6</Version>
+    <Title>OpenVINO C# API</Title>
+    <Version>3.0.122-test-8</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
-    <Product>OpenVinoSharp</Product>
+    <Product>OpenVINO C# API</Product>
     <Description>基于C#平台调用OpenVINO套件部署深度学习模型。
 Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.
 目前版本为测试版本，会存在相关的问题，待后续更新会修改相应的错误；如有其他问题请联系作者解决。</Description>
@@ -20,11 +20,12 @@ Based on the C # platform, call the OpenVINO suite to deploy a deep learning mod
     <RepositoryType>git</RepositoryType>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <NeutralLanguage>zh</NeutralLanguage>
-    <PackageIcon>csharp.png</PackageIcon>
+    <PackageIcon>NuGet.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>该版本为OpenVINO™ C# API 3.0 预发行版本，功能还未完善，如使用中有问题，欢迎与我沟通联系。
 This version is a pre release version of OpenVINO™ C# API 3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
-    <RootNamespace>OpenVinoSharp</RootNamespace> 
+    <RootNamespace>OpenVinoSharp</RootNamespace>
+    <AssemblyName>OpenVINOCSharp</AssemblyName> 
   </PropertyGroup>
 
 
@@ -34,7 +35,7 @@ This version is a pre release version of OpenVINO™ C# API 3.0 and its features
       <Pack>true</Pack>
       <PackagePath>build\openvino2023.0\%(Filename)%(Extension)</PackagePath>
     </None>
-    <None Include="..\..\nuget\csharp.png" Link="build\csharp.png">
+    <None Include="..\..\nuget\NuGet.png" Link="build\NuGet.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
@@ -59,8 +60,18 @@ This version is a pre release version of OpenVINO™ C# API 3.0 and its features
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.8.0.20230708" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
-  
-  
+
+  <ItemGroup>
+    <None Include="build\OpenVINO.CSharp.win.targets">
+      <Pack>true</Pack>
+      <PackagePath>build\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="exception\" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
     <DefineConstants>$(DefineConstants);DOTNET_FRAMEWORK;</DefineConstants>
   </PropertyGroup>
