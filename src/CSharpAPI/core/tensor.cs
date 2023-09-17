@@ -51,13 +51,9 @@ namespace OpenVinoSharp
             int l =mat.mat_data.Length;
             IntPtr data = Marshal.AllocHGlobal(l);
             Marshal.Copy(mat.mat_data, 0, data, (int)mat.mat_data_size);
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_create_from_host_ptr
-                ((uint)type.get_type(), shape.shape, data, ref m_ptr);
-            if (status != 0)
-            {
-                m_ptr = IntPtr.Zero;
-                System.Diagnostics.Debug.WriteLine("Tensor init error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)type.get_type(), shape.shape, data, ref m_ptr));
         }
         /// <summary>
         /// Constructs Tensor using element type and shape. Wraps allocated host memory.
@@ -68,13 +64,9 @@ namespace OpenVinoSharp
         /// <param name="host_ptr">Pointer to pre-allocated host memory</param>
         public Tensor(element.Type type, Shape shape, IntPtr host_ptr)
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_create_from_host_ptr
-                ((uint)type.get_type(), shape.shape, host_ptr, ref m_ptr);
-            if (status != 0)
-            {
-                m_ptr = IntPtr.Zero;
-                System.Diagnostics.Debug.WriteLine("Tensor init error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)type.get_type(), shape.shape, host_ptr, ref m_ptr));
         }
 
         /// <summary>
@@ -84,13 +76,9 @@ namespace OpenVinoSharp
         /// <param name="shape">Tensor shape</param>
         public Tensor(element.Type type, Shape shape)
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_create
-                ((uint)type.get_type(), shape.shape, ref m_ptr);
-            if (status != 0)
-            {
-                m_ptr = IntPtr.Zero;
-                System.Diagnostics.Debug.WriteLine("Tensor init error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_create
+                ((uint)type.get_type(), shape.shape, ref m_ptr));
         }
 
         /// <summary>
@@ -99,13 +87,9 @@ namespace OpenVinoSharp
         /// <param name="tensor">other Tensor object</param>
         public Tensor(Tensor tensor) 
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_create_from_host_ptr
-                ((uint)tensor.get_element_type().get_type(), tensor.get_shape().shape, tensor.data(), ref m_ptr);
-            if (status != 0)
-            {
-                m_ptr = IntPtr.Zero;
-                System.Diagnostics.Debug.WriteLine("Tensor init error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)tensor.get_element_type().get_type(), tensor.get_shape().shape, tensor.data(), ref m_ptr));
         }
 
         /// <summary>
@@ -134,11 +118,8 @@ namespace OpenVinoSharp
         /// <param name="shape"> A new shape</param>
         public void set_shape(Shape shape) 
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_set_shape(m_ptr, shape.shape);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Tensor set_shape error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_set_shape(m_ptr, shape.shape));
         }
 
         /// <summary>
@@ -149,12 +130,8 @@ namespace OpenVinoSharp
         {
             int l = Marshal.SizeOf(typeof(Ov.ov_shape));
             IntPtr shape_ptr = Marshal.AllocHGlobal(l);
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_shape(m_ptr, shape_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Tensor get_shape error : " + status.ToString());
-                shape_ptr = IntPtr.Zero;
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_get_shape(m_ptr, shape_ptr));
 
             return new Shape(shape_ptr);
         }
@@ -165,12 +142,8 @@ namespace OpenVinoSharp
         public OvType get_element_type() 
         {
             uint type = 100;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_element_type(m_ptr, out type);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Tensor get_element_type error : " + status.ToString());
-                type = 0;
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_get_element_type(m_ptr, out type));
             OvType t = new OvType((ElementType)type);
             return t;
         }
@@ -182,11 +155,8 @@ namespace OpenVinoSharp
         public ulong get_size() 
         {
             ulong size = 0;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_size(m_ptr, ref size);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Tensor get_size error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_get_size(m_ptr, ref size));
             return size;
         }
 
@@ -197,11 +167,8 @@ namespace OpenVinoSharp
         public ulong get_byte_size()
         {
             ulong size = 0;
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_get_byte_size(m_ptr, ref size);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Tensor get_byte_size error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_get_byte_size(m_ptr, ref size));
             return size;
         }
 
@@ -224,7 +191,8 @@ namespace OpenVinoSharp
         public IntPtr data()
         {
             IntPtr data_ptr = new IntPtr();
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_data(m_ptr, ref data_ptr);
+            HandleException.handler(
+                NativeMethods.ov_tensor_data(m_ptr, ref data_ptr));
             return data_ptr;
         }
 
@@ -236,12 +204,8 @@ namespace OpenVinoSharp
         public void set_data<T>(T[] input_data)
         {
             IntPtr data_ptr = new IntPtr();
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_data(m_ptr, ref data_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Tensor dispose error : " + status.ToString());
-                return;
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_data(m_ptr, ref data_ptr));
             int length = input_data.Length;
 
             string t = typeof(T).ToString();
@@ -290,11 +254,8 @@ namespace OpenVinoSharp
         public T[] get_data<T>(int length)
         {
             IntPtr data_ptr = new IntPtr();
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_tensor_data(m_ptr, ref data_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Tensor dispose error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_tensor_data(m_ptr, ref data_ptr));
             string t = typeof(T).ToString();
             T[] result = new T[length];
 

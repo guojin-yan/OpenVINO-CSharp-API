@@ -63,12 +63,8 @@ namespace OpenVinoSharp
         public InferRequest create_infer_request()
         {
             IntPtr infer_request_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_create_infer_request(m_ptr, ref infer_request_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel create_infer_request() error!");
-                return new InferRequest(IntPtr.Zero);
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_create_infer_request(m_ptr, ref infer_request_ptr));
             return new InferRequest(infer_request_ptr);
         }
 
@@ -79,11 +75,8 @@ namespace OpenVinoSharp
         public Node get_input()
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_input(m_ptr, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel get_input() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_input(m_ptr, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
 
@@ -96,11 +89,8 @@ namespace OpenVinoSharp
         {
             IntPtr port_ptr = IntPtr.Zero;
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = NativeMethods.ov_compiled_model_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel get_input() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
 
@@ -112,11 +102,8 @@ namespace OpenVinoSharp
         public Node get_input(ulong index)
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_input_by_index(m_ptr, index, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel get_input() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_input_by_index(m_ptr, index, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
 
@@ -127,11 +114,7 @@ namespace OpenVinoSharp
         public Node get_output()
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_output(m_ptr, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel get_output() error!");
-            }
+            HandleException.handler(NativeMethods.ov_compiled_model_output(m_ptr, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
         /// <summary>
@@ -143,11 +126,8 @@ namespace OpenVinoSharp
         {
             IntPtr port_ptr = IntPtr.Zero;
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = NativeMethods.ov_compiled_model_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel get_output() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
         /// <summary>
@@ -158,11 +138,8 @@ namespace OpenVinoSharp
         public Node get_output(ulong index)
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_output_by_index(m_ptr, index, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel get_output() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_output_by_index(m_ptr, index, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
         /// <summary>
@@ -172,11 +149,8 @@ namespace OpenVinoSharp
         public ulong get_inputs_size()
         {
             ulong input_size = 0;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_inputs_size(m_ptr, ref input_size);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel get_intputs_size() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_inputs_size(m_ptr, ref input_size));
             return input_size;
         }
         /// <summary>
@@ -186,11 +160,8 @@ namespace OpenVinoSharp
         public ulong get_outputs_size()
         {
             ulong output_size = 0;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_outputs_size(m_ptr, ref output_size);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel get_outputs_size() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_outputs_size(m_ptr, ref output_size));
             return output_size;
         }
 
@@ -322,11 +293,8 @@ namespace OpenVinoSharp
         public Model get_runtime_model()
         { 
             IntPtr model_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_get_runtime_model(m_ptr, ref model_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel  get_runtime_model() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_get_runtime_model(m_ptr, ref model_ptr));
             return new Model(model_ptr);
         }
 
@@ -338,11 +306,8 @@ namespace OpenVinoSharp
         public void export_model(string model_path) 
         {
             sbyte[] c_model_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
-            ExceptionStatus status = NativeMethods.ov_compiled_model_export_model(m_ptr, ref c_model_path[0]);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel  export_model() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_export_model(m_ptr, ref c_model_path[0]));
         }
 
         /// <summary>
@@ -353,11 +318,8 @@ namespace OpenVinoSharp
         {
             IntPtr property_key = Marshal.StringToHGlobalAnsi(properties.Key);
             IntPtr property_value = Marshal.StringToHGlobalAnsi(properties.Value);
-            ExceptionStatus status = NativeMethods.ov_compiled_model_set_property(m_ptr, property_key, property_value);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel  export_model() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_set_property(m_ptr, property_key, property_value));
         }
         /// <summary>
         /// Gets properties for current compiled model
@@ -375,12 +337,9 @@ namespace OpenVinoSharp
         {
             sbyte[] c_property_key = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(property_key));
             IntPtr property_value_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_get_property(m_ptr, ref c_property_key[0], 
-                ref property_value_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel  export_model() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_get_property(m_ptr, ref c_property_key[0], 
+                ref property_value_ptr));
             return Marshal.PtrToStringAnsi(property_value_ptr);
         }
 
@@ -391,11 +350,8 @@ namespace OpenVinoSharp
         /// <returns>A context.</returns>
         public RemoteContext get_context() {
             IntPtr context_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_compiled_model_get_context(m_ptr, ref context_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("CompiledModel  export_model() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_compiled_model_get_context(m_ptr, ref context_ptr));
             return new RemoteContext(context_ptr);
         }
     }

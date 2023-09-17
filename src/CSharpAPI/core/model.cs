@@ -61,11 +61,8 @@ namespace OpenVinoSharp
         {
 
             IntPtr s_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_model_get_friendly_name(m_ptr, ref s_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_type error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_get_friendly_name(m_ptr, ref s_ptr));
             string ss = Marshal.PtrToStringAnsi(s_ptr);
 
             return ss;
@@ -77,11 +74,8 @@ namespace OpenVinoSharp
         public Node get_input()
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_model_input(m_ptr, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_input() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_input(m_ptr, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_nomal);
         }
 
@@ -94,11 +88,8 @@ namespace OpenVinoSharp
         {
             IntPtr port_ptr = IntPtr.Zero;
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = NativeMethods.ov_model_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_input() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_nomal);
         }
 
@@ -110,11 +101,8 @@ namespace OpenVinoSharp
         public Node get_input(ulong index)
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_model_input_by_index(m_ptr, index, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_input() error!");
-            }
+            HandleException.handler( 
+                NativeMethods.ov_model_input_by_index(m_ptr, index, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_nomal);
         }
 
@@ -125,11 +113,8 @@ namespace OpenVinoSharp
         public Node get_output()
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_model_output(m_ptr, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_output() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_output(m_ptr, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_nomal);
         }
         /// <summary>
@@ -141,11 +126,8 @@ namespace OpenVinoSharp
         {
             IntPtr port_ptr = IntPtr.Zero;
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = NativeMethods.ov_model_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_output() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_nomal);
         }
         /// <summary>
@@ -156,11 +138,9 @@ namespace OpenVinoSharp
         public Node get_output(ulong index)
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_model_output_by_index(m_ptr, index, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_output() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_output_by_index(m_ptr, index, ref port_ptr));
+
             return new Node(port_ptr, Node.NodeType.e_nomal);
         }
         /// <summary>
@@ -170,11 +150,8 @@ namespace OpenVinoSharp
         public Node get_const_input()
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_model_const_input(m_ptr, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_const_input() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_const_input(m_ptr, ref port_ptr));
             return new Node(port_ptr,Node.NodeType.e_const);
         }
         /// <summary>
@@ -186,11 +163,8 @@ namespace OpenVinoSharp
         {
             IntPtr port_ptr = IntPtr.Zero;
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = NativeMethods.ov_model_const_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_const_input() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_const_input_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
         /// <summary>
@@ -201,11 +175,8 @@ namespace OpenVinoSharp
         public Node get_const_input(ulong index)
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_model_const_input_by_index(m_ptr, index, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model get_const_input() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_const_input_by_index(m_ptr, index, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
         /// <summary>
@@ -215,11 +186,8 @@ namespace OpenVinoSharp
         public Node get_const_output()
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_model_const_output(m_ptr, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model  get_const_output() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_const_output(m_ptr, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
         /// <summary>
@@ -231,11 +199,8 @@ namespace OpenVinoSharp
         {
             IntPtr port_ptr = IntPtr.Zero;
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = NativeMethods.ov_model_const_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model  get_const_output() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_const_output_by_name(m_ptr, ref c_tensor_name[0], ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
         /// <summary>
@@ -246,11 +211,8 @@ namespace OpenVinoSharp
         public Node get_const_output(ulong index)
         {
             IntPtr port_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_model_const_output_by_index(m_ptr, index, ref port_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model  get_const_output() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_const_output_by_index(m_ptr, index, ref port_ptr));
             return new Node(port_ptr, Node.NodeType.e_const);
         }
 
@@ -382,11 +344,8 @@ namespace OpenVinoSharp
         public ulong get_inputs_size() 
         {
             ulong input_size = 0;
-            ExceptionStatus status = NativeMethods.ov_model_inputs_size(m_ptr, ref input_size);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model  get_intputs_size() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_inputs_size(m_ptr, ref input_size));
             return input_size;
         }
         /// <summary>
@@ -396,11 +355,8 @@ namespace OpenVinoSharp
         public ulong get_outputs_size()
         {
             ulong output_size = 0;
-            ExceptionStatus status = NativeMethods.ov_model_outputs_size(m_ptr, ref output_size);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model  get_outputs_size() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_outputs_size(m_ptr, ref output_size));
             return output_size;
         }
 
@@ -489,12 +445,9 @@ namespace OpenVinoSharp
                     tensor_names_ptr[i] = p;
                     shapes[i] = partial_shape.Value.get_partial_shape();
                 }
-                ExceptionStatus status = NativeMethods.ov_model_reshape(m_ptr, tensor_names_ptr,
-                    ref shapes[0], (ulong)partial_shapes.Count);
-                if (status != 0)
-                {
-                    System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
-                }
+                HandleException.handler(
+                    NativeMethods.ov_model_reshape(m_ptr, tensor_names_ptr,
+                    ref shapes[0], (ulong)partial_shapes.Count));
             }
             else 
             {
@@ -502,12 +455,9 @@ namespace OpenVinoSharp
                 {
                     sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(partial_shape.Key));
                     Ov.ov_partial_shape shape = partial_shape.Value.get_partial_shape();
-                    ExceptionStatus status = NativeMethods.ov_model_reshape_input_by_name(m_ptr, ref c_tensor_name[0],
-                        shape);
-                    if (status != 0)
-                    {
-                        System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
-                    }
+                    HandleException.handler(
+                        NativeMethods.ov_model_reshape_input_by_name(m_ptr, ref c_tensor_name[0],
+                        shape));
                 }
 
             }
@@ -518,11 +468,8 @@ namespace OpenVinoSharp
         /// <param name="partial_shape">A PartialShape.</param>
         public void reshape(PartialShape partial_shape) 
         {
-            ExceptionStatus status = NativeMethods.ov_model_reshape_single_input(m_ptr, partial_shape.get_partial_shape());
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
-            }
+            HandleException.handler(
+                NativeMethods.ov_model_reshape_single_input(m_ptr, partial_shape.get_partial_shape()));
         }
         /// <summary>
         /// Do reshape in model with a list of (port id, partial shape).
@@ -538,13 +485,8 @@ namespace OpenVinoSharp
                 indexs[i] = partial_shape.Key;
                 shapes[i] = partial_shape.Value.get_partial_shape();
             }
-            ExceptionStatus status = NativeMethods.ov_model_reshape_by_port_indexes(m_ptr, ref indexs[0],
-                ref shapes[0], (ulong)partial_shapes.Count);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
-            }
-
+            HandleException.handler(NativeMethods.ov_model_reshape_by_port_indexes(m_ptr, ref indexs[0],
+                ref shapes[0], (ulong)partial_shapes.Count));
         }
         /// <summary>
         /// Do reshape in model with a list of (ov_output_port_t, partial shape).
@@ -560,12 +502,8 @@ namespace OpenVinoSharp
                 nodes_ptr[i] = partial_shape.Key.Ptr; 
                 shapes[i] = partial_shape.Value.get_partial_shape();
             }
-            ExceptionStatus status = NativeMethods.ov_model_reshape_by_ports(m_ptr, ref nodes_ptr[0],
-                ref shapes[0], (ulong)partial_shapes.Count);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Model  reshape() error!");
-            }
+            HandleException.handler(NativeMethods.ov_model_reshape_by_ports(m_ptr, ref nodes_ptr[0],
+                ref shapes[0], (ulong)partial_shapes.Count));
         }
 
     }

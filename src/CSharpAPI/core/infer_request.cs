@@ -64,12 +64,9 @@ namespace OpenVinoSharp
         public void set_tensor(string tensor_name,Tensor tensor) 
         {
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = NativeMethods.ov_infer_request_set_tensor(
-                m_ptr, ref c_tensor_name[0], tensor.Ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("set_tensor set_tensor error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_infer_request_set_tensor(
+                m_ptr, ref c_tensor_name[0], tensor.Ptr));
         }
         /// <summary>
         /// Sets an input/output tensor to infer.
@@ -79,20 +76,16 @@ namespace OpenVinoSharp
         /// the model's input/output element_type and size.</param>
         public void set_tensor(Node node, Tensor tensor)
         {
-            ExceptionStatus status;
             if (node.node_type == Node.NodeType.e_const) 
             {
-                status = NativeMethods.ov_infer_request_set_tensor_by_const_port(
-               m_ptr, node.Ptr, tensor.Ptr);
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_set_tensor_by_const_port(
+               m_ptr, node.Ptr, tensor.Ptr));
             }
             else {
-                status = NativeMethods.ov_infer_request_set_tensor_by_port(
-                m_ptr, node.Ptr, tensor.Ptr);
-            }
-     
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("set_tensor set_tensor error : " + status.ToString());
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_set_tensor_by_port(
+                m_ptr, node.Ptr, tensor.Ptr));
             }
         }
         /// <summary>
@@ -121,21 +114,17 @@ namespace OpenVinoSharp
         /// the model's input/output element_type and size.</param>
         public void set_tensor(Output port, Tensor tensor)
         {
-            ExceptionStatus status;
             if (port.get_node().node_type == Node.NodeType.e_const)
             {
-                status = NativeMethods.ov_infer_request_set_tensor_by_const_port(
-               m_ptr, port.get_node().Ptr, tensor.Ptr);
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_set_tensor_by_const_port(
+                        m_ptr, port.get_node().Ptr, tensor.Ptr));
             }
             else
             {
-                status = NativeMethods.ov_infer_request_set_tensor_by_port(
-                m_ptr, port.get_node().Ptr, tensor.Ptr);
-            }
-
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("set_tensor set_tensor error : " + status.ToString());
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_set_tensor_by_port(
+                        m_ptr, port.get_node().Ptr, tensor.Ptr));
             }
         }
 
@@ -148,12 +137,9 @@ namespace OpenVinoSharp
         /// the model's input/output element_type and size.</param>
         public void set_input_tensor(ulong index, Tensor tensor)
         {
-            ExceptionStatus status = NativeMethods.ov_infer_request_set_input_tensor_by_index(
-                m_ptr, index, tensor.Ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("set_tensor set_input_tensor error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_infer_request_set_input_tensor_by_index(
+                m_ptr, index, tensor.Ptr));
         }
 
         /// <summary>
@@ -163,12 +149,9 @@ namespace OpenVinoSharp
         /// <param name="tensor">Reference to the input tensor.</param>
         public void set_input_tensor(Tensor tensor)
         {
-            ExceptionStatus status = NativeMethods.ov_infer_request_set_input_tensor(
-                m_ptr, tensor.Ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("set_tensor set_input_tensor error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_infer_request_set_input_tensor(
+                m_ptr, tensor.Ptr));
         }
         /// <summary>
         /// Sets an output tensor to infer.
@@ -179,12 +162,9 @@ namespace OpenVinoSharp
         /// output element type and shape.</param>
         public void set_output_tensor(ulong index, Tensor tensor)
         {
-            ExceptionStatus status = NativeMethods.ov_infer_request_set_output_tensor_by_index(
-                m_ptr, index, tensor.Ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("set_tensor set_output_tensor error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_infer_request_set_output_tensor_by_index(
+                m_ptr, index, tensor.Ptr));
         }
         /// <summary>
         /// Sets an output tensor to infer models with single output.
@@ -193,12 +173,9 @@ namespace OpenVinoSharp
         /// <param name="tensor">Reference to the output tensor.</param>
         public void set_output_tensor(Tensor tensor)
         {
-            ExceptionStatus status = NativeMethods.ov_infer_request_set_output_tensor(
-                m_ptr, tensor.Ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("set_tensor set_output_tensor error : " + status.ToString());
-            }
+            HandleException.handler( 
+                NativeMethods.ov_infer_request_set_output_tensor(
+                m_ptr, tensor.Ptr));
         }
 
       
@@ -212,12 +189,8 @@ namespace OpenVinoSharp
         {
             IntPtr tensor_ptr = IntPtr.Zero;
             sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(tensor_name));
-            ExceptionStatus status = NativeMethods.ov_infer_request_get_tensor(m_ptr, ref c_tensor_name[0], ref tensor_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest get_tensor() error : " + status.ToString());
-                return new Tensor(IntPtr.Zero);
-            }
+            HandleException.handler( 
+                NativeMethods.ov_infer_request_get_tensor(m_ptr, ref c_tensor_name[0], ref tensor_ptr));
             return new Tensor(tensor_ptr);
         }
 
@@ -258,21 +231,17 @@ namespace OpenVinoSharp
         public Tensor get_tensor(Output port)
         {
             IntPtr tensor_ptr = IntPtr.Zero;
-            ExceptionStatus status;
             if (port.get_node().node_type == Node.NodeType.e_const)
             {
-                status = NativeMethods.ov_infer_request_get_tensor_by_const_port(
-               m_ptr, port.get_node().Ptr, ref tensor_ptr);
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_get_tensor_by_const_port(
+               m_ptr, port.get_node().Ptr, ref tensor_ptr));
             }
             else
             {
-                status = NativeMethods.ov_infer_request_get_tensor_by_port(
-                m_ptr, port.get_node().Ptr, ref tensor_ptr);
-            }
-
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("set_tensor get_tensor error : " + status.ToString());
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_get_tensor_by_port(
+                m_ptr, port.get_node().Ptr, ref tensor_ptr));
             }
             return new Tensor(tensor_ptr);
         }
@@ -286,13 +255,9 @@ namespace OpenVinoSharp
         public Tensor get_input_tensor(ulong index)
         {
             IntPtr tensor_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_infer_request_get_input_tensor_by_index(
-                m_ptr, index, ref tensor_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest get_input_tensor() error : " + status.ToString());
-                return new Tensor(IntPtr.Zero);
-            }
+            HandleException.handler( 
+                NativeMethods.ov_infer_request_get_input_tensor_by_index(
+                m_ptr, index, ref tensor_ptr));
             return new Tensor(tensor_ptr);
         }
 
@@ -304,13 +269,9 @@ namespace OpenVinoSharp
         {
             IntPtr tensor_ptr = IntPtr.Zero;
             
-            ExceptionStatus status = NativeMethods.ov_infer_request_get_input_tensor(
-                m_ptr, ref tensor_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest get_input_tensor() error : " + status.ToString());
-                return new Tensor(IntPtr.Zero);
-            }
+            HandleException.handler( 
+                NativeMethods.ov_infer_request_get_input_tensor(
+                m_ptr, ref tensor_ptr));
             return new Tensor(tensor_ptr);
         }
 
@@ -323,13 +284,9 @@ namespace OpenVinoSharp
         public Tensor get_output_tensor(ulong index)
         {
             IntPtr tensor_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_infer_request_get_output_tensor_by_index(
-                m_ptr, index, ref tensor_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest get_output_tensor() error : " + status.ToString());
-                return new Tensor(IntPtr.Zero);
-            }
+            HandleException.handler(
+                NativeMethods.ov_infer_request_get_output_tensor_by_index(
+                m_ptr, index, ref tensor_ptr));
             return new Tensor(tensor_ptr);
         }
 
@@ -341,13 +298,9 @@ namespace OpenVinoSharp
         {
             IntPtr tensor_ptr = IntPtr.Zero;
 
-            ExceptionStatus status = NativeMethods.ov_infer_request_get_output_tensor(
-                m_ptr, ref tensor_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest get_output_tensor() error : " + status.ToString());
-                return new Tensor(IntPtr.Zero);
-            }
+            HandleException.handler(
+                NativeMethods.ov_infer_request_get_output_tensor(
+                m_ptr, ref tensor_ptr));
             return new Tensor(tensor_ptr);
         }
         /// <summary>
@@ -359,11 +312,8 @@ namespace OpenVinoSharp
         /// </note>
         public void infer()
         {
-            ExceptionStatus status = NativeMethods.ov_infer_request_infer(m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest infer() error : " + status.ToString());
-            }
+            HandleException.handler( 
+                NativeMethods.ov_infer_request_infer(m_ptr));
         }
 
         /// <summary>
@@ -371,11 +321,8 @@ namespace OpenVinoSharp
         /// </summary>
         public void cancel() 
         {
-            ExceptionStatus status = NativeMethods.ov_infer_request_cancel(m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest cancel() error : " + status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_infer_request_cancel(m_ptr));
         }
         /// <summary>
         /// Starts inference of specified input(s) in asynchronous mode.
@@ -386,22 +333,16 @@ namespace OpenVinoSharp
         /// </note>
         public void start_async() 
         {
-            ExceptionStatus status = NativeMethods.ov_infer_request_start_async(m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest start_async() error : " + status.ToString());
-            }
+            HandleException.handler( 
+                NativeMethods.ov_infer_request_start_async(m_ptr));
         }
         /// <summary>
         /// Waits for the result to become available. Blocks until the result becomes available.
         /// </summary>
         public void wait()
         {
-            ExceptionStatus status = NativeMethods.ov_infer_request_wait(m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest wait() error : " + status.ToString());
-            }
+            HandleException.handler( 
+                NativeMethods.ov_infer_request_wait(m_ptr));
         }
 
         /// <summary>
@@ -412,12 +353,8 @@ namespace OpenVinoSharp
         /// <returns>True if inference request is ready and false, otherwise.</returns>
         public bool wait_for(long timeout)
         {
-            ExceptionStatus status = NativeMethods.ov_infer_request_wait_for(m_ptr, timeout);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest wait_for() error : " + status.ToString());
-                return false;
-            }
+            HandleException.handler( 
+                NativeMethods.ov_infer_request_wait_for(m_ptr, timeout));
             return true;
         }
 
@@ -429,11 +366,8 @@ namespace OpenVinoSharp
         public List<Ov.ProfilingInfo> get_profiling_info()
         {
             ov_profiling_info_list profiling_info_list = new ov_profiling_info_list();
-            ExceptionStatus status = NativeMethods.ov_infer_request_get_profiling_info(m_ptr, ref profiling_info_list);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InferRequest get_profiling_info() error : " + status.ToString());
-            }
+            HandleException.handler( 
+                NativeMethods.ov_infer_request_get_profiling_info(m_ptr, ref profiling_info_list));
             IntPtr[] profiling_infos_ptr = new IntPtr[profiling_info_list.size];
             Marshal.Copy(profiling_info_list.profiling_infos, profiling_infos_ptr, 0, (int)profiling_info_list.size);
             List<Ov.ProfilingInfo> profiling_infos = new List<ProfilingInfo>();

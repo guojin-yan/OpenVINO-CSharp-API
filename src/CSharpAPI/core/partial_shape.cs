@@ -87,11 +87,8 @@ namespace OpenVinoSharp
             {
                 ds[i] = dimensions[i].get_dimension();
             }
-            ExceptionStatus status = NativeMethods.ov_partial_shape_create((long)dimensions.Length, ref ds[0], m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PartialShape init error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_partial_shape_create((long)dimensions.Length, ref ds[0], m_ptr));
             this.dimensions = dimensions;
             rank = new Dimension(dimensions.Length, dimensions.Length);
         }
@@ -115,11 +112,8 @@ namespace OpenVinoSharp
             {
                 ds[i] = dimensions[i].get_dimension();
             }
-            ExceptionStatus status = NativeMethods.ov_partial_shape_create_dynamic(rank.get_dimension(), ref ds[0], m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PartialShape init error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_partial_shape_create_dynamic(rank.get_dimension(), ref ds[0], m_ptr));
             this.dimensions = dimensions;
             this.rank = rank;
         }
@@ -140,11 +134,8 @@ namespace OpenVinoSharp
         /// <param name="dimensions">The partial shape dimensions array.</param>
         public PartialShape(long rank, long[] dimensions)
         {
-            ExceptionStatus status = NativeMethods.ov_partial_shape_create_static(rank, ref dimensions[0], m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PartialShape init error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_partial_shape_create_static(rank, ref dimensions[0], m_ptr));
             this.rank = new Dimension(rank);
             for (int i = 0; i < dimensions.Length; ++i)
             {
@@ -165,11 +156,8 @@ namespace OpenVinoSharp
         /// <param name="shape">The shape</param>
         public PartialShape(Shape shape) 
         {
-            ExceptionStatus status = NativeMethods.ov_shape_to_partial_shape(shape.shape, m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PartialShape init error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_shape_to_partial_shape(shape.shape, m_ptr));
             this.rank = new Dimension(shape.Count);
             for (int i = 0; i < dimensions.Length; ++i)
             {
@@ -233,12 +221,8 @@ namespace OpenVinoSharp
         public Shape to_shape()
         {
             IntPtr shape_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_partial_shape_to_shape(get_partial_shape(), shape_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PartialShape init error : {0}!", status.ToString());
-            }
-            
+            HandleException.handler(
+                NativeMethods.ov_partial_shape_to_shape(get_partial_shape(), shape_ptr));     
             return new Shape(shape_ptr);
         }
 

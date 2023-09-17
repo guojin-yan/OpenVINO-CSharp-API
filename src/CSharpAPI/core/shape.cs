@@ -62,14 +62,10 @@ namespace OpenVinoSharp
             }
             int l = Marshal.SizeOf(typeof(ov_shape));
             m_ptr = Marshal.AllocHGlobal(l);
-            ExceptionStatus status = 
-                NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths.ToArray()[0], m_ptr);
+            HandleException.handler(
+                NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths.ToArray()[0], m_ptr));
             var temp = Marshal.PtrToStructure(m_ptr, typeof(ov_shape));
             shape = (ov_shape)temp;
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Shape init error : {0}!", status.ToString());
-            }
         }
         /// <summary>
         /// Constructs Shape from the initialized array.
@@ -84,14 +80,10 @@ namespace OpenVinoSharp
             }
             int l = Marshal.SizeOf(typeof(ov_shape));
             m_ptr = Marshal.AllocHGlobal(l);
-            ExceptionStatus status =
-                NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths[0], m_ptr);
+            HandleException.handler(
+                NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths[0], m_ptr)）;
             var temp = Marshal.PtrToStructure(m_ptr, typeof(ov_shape));
             shape = (ov_shape)temp;
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Shape init error : {0}!", status.ToString());
-            }
         }
         /// <summary>
         /// Shape's destructor

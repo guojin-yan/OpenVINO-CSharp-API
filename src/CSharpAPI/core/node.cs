@@ -85,23 +85,19 @@ namespace OpenVinoSharp
         /// <returns>Returns the shape.</returns>
         public Shape get_shape()
         {
-            ExceptionStatus status;
-
             int l = Marshal.SizeOf(typeof(Ov.ov_shape));
             IntPtr shape_ptr = Marshal.AllocHGlobal(l);
             if (node_type == NodeType.e_const)
             {
-                status = NativeMethods.ov_const_port_get_shape(m_ptr, shape_ptr);
+                HandleException.handler(
+                    NativeMethods.ov_const_port_get_shape(m_ptr, shape_ptr));
             }
             else
             {
-                status = NativeMethods.ov_port_get_shape(m_ptr, shape_ptr);
+                HandleException.handler(
+                    NativeMethods.ov_port_get_shape(m_ptr, shape_ptr));
             }
-            if (status != 0)
-            {
-                shape_ptr = IntPtr.Zero;
-                System.Diagnostics.Debug.WriteLine("Node get_shape error : {0}!", status.ToString());
-            }
+
             return new Shape(shape_ptr);
         }
 
@@ -114,12 +110,8 @@ namespace OpenVinoSharp
             int l = Marshal.SizeOf(typeof(Ov.ov_partial_shape));
             IntPtr shape_ptr = Marshal.AllocHGlobal(l);
             Ov.ov_partial_shape shape = new Ov.ov_partial_shape();
-            ExceptionStatus status = NativeMethods.ov_port_get_partial_shape(m_ptr, ref shape);
-            if (status != 0)
-            {
-                shape_ptr = IntPtr.Zero;
-                System.Diagnostics.Debug.WriteLine("Node get_partial_shape error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_port_get_partial_shape(m_ptr, ref shape));
             return new PartialShape(shape_ptr);
         }
 
@@ -131,11 +123,8 @@ namespace OpenVinoSharp
         {
             ExceptionStatus status;
             IntPtr s_ptr = IntPtr.Zero;
-            status = NativeMethods.ov_port_get_any_name(m_ptr, ref s_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Node get_name error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_port_get_any_name(m_ptr, ref s_ptr));
             string ss = Marshal.PtrToStringAnsi(s_ptr);
             return ss;
         }
@@ -150,14 +139,9 @@ namespace OpenVinoSharp
         /// <returns>Data type.</returns>
         public OvType get_element_type() 
         {
-            ExceptionStatus status = 0;
             uint data_type = 0;
-
-            status = NativeMethods.ov_port_get_element_type(m_ptr, ref data_type);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Node get_type error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_port_get_element_type(m_ptr, ref data_type));
             return new OvType((ElementType)data_type);
         }
     }
