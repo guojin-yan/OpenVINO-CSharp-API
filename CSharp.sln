@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test_csharp_api", "tests\te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpAPI", "src\CSharpAPI\CSharpAPI.csproj", "{E7805C46-40CE-4402-B480-421BA8823A12}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PP-Human_Fall_Detection", "tutorial_examples\PP-Human_Fall_Detection\PP-Human_Fall_Detection.csproj", "{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,14 @@ Global
 		{E7805C46-40CE-4402-B480-421BA8823A12}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E7805C46-40CE-4402-B480-421BA8823A12}.Release|x64.ActiveCfg = Release|Any CPU
 		{E7805C46-40CE-4402-B480-421BA8823A12}.Release|x64.Build.0 = Release|Any CPU
+		{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103}.Debug|x64.Build.0 = Debug|Any CPU
+		{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103}.Release|x64.ActiveCfg = Release|Any CPU
+		{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +95,7 @@ Global
 		{CE8198D1-5CE4-405A-92D6-2F0B44F527E5} = {9FE4DAB4-B697-4D9C-9D5A-A96985950C31}
 		{AC0AD3DF-ADBC-4917-A30F-B1D95B79D4B5} = {3737D82A-86E9-4D03-81D3-030E2F9BF006}
 		{E7805C46-40CE-4402-B480-421BA8823A12} = {DCFCA0E4-2267-42D0-894E-88DCE18927E8}
+		{7CA4EB58-4CD1-42A3-B7A1-7EA37DB79103} = {9FE4DAB4-B697-4D9C-9D5A-A96985950C31}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26D31CCE-2B57-4891-8ECC-5031281210D9}
