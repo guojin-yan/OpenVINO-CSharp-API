@@ -8,7 +8,7 @@
 cache.json
 others/
 hello_classification/
-
+plugins.xml
 *.docx
 
 # User-specific files
