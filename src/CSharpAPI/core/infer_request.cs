@@ -15,7 +15,7 @@ namespace OpenVinoSharp
     /// This is a class of infer request that can be run in asynchronous or synchronous manners.
     /// </summary>
     /// <ingroup>ov_runtime_c#_api</ingroup>
-    public class InferRequest
+    public class InferRequest : IDisposable
     {
         /// <summary>
         /// [private]InferRequest class pointer.
@@ -40,18 +40,18 @@ namespace OpenVinoSharp
         /// </summary>
         ~InferRequest()
         {
-            dispose();
+            Dispose();
         }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.ov_core_free(m_ptr);
+            NativeMethods.ov_infer_request_free(m_ptr);
 
             m_ptr = IntPtr.Zero;
         }

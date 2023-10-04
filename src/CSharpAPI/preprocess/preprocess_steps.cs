@@ -11,7 +11,7 @@ namespace OpenVinoSharp.preprocess
     /// Preprocessing steps. Each step typically intends adding of some operation to input parameter
     /// User application can specify sequence of preprocessing steps in a builder-like manner
     /// </summary>
-    public class PreProcessSteps
+    public class PreProcessSteps : IDisposable
     {
         /// <summary>
         /// [private]PreProcessSteps class pointer.
@@ -39,11 +39,11 @@ namespace OpenVinoSharp.preprocess
         /// <summary>
         /// Default destructor
         /// </summary>
-        ~PreProcessSteps() { dispose(); }
+        ~PreProcessSteps() { Dispose(); }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {

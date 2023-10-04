@@ -16,7 +16,7 @@ namespace OpenVinoSharp
     /// A model is compiled by a specific device by applying multiple optimization 
     /// transformations, then mapping to compute kernels.
     /// </remarks>
-    public class CompiledModel
+    public class CompiledModel : IDisposable
     {
         /// <summary>
         /// [private]CompiledModel class pointer.
@@ -40,12 +40,12 @@ namespace OpenVinoSharp
         /// </summary>
         ~CompiledModel()
         {
-            dispose();
+            Dispose();
         }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {

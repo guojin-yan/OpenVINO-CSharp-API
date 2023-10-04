@@ -20,7 +20,7 @@ namespace OpenVinoSharp
     /// <para> Static rank, and static dimensions on all axes.
     /// (Informal notation examples: `{1,2,3,4}`, `{6}`, `{}`)</para>
     /// </remarks>
-    public class PartialShape
+    public class PartialShape : IDisposable
     {
         /// <summary>
         /// [private]Core class pointer.
@@ -170,12 +170,12 @@ namespace OpenVinoSharp
         /// </summary>
         ~PartialShape()
         {
-            dispose();
+            Dispose();
         }
         /// <summary>
         /// Release unmanaged resources.
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {

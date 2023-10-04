@@ -16,7 +16,7 @@ namespace OpenVinoSharp.preprocess
     /// Support model has input parameter with shape {1, 3, 224, 224} and user needs to resize input image to model's
     /// dimensions. It can be done like this
     /// </example>
-    public class InputModelInfo
+    public class InputModelInfo : IDisposable
     {
         /// <summary>
         /// [private]InputModelInfo class pointer.
@@ -44,11 +44,11 @@ namespace OpenVinoSharp.preprocess
         /// <summary>
         /// Default destructor
         /// </summary>
-        ~InputModelInfo() { dispose(); }
+        ~InputModelInfo() { Dispose(); }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {

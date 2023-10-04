@@ -13,7 +13,7 @@ namespace OpenVinoSharp.preprocess
     ///    - Preprocessing steps applied to user's input (InputInfo::preprocess)
     ///    - Model's input info, which is a final input's info after preprocessing (InputInfo::model)
     /// </summary>
-    public class InputInfo
+    public class InputInfo : IDisposable
     {
         /// <summary>
         /// [private]InputInfo class pointer.
@@ -41,11 +41,11 @@ namespace OpenVinoSharp.preprocess
         /// <summary>
         /// Default destructor
         /// </summary>
-        ~InputInfo() { dispose(); }
+        ~InputInfo() { Dispose(); }
         /// <summary>
         /// Release unmanaged resources.
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {

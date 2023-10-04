@@ -14,7 +14,7 @@ namespace OpenVinoSharp
     /// are created multiple times and not shared between several Core instances.The recommended way is to have
     /// a single Core instance per application.
     /// </remarks>
-    public class Core
+    public class Core : IDisposable
     {
         /// <summary>
         /// [private]Core class pointer.
@@ -70,11 +70,11 @@ namespace OpenVinoSharp
         /// <summary>
         /// Core's destructor
         /// </summary>
-        ~Core() { dispose(); }
+        ~Core() { Dispose(); }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {
@@ -320,6 +320,7 @@ namespace OpenVinoSharp
             NativeMethods.ov_available_devices_free(devices_ptr);
             return devices;
         }
+
     }
 }
 

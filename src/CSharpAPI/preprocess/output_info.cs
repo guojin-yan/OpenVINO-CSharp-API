@@ -13,7 +13,7 @@ namespace OpenVinoSharp.preprocess
     ///    - Postprocessing steps applied to user's input (OutputInfo::postprocess)
     ///    - User's desired output parameter information, which is a final one after preprocessing (OutputInfo::tensor)
     /// </summary>
-    public class OutputInfo
+    public class OutputInfo : IDisposable
     {
         /// <summary>
         /// [private]OutputInfo class pointer.
@@ -41,11 +41,11 @@ namespace OpenVinoSharp.preprocess
         /// <summary>
         /// Default destructor
         /// </summary>
-        ~OutputInfo() { dispose(); }
+        ~OutputInfo() { Dispose(); }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {

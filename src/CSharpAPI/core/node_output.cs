@@ -35,7 +35,7 @@ namespace OpenVinoSharp
         /// </summary>
         public void dispose()
         {
-            m_node.dispose();
+            m_node.Dispose();
         }
         /// <summary>
         /// Get the node referred to by this output handle.

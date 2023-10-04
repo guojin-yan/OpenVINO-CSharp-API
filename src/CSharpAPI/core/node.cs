@@ -12,7 +12,7 @@ namespace OpenVinoSharp
     /// zero or more nodes as arguments and one value, which is either a tensor 
     /// or a (possibly empty) tuple of values.
     /// </summary>
-    public class Node
+    public class Node : IDisposable
     {
         /// <summary>
         /// The node type.
@@ -57,12 +57,12 @@ namespace OpenVinoSharp
         /// Default deconstruction.
         /// </summary>
         ~Node() {
-            dispose();
+            Dispose();
         }
         /// <summary>
         /// Release unmanaged resources.
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {

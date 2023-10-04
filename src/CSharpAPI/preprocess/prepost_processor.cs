@@ -18,7 +18,7 @@ namespace OpenVinoSharp.preprocess
     /// For advanced preprocessing scenarios, like combining several functions with multiple inputs/outputs into one,
     /// client's code can use transformation passes over ov::Model
     /// </remarks>
-    public class PrePostProcessor
+    public class PrePostProcessor : IDisposable
     {
         /// <summary>
         /// [private]PrePostProcessor class pointer.
@@ -45,11 +45,11 @@ namespace OpenVinoSharp.preprocess
         /// <summary>
         /// Default destructor
         /// </summary>
-        ~PrePostProcessor() { dispose(); }
+        ~PrePostProcessor() { Dispose(); }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose() {
+        public void Dispose() {
             if (m_ptr == IntPtr.Zero)
             {
                 return;

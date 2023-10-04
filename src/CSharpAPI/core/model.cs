@@ -13,7 +13,7 @@ namespace OpenVinoSharp
     /// <summary>
     /// A user-defined model
     /// </summary>
-    public class Model
+    public class Model : IDisposable
     {
         /// <summary>
         /// [private]Model class pointer.
@@ -39,17 +39,21 @@ namespace OpenVinoSharp
         /// <summary>
         /// Model's destructor
         /// </summary>
-        ~Model() { dispose(); }
+        ~Model()
+        {
+            Dispose();
+        }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {
                 return;
             }
             NativeMethods.ov_core_free(m_ptr);
+
             m_ptr = IntPtr.Zero;
         }
 

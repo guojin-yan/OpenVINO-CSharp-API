@@ -15,7 +15,7 @@ namespace OpenVinoSharp
     /// It can throw exceptions safely for the application, where it is properly handled.
     /// </summary>
     /// <ingroup>ov_runtime_c#_api</ingroup>
-    public class Tensor
+    public class Tensor : IDisposable
     {
         /// <summary>
         /// [private]Tensor class pointer.
@@ -97,18 +97,19 @@ namespace OpenVinoSharp
         /// </summary>
         ~Tensor()
         {
-            dispose();
+            Dispose();
         }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {
                 return;
             }
             NativeMethods.ov_tensor_free(m_ptr);
+
             m_ptr = IntPtr.Zero;
         }
         /// <summary>

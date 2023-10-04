@@ -15,7 +15,7 @@ namespace OpenVinoSharp
     /// Shape for a tensor.
     /// </summary>
     /// <ingroup>ov_runtime_c#_api</ingroup>
-    public class Shape : List<long>
+    public class Shape : List<long>, IDisposable
     {
         /// <summary>
         /// [struct] The shape ov_shape
@@ -81,7 +81,7 @@ namespace OpenVinoSharp
             int l = Marshal.SizeOf(typeof(ov_shape));
             m_ptr = Marshal.AllocHGlobal(l);
             HandleException.handler(
-                NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths[0], m_ptr)）;
+                NativeMethods.ov_shape_create((long)this.Count, ref axis_lengths[0], m_ptr));
             var temp = Marshal.PtrToStructure(m_ptr, typeof(ov_shape));
             shape = (ov_shape)temp;
         }
@@ -90,18 +90,18 @@ namespace OpenVinoSharp
         /// </summary>
         ~Shape() 
         {
-            dispose();
+            Dispose();
         }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {
                 return;
             }
-           NativeMethods.ov_core_free(m_ptr);
+           NativeMethods.ov_shape_free(m_ptr);
             m_ptr = IntPtr.Zero;
         }
         /// <summary>

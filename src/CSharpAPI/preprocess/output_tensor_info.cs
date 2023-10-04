@@ -11,7 +11,7 @@ namespace OpenVinoSharp.preprocess
     /// (type/shape/etc) as model's output parameter. User application can override particular parameters (like
     /// 'element_type') according to application's data and specify appropriate conversions in post-processing steps
     /// </summary>
-    public class OutputTensorInfo
+    public class OutputTensorInfo : IDisposable
     {
         /// <summary>
         /// [private]OutputTensorInfo class pointer.
@@ -39,11 +39,11 @@ namespace OpenVinoSharp.preprocess
         /// <summary>
         /// Default destructor
         /// </summary>
-        ~OutputTensorInfo() { dispose(); }
+        ~OutputTensorInfo() { Dispose(); }
         /// <summary>
         /// Release unmanaged resources
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {
