@@ -1,20 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--生成多框架库;-->
-    <TargetFrameworks>net6.0;net48</TargetFrameworks>
+    <TargetFrameworks>net5.0;net6.0;net48</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
     <PackageId>OpenVINO.CSharp.win</PackageId>
-    <!--设置NuGet包信息-->
+    <!--Set NuGet Message-->
     <Title>OpenVINO C# API</Title>
-    <Version>3.0.122-test-8</Version>
+    <Version>3.1.0-test1</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVINO C# API</Product>
-    <Description>基于C#平台调用OpenVINO套件部署深度学习模型。
-Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.
-目前版本为测试版本，会存在相关的问题，待后续更新会修改相应的错误；如有其他问题请联系作者解决。</Description>
+    <Description>Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.
+    </Description>
     <PackageProjectUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</PackageProjectUrl>
     <RepositoryUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -22,18 +20,17 @@ Based on the C # platform, call the OpenVINO suite to deploy a deep learning mod
     <NeutralLanguage>zh</NeutralLanguage>
     <PackageIcon>NuGet.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>该版本为OpenVINO™ C# API 3.0 预发行版本，功能还未完善，如使用中有问题，欢迎与我沟通联系。
-This version is a pre release version of OpenVINO™ C# API 3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
+    <PackageReleaseNotes>This version is a pre release version of OpenVINO™ C# API 3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
     <RootNamespace>OpenVinoSharp</RootNamespace>
     <AssemblyName>OpenVINOCSharp</AssemblyName> 
   </PropertyGroup>
 
 
-  <!--添加编译文件-->
+  <!--Add build file.-->
   <ItemGroup>
-    <None Include=".\build\openvino2023.0\*.*">
+    <None Include=".\build\openvino2023.1\*.*">
       <Pack>true</Pack>
-      <PackagePath>build\openvino2023.0\%(Filename)%(Extension)</PackagePath>
+      <PackagePath>build\openvino2023.1\%(Filename)%(Extension)</PackagePath>
     </None>
     <None Include="..\..\nuget\NuGet.png" Link="build\NuGet.png">
       <Pack>True</Pack>
