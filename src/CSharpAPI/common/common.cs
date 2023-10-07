@@ -89,6 +89,10 @@ namespace OpenVinoSharp
         /// UNKNOW_EXCEPTION
         /// </summary>
         UNKNOW_EXCEPTION = -17,
+        /// <summary>
+        /// PTR_NULL
+        /// </summary>
+        PTR_NULL = -100,
     }
 
     /// <summary>

@@ -17,7 +17,8 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="status"></param>
         public static void handler(ExceptionStatus status) {
-            if (ExceptionStatus.OK == status) {
+            if (ExceptionStatus.OK == status)
+            {
                 return;
             }
             else if (ExceptionStatus.GENERAL_ERROR == status)
@@ -28,7 +29,8 @@ namespace OpenVinoSharp
             {
                 not_implemented();
             }
-            else if (ExceptionStatus.NETWORK_NOT_LOADED == status) {
+            else if (ExceptionStatus.NETWORK_NOT_LOADED == status)
+            {
                 network_not_loaded();
             }
             else if (ExceptionStatus.PARAMETER_MISMATCH == status)
@@ -50,7 +52,9 @@ namespace OpenVinoSharp
             else if (ExceptionStatus.REQUEST_BUSY == status)
             {
                 request_busy();
-            } else if (ExceptionStatus.RESULT_NOT_READY == status) { 
+            }
+            else if (ExceptionStatus.RESULT_NOT_READY == status)
+            {
                 result_not_ready();
             }
             else if (ExceptionStatus.NOT_ALLOCATED == status)
@@ -84,6 +88,10 @@ namespace OpenVinoSharp
             else if (ExceptionStatus.UNKNOW_EXCEPTION == status)
             {
                 unknown_exception();
+            }
+            else if (ExceptionStatus.PTR_NULL == status)
+            {
+                ptr_null_exception();
             }
 
         }
@@ -163,7 +171,7 @@ namespace OpenVinoSharp
         /// <summary>
         /// Throw RESULT_NOT_READY OpenVINOException.
         /// </summary>
-        /// <exception cref="OpenVINOException">result not ready!</exception>
+        /// <exception cref="OVException">result not ready!</exception>
         private static void result_not_ready()
         {
             throw new OVException(ExceptionStatus.RESULT_NOT_READY, "result not ready!");
@@ -231,6 +239,14 @@ namespace OpenVinoSharp
         private static void unknown_exception()
         {
             throw new OVException(ExceptionStatus.UNKNOW_EXCEPTION, "unknown exception!");
+        }
+        /// <summary>
+        /// Throw PTR_NULL OpenVINOException.
+        /// </summary>
+        /// <exception cref="OVException"></exception>
+        private static void ptr_null_exception()
+        {
+            throw new OVException(ExceptionStatus.UNKNOW_EXCEPTION, "ptr is null!");
         }
     }
 }
