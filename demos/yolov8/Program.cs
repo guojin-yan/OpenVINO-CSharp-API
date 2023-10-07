@@ -59,7 +59,7 @@ namespace yolov8
             print_model_info(model);
 
             // -------- Step 3. Loading a model to the device --------
-            CompiledModel compiled_model = core.compiled_model(model, device);
+            CompiledModel compiled_model = core.compile_model(model, device);
 
             // -------- Step 4. Create an infer request --------
             InferRequest infer_request = compiled_model.create_infer_request();
@@ -186,15 +186,15 @@ namespace yolov8
             Node input_node = model.get_const_input(0);
             Console.WriteLine("[INFO]    inputs:");
             Console.WriteLine("[INFO]      input name: {0}", input_node.get_name());
-            Console.WriteLine("[INFO]      input type: {0}", input_node.get_type().to_string());
+            Console.WriteLine("[INFO]      input type: {0}", input_node.get_element_type().to_string());
             Console.WriteLine("[INFO]      input shape: {0}", input_node.get_shape().to_string());
-            input_node.dispose();
+            input_node.Dispose();
             Node output_node = model.get_const_output(0);
             Console.WriteLine("[INFO]    outputs:");
             Console.WriteLine("[INFO]      output name: {0}", output_node.get_name());
-            Console.WriteLine("[INFO]      output type: {0}", output_node.get_type().to_string());
+            Console.WriteLine("[INFO]      output type: {0}", output_node.get_element_type().to_string());
             Console.WriteLine("[INFO]      output shape: {0}", output_node.get_shape().to_string());
-            output_node.dispose();
+            output_node.Dispose();
         }
     }
 }

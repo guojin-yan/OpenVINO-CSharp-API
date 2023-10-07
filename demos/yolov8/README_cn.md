@@ -2,11 +2,11 @@
 
 简体中文| [English](README.md)
 
-# OpenVinoSharp部署Yolov8模型实例
+# OpenVINO™ C# API部署Yolov8模型实例
 
-&emsp;    OpenVinoSharp 3.0 版本较2.0版本做了较大程度上的更新，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。OpenVinoSharp 3.0 API 接口多参考 OpenVINO™ C++ API 实现，因此在使用时更加接近C++ API，这对熟悉使用C++ API的朋友会更加友好。
+&emsp;    OpenVINO™ C# API 3.0 版本较2.0版本做了较大程度上的更新，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。OpenVINO™ C# API3.0 API 接口多参考 OpenVINO™ C++ API 实现，因此在使用时更加接近C++ API，这对熟悉使用C++ API的朋友会更加友好。
 
-&emsp;    此示例演示了如何使用OpenVinoSharp 3.0 版本 API 部署Yolov8 全系列模型。
+&emsp;    此示例演示了如何使用OpenVINO™ C# API3.0 版本 API 部署Yolov8 全系列模型。
 
 &emsp;    该示例支持Yolov8全系列模型，并且支持官方预训练模型以及个人训练模型。
 
@@ -36,7 +36,7 @@
 
 &emsp;    项目运行时，示例程序会读取用户指定路径模型、测试图片以及类别文件，准备模型推理测试的相关数据；将指定模型和图像加载到OpenVINO™ 推理核心并进行同步推理，然后将获取的推理数据加载到自定义的Yolov8数据处理类中进行结果处理。
 
-&emsp;    项目中使用的OpenVINO™相关组件已经封装到OpenVinoSharp中，无需安装在单独安装OpenVINO™。
+&emsp;    项目中使用的OpenVINO™相关组件已经封装到OpenVINO™ C# API中，无需安装在单独安装OpenVINO™。
 
 ## 项目依赖
 
@@ -46,7 +46,7 @@
 
 &emsp;    可以通过Visual Studio 自带的 NuGet 工具进行安装
 
-<div align=center><span><img src="https://s2.loli.net/2023/07/31/UFAgRbBuhcsqOEv.png" height=300/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/10/04/GPx6nj3K91iBMoI.png" height=300/></span></div>
 
 &emsp;    如果项目是通过**dotnet**编译，可以通过下面语句添加对应的包：
 
@@ -83,7 +83,7 @@ dotnet add package OpenVinoSharp.win
 
 ## 快速构建
 
-&emsp;    目前已经实现Window环境下的快速实现，环境安装请参考[Windows 安装 OpenVINOSharp](./../../docs/cn/windows_install.md)。
+&emsp;    目前已经实现Window环境下的快速实现，环境安装请参考[Windows 安装 OpenVINO™ C# API](./../../docs/cn/windows_install.md)。
 
 &emsp;    Linux环境还在开发中。
 
@@ -92,15 +92,15 @@ dotnet add package OpenVinoSharp.win
   代码仓中已经提供了完整的项目代码和模型文件，通过Git下载项目源码。
   
   ```
-  git clone https://github.com/guojin-yan/OpenVINOSharp.git
-  cd OpenVINOSharp
+  git clone https://github.com/guojin-yan/OpenVINO-CSharp-API.git
+  cd OpenVINO-CSharp-API
   ```
 
 - **Visual Studio 编译**
 
-&emsp;    如果使用Visual Studio 编译，可以通过解决方案打开``OpenVinoSharp.sln`` 解决方案，并按照[项目依赖](##项目依赖)中的方式安装项目依赖，然后项目中会增加``openvino2023.0``文件夹。
+&emsp;    如果使用Visual Studio 编译，可以通过解决方案打开``CSharp.sln`` 解决方案，并按照[项目依赖](##项目依赖)中的方式安装项目依赖，然后项目中会增加``openvino2023.1``文件夹。
 
-<div align=center><span><img src="https://s2.loli.net/2023/07/31/Bal8QopgDmbePAJ.png" height=100/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/10/04/PlmnN4tfhoj63sT.png" height=100/></span></div>
 
 &emsp;    最后项目构建和编译，只需要通过右击项目->生成即可。
 
@@ -110,7 +110,7 @@ dotnet add package OpenVinoSharp.win
 
 ```
 cd demos\yolov8
-dotnet add package OpenVinoSharp.win # 添加OpenVinoSharp包
+dotnet add package OpenVINO CSharp.win # 添加OpenVINO™ C# API包
 dotnet build  # 编译项目
 ```
 
@@ -208,10 +208,10 @@ dotnet build  # 编译项目
 #### Yolov8-det 模型推理结果
 
 ```shell
-PS E:\Git_space\OpenVinoSharp\demos\yolov8> dotnet run det ./../../model/yolov8/yolov8s.xml ./../../dataset/image/demo_2.jpg CPU ./../../dataset/lable/COCO_lable.txt
+PS E:\Git_space\OpenVINO-CSharp-API\demos\yolov8> dotnet run det ./../../model/yolov8/yolov8s.xml ./../../dataset/image/demo_2.jpg CPU ./../../dataset/lable/COCO_lable.txt
 ---- OpenVINO INFO----
 Description : OpenVINO Runtime
-Build number: 2023.0.1-11005-fa1c41994f3-releases/2023/0
+Build number: 2023.1.0-12185-9e6b00e51cd-releases/2023/1
 Set inference device  CPU.
 [INFO] Loading model files: ./../../model/yolov8/yolov8s.xml
 [INFO] model name: torch_jit
@@ -238,10 +238,10 @@ Set inference device  CPU.
 #### Yolov8-pose 模型推理结果
 
 ```shell
-PS E:\Git_space\OpenVinoSharp\demos\yolov8> dotnet run pose ./../../model/yolov8/yolov8s-pose.xml ./../../dataset/image/demo_9.jpg CPU
+PS E:\Git_space\OpenVINO-CSharp-API\demos\yolov8> dotnet run pose ./../../model/yolov8/yolov8s-pose.xml ./../../dataset/image/demo_9.jpg CPU
 ---- OpenVINO INFO----
 Description : OpenVINO Runtime
-Build number: 2023.0.1-11005-fa1c41994f3-releases/2023/0
+Build number: 2023.1.0-12185-9e6b00e51cd-releases/2023/1
 Set inference device  CPU.
 [INFO] Loading model files: ./../../model/yolov8/yolov8s-pose.xml
 [INFO] model name: torch_jit
@@ -266,12 +266,12 @@ Set inference device  CPU.
 #### Yolov8-seg 模型推理结果
 
 ```shell
-PS E:\Git_space\OpenVinoSharp\demos\yolov8> dotnet run seg ./../../model/yolov8\\yolov8s-seg.xml ./../../dataset/image/demo_2.jpg CPU ./../../dataset/lable/COCO_lable.txt
+PS E:\Git_space\OpenVINO-CSharp-API\demos\yolov8> dotnet run seg ./../../model/yolov8/yolov8s-seg.xml ./../../dataset/image/demo_2.jpg CPU ./../../dataset/lable/COCO_lable.txt
 ---- OpenVINO INFO----
 Description : OpenVINO Runtime
-Build number: 2023.0.1-11005-fa1c41994f3-releases/2023/0
+Build number: 2023.1.0-12185-9e6b00e51cd-releases/2023/1
 Set inference device  CPU.
-[INFO] Loading model files: ./../../model/yolov8\\yolov8s-seg.xml
+[INFO] Loading model files: ./../../model/yolov8/yolov8s-seg.xml
 [INFO] model name: torch_jit
 [INFO]    inputs:
 [INFO]      input name: images
@@ -298,10 +298,10 @@ Set inference device  CPU.
 #### Yolov8-cls 模型推理结果
 
 ```shell
-PS E:\Git_space\OpenVinoSharp\demos\yolov8> dotnet run cls ./../../model/yolov8/yolov8s-cls.xml ./../../dataset/image/demo_7.jpg CPU
+PS E:\Git_space\OpenVINO-CSharp-API\demos\yolov8> dotnet run cls ./../../model/yolov8/yolov8s-cls.xml ./../../dataset/image/demo_7.jpg CPU
 ---- OpenVINO INFO----
 Description : OpenVINO Runtime
-Build number: 2023.0.1-11005-fa1c41994f3-releases/2023/0
+Build number: 2023.1.0-12185-9e6b00e51cd-releases/2023/1
 Set inference device  CPU.
 [INFO] Loading model files: ./../../model/yolov8/yolov8s-cls.xml
 [INFO] model name: torch_jit
