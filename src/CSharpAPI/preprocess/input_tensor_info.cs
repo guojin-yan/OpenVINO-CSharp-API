@@ -32,7 +32,7 @@ namespace OpenVinoSharp.preprocess
         {
             if (ptr == IntPtr.Zero)
             {
-                System.Diagnostics.Debug.WriteLine("InputTensorInfo init error : ptr is null!");
+                HandleException.handler(ExceptionStatus.PTR_NULL);
                 return;
             }
             this.m_ptr = ptr;
@@ -68,12 +68,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public InputTensorInfo set_color_format(ColorFormat format)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_tensor_info_set_color_format(
-                m_ptr, (uint)format);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputTensorInfo set_color_format error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_tensor_info_set_color_format(m_ptr, (uint)format));
             return this;
         }
         /// <summary>
@@ -84,12 +80,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public InputTensorInfo set_color_format(ColorFormat format, ulong sub_names_size)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_tensor_info_set_color_format_with_subname(
-                m_ptr, (uint)format, sub_names_size);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputTensorInfo set_color_format error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_tensor_info_set_color_format_with_subname(m_ptr, (uint)format, sub_names_size));
             return this;
         }
 
@@ -100,12 +92,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public InputTensorInfo set_element_type(OvType type)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_tensor_info_set_element_type(
-                m_ptr, (uint)type.get_type());
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputTensorInfo set_element_type error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_tensor_info_set_element_type(m_ptr, (uint)type.get_type()));
             return this;
         }
 
@@ -119,12 +107,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public InputTensorInfo set_spatial_static_shape(ulong input_height, ulong input_width)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_tensor_info_set_spatial_static_shape(
-                m_ptr, input_height, input_width);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputTensorInfo set_shape error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_tensor_info_set_spatial_static_shape(m_ptr, input_height, input_width));
             return this;
         }
 
@@ -136,12 +120,8 @@ namespace OpenVinoSharp.preprocess
         public InputTensorInfo set_memory_type(string memory_type)
         {
             sbyte[] c_mem_type = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(memory_type));
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_tensor_info_set_memory_type(
-                m_ptr, ref c_mem_type[0]);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputTensorInfo set_shape error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_tensor_info_set_memory_type(m_ptr, ref c_mem_type[0]));
             return this;
         }
 
@@ -152,12 +132,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public InputTensorInfo set_layout(Layout layout)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_tensor_info_set_layout(
-                m_ptr, layout.Ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputTensorInfo set_layout error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_tensor_info_set_layout(m_ptr, layout.Ptr));
             return this;
         }
 
@@ -177,12 +153,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public InputTensorInfo set_from(Tensor runtime_tensor)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_tensor_info_set_from(
-                m_ptr, runtime_tensor.Ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputTensorInfo set_from error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_tensor_info_set_from(m_ptr, runtime_tensor.Ptr));
             return this;
         }
     }

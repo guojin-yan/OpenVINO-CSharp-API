@@ -62,12 +62,8 @@ namespace OpenVinoSharp.preprocess
         public InputTensorInfo tensor() 
         {
             IntPtr input_tensor_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_info_get_tensor_info(
-                m_ptr, ref input_tensor_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputInfo tensor error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_info_get_tensor_info(m_ptr, ref input_tensor_ptr));
             return new InputTensorInfo(input_tensor_ptr);
         }
 
@@ -78,12 +74,8 @@ namespace OpenVinoSharp.preprocess
         public PreProcessSteps preprocess() 
         {
             IntPtr preprocess_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_info_get_preprocess_steps(
-                m_ptr, ref preprocess_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputInfo preprocess error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_info_get_preprocess_steps(m_ptr, ref preprocess_ptr));
             return new PreProcessSteps(preprocess_ptr);
         }
 
@@ -94,12 +86,8 @@ namespace OpenVinoSharp.preprocess
         public InputModelInfo model()
         {
             IntPtr model_ptr = IntPtr.Zero;
-            ExceptionStatus status = NativeMethods.ov_preprocess_input_info_get_model_info(
-                m_ptr, ref model_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("InputInfo preprocess error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_input_info_get_model_info(m_ptr, ref model_ptr));
             return new InputModelInfo(model_ptr);
         }
     };

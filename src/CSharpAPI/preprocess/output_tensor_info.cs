@@ -31,7 +31,7 @@ namespace OpenVinoSharp.preprocess
         {
             if (ptr == IntPtr.Zero)
             {
-                System.Diagnostics.Debug.WriteLine("OutputTensorInfo init error : ptr is null!");
+                HandleException.handler(ExceptionStatus.PTR_NULL);
                 return;
             }
             this.m_ptr = ptr;
@@ -60,12 +60,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public OutputTensorInfo set_element_type(ElementType type)
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_preprocess_output_set_element_type(
-                m_ptr, (uint)type);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("OutputTensorInfo set_element_type error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_preprocess_output_set_element_type(m_ptr, (uint)type));
             return this;
         }
     }
