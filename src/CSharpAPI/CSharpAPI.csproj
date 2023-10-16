@@ -7,7 +7,7 @@
     <PackageId>OpenVINO.CSharp.win</PackageId>
     <!--Set NuGet Message-->
     <Title>OpenVINO C# API</Title>
-    <Version>3.1.0</Version>
+    <Version>3.1.1</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVINO C# API</Product>
