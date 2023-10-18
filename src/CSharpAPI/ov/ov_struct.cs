@@ -29,7 +29,7 @@ namespace OpenVinoSharp
                 return dims;
             }
         }
-
+#pragma warning disable CS1591
         /// <summary>
         /// It represents a shape that may be partially or totally dynamic.
         /// </summary>
@@ -43,24 +43,6 @@ namespace OpenVinoSharp
         public struct ov_partial_shape
         {
 
-#if NET7_0_OR_GREATER || NET6_0_OR_GREATER
-            /// <summary>
-            /// The rank
-            /// </summary>
-            public ov_dimension rank;
-            /// <summary>
-            /// The dimension
-            /// </summary>
-            public IntPtr dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Dimension)));
-            /// <summary>
-            /// Default Constructor
-            /// </summary>
-            public ov_partial_shape()
-            {
-                rank = new ov_dimension();
-                dims = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Dimension)));
-            }
-#else
             /// <summary>
             /// The rank
             /// </summary>
@@ -69,10 +51,7 @@ namespace OpenVinoSharp
             /// The dimension
             /// </summary>
             public IntPtr dims;
-#endif
         }
-
-
         /// <summary>
         /// This is a structure interface equal to ov::Rank
         /// </summary>

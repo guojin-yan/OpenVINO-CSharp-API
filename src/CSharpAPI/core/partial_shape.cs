@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -20,16 +21,8 @@ namespace OpenVinoSharp
     /// <para> Static rank, and static dimensions on all axes.
     /// (Informal notation examples: `{1,2,3,4}`, `{6}`, `{}`)</para>
     /// </remarks>
-    public class PartialShape : IDisposable
+    public class PartialShape
     {
-        /// <summary>
-        /// [private]Core class pointer.
-        /// </summary>
-        private IntPtr m_ptr = IntPtr.Zero;
-        /// <summary>
-        /// [public]Core class pointer.
-        /// </summary>
-        public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
 
 
 
@@ -44,37 +37,11 @@ namespace OpenVinoSharp
         private Dimension[] dimensions;
 
         /// <summary>
-        /// Constructing partial shape by pointer.
+        /// Constructing partial shape by ov_partial_shape.
         /// </summary>
-        /// <param name="ptr">The partial shape ptr./param>
-        public PartialShape(IntPtr ptr)
-        {
-            if (ptr == IntPtr.Zero)
-            {
-                System.Diagnostics.Debug.WriteLine("Shape init error : ptr is null!");
-                return;
-            }
-            this.m_ptr = ptr;
-            var temp = Marshal.PtrToStructure(ptr, typeof(ov_partial_shape));
-            ov_partial_shape shape = (ov_partial_shape)temp;
-            Dimension rank_tmp = new Dimension(shape.rank);
-
-            if (!rank_tmp.is_dynamic()){
-                rank = rank_tmp;
-                IntPtr[] d_ptr = new IntPtr[rank.get_max()];
-                Marshal.Copy(shape.dims, d_ptr, 0, (int)rank.get_min());
-
-                dimensions = new Dimension[rank.get_min()];
-                for (int i = 0; i < rank.get_min(); ++i) 
-                {
-                    var temp1 = Marshal.PtrToStructure(ptr, typeof(Ov.ov_dimension));
-                    Dimension dim = new Dimension((Ov.ov_dimension)temp1);
-                    dimensions[i] = dim;
-                }
-            }
-            else {
-                rank = rank_tmp;
-            }
+        /// <param name="shape">ov_partial_shape struct.</param>
+        public PartialShape(Ov.ov_partial_shape shape) {
+            partial_shape_convert(shape);
         }
         /// <summary>
         /// Constructing partial shape by dimensions.
@@ -82,13 +49,6 @@ namespace OpenVinoSharp
         /// <param name="dimensions">The partial shape dimensions array.</param>
         public PartialShape(Dimension[] dimensions) 
         { 
-            Ov.ov_dimension[] ds = new Ov.ov_dimension[dimensions.Length];
-            for (int i = 0; i < dimensions.Length; ++i)
-            {
-                ds[i] = dimensions[i].get_dimension();
-            }
-            HandleException.handler(
-                NativeMethods.ov_partial_shape_create((long)dimensions.Length, ref ds[0], m_ptr));
             this.dimensions = dimensions;
             rank = new Dimension(dimensions.Length, dimensions.Length);
         }
@@ -107,13 +67,6 @@ namespace OpenVinoSharp
         /// <param name="dimensions">The partial shape dimensions array.</param>
         public PartialShape(Dimension rank, Dimension[] dimensions)
         {
-            Ov.ov_dimension[] ds = new Ov.ov_dimension[dimensions.Length];
-            for (int i = 0; i < dimensions.Length; ++i)
-            {
-                ds[i] = dimensions[i].get_dimension();
-            }
-            HandleException.handler(
-                NativeMethods.ov_partial_shape_create_dynamic(rank.get_dimension(), ref ds[0], m_ptr));
             this.dimensions = dimensions;
             this.rank = rank;
         }
@@ -134,8 +87,6 @@ namespace OpenVinoSharp
         /// <param name="dimensions">The partial shape dimensions array.</param>
         public PartialShape(long rank, long[] dimensions)
         {
-            HandleException.handler(
-                NativeMethods.ov_partial_shape_create_static(rank, ref dimensions[0], m_ptr));
             this.rank = new Dimension(rank);
             for (int i = 0; i < dimensions.Length; ++i)
             {
@@ -156,13 +107,10 @@ namespace OpenVinoSharp
         /// <param name="shape">The shape</param>
         public PartialShape(Shape shape) 
         {
+            Ov.ov_partial_shape partial_shape = new ov_partial_shape();
             HandleException.handler(
-                NativeMethods.ov_shape_to_partial_shape(shape.shape, m_ptr));
-            this.rank = new Dimension(shape.Count);
-            for (int i = 0; i < dimensions.Length; ++i)
-            {
-                this.dimensions[i] = new Dimension(shape[i]);
-            }
+                NativeMethods.ov_shape_to_partial_shape(shape.shape, out partial_shape));
+            partial_shape_convert(partial_shape);
         }
 
         /// <summary>
@@ -170,21 +118,22 @@ namespace OpenVinoSharp
         /// </summary>
         ~PartialShape()
         {
-            Dispose();
         }
         /// <summary>
-        /// Release unmanaged resources.
+        /// Convert partial shape to PartialShape class.
         /// </summary>
-        public void Dispose()
+        /// <param name="shape">ov_partial_shape struct</param>
+        private void partial_shape_convert(Ov.ov_partial_shape shape)
         {
-            if (m_ptr == IntPtr.Zero)
+            rank = new Dimension(shape.rank);
+            long[] data = new long[rank.get_max() * 2];
+            dimensions = new Dimension[rank.get_max()];
+            Marshal.Copy(shape.dims, data, 0, (int)rank.get_max() * 2);
+            for (int i = 0; i < rank.get_max(); ++i)
             {
-                return;
+                dimensions[i] = new Dimension(data[2 * i], data[2 * i + 1]);
             }
-            NativeMethods.ov_partial_shape_free(m_ptr);
-            m_ptr = IntPtr.Zero;
         }
-
         /// <summary>
         /// Get ov_partial_shape
         /// </summary>
@@ -195,12 +144,13 @@ namespace OpenVinoSharp
             partial_shape.rank = rank.get_dimension();
             int l = Marshal.SizeOf(typeof(Ov.ov_dimension));
             IntPtr[] ds_ptr = new IntPtr[rank.get_max()];
-            for (int i = 0; i < rank.get_max(); ++i) {
+            for (int i = 0; i < rank.get_max(); ++i)
+            {
                 IntPtr ptr = Marshal.AllocHGlobal(l);
                 Marshal.StructureToPtr(dimensions[i], ptr, false);
                 ds_ptr[i] = ptr;
             }
-            
+
             IntPtr d_ptr = Marshal.AllocHGlobal((int)(l * rank.get_max()));
             Marshal.Copy(ds_ptr, 0, d_ptr, (int)rank.get_max());
             partial_shape.dims = d_ptr;
@@ -243,7 +193,7 @@ namespace OpenVinoSharp
         /// are static.</remarks>
         /// <returns>`false` if this shape is static, else `true`.</returns>
         public bool is_dynamic() {
-            return NativeMethods.ov_partial_shape_is_dynamic(get_partial_shape());
+            return rank.is_dynamic();
         }
 
         /// <summary>

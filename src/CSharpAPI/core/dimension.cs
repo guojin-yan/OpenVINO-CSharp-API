@@ -78,7 +78,7 @@ namespace OpenVinoSharp
         /// <returns>Boolean, true is dynamic and false is static.</returns>
         public bool is_dynamic() 
         {
-            return NativeMethods.ov_dimension_is_dynamic(m_dimension);
+            return (m_dimension.min == 0 && m_dimension.max == -1) ? true : false;
         }
     }
 }

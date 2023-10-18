@@ -27,7 +27,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_partial_shape_create(
             long rank, 
             ref Ov.ov_dimension dims,
-            IntPtr partial_shape_obj);
+            out Ov.ov_partial_shape partial_shape_obj);
 
         /// <summary>
         /// Initialze a partial shape with static rank and dynamic dimension.
@@ -48,7 +48,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_partial_shape_create_dynamic(
             Ov.ov_dimension rank,
             ref Ov.ov_dimension dims,
-            IntPtr partial_shape_obj);
+            out Ov.ov_partial_shape partial_shape_obj);
 
         /// <summary>
         /// Initialize a partial shape with static rank and static dimension.
@@ -62,7 +62,7 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_partial_shape_create_static(
             long rank, 
             ref long dims,
-            IntPtr partial_shape_obj);
+            out Ov.ov_partial_shape partial_shape_obj);
 
         /// <summary>
         /// Release internal memory allocated in partial shape.
@@ -70,7 +70,7 @@ namespace OpenVinoSharp
         /// <param name="partial_shape">The object's internal memory will be released.</param>
         [DllImport(dll_extern, EntryPoint = "ov_get_openvino_version",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static void ov_partial_shape_free(IntPtr partial_shape);
+        public extern static void ov_partial_shape_free(ref Ov.ov_partial_shape partial_shape);
 
         /// <summary>
         /// Convert partial shape without dynamic data to a static shape.
@@ -94,7 +94,7 @@ namespace OpenVinoSharp
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_shape_to_partial_shape(
             Ov.ov_shape shape, 
-            IntPtr partial_shape);
+            out Ov.ov_partial_shape partial_shape);
 
         /// <summary>
         /// Check this partial_shape whether is dynamic

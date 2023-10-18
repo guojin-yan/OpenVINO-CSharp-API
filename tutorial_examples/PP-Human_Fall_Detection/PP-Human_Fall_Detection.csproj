@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="OpenVINO-CSharp-API\src\CSharpAPI\CSharpAPI.csproj" />
+    <ProjectReference Include="OpenVINO-CSharp-API\src\CSharp\CSharp.csproj" />
   </ItemGroup>
 
 </Project>

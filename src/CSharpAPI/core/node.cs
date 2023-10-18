@@ -107,12 +107,10 @@ namespace OpenVinoSharp
         /// <returns>Returns the partial shape.</returns>
         public PartialShape get_partial_shape()
         {
-            int l = Marshal.SizeOf(typeof(Ov.ov_partial_shape));
-            IntPtr shape_ptr = Marshal.AllocHGlobal(l);
             Ov.ov_partial_shape shape = new Ov.ov_partial_shape();
             HandleException.handler(
                 NativeMethods.ov_port_get_partial_shape(m_ptr, ref shape));
-            return new PartialShape(shape_ptr);
+            return new PartialShape(shape);
         }
 
         /// <summary>
