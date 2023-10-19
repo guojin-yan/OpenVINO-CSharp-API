@@ -46,11 +46,11 @@ namespace OpenVinoSharp
         /// <param name="type">Tensor element type</param>
         /// <param name="shape">Tensor shape</param>
         /// <param name="mat">Image data</param>
-        public Tensor(element.Type type, Shape shape, OvMat mat) 
+        public Tensor(element.Type type, Shape shape, byte[] mat) 
         {
-            int l =mat.mat_data.Length;
+            int l =mat.Length;
             IntPtr data = Marshal.AllocHGlobal(l);
-            Marshal.Copy(mat.mat_data, 0, data, (int)mat.mat_data_size);
+            Marshal.Copy(mat, 0, data, (int)mat.Length);
             HandleException.handler(
                 NativeMethods.ov_tensor_create_from_host_ptr
                 ((uint)type.get_type(), shape.shape, data, ref m_ptr));

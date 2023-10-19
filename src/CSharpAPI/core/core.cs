@@ -99,7 +99,6 @@ namespace OpenVinoSharp
             {
                 throw new ArgumentNullException(nameof(device_name));
             }
-            ExceptionStatus status;
             int l = Marshal.SizeOf(typeof(CoreVersionList));
             IntPtr ptr_core_version_s = Marshal.AllocHGlobal(l);
             sbyte[] c_device_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
@@ -111,7 +110,6 @@ namespace OpenVinoSharp
             CoreVersion core_version = (CoreVersion)temp2;
             KeyValuePair<string, Version> value = new KeyValuePair<string, Version>(core_version.device_name, core_version.version);
             NativeMethods.ov_core_versions_free(ptr_core_version_s);
-
             return value;
         }
 
