@@ -10,7 +10,7 @@
 
 简体中文| [English](README.md)
 
-## 这是OpenVINO™ C# API 3.0 版本，该版本还在建设中，功能还未完善，如使用中有问题，欢迎与我沟通联系。如果对该项目感兴趣，也可以加入到我们的开发中来。🥰🥰🥰🥰
+## 这是OpenVINO™ C# API，该项目还在建设中，功能还未完善，如使用中有问题，欢迎与我沟通联系。如果对该项目感兴趣，也可以加入到我们的开发中来。🥰🥰🥰🥰
 
 
 
@@ -22,17 +22,25 @@
 - 使用流行框架（如TensorFlow，PyTorch等）训练的模型
 - 减少资源需求，并在从边缘到云的一系列英特尔®平台上高效部署
 
-&emsp;    然而 OpenVINO™未提供C#语言接口，这对在C#中使用 OpenVINO™带来了很多麻烦，因此基于OpenVINO™工具套件推出了 OpenVINO™ C# API，旨在推动 OpenVINO™在C#领域的应用。OpenVINO™ C# API 由于是基于 OpenVINO™ 开发，所支持的平台与OpenVINO™ 一致，具体信息可以参考 OpenVINO™。
-
-&emsp;    目前 OpenVINO™ C# API 已经更新迭代起到3.0版本，相比于之前版本，OpenVINO™ C# API 3.0 版本做了较大程度上的更新，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。
+&emsp;    该项目基于OpenVINO™工具套件推出了 OpenVINO™ C# API，旨在推动 OpenVINO™在C#领域的应用。OpenVINO™ C# API 由于是基于 OpenVINO™ 开发，所支持的平台与OpenVINO™ 一致，具体信息可以参考 OpenVINO™。
 
 ## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet 包
 
-### 托管库
+### Managed libraries
 
-| Package                  | Description                                                  | Link                                                         |
-| ------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **OpenVINO™ C# API.win** | OpenVINO™ C# API core libraries，附带完整的OpenVINO 2023.0依赖库 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINOSharp.win.svg)](https://www.nuget.org/packages/OpenVINO™ C# API.win/) |
+| Package                     | Description                    | Link                                                         |
+| --------------------------- | ------------------------------ | ------------------------------------------------------------ |
+| **OpenVINO.CSharp.API**     | OpenVINO C# API core libraries | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API/) |
+| **OpenVINO.CSharp.Windows** | All-in-one package for Windows | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.Windows.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.Windows/) |
+
+### Native bindings
+
+| Package                  | Description                 | Link                                                         |
+| ------------------------ | --------------------------- | ------------------------------------------------------------ |
+| **OpenVINO.runtime.win** | Native bindings for Windows | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
+|                          |                             |                                                              |
+
+
 
 ## ⚙ 如何安装
 
@@ -53,7 +61,7 @@
 如果你不知道如何使用，通过下面代码简单了解使用方法。
 
 ```c#
-using OpenVINO™ C# API;  // 引用命名空间
+using OpenVinoSharp;  // 引用命名空间
 namespace test 
 {
     internal class Program
@@ -62,7 +70,7 @@ namespace test
         {
             Core core = new Core();  // 初始化 Core 核心
             Model model = core.read_model("./model.xml");  // 读取模型文件
-            CompiledModel compiled_model = core.compiled_model(model, "AUTO");  // 将模型加载到设备
+            CompiledModel compiled_model = core.compile_model(model, "AUTO");  // 将模型加载到设备
             InferRequest infer_request = compiled_model.create_infer_request();  // 创建推理通道
             Tensor input_tensor = infer_request.get_tensor("images");  // 获取输入节点Tensor
             infer_request.infer();  // 模型推理
@@ -73,23 +81,33 @@ namespace test
 }
 ```
 
-项目中所封装的类、对象例如Core、Model、Tensor等，通过调用 C api 接口实现，具有非托管资源，需要调用**dispose()**方法处理，否则就会出现内存泄漏。
+项目中所封装的类、对象例如Core、Model、Tensor等，通过调用 C api 接口实现，具有非托管资源，需要调用**Dispose()**方法处理，否则就会出现内存泄漏。
 
 
 
 ## 💻 应用案例
 
 - [爱克斯开发板使用OpenVINO™ C# API部署Yolov8模型](tutorial_examples/AlxBoard_deploy_yolov8/README_cn.md)
+-  [行人摔倒检测 — 基于 OpenVINO C# API 部署PP-Human](tutorial_examples\PP-Human_Fall_Detection\README_cn.md) 
+- [基于 OpenVINO 部署 RT-DETR](https://github.com/guojin-yan/RT-DETR-OpenVINO)
 
 ## 🗂 API 文档
 
-如果想了解更多信息，可以参阅：[OpenVINO™ C# API API Documented](https://guojin-yan.github.io/OpenVINO™ C# API.docs/index.html)
-
-(API Documented 正在建设中)
+如果想了解更多信息，可以参阅：[OpenVINO™ C# API API Documented](https://guojin-yan.github.io/OpenVINO-CSharp-API.docs/index.html)
 
 ## 🔃 更新日志
 
-#### 🔥 **2023.6.19 ：发布 OpenVINO™ C# API 3.0**
+#### 🔥 **2023.10.22 ：更新OpenVINO™ C# API **
+
+- 🗳 **OpenVINO™ C# API 库：**
+  - 修改OpenVINO™ C# API 中的错误，并对代码板块进行整合，添加异常处理机制。
+- 🛹**应用案例：**
+  - 行人摔倒检测 — 基于 OpenVINO C# API 部署PP-Human
+  - 基于 OpenVINO 部署 RT-DETR
+- 🔮 **NuGet包：**
+  - 废除之前发布的NuGet包，发布更新新的安装包，发布三类NuGet包，包括**OpenVINO.CSharp.API**：核心代码包，**OpenVINO.CSharp.Windows**：Windows平台整合包、**OpenVINO.runtime.win**：Windows平台运行库包。
+
+####  **2023.6.19 ：发布 OpenVINO™ C# API 3.0**
 
 - 🗳 **OpenVINO™ C# API 库：**
   - 升级OpenVINO™ C# API 2.0 到 OpenVINO™ C# API 3.0 版本，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。

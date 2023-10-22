@@ -11,7 +11,7 @@
 
 [简体中文](README_cn.md) | English
 
-## This is OpenVINO™ C# API 3.0 version, which is still under construction and its features are not yet fully developed. If there are any issues during use, please feel free to contact me. If you are interested in this project, you can also join our development.🥰🥰🥰🥰🥰
+## This is OpenVINO ™  C # API, this project is still under construction and its functions are not yet fully developed. If you have any problems using it, please feel free to communicate with me. If you are interested in this project, you can also join our development.🥰🥰🥰🥰🥰
 
 ## 📚 What is OpenVINO™ C# API ?
 
@@ -21,17 +21,25 @@
 - Use models trained with popular frameworks like TensorFlow, PyTorch and more
 - Reduce resource demands and efficiently deploy on a range of Intel® platforms from edge to cloud
 
-&emsp;    However, OpenVINO™ No C# language interface provided, which is beneficial for using OpenVINO™ in C#  bringing a lot of trouble, therefore based on OpenVINO™ The tool kit has launched OpenVINO™ C# API, aiming to drive OpenVINO™ Application in the C # field. OpenVINO™ C# API is based on OpenVINO™ Development, supported platforms, and OpenVINO™ Consistent, please refer to OpenVINO™ for specific information.
-
-&emsp;    Currently, OpenVINO™ C# API has been updated and iterated to version 3.0. Compared to the previous version, OpenVINO™ C# API version 3.0 has undergone a significant update, replacing the original refactoring of the C++API with directly reading OpenVINO\™  The official C API makes the application more flexible and supports a richer range of functions.
+&emsp;    This project is based on OpenVINO™ The tool kit has launched OpenVINO™  C # API, aimed at driving OpenVINO™ Application in the C # field. OpenVINO ™  The C # API is based on OpenVINO™  Development, supported platforms, and OpenVINO ™  Consistent, please refer to OpenVINO™ for specific information。
 
 ## <img title="NuGet" src="https://s2.loli.net/2023/08/08/jE6BHu59L4WXQFg.png" alt="" width="40">NuGet Package
 
-### Managed Library
+### Managed libraries
 
-| Package                  | Description                                                  | Link                                                         |
-| ------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **OpenVINO™ C# API.win** | OpenVINO™ C# API core libraries，comes with a complete OpenVINO 2023.0 dependency library | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO™ C# API.win.svg)](https://www.nuget.org/packages/OpenVINO™ C# API.win/) |
+| Package                     | Description                    | Link                                                         |
+| --------------------------- | ------------------------------ | ------------------------------------------------------------ |
+| **OpenVINO.CSharp.API**     | OpenVINO C# API core libraries | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API/) |
+| **OpenVINO.CSharp.Windows** | All-in-one package for Windows | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.Windows.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.Windows/) |
+
+### Native bindings
+
+| Package                  | Description                 | Link                                                         |
+| ------------------------ | --------------------------- | ------------------------------------------------------------ |
+| **OpenVINO.runtime.win** | Native bindings for Windows | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
+|                          |                             |                                                              |
+
+
 
 ## ⚙ How to install OpenVINO™ C# API?
 
@@ -45,6 +53,8 @@ The following article provides installation methods for OpenVINO™ C# API on di
 
 - **Quick start**
   - [Deploying the Yolov8 full series model using OpenVINO™ C# API](demos/yolov8/README.md)
+  -  [Pedestrian fall detection - Deploying PP-Human based on OpenVINO C # API](tutorial_examples\PP-Human_Fall_Detection\README.md) 
+  - [Deploying RT-DETR based on OpenVINO](https://github.com/guojin-yan/RT-DETR-OpenVINO)
   
 - **Simple usage**
 
@@ -84,13 +94,23 @@ If you want to learn more information, you can refer to: [OpenVINO™ C# API API
 
 ## 🔃 Update log
 
-#### 🔥 **2023.6.19 ： release OpenVINO™ C# API 3.0**
+#### 🔥 **2023.10.22 ：Update OpenVINO™ C# API **
+
+- 🗳 **OpenVINO™ C# API ：**
+  - Modify OpenVINO™  errors in the C # API, and integration of code sections to add exception handling mechanisms.
+- 🛹**Application Cases：**
+  - Pedestrian fall detection - Deploying PP-Human based on OpenVINO C # API
+  - Deploying RT-DETR based on OpenVINO
+- 🔮 **NuGet：**
+  - Abolish the previously released NuGet package, release updated installation packages, and release three types of NuGet packages, including **OpenVINO. CSharp. API **: core code package, **OpenVINO. CSharp. Windows **: Windows platform integration package, and **OpenVINO. runtime. win **: Windows platform runtime package.
+
+####  **2023.6.19 ： release OpenVINO™ C# API 3.0**
 
 - 🗳OpenVINO™ C# API ：
   - Upgrade OpenVINO™ C# API 2.0 to OpenVINO™ C# API 3.0, changing from refactoring the C++API to directly reading OpenVino ™ The official C API makes the application more flexible and supports a richer range of functions.
 - 🛹Application Cases：
   - OpenVINO™ C# API Deployment Yolov8 Model Example。
-- 🔮NuGe：
+- 🔮NuGet：
   - Create and publish NuGet package, release * * OpenVINO™ C# API. win 3.0.120 * *, including OpenVino 2023.0 dependencies.
 
 ## 🎖 Contribute
