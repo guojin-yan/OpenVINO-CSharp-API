@@ -67,7 +67,7 @@ namespace test
         {
             Core core = new Core();
             Model model = core.read_model("./model.xml");
-            CompiledModel compiled_model = core.compiled_model(model, "AUTO"); 
+            CompiledModel compiled_model = core.compile_model(model, "AUTO"); 
             InferRequest infer_request = compiled_model.create_infer_request(); 
             Tensor input_tensor = infer_request.get_tensor("images"); 
             infer_request.infer(); 
@@ -88,8 +88,7 @@ The classes and objects encapsulated in the project, such as Core, Model, Tensor
 
 ## 🗂 API Reference
 
-If you want to learn more information, you can refer to: [OpenVINO™ C# API API Documented](https://guojin-yan.github.io/OpenVINO™ C# API.docs/index.html)
-(API Documented is under construction)
+If you want to learn more information, you can refer to: [OpenVINO™ C# API API Documented](https://guojin-yan.github.io/OpenVINO-CSharp-API.docs/index.html)
 
 ## 🔃 Update log
 
