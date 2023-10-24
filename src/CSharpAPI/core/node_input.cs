@@ -9,7 +9,7 @@ namespace OpenVinoSharp
     /// <summary>
     /// A handle for one of a node's inputs.
     /// </summary>
-    public class Input 
+    public class Input : IDisposable
     {
         private Node m_node;
         private ulong m_index = 0;
@@ -27,12 +27,12 @@ namespace OpenVinoSharp
         /// Default deconstruction.
         /// </summary>
         ~Input() {
-            dispose();
+            Dispose();
         }
         /// <summary>
         /// Release unmanaged resources.
         /// </summary>
-        public void dispose() {
+        public void Dispose() {
             m_node.Dispose();
         }
         /// <summary>
