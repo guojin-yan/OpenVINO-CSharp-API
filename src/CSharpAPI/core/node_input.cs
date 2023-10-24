@@ -11,7 +11,13 @@ namespace OpenVinoSharp
     /// </summary>
     public class Input : IDisposable
     {
+        /// <summary>
+        /// The input node.
+        /// </summary>
         private Node m_node;
+        /// <summary>
+        /// The input node port index.
+        /// </summary>
         private ulong m_index = 0;
         /// <summary>
         /// Constructs a Output.
@@ -32,7 +38,8 @@ namespace OpenVinoSharp
         /// <summary>
         /// Release unmanaged resources.
         /// </summary>
-        public void Dispose() {
+        public void Dispose()
+        {
             m_node.Dispose();
         }
         /// <summary>

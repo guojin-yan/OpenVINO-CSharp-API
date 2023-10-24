@@ -65,8 +65,8 @@ namespace test
     {
         static void Main(string[] args)
         {
-        	using Core core = new Core();
-            using Model model = core.read_model("./model.xml");
+			using Core core = new Core();
+			using Model model = core.read_model("./model.xml");
             using CompiledModel compiled_model = core.compiled_model(model, "AUTO");
             using InferRequest infer_request = compiled_model.create_infer_request();
             using Tensor input_tensor = infer_request.get_tensor("images");

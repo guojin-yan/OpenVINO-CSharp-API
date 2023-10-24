@@ -51,7 +51,6 @@ namespace OpenVinoSharp
                 return;
             }
             NativeMethods.ov_infer_request_free(m_ptr);
-
             m_ptr = IntPtr.Zero;
         }
         /// <summary>
@@ -298,8 +297,7 @@ namespace OpenVinoSharp
             IntPtr tensor_ptr = IntPtr.Zero;
 
             HandleException.handler(
-                NativeMethods.ov_infer_request_get_output_tensor(
-                m_ptr, ref tensor_ptr));
+                NativeMethods.ov_infer_request_get_output_tensor(m_ptr, ref tensor_ptr));
             return new Tensor(tensor_ptr);
         }
         /// <summary>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace OpenVinoSharp
 {
     /// <summary>
-    /// [struct] Represents version information that describes plugins and the OpemVINO library
+    /// [struct] Represents version information that describes plugins and the OpenVINO library
     /// </summary>
     /// <ingroup>ov_runtime_c#_api</ingroup>
     public struct Version
@@ -55,6 +55,9 @@ namespace OpenVinoSharp
         /// A device name
         /// </summary>
         public string device_name;
+        /// <summary>
+        /// The OpenVINO version.
+        /// </summary>
         public Version version;
     }
     /// <summary>

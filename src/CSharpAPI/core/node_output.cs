@@ -9,10 +9,15 @@ namespace OpenVinoSharp
     /// <summary>
     /// A handle for one of a node's outputs.
     /// </summary>
-    /// <typeparam name="Node"></typeparam>
     public class Output : IDisposable
     {
+        /// <summary>
+        /// The output node.
+        /// </summary>
         private Node m_node;
+        /// <summary>
+        /// The output node port index.
+        /// </summary>
         private ulong m_index = 0;
         /// <summary>
         /// Constructs a Output.

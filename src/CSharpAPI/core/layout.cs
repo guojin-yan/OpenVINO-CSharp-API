@@ -34,7 +34,11 @@ namespace OpenVinoSharp
         /// <summary>
         /// [public]Layout class pointer.
         /// </summary>
-        public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
+        public IntPtr Ptr
+        { 
+            get { return m_ptr; } 
+            set { m_ptr = value; }
+        }
 
         /// <summary>
         /// Constructs a Layout with static or dynamic layout information based on string representation.

@@ -21,7 +21,11 @@ namespace OpenVinoSharp
         /// <summary>
         /// [public]Model class pointer.
         /// </summary>
-        public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
+        public IntPtr Ptr 
+        { 
+            get { return m_ptr; } 
+            set { m_ptr = value; }
+        }
         /// <summary>
         /// Default Constructor
         /// </summary>
@@ -52,7 +56,6 @@ namespace OpenVinoSharp
                 return;
             }
             NativeMethods.ov_core_free(m_ptr);
-
             m_ptr = IntPtr.Zero;
         }
 
@@ -67,7 +70,6 @@ namespace OpenVinoSharp
             HandleException.handler(
                 NativeMethods.ov_model_get_friendly_name(m_ptr, ref s_ptr));
             string ss = Marshal.PtrToStringAnsi(s_ptr);
-
             return ss;
         }
         /// <summary>
@@ -143,7 +145,6 @@ namespace OpenVinoSharp
             IntPtr port_ptr = IntPtr.Zero;
             HandleException.handler(
                 NativeMethods.ov_model_output_by_index(m_ptr, index, ref port_ptr));
-
             return new Node(port_ptr, Node.NodeType.e_nomal);
         }
         /// <summary>

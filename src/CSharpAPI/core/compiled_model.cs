@@ -24,7 +24,11 @@ namespace OpenVinoSharp
         /// <summary>
         /// [private]CompiledModel class pointer.
         /// </summary>
-        public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
+        public IntPtr Ptr 
+        { 
+            get { return m_ptr; } 
+            set { m_ptr = value; } 
+        }
 
         /// <summary>
         /// Constructs CompiledModel from the initialized ptr.

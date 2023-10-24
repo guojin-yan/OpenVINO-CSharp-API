@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-
 namespace OpenVinoSharp
 {
-
     /// <summary>
     /// <para>This class represents an OpenVINO runtime Core entity.</para>
     /// <ingroupe>ov_runtime_c#_api</ingroupe>
@@ -23,7 +21,11 @@ namespace OpenVinoSharp
         /// <summary>
         /// [public]Core class pointer.
         /// </summary>
-        public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
+        public IntPtr Ptr 
+        { 
+            get { return m_ptr; }
+            set { m_ptr = value; } 
+        }
 
         /// <summary>
         /// Represent all available devices.
@@ -316,7 +318,6 @@ namespace OpenVinoSharp
             NativeMethods.ov_available_devices_free(devices_ptr);
             return devices;
         }
-
     }
 }
 
