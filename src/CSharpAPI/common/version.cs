@@ -21,7 +21,11 @@ namespace OpenVinoSharp
         /// A null terminated description string
         /// </summary>
         public string description;
-
+        /// <summary>
+        /// Constructs a Version.
+        /// </summary>
+        /// <param name="buildNumber"></param>
+        /// <param name="description"></param>
         public Version(string buildNumber, string description) {
             this.buildNumber = buildNumber;
             this.description = description;
@@ -67,9 +71,4 @@ namespace OpenVinoSharp
         /// </summary>
         public ulong size;
     }
-
-
-
-
-
 }

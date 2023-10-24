@@ -257,8 +257,6 @@ namespace OpenVinoSharp
                 NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr));
             return new CompiledModel(compiled_model_ptr);
         }
-
-
         /// <summary>
         /// Reads a model and creates a compiled model from the IR/ONNX/PDPD file.
         /// </summary>

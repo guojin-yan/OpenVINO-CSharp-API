@@ -35,7 +35,6 @@ namespace OpenVinoSharp
     };
     namespace element
     {
-
         /// <summary>
         /// Enum to define possible element types
         /// <ingroup>ov_element_c#_api</ingroup>
@@ -115,7 +114,6 @@ namespace OpenVinoSharp
             /// </summary>
             u64
         };
-
         /// <summary>
         /// [struct] Type information storage struct.
         /// </summary>

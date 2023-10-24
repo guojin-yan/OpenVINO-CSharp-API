@@ -65,20 +65,19 @@ namespace test
     {
         static void Main(string[] args)
         {
-            Core core = new Core();
-            Model model = core.read_model("./model.xml");
-            CompiledModel compiled_model = core.compile_model(model, "AUTO"); 
-            InferRequest infer_request = compiled_model.create_infer_request(); 
-            Tensor input_tensor = infer_request.get_tensor("images"); 
-            infer_request.infer(); 
-            Tensor output_tensor = infer_request.get_tensor("output0"); 
-            core.free(); 
+        	using Core core = new Core();
+            using Model model = core.read_model("./model.xml");
+            using CompiledModel compiled_model = core.compiled_model(model, "AUTO");
+            using InferRequest infer_request = compiled_model.create_infer_request();
+            using Tensor input_tensor = infer_request.get_tensor("images");
+            infer_request.infer();
+            using Tensor output_tensor = infer_request.get_tensor("output0");
         }
     }
 }
 ```
 
-The classes and objects encapsulated in the project, such as Core, Model, Tensor, etc., are implemented by calling the C API interface and have unmanaged resources. They need to be handled by calling the **dispose() ** method, otherwise memory leakage may occur.
+The classes and objects encapsulated in the project, such as Core, Model, Tensor, etc., are implemented by calling the C API interface and have unmanaged resources. They need to be handled by calling the **Dispose() ** method or `using` statement, otherwise memory leakage may occur.
 
 ## 💻 Tutorial Examples
 

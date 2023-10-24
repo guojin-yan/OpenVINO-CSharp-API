@@ -25,7 +25,7 @@ namespace OpenVinoSharp
     /// - To set/get model's batch (see `ov::get_batch`/`ov::set_batch') it is required in general to specify 'N' dimension
     /// in layout for appropriate inputs
     /// </example>
-    public class Layout
+    public class Layout : IDisposable
     {
         /// <summary>
         /// [private]Layout class pointer.
@@ -66,13 +66,13 @@ namespace OpenVinoSharp
         /// </summary>
         ~Layout()
         {
-            dispose(); 
+            Dispose(); 
         }
 
         /// <summary>
         /// Release unmanaged resources.
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (m_ptr == IntPtr.Zero)
             {

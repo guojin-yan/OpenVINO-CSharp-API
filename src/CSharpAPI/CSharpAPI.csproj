@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0;net48</TargetFrameworks>
+    <TargetFrameworks>net5.0;net6.0;net48;netcoreapp3.1</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
-    <PackageId>OpenVINO.CSharp.win</PackageId>
+    <PackageId>OpenVINO.CSharp.API</PackageId>
     <!--Set NuGet Message-->
     <Title>OpenVINO C# API</Title>
-    <Version>3.1.1</Version>
+    <Version>2023.1.0.1</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVINO C# API</Product>
@@ -18,21 +18,17 @@
     <RepositoryType>git</RepositoryType>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <NeutralLanguage>zh</NeutralLanguage>
-    <PackageIcon>NuGet.png</PackageIcon>
+    <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>This version is a pre release version of OpenVINO™ C# API 3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
     <RootNamespace>OpenVinoSharp</RootNamespace>
-    <AssemblyName>OpenVINOCSharp</AssemblyName> 
+    <AssemblyName>OpenVINO_CSharp_API</AssemblyName> 
   </PropertyGroup>
 
 
   <!--Add build file.-->
   <ItemGroup>
-    <None Include=".\build\openvino2023.1\*.*">
-      <Pack>true</Pack>
-      <PackagePath>build\openvino2023.1\%(Filename)%(Extension)</PackagePath>
-    </None>
-    <None Include="..\..\nuget\NuGet.png" Link="build\NuGet.png">
+    <None Include="..\..\nuget\logo.png" Link="build\logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
@@ -52,23 +48,6 @@
   </ItemGroup>
   
   
-  <ItemGroup>
-    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.8.0.20230708" />
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.8.0.20230708" />
-    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="build\OpenVINO.CSharp.win.targets">
-      <Pack>true</Pack>
-      <PackagePath>build\</PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="exception\" />
-  </ItemGroup>
-
   <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
     <DefineConstants>$(DefineConstants);DOTNET_FRAMEWORK;</DefineConstants>
   </PropertyGroup>

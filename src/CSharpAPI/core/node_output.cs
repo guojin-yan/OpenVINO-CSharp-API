@@ -10,7 +10,8 @@ namespace OpenVinoSharp
     /// A handle for one of a node's outputs.
     /// </summary>
     /// <typeparam name="Node"></typeparam>
-    public class Output {
+    public class Output : IDisposable
+    {
         private Node m_node;
         private ulong m_index = 0;
         /// <summary>
@@ -28,12 +29,12 @@ namespace OpenVinoSharp
         /// </summary>
         ~Output()
         {
-            dispose();
+            Dispose();
         }
         /// <summary>
         /// Release unmanaged resources.
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             m_node.Dispose();
         }

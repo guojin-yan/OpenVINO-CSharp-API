@@ -22,9 +22,6 @@ namespace OpenVinoSharp
     /// </remarks>
     public class PartialShape
     {
-
-
-
         /// <summary>
         /// PartialShape rank.
         /// </summary>
@@ -34,7 +31,6 @@ namespace OpenVinoSharp
         /// PartialShape dimensions.
         /// </summary>
         private Dimension[] dimensions;
-
         /// <summary>
         /// Constructing partial shape by ov_partial_shape.
         /// </summary>
@@ -77,7 +73,6 @@ namespace OpenVinoSharp
         /// <param name="dimensions">The partial shape dimensions list.</param>
         public PartialShape(Dimension rank, List<Dimension> dimensions) : this(rank, dimensions.ToArray())
         {
-
         }
         /// <summary>
         /// Constructing static partial shape by dimensions.
@@ -98,7 +93,8 @@ namespace OpenVinoSharp
         /// <param name="rank">The partial shape rank.</param>
         /// <param name="dimensions">The partial shape dimensions list.</param>
         public PartialShape(long rank, List<long> dimensions) : this(rank, dimensions.ToArray())
-        {}
+        {
+        }
 
         /// <summary>
         /// Constructing static partial shape by shape.

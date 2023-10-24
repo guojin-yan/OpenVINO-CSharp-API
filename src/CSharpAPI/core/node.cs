@@ -56,7 +56,8 @@ namespace OpenVinoSharp
         /// <summary>
         /// Default deconstruction.
         /// </summary>
-        ~Node() {
+        ~Node() 
+        {
             Dispose();
         }
         /// <summary>

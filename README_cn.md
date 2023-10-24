@@ -68,22 +68,19 @@ namespace test
     {
         static void Main(string[] args)
         {
-            Core core = new Core();  // 初始化 Core 核心
-            Model model = core.read_model("./model.xml");  // 读取模型文件
-            CompiledModel compiled_model = core.compile_model(model, "AUTO");  // 将模型加载到设备
-            InferRequest infer_request = compiled_model.create_infer_request();  // 创建推理通道
-            Tensor input_tensor = infer_request.get_tensor("images");  // 获取输入节点Tensor
+ 			using Core core = new Core();  // 初始化 Core 核心
+            using Model model = core.read_model("./model.xml");  // 读取模型文件
+            using CompiledModel compiled_model = core.compiled_model(model, "AUTO");  // 将模型加载到设备
+            using InferRequest infer_request = compiled_model.create_infer_request();  // 创建推理通道
+            using Tensor input_tensor = infer_request.get_tensor("images");  // 获取输入节点Tensor
             infer_request.infer();  // 模型推理
-            Tensor output_tensor = infer_request.get_tensor("output0");  // 获取输出节点Tensor
-            core.free();  // 清理 Core 非托管内存
+            using Tensor output_tensor = infer_request.get_tensor("output0");  // 获取输出节点Tensor
         }
     }
 }
 ```
 
-项目中所封装的类、对象例如Core、Model、Tensor等，通过调用 C api 接口实现，具有非托管资源，需要调用**Dispose()**方法处理，否则就会出现内存泄漏。
-
-
+项目中所封装的类、对象例如Core、Model、Tensor等，通过调用 C api 接口实现，具有非托管资源，需要调用**Dispose()**方法处理或者使用**using**，否则就会出现内存泄漏。
 
 ## 💻 应用案例
 
