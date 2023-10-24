@@ -58,15 +58,15 @@ The following article provides installation methods for OpenVINO™ C# API on di
 If you don't know how to use it, simply understand the usage method through the following code.
 
 ```c#
-using OpenVINO™ C# API;
-namespace test 
+using OpenVinoSharp;
+namespace test
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-			using Core core = new Core();
-			using Model model = core.read_model("./model.xml");
+            using Core core = new Core();
+            using Model model = core.read_model("./model.xml");
             using CompiledModel compiled_model = core.compiled_model(model, "AUTO");
             using InferRequest infer_request = compiled_model.create_infer_request();
             using Tensor input_tensor = infer_request.get_tensor("images");

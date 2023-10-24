@@ -62,13 +62,13 @@
 
 ```c#
 using OpenVinoSharp;  // 引用命名空间
-namespace test 
+namespace test
 {
     internal class Program
     {
         static void Main(string[] args)
         {
- 			using Core core = new Core();  // 初始化 Core 核心
+            using Core core = new Core();  // 初始化 Core 核心
             using Model model = core.read_model("./model.xml");  // 读取模型文件
             using CompiledModel compiled_model = core.compiled_model(model, "AUTO");  // 将模型加载到设备
             using InferRequest infer_request = compiled_model.create_infer_request();  // 创建推理通道
