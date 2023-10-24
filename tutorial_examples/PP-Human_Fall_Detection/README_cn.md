@@ -1,25 +1,25 @@
-# Pedestrian fall detection - Deploying PP-Human based on OpenVINO C # API
+# 行人摔倒检测 — 基于 OpenVINO C# API 部署PP-Human
 
-&emsp;    With the aggravation of population aging, the number of elderly people living alone and empty-nesters is constantly increasing. Therefore, it is crucial to ensure the healthy life and personal safety of elderly people living alone and empty-nesters. For elderly people living alone and empty-nesters, if they fall and are not detected in a timely manner, it will have a significant impact on their health and safety. The main research of this project is to develop an automatic recognition and alarm platform for falls, which uses video surveillance to collect multi-channel video stream data. Pedestrian detection algorithms, key point detection algorithms, and fall detection algorithms are used to achieve automatic recognition of pedestrian falls. Based on the detection situation, alerts are sent to relevant personnel to achieve timely care for the elderly. This device can be installed in nursing homes and other places, and can be automatically identified through algorithms, greatly reducing labor costs and protecting the privacy of the elderly. The application scenario of this project is unknown, which can include empty nest elderly people, pregnant women and children in families, kindergartens, and other scenarios to achieve fall detection for children.
-&emsp;    In the project, OpenVINO is used to deploy pedestrian detection algorithms, key point detection algorithms, and fall detection algorithms to achieve automatic recognition of pedestrian falls. Multiple models are deployed on the AIxBoard development board using the OpenVINO C # API combined with application scenarios.
+&emsp;    随着人口老龄化问题的加重，独居老人、空巢老人数量在不断上升，因此如何保障独居老人、空巢老人健康生活和人身安全至关重要。而对于独居老人、空巢老人，如果出现摔倒等情况而不会及时发现，将会对其健康安全造成重大影响。本项目主要研究为开发一套摔倒自动识别报警平台，使用视频监控其采集多路视频流数据，使用行人检测算法、关键点检测算法以及摔倒检测算法实现对行人摔倒自动识别，并根据检测情况，对相关人员发送警报，实现对老人的及时看护。该装置可以布置在养老院等场所，通过算法自动判别，可以大大降低人力成本以及保护老人的隐私。该项目应用场景不知可以用到空巢老人，还可以用到家庭中的孕妇儿童、幼儿园等场景，实现对儿童的摔倒检测。
+&emsp;    项目中采用OpenVINO部署行人检测算法、关键点检测算法以及摔倒检测算法实现对行人摔倒自动识别算法，并在AIxBoard 开发板上使用 OpenVINO C# API 结合应用场景部署多模型。
 
-&emsp;   All the code used in the project is open source on GitHub, and the project link is：[PP-Human_Fall_Detection](https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.0/tutorial_examples/PP-Human_Fall_Detection)
+&emsp;    项目中所使用的代码全部在GitHub上开源，项目链接为：[PP-Human_Fall_Detection](https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.0/tutorial_examples/PP-Human_Fall_Detection)
 
-# 1.  Intel Development Suite
+# 1.  英特尔开发套件
 
 ## 1.1 OpenVINO
 
-&emsp;    Intel Distribution [OpenVINO ™](www.openvino. ai) tool kit is developed based on the oneAPI and can accelerate the development speed of high-performance computer vision and deep learning visual applications. It is suitable for various Intel platforms from the edge to the cloud, helping users deploy more accurate real-world results into production systems faster. By simplifying the development workflow, OpenVINO ™ Enable developers to deploy high-performance applications and algorithms in the real world.
+&emsp;    英特尔发行版 [OpenVINO™](www.openvino.ai)工具套件基于oneAPI 而开发，可以加快高性能计算机视觉和深度学习视觉应用开发速度工具套件，适用于从边缘到云的各种英特尔平台上，帮助用户更快地将更准确的真实世界结果部署到生产系统中。通过简化的开发工作流程， OpenVINO™可赋能开发者在现实世界中部署高性能应用程序和算法。
 
 ![image-20230919110341141](https://s2.loli.net/2023/09/19/sNM7hleuwYv6mbG.png)
 
-&emsp;    OpenVINO™  Released on September 18, 2023, 2023.1 brings new features to tap into the full potential of generating artificial intelligence. The coverage of generating artificial intelligence has been expanded, and the experience has been enhanced through frameworks such as PyTorch *, where you can automatically import and transform models. The Large Language Model (LLM) has been improved in terms of runtime performance and memory optimization. The models for chat robots, code generation, etc. have been enabled. OpenVINO is more portable, with higher performance, and can run anywhere needed: at the edge, in the cloud, or locally.
+&emsp;    OpenVINO™ 2023.1于2023年9月18日发布，该工具包带来了挖掘生成人工智能全部潜力的新功能。生成人工智能的覆盖范围得到了扩展，通过PyTorch*等框架增强了体验，您可以在其中自动导入和转换模型。大型语言模型（LLM）在运行时性能和内存优化方面得到了提升。聊天机器人、代码生成等的模型已启用。OpenVINO更便携，性能更高，可以在任何需要的地方运行：在边缘、云中或本地。
 
-##  1.2 AIxBoard 
+##  1.2 AIxBoard 介绍
 
 <div align=center><span><img src="https://s2.loli.net/2023/08/01/nvUgJ7Hwaj5cm12.png" height=300/></span></div>
 
-###  Product Positioning
+###  产品定位
 
 &emsp;    英特尔开发套件 AIxBoard(爱克斯板)是[英特尔开发套件](https://www.intel.cn/content/www/cn/zh/developer/topic-technology/edge-5g/hardware/lan-wa-aixboard-edge-dev-kit.html)官方序列中的一员，专为入门级人工智能应用和边缘智能设备而设计。爱克斯板能完美胜人工智能学习、开发、实训、应用等不同应用场景。该套件预装了英特尔OpenVINO™工具套件、模型仓库和演示案例，便于您轻松快捷地开始应用开发。
 
