@@ -65,7 +65,6 @@ namespace OpenVinoSharp
         /// <returns>The friendly name for a model.</returns>
         public string get_friendly_name() 
         {
-
             IntPtr s_ptr = IntPtr.Zero;
             HandleException.handler(
                 NativeMethods.ov_model_get_friendly_name(m_ptr, ref s_ptr));
@@ -438,32 +437,12 @@ namespace OpenVinoSharp
         /// <param name="partial_shapes">The list of input tensor names and PartialShape.</param>
         public void reshape(Dictionary<string, PartialShape> partial_shapes)
         {
-            if (1 != partial_shapes.Count)
+            foreach (var partial_shape in partial_shapes)
             {
-                IntPtr[] tensor_names_ptr = new IntPtr[partial_shapes.Count];
-                Ov.ov_partial_shape[] shapes = new Ov.ov_partial_shape[partial_shapes.Count];
-                int i = 0;
-                foreach (var partial_shape in partial_shapes)
-                {
-                    IntPtr p = Marshal.StringToHGlobalAnsi(partial_shape.Key);
-                    tensor_names_ptr[i] = p;
-                    shapes[i] = partial_shape.Value.get_partial_shape();
-                }
+                sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(partial_shape.Key));
+                PartialShape shape = partial_shape.Value;
                 HandleException.handler(
-                    NativeMethods.ov_model_reshape(m_ptr, tensor_names_ptr,
-                    ref shapes[0], (ulong)partial_shapes.Count));
-            }
-            else 
-            {
-                foreach (var partial_shape in partial_shapes) 
-                {
-                    sbyte[] c_tensor_name = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(partial_shape.Key));
-                    Ov.ov_partial_shape shape = partial_shape.Value.get_partial_shape();
-                    HandleException.handler(
-                        NativeMethods.ov_model_reshape_input_by_name(m_ptr, ref c_tensor_name[0],
-                        shape));
-                }
-
+                    NativeMethods.ov_model_reshape_input_by_name(m_ptr, ref c_tensor_name[0], shape.get_partial_shape()));
             }
         }
         /// <summary>
