@@ -123,5 +123,5 @@ namespace test
 
 ## <img title="" src="https://user-images.githubusercontent.com/48054808/157835345-f5d24128-abaf-4813-b793-d2e5bdc70e5a.png" alt="" width="40"> 许可证书
 
-本项目的发布受[Apache 2.0 license](LICENSE)许可认证。
+本项目的发布受[Apache 2.0 license](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.0/LICENSE.txt)许可认证。
 

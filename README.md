@@ -117,4 +117,4 @@ If you want to learn more information, you can refer to: [OpenVINO™ C# API API
 
 ## <img title="" src="https://s2.loli.net/2023/08/08/cijB2K9aDvthEQA.png" alt="" width="40"> License
 
-The release of this project is certified under the [Apache 2.0 license](https://github.com/guojin-yan/OpenVINO™ C# API/blob/OpenVINO™ C# API3.0/LICENSE) .
+The release of this project is certified under the [Apache 2.0 license](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.0/LICENSE.txt) .
