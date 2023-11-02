@@ -104,7 +104,7 @@ namespace OpenVinoSharp
         {
             Ov.ov_partial_shape partial_shape = new ov_partial_shape();
             HandleException.handler(
-                NativeMethods.ov_shape_to_partial_shape(shape.shape, out partial_shape));
+                NativeMethods.ov_shape_to_partial_shape(shape.shape, ref partial_shape));
             partial_shape_convert(partial_shape);
         }
 
@@ -114,6 +114,7 @@ namespace OpenVinoSharp
         ~PartialShape()
         {
         }
+
         /// <summary>
         /// Convert partial shape to PartialShape class.
         /// </summary>
@@ -135,21 +136,24 @@ namespace OpenVinoSharp
         /// <returns>return ov_partial_shape.</returns>
         public ov_partial_shape get_partial_shape() 
         {
-            ov_partial_shape partial_shape = new ov_partial_shape();
-            partial_shape.rank = rank.get_dimension();
-            int l = Marshal.SizeOf(typeof(Ov.ov_dimension));
-            IntPtr[] ds_ptr = new IntPtr[rank.get_max()];
-            for (int i = 0; i < rank.get_max(); ++i)
+            Ov.ov_partial_shape shape_arr = new Ov.ov_partial_shape();
+            shape_arr.rank = rank.get_dimension();
+            List<Ov.ov_dimension> ov_dims = new List<Ov.ov_dimension>();
+            for (int i = 0; i < shape_arr.rank.max; ++i)
             {
-                IntPtr ptr = Marshal.AllocHGlobal(l);
-                Marshal.StructureToPtr(dimensions[i], ptr, false);
-                ds_ptr[i] = ptr;
+                ov_dims.Add(dimensions[i].get_dimension());
             }
-
-            IntPtr d_ptr = Marshal.AllocHGlobal((int)(l * rank.get_max()));
-            Marshal.Copy(ds_ptr, 0, d_ptr, (int)rank.get_max());
-            partial_shape.dims = d_ptr;
-            return partial_shape;
+            Ov.ov_dimension[] ds = ov_dims.ToArray();
+            shape_arr.dims = Marshal.UnsafeAddrOfPinnedArrayElement(ds, 0);
+            return shape_arr;
+        }
+        /// <summary>
+        /// Get rank.
+        /// </summary>
+        /// <returns></returns>
+        public Dimension get_rank()
+        {
+            return rank;
         }
         /// <summary>
         /// Get dimensions.
