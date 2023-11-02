@@ -93,8 +93,8 @@ namespace OpenVinoSharp
         [DllImport(dll_extern, EntryPoint = "ov_shape_to_partial_shape",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_shape_to_partial_shape(
-            Ov.ov_shape shape, 
-            IntPtr partial_shape);
+            Ov.ov_shape shape,
+            ref Ov.ov_partial_shape partial_shape);
 
         /// <summary>
         /// Check this partial_shape whether is dynamic
