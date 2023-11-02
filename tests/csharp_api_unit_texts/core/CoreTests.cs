@@ -59,43 +59,69 @@ namespace OpenVinoSharp.Tests
             byte[] bin_buff = br.ReadBytes((int)data_length);
 
             Shape shape = new Shape(new List<long> { 1, data_length });
-            Tensor tensor = new Tensor(new OpenVinoSharp.element.Type(OpenVinoSharp.element.Type_t.u8),
+            Tensor tensor = new Tensor(new element.Type(element.Type_t.u8),
                 shape, bin_buff);
 
             Core core = new Core();
             Assert.IsTrue(core.Ptr != IntPtr.Zero);
             Model model = core.read_model(xml_name, tensor);
-            //Assert.IsTrue(model.Ptr != IntPtr.Zero);
+            Assert.IsTrue(model.Ptr != IntPtr.Zero);
         }
 
         [TestMethod()]
         public void compile_model_test()
         {
-            Assert.Fail();
+            var core = new Core();
+            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Assert.IsTrue(model.Ptr != IntPtr.Zero); 
+            CompiledModel compiled = core.compile_model(model);
+            Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
+            compiled.Dispose();
+            model.Dispose();
+            core.Dispose();
         }
 
         [TestMethod()]
         public void compile_model_test1()
         {
+            //var core = new Core();
+            //Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            //Assert.IsTrue(model.Ptr != IntPtr.Zero);
+
+            //CompiledModel compiled = core.compile_model(model, "CPU");
+            //Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
+            //compiled.Dispose();
+            //model.Dispose();
+            //core.Dispose();
             Assert.Fail();
         }
 
         [TestMethod()]
         public void compile_model_test2()
         {
-            Assert.Fail();
+            var core = new Core();
+            CompiledModel compiled = core.compile_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
+            compiled.Dispose();
+            core.Dispose();
         }
 
         [TestMethod()]
         public void compile_model_test3()
         {
-            Assert.Fail();
+            var core = new Core();
+            CompiledModel compiled = core.compile_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml", "CPU");
+            Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
+            compiled.Dispose();
+            core.Dispose();
         }
 
         [TestMethod()]
         public void get_available_devices_test()
         {
-            Assert.Fail();
+            var core = new Core();
+            List<string> devicces = core.get_available_devices();
+            Assert.IsNotNull(devicces);
         }
     }
 }
