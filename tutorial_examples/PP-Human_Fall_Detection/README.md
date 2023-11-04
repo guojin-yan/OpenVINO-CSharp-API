@@ -93,18 +93,31 @@
 
 #### （1）PaddlePaddle模型下载与裁剪：
 
-&emsp;    PP-Human提供了训练好的行人跟踪模型，此处只需要下载，并将其解压到指定文件夹中：
+&emsp;    PP-Human提供了训练好的行人跟踪模型，此处只需要下载，并将其解压到model文件夹中：
 
 ```shell
-weget https://bj.bcebos.com/v1/paddledet/models/pipeline/mot_ppyoloe_l_36e_pipeline.zip
+wget https://bj.bcebos.com/v1/paddledet/models/pipeline/mot_ppyoloe_l_36e_pipeline.zip
 ```
 
+&emsp;    此处模型裁剪主要是在Paddle模型格式下进行裁剪，裁剪方式参考的jiangjiajun (https://github.com/jiangjiajun/PaddleUtils)提供的模型裁剪方式，为了方便使用，当前项目提供了模型裁剪工具包，在“./paddle_model_process/”文件夹下，利用命令进行模型裁剪，下面为项目裁剪模型文件目录：
 
+```
+PP-Human_Fall_Detection
+	|
+	├──── model
+	|	├──── infer_cfg.yml
+	|	├──── model.pdiparams
+	|	├──── model.pdiparams.info
+	|	├──── model.pdmodel
+	├──── paddle_model_process
+	|	├──── paddle_infer_shape.py
+	|	├──── prune_paddle_model.py
+```
 
-&emsp;    此处模型裁剪主要是在Paddle模型格式下进行裁剪，裁剪方式参考的jiangjiajun (https://github.com/jiangjiajun/PaddleUtils)提供的模型裁剪方式，为了方便使用，当前项目提供了模型裁剪工具包，在“./paddle_model_process/”文件夹下，利用命令进行模型裁剪：
+下面面为模型裁剪指令：
 
 ```shell
-python prune_paddle_model.py --model_dir mot_ppyoloe_l_36e_pipeline --model_filename model.pdmodel --params_filename model.pdiparams --output_names tmp_16 concat_14.tmp_0 --save_dir export_model
+python ./paddle_model_process/prune_paddle_model.py --model_dir ./model/mot_ppyoloe_l_36e_pipeline --model_filename model.pdmodel --params_filename model.pdiparams --output_names tmp_16 concat_14.tmp_0 --save_dir ./model/export_model
 ```
 
 &emsp;    如表 4 所示，提供了模型裁剪命令说明，大家可以根据自己设置进行模型裁剪，当前命令裁剪的模型目前已经进行测试，完全符合当前阶段的要求。
@@ -132,7 +145,7 @@ paddle2onnx --model_dir mot_ppyoloe_l_36e_pipeline --model_filename model.pdmode
 &emsp;    IR格式为OpenVINOTM原生支持的模型格式，此处主要通过OpenVINOTM工具进行转换，直接在命令行输入以下指令即可：
 
 ```shell
-mo --input_model mot_ppyoloe_l_36e_pipeline.onnx
+ovc mot_ppyoloe_l_36e_pipeline.onnx --output_model mot_ppyoloe_l_36e_pipeline
 ```
 
 ## 3.2 PP-TinyPose 人体姿态识别
@@ -180,8 +193,7 @@ paddle2onnx --model_dir dark_hrnet_w32_256x192 --model_filename model.pdmodel --
 &emsp;    利用OpenVINOTM模型优化器，可以实现将ONNX模型转为IR格式。在OpenVINOTM环境下，切换到模型优化器文件夹，直接使用下面指令便可以进行转换。
 
 ```shell
-cd .\openvino\tools
-mo --input_model paddle/model.pdmodel --input_shape [1,3,256,192]
+ovc dark_hrnet_w32_256x192.onnx --output_model dark_hrnet_w32_256x192
 ```
 
 &emsp;    经过上述指令模型转换后，可以在当前文件夹下找到转换后的三个文件。
@@ -189,7 +201,7 @@ mo --input_model paddle/model.pdmodel --input_shape [1,3,256,192]
 &emsp;    由于OpenVINOTM支持FP16推理，此处为了对比推理时间，也已并将模型转为FP16格式：
 
 ```shell
-mo --input_model paddle/model.pdmodel --data_type FP16 --input_shape [1,3,256,192]
+ovc dark_hrnet_w32_256x192.onnx --output_model dark_hrnet_w32_256x192 --compress_to_fp16=True
 ```
 
 ## 3.3 ST-GCN基于关键点的行为识别
@@ -237,16 +249,15 @@ paddle2onnx --model_dir STGCN --model_filename model.pdmodel --params_filename m
 &emsp;    利用OpenVINOTM模型优化器，可以实现将ONNX模型转为IR格式。在OpenVINOTM环境下，切换到模型优化器文件夹，直接使用下面指令便可以进行转换。
 
 ```shell
-cd .\openvino\tools
-mo --input_model paddle/model.pdmodel
+ovc STGCN.onnx --output_model STGCN --compress_to_fp16=True
 ```
 
 &emsp;    经过上述指令模型转换后，可以在当前文件夹下找到转换后的三个文件。
 
 &emsp;    由于OpenVINOTM支持FP16推理，此处为了对比推理时间，也已并将模型转为FP16格式：
 
-```
-mo --input_model paddle/model.pdmodel --data_type FP16
+```shell
+ovc STGCN.onnx --output_model STGCN --compress_to_fp16=True
 ```
 
 # 4. 配置 PP-Human_Fall_Detection 项目
