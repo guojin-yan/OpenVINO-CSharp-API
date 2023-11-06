@@ -35,20 +35,54 @@
 
 ### Native bindings
 
-| Package                  | Description                 | Link                                                         |
-| ------------------------ | --------------------------- | ------------------------------------------------------------ |
-| **OpenVINO.runtime.win** | Native bindings for Windows | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
-|                          |                             |                                                              |
+| Package                               | Description                          | Link                                                         |
+| ------------------------------------- | ------------------------------------ | ------------------------------------------------------------ |
+| **OpenVINO.runtime.win**              | Native bindings for Windows          | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
+| **OpenVINO.runtime.ubuntu.22-x86_64** | Native bindings for ubuntu.22-x86_64 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.22-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.22-x86_64/) |
+| **OpenVINO.runtime.ubuntu.20-x86_64** | Native bindings for ubuntu.20-x86_64 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.20-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.20-x86_64/) |
+| **OpenVINO.runtime.ubuntu.18-x86_64** | Native bindings for ubuntu.18-x86_64 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.18-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.18-x86_64/) |
+| **OpenVINO.runtime.debian9-arm64**    | Native bindings for debian9-arm64    | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
+| **OpenVINO.runtime.centos7-x86_64**   | Native bindings for centos7-x86_64   | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.centos7-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.centos7-x86_64/) |
 
 
 
 ## ⚙ 如何安装
 
-以下文章提供了OpenVINO™ C# API在不同平台的安装方法，可以根据自己使用平台进行安装。
+以下提供了OpenVINO™ C# API在不同平台的安装方法，可以根据自己使用平台进行安装。
 
-- [Windows](docs/cn/windows_install.md)
+### 	**Windows**
 
-- [Linux](docs/cn/linux_install.md)
+通过``dotnet add package``指令安装或通过Visual Studio安装以下程序包
+
+```shell
+dotnet add package OpenVINO.CSharp.API
+dotnet add package OpenVINO.runtime.win
+或者安装集成包=》
+dotnet add package OpenVINO.CSharp.Windows
+```
+
+### 	**Linux**
+
+&emsp;    **linux**平台我们根据官方编译的平台制作了对应的NuGet Package，以**ubuntu.22-x86_64**为例，通过``dotnet add package``指令安装：
+
+```shell
+dotnet add package OpenVINO.CSharp.API
+dotnet add package OpenVINO.runtime.ubuntu.22-x86_64
+```
+
+&emsp;    运行一次程序后，添加环境变量：
+
+```
+export LD_LIBRARY_PATH={Program generated executable file directory}/runtimes/ubuntu.22-x86_64/native
+例如=》
+export LD_LIBRARY_PATH=/home/ygj/Program/sample1/bin/Debug/net6.0/runtimes/ubuntu.22-x86_64/native
+```
+
+&emsp;    如果对于一个全新平台(未安装过OpenVINO C++)，需要安装一下依赖环境，切换到``{Program generated executable file directory}/runtimes/ubuntu.22-x86_64/native``目录下，运行以下指令：
+
+```shell
+sudo -E ./install_openvino_dependencies.sh
+```
 
 ## 🏷开始使用
 
@@ -112,8 +146,6 @@ namespace test
   - OpenVINO™ C# API部署Yolov8模型实例。
 - 🔮 **NuGet包：**
   - 制作并发布NuGet包，发布**OpenVINO™ C# API.win 3.0.120**  ，包含OpenVINO 2023.0 依赖项。
-
-
 
 ## 🎖 贡献
 
