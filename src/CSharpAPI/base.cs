@@ -10,7 +10,7 @@ namespace OpenVinoSharp
 
     /// <summary>
     /// OpenVINO wrapper for .NET. 
-    /// This is the basic namespace of OpenVINO in Cshrp, 
+    /// This is the basic namespace of OpenVINO in C#, 
     /// and all classes and methods are within this method.
     /// <c>OpenVinoSharp</c>.
     /// </summary>
@@ -40,29 +40,6 @@ namespace OpenVinoSharp
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         class NamespaceDoc
         {
-        }
-    }
-
-
-    namespace model
-    {
-        /// <summary>
-        /// Processing methods for main common models.
-        /// <c>OpenVinoSharp.model</c>.
-        /// </summary>
-        [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-        class NamespaceDoc
-        {
-        }
-        namespace Yolov8 {
-            /// <summary>
-            /// The processing methods of the main Yolov8 model.
-            /// <c>OpenVinoSharp.model.Yolov8</c>.
-            /// </summary>
-            [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-            class NamespaceDoc
-            {
-            }
         }
     }
 }
