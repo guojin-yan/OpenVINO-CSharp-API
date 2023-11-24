@@ -26,5 +26,13 @@ namespace OpenVinoSharp
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_free(ref char content);
 
+
+        /// <summary>
+        /// Get the last error msg.
+        /// </summary>
+        /// <returns>The last error msg.</returns>
+        [DllImport(dll_extern, EntryPoint = "ov_get_last_err_msg",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static string ov_get_last_err_msg();
     }
 }
