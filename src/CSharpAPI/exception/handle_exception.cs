@@ -100,7 +100,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <exception cref="OVException">general error!</exception>
         private static void general_error() {
-            throw new OVException(ExceptionStatus.GENERAL_ERROR, "general error!");
+            throw new OVException(ExceptionStatus.GENERAL_ERROR, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw NOT_IMPLEMENTED OpenVINOException.
@@ -108,7 +108,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">not implemented!</exception>
         private static void not_implemented()
         {
-            throw new OVException(ExceptionStatus.NOT_IMPLEMENTED, "not implemented!");
+            throw new OVException(ExceptionStatus.NOT_IMPLEMENTED, NativeMethods.ov_get_last_err_msg());
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">network not loaded!</exception>
         private static void network_not_loaded()
         {
-            throw new OVException(ExceptionStatus.NETWORK_NOT_LOADED, "network not loaded!");
+            throw new OVException(ExceptionStatus.NETWORK_NOT_LOADED, NativeMethods.ov_get_last_err_msg());
         }
 
 
@@ -127,7 +127,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">parameter mismatch!</exception>
         private static void parameter_mismatch()
         {
-            throw new OVException(ExceptionStatus.PARAMETER_MISMATCH, "parameter mismatch!");
+            throw new OVException(ExceptionStatus.PARAMETER_MISMATCH, NativeMethods.ov_get_last_err_msg());
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">not found!</exception>
         private static void not_found()
         {
-            throw new OVException(ExceptionStatus.NOT_FOUND, "not found!");
+            throw new OVException(ExceptionStatus.NOT_FOUND, NativeMethods.ov_get_last_err_msg());
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">out of bounds!</exception>
         private static void out_of_bounds()
         {
-            throw new OVException(ExceptionStatus.OUT_OF_BOUNDS, "out of bounds!");
+            throw new OVException(ExceptionStatus.OUT_OF_BOUNDS, NativeMethods.ov_get_last_err_msg());
         }
 
 
@@ -155,7 +155,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">unexpection!</exception>
         private static void unexpection()
         {
-            throw new OVException(ExceptionStatus.UNEXPECTED, "unexpection!");
+            throw new OVException(ExceptionStatus.UNEXPECTED, NativeMethods.ov_get_last_err_msg());
         }
 
 
@@ -166,7 +166,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">request busy!</exception>
         private static void request_busy()
         {
-            throw new OVException(ExceptionStatus.REQUEST_BUSY, "request busy!");
+            throw new OVException(ExceptionStatus.REQUEST_BUSY, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw RESULT_NOT_READY OpenVINOException.
@@ -174,7 +174,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">result not ready!</exception>
         private static void result_not_ready()
         {
-            throw new OVException(ExceptionStatus.RESULT_NOT_READY, "result not ready!");
+            throw new OVException(ExceptionStatus.RESULT_NOT_READY, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw OpenVINOException.
@@ -182,7 +182,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">not allocated!</exception>
         private static void not_allocated()
         {
-            throw new OVException(ExceptionStatus.NOT_ALLOCATED, "not allocated!");
+            throw new OVException(ExceptionStatus.NOT_ALLOCATED, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw INFER_NOT_STARTED OpenVINOException.
@@ -190,7 +190,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">infer not started!</exception>
         private static void infer_not_started()
         {
-            throw new OVException(ExceptionStatus.INFER_NOT_STARTED, "infer not started!");
+            throw new OVException(ExceptionStatus.INFER_NOT_STARTED, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw NETWORK_NOT_READ OpenVINOException.
@@ -198,7 +198,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">netword not read!</exception>
         private static void netword_not_read()
         {
-            throw new OVException(ExceptionStatus.NETWORK_NOT_READ, "netword not read!");
+            throw new OVException(ExceptionStatus.NETWORK_NOT_READ, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw INFER_CANCELLED OpenVINOException.
@@ -206,7 +206,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">infer cancelled!</exception>
         private static void infer_cancelled()
         {
-            throw new OVException(ExceptionStatus.INFER_CANCELLED, "infer cancelled!");
+            throw new OVException(ExceptionStatus.INFER_CANCELLED, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw INVALID_C_PARAM OpenVINOException.
@@ -214,7 +214,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">invalid c param!</exception>
         private static void invalid_c_param()
         {
-            throw new OVException(ExceptionStatus.INVALID_C_PARAM, "invalid c param!");
+            throw new OVException(ExceptionStatus.INVALID_C_PARAM, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw UNKNOWN_C_ERROR OpenVINOException.
@@ -222,7 +222,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">unknown c error!</exception>
         private static void unknown_c_error()
         {
-            throw new OVException(ExceptionStatus.UNKNOWN_C_ERROR, "unknown c error!");
+            throw new OVException(ExceptionStatus.UNKNOWN_C_ERROR, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw NOT_IMPLEMENT_C_METHOD OpenVINOException.
@@ -230,7 +230,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">not implement c method!</exception>
         private static void not_implement_c_method()
         {
-            throw new OVException(ExceptionStatus.NOT_IMPLEMENT_C_METHOD, "not implement c method!");
+            throw new OVException(ExceptionStatus.NOT_IMPLEMENT_C_METHOD, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw UNKNOW_EXCEPTION OpenVINOException.
@@ -238,7 +238,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException">unknown exception!</exception>
         private static void unknown_exception()
         {
-            throw new OVException(ExceptionStatus.UNKNOW_EXCEPTION, "unknown exception!");
+            throw new OVException(ExceptionStatus.UNKNOW_EXCEPTION, NativeMethods.ov_get_last_err_msg());
         }
         /// <summary>
         /// Throw PTR_NULL OpenVINOException.
@@ -246,7 +246,7 @@ namespace OpenVinoSharp
         /// <exception cref="OVException"></exception>
         private static void ptr_null_exception()
         {
-            throw new OVException(ExceptionStatus.UNKNOW_EXCEPTION, "ptr is null!");
+            throw new OVException(ExceptionStatus.UNKNOW_EXCEPTION, NativeMethods.ov_get_last_err_msg());
         }
     }
 }
