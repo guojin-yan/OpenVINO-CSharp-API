@@ -33,6 +33,6 @@ namespace OpenVinoSharp
         /// <returns>The last error msg.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_get_last_err_msg",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static string ov_get_last_err_msg();
+        public extern static IntPtr ov_get_last_err_msg();
     }
 }

@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0;net48;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net8.0;net5.0;net6.0;netcoreapp3.1;net48;net46;net472</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
     <PackageId>OpenVINO.CSharp.API</PackageId>
     <!--Set NuGet Message-->
     <Title>OpenVINO C# API</Title>
-    <Version>2023.1.0.1</Version>
+    <Version>2023.2.0.2</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVINO C# API</Product>
