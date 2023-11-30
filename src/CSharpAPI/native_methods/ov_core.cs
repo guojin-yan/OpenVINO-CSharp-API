@@ -195,7 +195,10 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_core_set_property(
             IntPtr core, 
             ref sbyte device_name);
-
+        [DllImport(dll_extern, EntryPoint = "ov_core_set_property",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern ExceptionStatus ov_core_set_property(IntPtr core,
+            ref sbyte device_name, IntPtr varg1, IntPtr varg2);
         /// <summary>
         /// Gets properties related to device behaviour.
         /// The method extracts information that can be set via the set_property method.

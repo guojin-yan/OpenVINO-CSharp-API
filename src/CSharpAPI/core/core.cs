@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace OpenVinoSharp
 {
@@ -286,8 +287,38 @@ namespace OpenVinoSharp
                 NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr));
             return new CompiledModel(compiled_model_ptr);
         }
+        /// <summary>
+        /// Sets properties for a device, acceptable keys can be found in PropertyKey.
+        /// </summary>
+        /// <param name="device_name">Name of a device to load a model to.</param>
+        /// <param name="properties">
+        /// The read-write property(string) to set/get the directory which will be used to store any data cached by plugins.
+        /// </param>
+        public void set_property(string device_name, KeyValuePair<string, string> properties) 
+        {
+            sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
+            IntPtr key = Marshal.StringToHGlobalAnsi(properties.Key);
+            IntPtr value = Marshal.StringToHGlobalAnsi(properties.Value);
+            HandleException.handler(
+                NativeMethods.ov_core_set_property(m_ptr, ref c_device[0], key, value));
+        }
 
-
+        /// <summary>
+        /// Gets properties related to device behaviour.
+        /// The method extracts information that can be set via the set_property method.
+        /// </summary>
+        /// <param name="device_name">Name of a device to load a model to.</param>
+        /// <param name="key">A header for advanced hardware specific properties for OpenVINO runtime devices.</param>
+        /// <returns>Properties related to device behaviour.</returns>
+        public string get_property(string device_name, PropertyKey key)
+        {
+            IntPtr value = IntPtr.Zero;
+            sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
+            sbyte[] c_key = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(key.ToString()));
+            HandleException.handler(
+               NativeMethods.ov_core_get_property(m_ptr, ref c_device[0], ref c_key[0], ref value));
+            return Marshal.PtrToStringAnsi(value);
+        }
         /// <summary>
         /// Returns devices available for inference.
         /// Core objects go over all registered plugins and ask about available devices.
