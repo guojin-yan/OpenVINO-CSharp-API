@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OpenVinoSharp.Extensions.Result
+namespace OpenVinoSharp.Extensions.result
 {
     public interface IResultData
     {
