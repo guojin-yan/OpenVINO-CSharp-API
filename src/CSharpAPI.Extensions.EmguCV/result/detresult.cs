@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenVinoSharp.Extensions.Result
+namespace OpenVinoSharp.Extensions.result
 {
     /// <summary>
     /// Object detection result data.

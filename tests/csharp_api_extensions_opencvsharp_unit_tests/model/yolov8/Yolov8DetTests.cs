@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenCvSharp;
-using OpenVinoSharp.Extensions.Result;
+using OpenVinoSharp.Extensions.result;
 using OpenVinoSharp.Extensions.model;
 using System;
 using System.Collections.Generic;

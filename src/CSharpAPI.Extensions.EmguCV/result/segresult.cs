@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenVinoSharp.Extensions.Result
+namespace OpenVinoSharp.Extensions.result
 {
     /// <summary>
     /// Object segmentation result data.

@@ -3,7 +3,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
 using OpenVinoSharp.Extensions.process;
-using OpenVinoSharp.Extensions.Result;
+using OpenVinoSharp.Extensions.result;
 using OpenVinoSharp.Extensions.RuntimeOption;
 using System;
 using System.Collections.Generic;
