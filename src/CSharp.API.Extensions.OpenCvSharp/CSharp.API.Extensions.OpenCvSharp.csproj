@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net5.0;net6.0;netcoreapp3.1;net48;net46;net472</TargetFrameworks>
+    <TargetFrameworks>net8.0;net5.0;net6.0;netcoreapp3.1;net48;net472</TargetFrameworks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <LangVersion>12.0</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RootNamespace>OpenVinoSharp.Extensions.OpenCvSharp</RootNamespace>
     <AssemblyName>OpenVINO_CSharp_API_Extensions_OpenCvSharp</AssemblyName>
@@ -22,8 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageReference Include="OpenCvSharp4">
-    </PackageReference>
     <PackageReference Include="OpenCvSharp4.Extensions">
     </PackageReference>
   </ItemGroup>
@@ -61,6 +60,17 @@
     </PackageReference>
     <PackageReference Include="OpenCvSharp4.Extensions">
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\nuget\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenVINO.CSharp.API" Version="2023.2.0.3" />
   </ItemGroup>
 
 </Project>
