@@ -109,14 +109,11 @@ namespace OpenVinoSharp.Extensions.process
         {
             int max_image_length = image.Cols > image.Rows ? image.Cols : image.Rows;
             Mat max_image = Mat.Zeros(max_image_length, max_image_length, MatType.CV_8UC3);
+            max_image = max_image * 255;
             Rect roi = new Rect(0, 0, image.Cols, image.Rows);
             image.CopyTo(new Mat(max_image, roi));
-            float[] factors = new float[4];
-            factors[0] = factors[1] = (float)(max_image_length / 640.0);
-            factors[2] = image.Rows;
-            factors[3] = image.Cols;
             Mat resize_img = new Mat();
-            Cv2.Resize(image, resize_img, new Size(length, length), 0.0f, 0.0f, InterpolationFlags.Linear);
+            Cv2.Resize(max_image, resize_img, new Size(length, length), 0.0f, 0.0f, InterpolationFlags.Linear);
             scales = (float)((float)max_image_length / (float)length);
             return resize_img;
         }
