@@ -45,7 +45,7 @@ namespace OpenVinoSharp.Extensions.model
             m_batch_num = batch_num ?? Yolov8DetOption.batch_num;
         }
 
-        public DetResult predict(Mat image) 
+        public DetResult predict(Mat image)
         {
             Mat mat = new Mat();
             Cv2.CvtColor(image, mat, ColorConversionCodes.BGR2RGB);
@@ -55,20 +55,6 @@ namespace OpenVinoSharp.Extensions.model
             float[] input_data = Permute.run(mat);
             float[] output_data = infer(input_data);
             return process_result(output_data, 1)[0];
-
-            //int max_image_length = image.Cols > image.Rows ? image.Cols : image.Rows;
-            //Mat max_image = Mat.Zeros(max_image_length, max_image_length, DepthType.Cv8U, 3);
-            //Rectangle roi = new Rectangle(0, 0, image.Cols, image.Rows);
-            //image.CopyTo(new Mat(max_image, roi));
-            //m_factors = new float[4];
-            //m_factors[0] = m_factors[1] = (float)(max_image_length / 640.0);
-            //m_factors[2] = image.Rows;
-            //m_factors[3] = image.Cols;
-            //Mat input_mat = DnnInvoke.BlobFromImage(max_image, 1.0 / 255.0, new Size(640, 640), new MCvScalar(), true, false);
-            //float[] input_data = new float[3 * 640 * 640];
-            //Marshal.Copy(input_mat.DataPointer, input_data, 0, input_data.Length);
-            //float[] output_data = infer(input_data);
-            //return process_result(output_data, 1)[0];
         }
 
         public List<DetResult> predict(List<Mat> images)
