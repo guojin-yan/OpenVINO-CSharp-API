@@ -11,7 +11,7 @@
 
 [简体中文](README_cn.md) | English
 
-## This is OpenVINO ™  C # API, this project is still under construction and its functions are not yet fully developed. If you have any problems using it, please feel free to communicate with me. If you are interested in this project, you can also join our development.🥰🥰🥰🥰🥰
+## This is OpenVINO ™  C # API, this project is still under construction and its functions are not yet fully developed. If you have any problems using it, please feel free to communicate with me. If you are interested in this project, you can also join our development.🥰🥰🥰🥰🥰🥰🥰🥰🥰
 
 ## 📚 What is OpenVINO™ C# API ?
 
