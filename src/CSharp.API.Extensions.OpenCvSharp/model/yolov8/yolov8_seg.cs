@@ -111,9 +111,6 @@ namespace OpenVinoSharp.Extensions.model
                 float[] result_proto = output_tensor_1.get_data<float>((int)output_tensor_1.get_size());
                 List<SegResult> results = process_result(result_detect, result_proto, batch_num);
                 re_results.AddRange(results);
-                Mat m = Visualize.draw_seg_result(results[0], images[beg_img_no]);
-                Cv2.ImShow("www", m);
-                Cv2.WaitKey(0);
             }
             return re_results;
 
@@ -130,7 +127,7 @@ namespace OpenVinoSharp.Extensions.model
             List<SegResult> re_result = new List<SegResult>();
             for (int b = 0; b < batch; ++b) 
             {
-                Mat detect_data = new Mat(36 + m_categ_nums, 8400, MatType.CV_32FC1,
+                Mat detect_data = new Mat(36 + m_categ_nums, m_output_length, MatType.CV_32FC1,
                      Marshal.UnsafeAddrOfPinnedArrayElement(detect, (4 + m_categ_nums) * m_output_length * b * 4));
                 Mat proto_data = new Mat(32, 25600, MatType.CV_32F, proto);
                 detect_data = detect_data.T();
