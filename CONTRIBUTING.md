@@ -30,7 +30,7 @@
 
 &emsp;   Select the update by clicking on it in GitHub, using the ``README. md`` file as an example:
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/1SQHsF8UXJkc2df.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/ROMzrsVcTDGAnpI.jpg" height=500/></span></div>
 
 
 
@@ -38,31 +38,31 @@
 
 &emsp;   This button is located in the upper right corner.
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/Z8pWy4hUSGK5EPB.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/DnV79LOB1Xu5odi.jpg" height=500/></span></div>
 
 If you do not have the Fork project, you need to Fork the project first.
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/Lw7HrquabZRnxv3.jpg" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/H3ya5vO7tciNL9U.jpg" height=500/></span></div>
 
 ####   3. Modify file content
 
 &emsp;   Add two more 🥰 Symbols.
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/phOdqD85I93stuN.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/L5xIwJzT23yvS7s.jpg" height=500/></span></div>
 
 &emsp;   After modifying the file content, click * * Commit changes * * to submit the changes and fill in the log according to the changes.
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/PAXH4vzLUNFikBY.png" height=300/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/PEtvN7jr2Bxwl6f.jpg" height=300/></span></div>
 
 ####   4. Creat Pull Request
 
 &emsp;   After modifying the file, the modified content only exists in the current branch of the modifier and needs to be submitted to the original author's warehouse through a Pull Request. Click on * * Create pull request * * to create a PR.
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/Ki7aloTVCqA9EbP.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/KF1AfmujhwcNgQn.jpg" height=500/></span></div>
 
 
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/u8WFxcjbLI1ozP6.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/8synN6v5atPoUdw.jpg" height=500/></span></div>
 
 &emsp;    After submitting as required, wait for the code warehouse management personnel to review and approve the PR you submitted.
 
@@ -74,26 +74,34 @@ If you do not have the Fork project, you need to Fork the project first.
 
 &emsp;   Find the project to submit PR and first fork it into your own code repository.
 
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/wFICoTLxUj9NiJ2.jpg" height=500/></span></div>
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/G4UYbH85pQOJfxa.jpg" height=500/></span></div>
+
 ####  2. Clone open source project
 
   Clone the project that needs to submit PR locally.
 
 ```
-git clone https://github.com/guojin-yan/OpenVINOSharp.git
+git clone https://github.com/guojin-yan/OpenVINO-CSharp-API.git
 ```
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/GOXw5iLmqf2clea.jpg" height=300/></span></div>
 
 #### 3.  Create a new branch
 
 &emsp;   When submitting PR, it is necessary to create a branch here to prevent modifications on the main branch from affecting the main branch code.
 
 ```
-cd OpenVINOSharp
-git checkout -b mybranch 
+cd OpenVINO-CSharp-API
+git checkout -b temp 
 git branch 
-git checkout mybranch
+git checkout temp
 ```
 
 &emsp;   After switching the branches, you can directly modify the project according to your own needs, as shown in the above figure.
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/wW9DcrjzZEekfQT.jpg" height=300/></span></div>
 
 #### 4. 修改提交项目代码
 
@@ -104,6 +112,8 @@ git status
 git add `file name`
 git commit -m "log information" `file name`
 ```
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/i71frOAaZk2FwVU.jpg" height=300/></span></div>
 
 &emsp;   Finally, submit the local project code to the remote GitHub;
 
@@ -133,8 +143,16 @@ git push origin main
 #### 4. Submit PR 
 
 &emsp; Enter your ``fork`` project and click on ``Pull requests``
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/MjCINlbSD4Rx7sA.jpg" height=500/></span></div>
+
 &emsp; Click on ``Create pull requests``
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/nNcUd8phGWfj1LH.jpg" height=500/></span></div>
+
 &emsp; Finally, click on ``Create pull request``, and after submitting, the open-source person will receive your merge request.
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/lXCmnEdpYIbai8D.jpg" height=500/></span></div>
 
 ## ⭕Coding specification
 

@@ -30,7 +30,7 @@
 
 &emsp;   通过在 GitHub 中单击它来选择更新，以`README.md`文件为例：
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/1SQHsF8UXJkc2df.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/ROMzrsVcTDGAnpI.jpg" height=500/></span></div>
 
 
 
@@ -38,31 +38,29 @@
 
 &emsp;   该按钮位于右上角。
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/Z8pWy4hUSGK5EPB.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/DnV79LOB1Xu5odi.jpg" height=500/></span></div>
 
 如果你没有Fork该项目，需要先Fork该项目。
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/Lw7HrquabZRnxv3.jpg" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/H3ya5vO7tciNL9U.jpg" height=500/></span></div>
 
 ####   3. 修改文件内容
 
 &emsp;   增加两个🥰符号。
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/phOdqD85I93stuN.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/L5xIwJzT23yvS7s.jpg" height=500/></span></div>
 
 &emsp;   修改完文件内容后，点击**Commit changes**提交更改，并按照更改内容填写日志。
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/PAXH4vzLUNFikBY.png" height=300/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/PEtvN7jr2Bxwl6f.jpg" height=300/></span></div>
 
 ####   4. 创建 Pull Request
 
 &emsp;   修改完该文件后，修改内容只存在于修改者当前分支，需要通过 Pull Request 提交到原作者仓库才可以。点击 **Create pull request**，创建PR。
 
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/Ki7aloTVCqA9EbP.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/KF1AfmujhwcNgQn.jpg" height=500/></span></div>
 
-
-
-<div align=center><span><img src="https://s2.loli.net/2023/08/26/u8WFxcjbLI1ozP6.png" height=500/></span></div>
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/8synN6v5atPoUdw.jpg" height=500/></span></div>
 
 &emsp;    按要求提交后，等待代码仓库管理人员审核并通过你提交的PR。
 
@@ -74,27 +72,37 @@
 
 &emsp;   找到要提交PR的项目，先将该项目fork自己的代码仓。
 
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/wFICoTLxUj9NiJ2.jpg" height=500/></span></div>
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/G4UYbH85pQOJfxa.jpg" height=500/></span></div>
+
 ####  2. 克隆开源项目
 
   将需要提交PR的项目克隆到本地。
 
 ```
 //打开CMD或者打开Git Bash Here
-git clone https://github.com/guojin-yan/OpenVINOSharp.git
+git clone https://github.com/guojin-yan/OpenVINO-CSharp-API.git
 ```
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/GOXw5iLmqf2clea.jpg" height=300/></span></div>
 
 #### 3.创建新的分支
 
 &emsp;   提交PR时需要.为了防止在主分支上修改影响主分支代码，此处创建一个分支用于代码的修改。
 
 ```
-cd PaddleGame // 切换到项目路径
-git checkout -b mybranch //创建名为mybranch的分支
-git branch //查看已经创建的分支 如图有mybranch和main两个分支
-git checkout mybranch // 切换到分支
+cd OpenVINO-CSharp-API // 切换到项目路径
+git checkout -b temp //创建名为temp的分支
+git branch //查看已经创建的分支 如图有temph和csharp3.0两个分支
+git checkout temp // 切换到分支
 ```
 
 &emsp;   切换好分支后就可以直接根据自己需求修改项目,如上图所示。
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/wW9DcrjzZEekfQT.jpg" height=300/></span></div>
+
+
 
 #### 4. 修改提交项目代码
 
@@ -106,10 +114,12 @@ git add 文件名 // 将修改的文件存放到暂存区
 git commit -m "日志信息" 文件名 // 将修改的文件提交到本地库
 ```
 
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/i71frOAaZk2FwVU.jpg" height=300/></span></div>
+
 &emsp;   最后将本地项目代码提交到远程GitHub上
 
 ```
-git push --set-upstream main mybranch
+git push --set-upstream origin temp
 ```
 
 &emsp;   进入GitHub项目，切换到mybranch分支，查看是否修改成功。
@@ -118,7 +128,7 @@ git push --set-upstream main mybranch
 
 ```
 git checkout main // 切换到主分支
-git merge mybranch  // 合并派生分支到主分支
+git merge temp  // 合并派生分支到主分支
 ```
 
 &emsp;   合并成功后，将主分支推送到代码仓。
@@ -126,18 +136,24 @@ git merge mybranch  // 合并派生分支到主分支
 ```
 git add .  // 将修改的文件存放到暂存区
 git commit -m "日志信息" // 将修改的文件提交到本地库
-git push origin main // 推送到远程仓库
+git push origin csharp3.0 // 推送到远程仓库
 ```
 
 &emsp;   在GitHub切换到master主分支，查看是否合并成功
 
 #### 4.提交pr请求
 
-&emsp;   进入自己`fork`的项目中，点击`Pull requests`
+&emsp;   进入自己`fork`的项目中，点击下方所指使的位置。
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/MjCINlbSD4Rx7sA.jpg" height=500/></span></div>
 
 &emsp;   点击`Create pull requests`
 
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/nNcUd8phGWfj1LH.jpg" height=500/></span></div>
+
 &emsp;   最后点击`Create pull request`，提交后开源人将会收到你的合并请求。
+
+<div align=center><span><img src="https://s2.loli.net/2023/12/09/lXCmnEdpYIbai8D.jpg" height=500/></span></div>
 
 ## ⭕编码规范
 
