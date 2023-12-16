@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenCvSharp;
-using OpenVinoSharp.Extensions.RuntimeOption;
 using OpenVinoSharp.Extensions.result;
 using OpenVinoSharp.Extensions.process;
 using OpenCvSharp.Dnn;

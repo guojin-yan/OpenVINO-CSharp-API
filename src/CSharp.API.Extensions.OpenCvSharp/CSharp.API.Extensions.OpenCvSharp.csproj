@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>OpenVINO.CSharp.API.Extensions.OpenCvSharp</PackageId>
     <Title>OpenVINO C# API Extensions by OpenCvSharp</Title>
-    <Version>1.0.1</Version>
+    <Version>1.0.1-develop</Version>
     <Authors>Guojin Yan</Authors>
     <Product>OpenVINO C# API Extensions by OpenCvSharp</Product>
     <Description>Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
@@ -22,45 +22,7 @@
     <PackageOutputPath>../../nuget</PackageOutputPath>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageReference Include="OpenCvSharp4.Extensions">
-    </PackageReference>
-  </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="OpenCvSharp4">
-    </PackageReference>
-    <PackageReference Include="OpenCvSharp4.Extensions">
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="OpenCvSharp4">
-    </PackageReference>
-    <PackageReference Include="OpenCvSharp4.Extensions">
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="OpenCvSharp4">
-    </PackageReference>
-    <PackageReference Include="OpenCvSharp4.Extensions">
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-    <PackageReference Include="OpenCvSharp4">
-    </PackageReference>
-    <PackageReference Include="OpenCvSharp4.Extensions">
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <PackageReference Include="OpenCvSharp4">
-    </PackageReference>
-    <PackageReference Include="OpenCvSharp4.Extensions">
-    </PackageReference>
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\nuget\logo.png">
@@ -69,8 +31,16 @@
     </None>
   </ItemGroup>
 
+
+
   <ItemGroup>
-    <PackageReference Include="OpenVINO.CSharp.API" Version="2023.2.0.3" />
+    <PackageReference Include="OpenCvSharp4" Version="4.8.0.20230708" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.8.0.20230708" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpAPI.Extensions\CSharpAPI.Extensions.csproj" />
+    <ProjectReference Include="..\CSharpAPI\CSharpAPI.csproj" />
   </ItemGroup>
 
 </Project>

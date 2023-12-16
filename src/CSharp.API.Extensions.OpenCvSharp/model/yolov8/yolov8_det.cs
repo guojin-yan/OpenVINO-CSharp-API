@@ -3,7 +3,6 @@ using OpenCvSharp;
 using OpenCvSharp.Dnn;
 using OpenVinoSharp.Extensions.process;
 using OpenVinoSharp.Extensions.result;
-using OpenVinoSharp.Extensions.RuntimeOption;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

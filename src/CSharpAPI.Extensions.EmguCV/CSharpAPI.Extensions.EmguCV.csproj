@@ -8,7 +8,7 @@
     <RootNamespace>OpenVinoSharp.Extensions.EmguCV</RootNamespace>
     <AssemblyName>OpenVINO_CSharp_API_Extensions_EmguCV</AssemblyName>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>OpenVINO.CSharp.API.Extensions</PackageId>
+    <PackageId>OpenVINO.CSharp.API.Extensions.EmguCV</PackageId>
     <Title>OpenVINO C# API Extensions by EmguCV</Title>
     <Version>1.0.0</Version>
     <Authors>Guojin Yan</Authors>
@@ -23,6 +23,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="utility\**" />
+    <EmbeddedResource Remove="utility\**" />
+    <None Remove="utility\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\..\nuget\logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -31,7 +37,11 @@
 
   <ItemGroup>
     <PackageReference Include="Emgu.CV" Version="4.8.1.5350" />
-    <PackageReference Include="OpenVINO.CSharp.API" Version="2023.2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpAPI.Extensions\CSharpAPI.Extensions.csproj" />
+    <ProjectReference Include="..\CSharpAPI\CSharpAPI.csproj" />
   </ItemGroup>
 
 

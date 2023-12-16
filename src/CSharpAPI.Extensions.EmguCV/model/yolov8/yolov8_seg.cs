@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenVinoSharp.Extensions.RuntimeOption;
 using OpenVinoSharp.Extensions.result;
 using OpenVinoSharp.Extensions.process;
 using System.Runtime.InteropServices;
@@ -12,6 +11,8 @@ using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
+using Emgu.CV.Flann;
+using Emgu.CV.Reg;
 namespace OpenVinoSharp.Extensions.model
 {
     public class Yolov8Seg : Predictor
@@ -185,8 +186,11 @@ namespace OpenVinoSharp.Extensions.model
 
                 SegResult re = new SegResult(); // Output Result Class
                                                        // RGB images with colors
-                Mat rgb_mask = Mat.Zeros((int)m_image_sizes[b].Width, (int)m_image_sizes[b].Height, DepthType.Cv8U, 3);
+                Mat rgb_mask = Mat.Zeros((int)m_image_sizes[b].Height, (int)m_image_sizes[b].Width, DepthType.Cv8U, 3);
                 Random rd = new Random(); // Generate Random Numbers
+
+                Matrix<float> proto_data_m = new Matrix<float>(proto_data.Rows, proto_data.Cols);
+                proto_data.CopyTo(proto_data_m);
                 for (int i = 0; i < indexes.Length; i++)
                 {
                     int index = indexes[i];
@@ -194,22 +198,28 @@ namespace OpenVinoSharp.Extensions.model
                     Rectangle box = position_boxes[index];
                     int box_x1 = Math.Max(0, box.X);
                     int box_y1 = Math.Max(0, box.Y);
-                    int box_x2 = Math.Max(0, box.Location.X + box.Width);
-                    int box_y2 = Math.Max(0, box.Location.Y + box.Height);
+                    int box_x2 = Math.Max(0, box.X + box.Width);
+                    int box_y2 = Math.Max(0, box.Y + box.Height);
 
                     // Segmentation results
-                    Mat original_mask = new Mat();
-                    CvInvoke.Multiply(masks[index], proto_data, original_mask);
+                    //Mat original_mask = new Mat(32,32, DepthType.Cv32F, 1);
 
-                    float[] data = (float[])original_mask.GetData();
+                   
+                    Matrix<float> xx = new Matrix<float>(masks[index].Rows, masks[index].Cols);
+                    masks[index].CopyTo(xx);
+
+                    Matrix<float> rr = xx * proto_data_m;
+                    Mat original_mask = rr.Mat;
+                    float[,] data = (float[,])original_mask.GetData();
+                    float[] data2 = new float[data.GetLength(1)];
                     for (int col = 0; col < original_mask.Cols; col++)
                     {
-                        data[col] = sigmoid(data[col]);
+                        data2[col] = sigmoid(data[0,col]);
                     }
-                    original_mask = new Mat(original_mask.Size, DepthType.Cv32F, 1,
-                        Marshal.UnsafeAddrOfPinnedArrayElement(data, 0), original_mask.Cols);
+                    Mat original_mask1 = new Mat(original_mask.Size.Height, original_mask.Size.Width, DepthType.Cv32F, 1,
+                        Marshal.UnsafeAddrOfPinnedArrayElement(data2, 0),4*original_mask.Cols);
                     // 1x25600 -> 160x160 Convert to original size
-                    Mat reshape_mask = original_mask.Reshape(1, 160);
+                    Mat reshape_mask = original_mask1.Reshape(1, 160);
 
                     //Console.WriteLine("m1.size = {0}", m1.Size());
 
@@ -219,29 +229,29 @@ namespace OpenVinoSharp.Extensions.model
                     int my1 = Math.Max(0, (int)((box_y1 / m_factors[b]) * 0.25));
                     int my2 = Math.Min(160, (int)((box_y2 / m_factors[b]) * 0.25));
                     // Crop Split Region
-                    Mat mask_roi = new Mat(reshape_mask, new Rectangle(my1, my2, mx1 - my1, mx2 - my2));
+                    Mat mask_roi = new Mat(reshape_mask, new Emgu.CV.Structure.Range(my1, my2), new Emgu.CV.Structure.Range(mx1, mx2));
                     // Convert the segmented area to the actual size of the image
                     Mat actual_maskm = new Mat();
                     CvInvoke.Resize(mask_roi, actual_maskm, new Size(box_x2 - box_x1, box_y2 - box_y1));
                     // Binary segmentation region
-                    float[] data1 = (float[])actual_maskm.GetData();
+                    float[,] data1 = (float[,])actual_maskm.GetData();
                     for (int r = 0; r < actual_maskm.Rows; r++)
                     {
                         for (int c = 0; c < actual_maskm.Cols; c++)
                         {
-                            float pv = data1[r * actual_maskm.Cols + c];
+                            float pv = data1[r, c];
                             if (pv > 0.5)
                             {
-                                data1[r * actual_maskm.Cols + c] = 1.0f;
+                                data1[r, c] = 1.0f;
                             }
                             else
                             {
-                                data1[r * actual_maskm.Cols + c] = 0.0f;
+                                data1[r, c] = 0.0f;
                             }
                         }
                     }
                     actual_maskm = new Mat(actual_maskm.Size, DepthType.Cv32F, 1,
-                        Marshal.UnsafeAddrOfPinnedArrayElement(data1, 0), actual_maskm.Cols);
+                        Marshal.UnsafeAddrOfPinnedArrayElement(data1, 0), 4*actual_maskm.Cols);
                     // 预测
                     Mat bin_mask = new Mat();
                     actual_maskm = actual_maskm * 200;
@@ -255,14 +265,16 @@ namespace OpenVinoSharp.Extensions.model
                         box_x2 = (int)m_image_sizes[b].Width - 1;
                     }
                     // Obtain segmentation area
-                    Mat mask = Mat.Zeros((int)m_image_sizes[b].Width, (int)m_image_sizes[b].Height, DepthType.Cv8U, 1);
-                    bin_mask = new Mat(bin_mask, new Rectangle(0, 0, box_y2 - box_y1, box_x2 - box_x1));
+                    Mat mask = Mat.Zeros((int)m_image_sizes[b].Height, (int)m_image_sizes[b].Width, DepthType.Cv8U, 1);
+                    bin_mask = new Mat(bin_mask, new Rectangle(0, 0, box_x2 - box_x1, box_y2 - box_y1));
                     Rectangle roi = new Rectangle(box_x1, box_y1, box_x2 - box_x1, box_y2 - box_y1);
                     bin_mask.CopyTo(new Mat(mask, roi));
+                    Mat new_rgb_mask = new Mat();
                     // Color segmentation area
-                    CvInvoke.Add(rgb_mask, new ScalarArray(new MCvScalar( rd.Next(0, 255), rd.Next(0, 255), rd.Next(0, 255))), rgb_mask, mask);
-
-                    re.add(class_ids[index], confidences[index], position_boxes[index], rgb_mask.Clone());
+                    CvInvoke.Add(rgb_mask, new ScalarArray(new MCvScalar( rd.Next(0, 255), rd.Next(0, 255), rd.Next(0, 255))), new_rgb_mask, mask);
+                    //CvInvoke.Imshow("new_rgb_mask", new_rgb_mask);
+                    //CvInvoke.WaitKey(0);
+                    re.add(class_ids[index], confidences[index], position_boxes[index], new_rgb_mask.Clone());
 
                 }
                 re_result.Add(re);

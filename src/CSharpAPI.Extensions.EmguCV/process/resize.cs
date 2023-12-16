@@ -117,7 +117,7 @@ namespace OpenVinoSharp.Extensions.process
             factors[2] = image.Rows;
             factors[3] = image.Cols;
             Mat resize_img = new Mat();
-            CvInvoke.Resize(image, resize_img, new Size(length, length), 0.0f, 0.0f, Inter.Linear);
+            CvInvoke.Resize(max_image, resize_img, new Size(length, length), 0.0f, 0.0f, Inter.Linear);
             scales = (float)((float)max_image_length / (float)length);
             return resize_img;
         }

@@ -1,5 +1,4 @@
-﻿using OpenCvSharp;
-using OpenCvSharp.Dnn;
+﻿using Emgu.CV;
 using OpenVinoSharp.Extensions.process;
 using OpenVinoSharp.Extensions.result;
 using OpenVinoSharp.Extensions.utility;
@@ -31,7 +30,7 @@ namespace OpenVinoSharp.Extensions.model
         public ClsResult predict(Mat image)
         {
             Mat mat = new Mat();
-            Cv2.CvtColor(image, mat, ColorConversionCodes.BGR2RGB);
+            CvInvoke.CvtColor(image, mat, Emgu.CV.CvEnum.ColorConversion.Bgr2Rgb);
             float factors = 0f;
             mat = Resize.letterbox_img(mat, (int)m_input_size[2], out factors);
             mat = Normalize.run(mat, true);
@@ -58,7 +57,7 @@ namespace OpenVinoSharp.Extensions.model
                 for (int ino = beg_img_no; ino < end_img_no; ino++)
                 {
                     Mat mat = new Mat();
-                    Cv2.CvtColor(images[ino], mat, ColorConversionCodes.BGR2RGB);
+                    CvInvoke.CvtColor(images[ino], mat, Emgu.CV.CvEnum.ColorConversion.Bgr2Rgb);
                     mat = Resize.letterbox_img(mat, (int)m_input_size[2], out factors);
                     mat = Normalize.run(mat, true);
                     norm_img_batch.Add(mat);
