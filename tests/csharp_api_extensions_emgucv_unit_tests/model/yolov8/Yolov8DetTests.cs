@@ -1,7 +1,7 @@
 ﻿using Emgu.CV;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenVinoSharp.Extensions.model;
-using OpenVinoSharp.Extensions.Result;
+using OpenVinoSharp.Extensions.result;
 using System;
 using System.Collections.Generic;
 using System.Linq;
