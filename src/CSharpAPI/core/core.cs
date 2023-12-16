@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -191,23 +192,15 @@ namespace OpenVinoSharp
         /// Creates a compiled model from a source model object.
         /// </summary>
         /// <param name="model">Model object acquired from Core::read_model.</param>
+        /// <param name="properties">Optional map of pairs: (property name, property value) relevant only for this load operation.</param>
         /// <returns>A compiled model.</returns>
         /// <remarks>
         /// Users can create as many compiled models as they need and use
         /// them simultaneously (up to the limitation of the hardware resources).
         /// </remarks>
-        public CompiledModel compile_model(Model model)
+        public CompiledModel compile_model(Model model, Dictionary<string, string> properties = null)
         {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-            IntPtr compiled_model_ptr = new IntPtr();
-            string device_name = "AUTO";
-            sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            HandleException.handler(
-                NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr));
-            return new CompiledModel(compiled_model_ptr);
+            return compile_model(model, "AUTO", properties);
         }
 
         /// <summary>
@@ -215,12 +208,13 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="model">Model object acquired from Core::read_model.</param>
         /// <param name="device_name">Name of a device to load a model to.</param>
+        /// <param name="properties">Optional map of pairs: (property name, property value) relevant only for this load operation.</param>
         /// <returns>A compiled model.</returns>
         /// <remarks>
         /// Users can create as many compiled models as they need and use
         /// them simultaneously (up to the limitation of the hardware resources).
         /// </remarks>
-        public CompiledModel compile_model(Model model, string device_name)
+        public CompiledModel compile_model(Model model, string device_name, Dictionary<string, string> properties=null)
         {
             if (model == null)
             {
@@ -232,8 +226,36 @@ namespace OpenVinoSharp
             }
             IntPtr compiled_model_ptr = new IntPtr();
             sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            HandleException.handler(
+            if (properties == null)
+            {
+                HandleException.handler(
                 NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr));
+            }
+            else if (properties.Count==1) 
+            {
+                List<IntPtr> inputs = new List<IntPtr>();
+                foreach (var item in properties)
+                {
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Key));
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
+                }
+                HandleException.handler(
+                    NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr, 
+                    inputs[0], inputs[1]));
+            }
+            else if (properties.Count == 2)
+            {
+                List<IntPtr> inputs = new List<IntPtr>();
+                foreach (var item in properties)
+                {
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Key));
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
+                }
+                HandleException.handler(
+                    NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr,
+                    inputs[0], inputs[1], inputs[2], inputs[3]));
+            }
+
             return new CompiledModel(compiled_model_ptr);
         }
 
@@ -241,36 +263,28 @@ namespace OpenVinoSharp
         /// Reads and loads a compiled model from the IR/ONNX/PDPD file to the default OpenVINO device selected by the AUTO plugin.
         /// </summary>
         /// <param name="model_path">Path to a model.</param>
+        /// <param name="properties">Optional map of pairs: (property name, property value) relevant only for this load operation.</param>
         /// <remarks>
         /// This can be more efficient than using the Core::read_model + Core::compile_model(model_in_memory_object) flow, 
         /// especially for cases when caching is enabled and a cached model is availab
         /// </remarks>
         /// <returns> A compiled model.</returns>
-        public CompiledModel compile_model(string model_path)
+        public CompiledModel compile_model(string model_path, Dictionary<string, string> properties = null)
         {
-            if (string.IsNullOrEmpty(model_path))
-            {
-                throw new ArgumentNullException(nameof(model_path));
-            }
-            IntPtr compiled_model_ptr = new IntPtr();
-            string device_name = "AUTO";
-            sbyte[] c_model = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
-            sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            HandleException.handler(
-                NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr));
-            return new CompiledModel(compiled_model_ptr);
+            return compile_model(model_path, "AUTO", properties);
         }
         /// <summary>
         /// Reads a model and creates a compiled model from the IR/ONNX/PDPD file.
         /// </summary>
         /// <param name="model_path">Path to a model.</param>
         /// <param name="device_name">Name of a device to load a model to.</param>
+        /// <param name="properties">Optional map of pairs: (property name, property value) relevant only for this load operation.</param>
         /// <remarks>
         /// This can be more efficient than using the Core::read_model + Core::compile_model(model_in_memory_object) flow, 
         /// especially for cases when caching is enabled and a cached model is availab
         /// </remarks>
         /// <returns>A compiled model.</returns>
-        public CompiledModel compile_model(string model_path, string device_name)
+        public CompiledModel compile_model(string model_path, string device_name, Dictionary<string, string> properties = null)
         {
             if (string.IsNullOrEmpty(model_path))
             {
@@ -283,8 +297,35 @@ namespace OpenVinoSharp
             IntPtr compiled_model_ptr = new IntPtr();
             sbyte[] c_model = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
             sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
-            HandleException.handler(
+            if (properties == null)
+            {
+                HandleException.handler(
                 NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr));
+            }
+            else if (properties.Count == 1)
+            {
+                List<IntPtr> inputs = new List<IntPtr>();
+                foreach (var item in properties)
+                {
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Key));
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
+                }
+                HandleException.handler(
+                    NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr,
+                    inputs[0], inputs[1]));
+            }
+            else if (properties.Count == 2)
+            {
+                List<IntPtr> inputs = new List<IntPtr>();
+                foreach (var item in properties)
+                {
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Key));
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
+                }
+                HandleException.handler(
+                    NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr,
+                    inputs[0], inputs[1], inputs[2], inputs[3]));
+            }
             return new CompiledModel(compiled_model_ptr);
         }
         /// <summary>

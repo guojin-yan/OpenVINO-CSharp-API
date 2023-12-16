@@ -163,6 +163,26 @@ namespace OpenVinoSharp
             ulong property_args_size, 
             ref IntPtr compiled_model);
 
+        [DllImport(dll_extern, EntryPoint = "ov_core_compile_model",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_core_compile_model(
+            IntPtr core,
+            IntPtr model,
+            ref sbyte device_name,
+            ulong property_args_size,
+            ref IntPtr compiled_model, 
+            IntPtr varg1, IntPtr varg2);
+        [DllImport(dll_extern, EntryPoint = "ov_core_compile_model",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_core_compile_model(
+            IntPtr core,
+            IntPtr model,
+            ref sbyte device_name,
+            ulong property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr varg1, IntPtr varg2,
+            IntPtr varg3, IntPtr varg4);
+
         /// <summary>
         /// Reads a model and creates a compiled model from the IR/ONNX/PDPD file. 
         /// This can be more efficient than using the ov_core_read_model_from_XXX + ov_core_compile_model flow, 
@@ -183,6 +203,27 @@ namespace OpenVinoSharp
             ref sbyte device_name,
             ulong property_args_size,
             ref IntPtr compiled_model);
+        [DllImport(dll_extern, EntryPoint = "ov_core_compile_model_from_file",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_core_compile_model_from_file(
+            IntPtr core,
+            ref sbyte model_path,
+            ref sbyte device_name,
+            ulong property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr varg1, IntPtr varg2);
+        [DllImport(dll_extern, EntryPoint = "ov_core_compile_model_from_file",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_core_compile_model_from_file(
+            IntPtr core,
+            ref sbyte model_path,
+            ref sbyte device_name,
+            ulong property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr varg1, IntPtr varg2,
+            IntPtr varg3, IntPtr varg4);
+
+
 
         /// <summary>
         /// Sets properties for a device, acceptable keys can be found in ov_property_key_xxx.

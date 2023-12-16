@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "csharp_api_extensions_emguc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "csharp_api_extensions_opencvsharp_unit_tests", "tests\csharp_api_extensions_opencvsharp_unit_tests\csharp_api_extensions_opencvsharp_unit_tests.csproj", "{1CA14C6F-881A-4201-A340-2B05514D4E8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpAPI.Extensions", "src\CSharpAPI.Extensions\CSharpAPI.Extensions.csproj", "{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,14 @@ Global
 		{1CA14C6F-881A-4201-A340-2B05514D4E8A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1CA14C6F-881A-4201-A340-2B05514D4E8A}.Release|x64.ActiveCfg = Release|Any CPU
 		{1CA14C6F-881A-4201-A340-2B05514D4E8A}.Release|x64.Build.0 = Release|Any CPU
+		{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185}.Debug|x64.Build.0 = Debug|Any CPU
+		{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185}.Release|x64.ActiveCfg = Release|Any CPU
+		{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,6 +150,7 @@ Global
 		{058BB22D-E39E-464B-84BF-C9EF47105932} = {3737D82A-86E9-4D03-81D3-030E2F9BF006}
 		{F477AB61-1825-4427-B28A-D27C0A99301D} = {3737D82A-86E9-4D03-81D3-030E2F9BF006}
 		{1CA14C6F-881A-4201-A340-2B05514D4E8A} = {3737D82A-86E9-4D03-81D3-030E2F9BF006}
+		{F3CEDDC3-7350-4CF0-B9B4-3EEC1D751185} = {DCFCA0E4-2267-42D0-894E-88DCE18927E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26D31CCE-2B57-4891-8ECC-5031281210D9}
