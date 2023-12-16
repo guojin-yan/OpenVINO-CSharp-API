@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net5.0;net6.0;netcoreapp3.1;net48;net472</TargetFrameworks>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <LangVersion>12.0</LangVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RootNamespace>OpenVinoSharp.Extensions</RootNamespace>
+    <AssemblyName>OpenVINO_CSharp_API_Extensions</AssemblyName>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>OpenVINO.CSharp.API.Extensions</PackageId>
+    <Title>OpenVINO C# API Extensions by OpenCvSharp</Title>
+    <Version>1.0.0</Version>
+    <Authors>Guojin Yan</Authors>
+    <Product>OpenVINO C# API Extensions</Product>
+    <Description>Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
+    <PackageProjectUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>This assembly is for OpenVINO CSharp API. The expansion of API mainly involves encapsulating the inference process of common models and the pre-processing and post-processing methods of data.</PackageReleaseNotes>
+    <PackageOutputPath>../../nuget</PackageOutputPath>
+    <PackageIcon>logo.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\nuget\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpAPI\CSharpAPI.csproj" />
+  </ItemGroup>
+
+</Project>
