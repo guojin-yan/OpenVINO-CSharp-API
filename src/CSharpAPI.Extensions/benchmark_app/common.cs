@@ -1,11 +1,12 @@
-﻿using System;
+﻿using OpenVinoSharp.Extensions.utility;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OpenVinoSharp.Extensions.benchmark_app
 {
@@ -120,4 +121,51 @@ namespace OpenVinoSharp.Extensions.benchmark_app
         }
 
     }
+
+    class LatencyMetrics
+    {
+        public LatencyMetrics() { }
+
+        public LatencyMetrics(List<double> latencies,
+                    string data_shape = "",
+                    int percentile_boundary = 50)      
+        {
+            percentile_boundary = percentile_boundary;
+            data_shape = data_shape;
+            fill_data(latencies, percentile_boundary);
+        }
+
+        public void write_to_slog()
+        {
+            string percentileStr = (percentile_boundary == 50)
+                                ? "   Median:           "
+                                : "   " + percentile_boundary + " percentile:     ";
+
+            Slog.INFO(percentileStr + median_or_percentile.ToString("0.00") + " ms");
+            Slog.INFO("   Average:          " + avg.ToString("0.00") + " ms");
+            Slog.INFO("   Min:              " + min.ToString("0.00") + " ms");
+            Slog.INFO("   Max:              " + max.ToString("0.00") + " ms");
+        }
+
+        double median_or_percentile = 0;
+        double avg = 0;
+        double min = 0;
+        double max = 0;
+        string data_shape;
+
+        private void fill_data(List<double> latencies, int percentile_boundary)
+        {
+            if (latencies.Count == 0)
+            {
+                throw new ArgumentNullException("Latency metrics class expects non-empty vector of latencies at consturction.");
+            }
+            latencies.Sort();
+            min = latencies.Min();
+            avg = latencies.Sum() / (double)latencies.Count;
+            median_or_percentile = latencies[(int)(latencies.Count/ 100.0 * percentile_boundary)];
+            max = latencies.Max();
+        }
+        private int percentile_boundary = 50;
+    };
+
 }
