@@ -243,6 +243,23 @@ namespace OpenVinoSharp
             }
             return new Tensor(tensor_ptr);
         }
+        public Tensor get_tensor(Input port)
+        {
+            IntPtr tensor_ptr = IntPtr.Zero;
+            if (port.get_node().node_type == Node.NodeType.e_const)
+            {
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_get_tensor_by_const_port(
+               m_ptr, port.get_node().Ptr, ref tensor_ptr));
+            }
+            else
+            {
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_get_tensor_by_port(
+                m_ptr, port.get_node().Ptr, ref tensor_ptr));
+            }
+            return new Tensor(tensor_ptr);
+        }
 
         /// <summary>
         /// Gets an input tensor for inference.
