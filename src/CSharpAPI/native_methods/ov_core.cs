@@ -119,6 +119,14 @@ namespace OpenVinoSharp
             ref sbyte bin_path, 
             ref IntPtr model);
 
+        [DllImport(dll_extern, EntryPoint = "ov_core_read_model_from_memory_buffer",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_core_read_model_from_memory_buffer(IntPtr core,
+            ref byte model_path,
+            ulong str_size,
+            IntPtr weights,
+            ref IntPtr model);
+
         /// <summary>
         /// Reads models from IR / ONNX / PDPD / TF / TFLite formats.
         /// </summary>
@@ -138,7 +146,7 @@ namespace OpenVinoSharp
         [DllImport(dll_extern, EntryPoint = "ov_core_read_model_from_memory", 
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_read_model_from_memory(IntPtr core,
-            ref sbyte model_path, 
+            ref byte model_path, 
             IntPtr weights, 
             ref IntPtr model);
 
