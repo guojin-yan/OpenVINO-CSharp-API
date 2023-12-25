@@ -48,12 +48,9 @@ namespace OpenVinoSharp
         /// <param name="mat">Image data</param>
         public Tensor(element.Type type, Shape shape, byte[] mat) 
         {
-            int l =mat.Length;
-            IntPtr data = Marshal.AllocHGlobal(l);
-            Marshal.Copy(mat, 0, data, (int)mat.Length);
             HandleException.handler(
                 NativeMethods.ov_tensor_create_from_host_ptr
-                ((uint)type.get_type(), shape.shape, data, ref m_ptr));
+                ((uint)type.get_type(), shape.shape, Marshal.UnsafeAddrOfPinnedArrayElement(mat,0), ref m_ptr));
         }
         /// <summary>
         /// Constructs Tensor using element type and shape. Wraps allocated host memory.
