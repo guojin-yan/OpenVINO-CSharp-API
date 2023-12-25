@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net5.0;net6.0;netcoreapp3.1;net48</TargetFrameworks>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <LangVersion>12.0</LangVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RootNamespace>OpenVinoSharp.Extensions.EmguCV</RootNamespace>
+    <AssemblyName>OpenVINO_CSharp_API_Extensions_EmguCV</AssemblyName>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>OpenVINO.CSharp.API.Extensions.EmguCV</PackageId>
+    <Title>OpenVINO C# API Extensions by EmguCV</Title>
+    <Version>1.0.0</Version>
+    <Authors>Guojin Yan</Authors>
+    <Product>OpenVINO C# API Extensions by EmguCV</Product>
+    <Description>Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
+    <PackageProjectUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</PackageProjectUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>This assembly is for OpenVINO CSharp API. The expansion of API mainly involves encapsulating the inference process of common models and the pre-processing and post-processing methods of data.The image processing library uses EmguCV.</PackageReleaseNotes>
+    <PackageOutputPath>../../nuget</PackageOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="utility\**" />
+    <EmbeddedResource Remove="utility\**" />
+    <None Remove="utility\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\nuget\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Emgu.CV" Version="4.8.1.5350" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpAPI.Extensions\CSharpAPI.Extensions.csproj" />
+    <ProjectReference Include="..\CSharpAPI\CSharpAPI.csproj" />
+  </ItemGroup>
+
+
+</Project>

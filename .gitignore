@@ -3,6 +3,15 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# custom
+*.dll
+cache.json
+others/
+hello_classification/
+plugins.xml
+*.docx
+test_data/
+
 # User-specific files
 *.rsuser
 *.suo

@@ -12,6 +12,7 @@
 ###############################################################################
 #*.cs     diff=csharp
 
+
 ###############################################################################
 # Set the merge driver for project and solution files
 #
@@ -35,6 +36,7 @@
 #*.sqlproj   merge=binary
 #*.wwaproj   merge=binary
 
+
 ###############################################################################
 # behavior for image files
 #
@@ -43,6 +45,7 @@
 #*.jpg   binary
 #*.png   binary
 #*.gif   binary
+
 
 ###############################################################################
 # diff behavior for common document formats

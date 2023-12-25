@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net5.0;net6.0;netcoreapp3.1;net48;net46;net472</TargetFrameworks>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
+    <PackageId>OpenVINO.CSharp.API</PackageId>
+    <!--Set NuGet Message-->
+    <Title>OpenVINO C# API</Title>
+    <Version>2023.2.0.3-develop</Version>
+    <Authors>Guojin Yan</Authors>
+    <Company>Guojin Yan</Company>
+    <Product>OpenVINO C# API</Product>
+    <Description>Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.
+    </Description>
+    <PackageProjectUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageOutputPath>../../nuget</PackageOutputPath>
+    <NeutralLanguage>zh</NeutralLanguage>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>This version is a pre release version of OpenVINO™ C# API 3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
+    <RootNamespace>OpenVinoSharp</RootNamespace>
+    <AssemblyName>OpenVINO_CSharp_API</AssemblyName>
+  </PropertyGroup>
+
+
+  <!--Add build file.-->
+  <ItemGroup>
+    <None Include="..\..\nuget\logo.png" Link="build\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\nuget\README.md" Link="build\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <DefineConstants>$(DefineConstants);DOTNET_FRAMEWORK;</DefineConstants>
+  </PropertyGroup>
+
+
+</Project>
