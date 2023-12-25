@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -181,10 +182,15 @@ namespace OpenVinoSharp
             {
                 throw new ArgumentNullException(nameof(weights));
             }
+            FileStream fs = new FileStream(model_path, FileMode.Open, FileAccess.Read);
+            long len = fs.Seek(0, SeekOrigin.End);
+            fs.Seek(0, SeekOrigin.Begin);
+            byte[] data = new byte[len + 1];
+            fs.Read(data, 0, (int)len);
             IntPtr model_ptr = new IntPtr();
             sbyte[] c_model_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
             HandleException.handler(
-                NativeMethods.ov_core_read_model_from_memory(m_ptr, ref c_model_path[0], weights.Ptr, ref model_ptr));
+                NativeMethods.ov_core_read_model_from_memory(m_ptr, ref data[0], weights.Ptr, ref model_ptr));
             return new Model(model_ptr);
         }
 
