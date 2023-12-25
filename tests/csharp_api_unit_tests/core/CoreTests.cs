@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 namespace OpenVinoSharp.Tests
 {
     [TestClass()]
-    public class CoreTests
+    public class CoreTests : OVBaseTest
     {
+
+
         [TestMethod()]
         public void Core_test()
         {
-            Core core = new Core();  
+            Core core = new Core();
             Assert.IsTrue(core.Ptr != IntPtr.Zero);
         }
 
@@ -31,18 +33,17 @@ namespace OpenVinoSharp.Tests
         {
             var core = new Core();
             KeyValuePair<string, Version> ver = core.get_versions("CPU");
-            Assert.IsNotNull(ver.Key,ver.Value.buildNumber,ver.Value.description);
+            Assert.IsNotNull(ver.Key, ver.Value.buildNumber, ver.Value.description);
         }
 
         [TestMethod()]
         public void read_model_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             model.Dispose();
-            model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml",
-                "..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.bin");
+            model = core.read_model(get_model_xml_file_name(), get_model_bin_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             model.Dispose();
             core.Dispose();
@@ -51,20 +52,14 @@ namespace OpenVinoSharp.Tests
         [TestMethod()]
         public void read_model_test1()
         {
-            string xml_name = "..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml";
-            string bin_name = "..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.bin";
-            FileStream fs = new FileStream(bin_name, FileMode.Open, FileAccess.Read);
-            BinaryReader br = new BinaryReader(fs);
-            long data_length = new FileInfo(bin_name).Length;
-            byte[] bin_buff = br.ReadBytes((int)data_length);
+            byte[] data = content_from_file(get_model_bin_file_name());
 
-            Shape shape = new Shape(new List<long> { 1, data_length });
-            Tensor tensor = new Tensor(new element.Type(element.Type_t.u8),
-                shape, bin_buff);
+            Shape shape = new Shape(new List<long> { 1, data.Length });
+            Tensor tensor = new Tensor(new element.Type(element.Type_t.u8), shape, data);
 
             Core core = new Core();
             Assert.IsTrue(core.Ptr != IntPtr.Zero);
-            Model model = core.read_model(xml_name, tensor);
+            Model model = core.read_model(Path.GetFullPath(get_model_xml_file_name()), tensor);
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
         }
 
@@ -72,8 +67,8 @@ namespace OpenVinoSharp.Tests
         public void compile_model_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
-            Assert.IsTrue(model.Ptr != IntPtr.Zero); 
+            Model model = core.read_model(get_model_xml_file_name());
+            Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled = core.compile_model(model);
             Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
             compiled.Dispose();
@@ -84,23 +79,33 @@ namespace OpenVinoSharp.Tests
         [TestMethod()]
         public void compile_model_test1()
         {
-            //var core = new Core();
-            //Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
-            //Assert.IsTrue(model.Ptr != IntPtr.Zero);
+            var core = new Core();
+            Model model = core.read_model(get_model_xml_file_name());
+            Assert.IsTrue(model.Ptr != IntPtr.Zero);
 
-            //CompiledModel compiled = core.compile_model(model, "CPU");
-            //Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
-            //compiled.Dispose();
-            //model.Dispose();
-            //core.Dispose();
-            Assert.Fail();
+            Dictionary<string, string> latency = new Dictionary<string, string>();
+            latency.Add("PERFORMANCE_HINT", "1");
+
+            CompiledModel compiled = core.compile_model(model, "CPU", latency);
+            Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
+            latency.Add("PERFORMANCE", "1");
+            compiled = core.compile_model(get_model_xml_file_name(), "CPU", latency);
+            Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
+            compiled.Dispose();
+            model.Dispose();
+            core.Dispose();
         }
 
         [TestMethod()]
         public void compile_model_test2()
         {
             var core = new Core();
-            CompiledModel compiled = core.compile_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Dictionary<string, string> latency = new Dictionary<string, string>();
+            latency.Add("PERFORMANCE_HINT", "1");
+            CompiledModel compiled = core.compile_model(get_model_xml_file_name(), latency);
+            Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
+            latency.Add("PERFORMANCE", "1");
+            compiled = core.compile_model(get_model_xml_file_name(), "CPU", latency);
             Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
             compiled.Dispose();
             core.Dispose();
@@ -110,7 +115,12 @@ namespace OpenVinoSharp.Tests
         public void compile_model_test3()
         {
             var core = new Core();
-            CompiledModel compiled = core.compile_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml", "CPU");
+            Dictionary<string, string> latency = new Dictionary<string, string>();
+            latency.Add("PERFORMANCE_HINT", "1");
+            CompiledModel compiled = core.compile_model(get_model_xml_file_name(), "CPU", latency);
+            Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
+            latency.Add("PERFORMANCE", "1");
+            compiled = core.compile_model(get_model_xml_file_name(), "CPU", latency);
             Assert.IsTrue(compiled.Ptr != IntPtr.Zero);
             compiled.Dispose();
             core.Dispose();
@@ -122,6 +132,18 @@ namespace OpenVinoSharp.Tests
             var core = new Core();
             List<string> devicces = core.get_available_devices();
             Assert.IsNotNull(devicces);
+        }
+
+        [TestMethod()]
+        public void set_propertyTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void get_propertyTest()
+        {
+            Assert.Fail();
         }
     }
 }
