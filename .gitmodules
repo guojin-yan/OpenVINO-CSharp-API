@@ -1,3 +1,1 @@
-[submodule "tutorial_examples/RT-DETR"]
-	path = tutorial_examples/RT-DETR
-	url = git@github.com:guojin-yan/RT-DETR-OpenVINO.git
+
