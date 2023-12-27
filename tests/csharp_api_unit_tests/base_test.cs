@@ -10,6 +10,8 @@ namespace OpenVinoSharp.Tests
     {
         private string model_xml = "..\\..\\..\\..\\..\\tests\\test_data\\model\\yolov8\\yolov8s.xml";
         private string model_bin = "..\\..\\..\\..\\..\\tests\\test_data\\model\\yolov8\\yolov8s.bin";
+
+        private string device = "CPU";
         public string get_model_xml_file_name() 
         {
             if (!File.Exists(model_xml)) 
@@ -26,6 +28,11 @@ namespace OpenVinoSharp.Tests
             }
             return model_bin;
         }
+        public string get_device() 
+        {
+            return device;
+        }
+
 
         public byte[] content_from_file(string file)
         {
