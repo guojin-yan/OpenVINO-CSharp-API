@@ -246,7 +246,7 @@ namespace OpenVinoSharp
                     inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
                 }
                 HandleException.handler(
-                    NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr, 
+                    NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 2, ref compiled_model_ptr, 
                     inputs[0], inputs[1]));
             }
             else if (properties.Count == 2)
@@ -258,10 +258,25 @@ namespace OpenVinoSharp
                     inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
                 }
                 HandleException.handler(
-                    NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 0, ref compiled_model_ptr,
+                    NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 4, ref compiled_model_ptr,
                     inputs[0], inputs[1], inputs[2], inputs[3]));
             }
-
+            else if (properties.Count == 3)
+            {
+                List<IntPtr> inputs = new List<IntPtr>();
+                foreach (var item in properties)
+                {
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Key));
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
+                }
+                HandleException.handler(
+                    NativeMethods.ov_core_compile_model(m_ptr, model.m_ptr, ref c_device[0], 6, ref compiled_model_ptr,
+                    inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]));
+            }
+            else
+            {
+                throw new Exception("Only supports parameter quantities of 0, 1, 2, and 3.");
+            }
             return new CompiledModel(compiled_model_ptr);
         }
 
@@ -317,7 +332,7 @@ namespace OpenVinoSharp
                     inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
                 }
                 HandleException.handler(
-                    NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr,
+                    NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 2, ref compiled_model_ptr,
                     inputs[0], inputs[1]));
             }
             else if (properties.Count == 2)
@@ -329,8 +344,24 @@ namespace OpenVinoSharp
                     inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
                 }
                 HandleException.handler(
-                    NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 0, ref compiled_model_ptr,
+                    NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 4, ref compiled_model_ptr,
                     inputs[0], inputs[1], inputs[2], inputs[3]));
+            }
+            else if (properties.Count == 3)
+            {
+                List<IntPtr> inputs = new List<IntPtr>();
+                foreach (var item in properties)
+                {
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Key));
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
+                }
+                HandleException.handler(
+                    NativeMethods.ov_core_compile_model_from_file(m_ptr, ref c_model[0], ref c_device[0], 6, ref compiled_model_ptr,
+                    inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]));
+            }
+            else
+            {
+                throw new Exception("Only supports parameter quantities of 0, 1, 2, and 3.");
             }
             return new CompiledModel(compiled_model_ptr);
         }
@@ -348,6 +379,51 @@ namespace OpenVinoSharp
             IntPtr value = Marshal.StringToHGlobalAnsi(properties.Value);
             HandleException.handler(
                 NativeMethods.ov_core_set_property(m_ptr, ref c_device[0], key, value));
+        }
+
+        public void set_property(string device_name, Dictionary<string, string> properties)
+        {
+            sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
+
+            if (properties.Count == 1)
+            {
+                List<IntPtr> inputs = new List<IntPtr>();
+                foreach (var item in properties)
+                {
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Key));
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
+                }
+                HandleException.handler(
+                    NativeMethods.ov_core_set_property(m_ptr, ref c_device[0], inputs[0], inputs[1]));
+            }
+            else if (properties.Count == 2)
+            {
+                List<IntPtr> inputs = new List<IntPtr>();
+                foreach (var item in properties)
+                {
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Key));
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
+                }
+                HandleException.handler(
+                    NativeMethods.ov_core_set_property(m_ptr, ref c_device[0], inputs[0], inputs[1], inputs[2], inputs[3]));
+            }
+            else if (properties.Count == 3)
+            {
+                List<IntPtr> inputs = new List<IntPtr>();
+                foreach (var item in properties)
+                {
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Key));
+                    inputs.Add(Marshal.StringToHGlobalAnsi(item.Value));
+                }
+                HandleException.handler(
+                    NativeMethods.ov_core_set_property(m_ptr, ref c_device[0], inputs[0], inputs[1],
+                    inputs[2], inputs[3], inputs[4], inputs[5]));
+            }
+            else 
+            {
+                throw new Exception("Only supports parameter quantities of 1, 2, and 3.");
+            }
+
         }
 
         /// <summary>
@@ -395,6 +471,16 @@ namespace OpenVinoSharp
             }
             NativeMethods.ov_available_devices_free(devices_ptr);
             return devices;
+        }
+
+        public CompiledModel import_model(string model_path, string device_name = "AUTO") 
+        {
+            IntPtr value = IntPtr.Zero;
+            byte[] data = Ov.content_from_file(model_path);
+            sbyte[] c_device = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(device_name));
+            HandleException.handler(
+                NativeMethods.ov_core_import_model(m_ptr, ref data[0], (ulong)data.Length, ref c_device[0], ref value));
+            return new CompiledModel(value);
         }
     }
 }
