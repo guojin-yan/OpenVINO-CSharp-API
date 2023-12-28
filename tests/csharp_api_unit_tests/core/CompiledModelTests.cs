@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace OpenVinoSharp.Tests
 {
     [TestClass()]
-    public class CompiledModelTests
+    public class CompiledModelTests : OVBaseTest
     {
         [TestMethod()]
         public void CompiledModel_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -28,7 +28,7 @@ namespace OpenVinoSharp.Tests
         public void Dispose_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -42,7 +42,7 @@ namespace OpenVinoSharp.Tests
         public void create_infer_request_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -58,7 +58,7 @@ namespace OpenVinoSharp.Tests
         public void get_input_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -74,11 +74,11 @@ namespace OpenVinoSharp.Tests
         public void get_input_test1()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
-            Node input = compiled_model.get_input("images");
+            Node input = compiled_model.get_input(model_input_name());
             Assert.IsTrue(input.Ptr != IntPtr.Zero);
             input.Dispose();
             compiled_model.Dispose();
@@ -90,7 +90,7 @@ namespace OpenVinoSharp.Tests
         public void get_input_test2()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -106,7 +106,7 @@ namespace OpenVinoSharp.Tests
         public void get_output_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -122,11 +122,11 @@ namespace OpenVinoSharp.Tests
         public void get_output_test1()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
-            Node output = compiled_model.get_output("output0");
+            Node output = compiled_model.get_output(model_output_name());
             Assert.IsTrue(output.Ptr != IntPtr.Zero);
             output.Dispose();
             compiled_model.Dispose();
@@ -138,7 +138,7 @@ namespace OpenVinoSharp.Tests
         public void get_output_test2()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -154,7 +154,7 @@ namespace OpenVinoSharp.Tests
         public void get_inputs_size_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -169,7 +169,7 @@ namespace OpenVinoSharp.Tests
         public void get_outputs_size_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -184,7 +184,7 @@ namespace OpenVinoSharp.Tests
         public void input_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -200,11 +200,11 @@ namespace OpenVinoSharp.Tests
         public void input_test1()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
-            Input input = compiled_model.input("images");
+            Input input = compiled_model.input(model_input_name());
             Assert.IsTrue(input.get_node().Ptr != IntPtr.Zero);
             input.Dispose();
             compiled_model.Dispose();
@@ -216,7 +216,7 @@ namespace OpenVinoSharp.Tests
         public void input_test2()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -232,7 +232,7 @@ namespace OpenVinoSharp.Tests
         public void output_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -248,11 +248,11 @@ namespace OpenVinoSharp.Tests
         public void output_test1()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
-            Output output = compiled_model.output("output0");
+            Output output = compiled_model.output(model_output_name());
             Assert.IsTrue(output.get_node().Ptr != IntPtr.Zero);
             output.Dispose();
             compiled_model.Dispose();
@@ -264,7 +264,7 @@ namespace OpenVinoSharp.Tests
         public void output_test2()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -280,7 +280,7 @@ namespace OpenVinoSharp.Tests
         public void inputs_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -295,7 +295,7 @@ namespace OpenVinoSharp.Tests
         public void outputs_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -310,7 +310,7 @@ namespace OpenVinoSharp.Tests
         public void get_runtime_model_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             CompiledModel compiled_model = core.compile_model(model);
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
@@ -326,9 +326,9 @@ namespace OpenVinoSharp.Tests
         public void export_model_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
-            CompiledModel compiled_model = core.compile_model(model,"CPU");
+            CompiledModel compiled_model = core.compile_model(model,get_device());
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
             compiled_model.export_model("test_exported_model.blob");
             compiled_model.Dispose();
@@ -339,16 +339,24 @@ namespace OpenVinoSharp.Tests
         [TestMethod()]
         public void set_property_test()
         {
-            Assert.Fail();
+            var core = new Core();
+            Model model = core.read_model(get_model_xml_file_name());
+            Assert.IsTrue(model.Ptr != IntPtr.Zero);
+            CompiledModel compiled_model = core.compile_model(model, "BATCH:" + get_device() + "(4)");
+            Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
+            KeyValuePair<string, string> key = new KeyValuePair<string, string>(PropertyKey.AUTO_BATCH_TIMEOUT.ToString(), "5000");
+            compiled_model.set_property(key);
+            string result = compiled_model.get_property("AUTO_BATCH_TIMEOUT");
+            Assert.AreEqual("5000", result);
         }
 
         [TestMethod()]
         public void get_property_test()
         {
             var core = new Core();
-            Model model = core.read_model("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s.xml");
+            Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
-            CompiledModel compiled_model = core.compile_model(model, "CPU");
+            CompiledModel compiled_model = core.compile_model(model, get_device());
             Assert.IsTrue(compiled_model.Ptr != IntPtr.Zero);
             string result = compiled_model.get_property("SUPPORTED_PROPERTIES");
             compiled_model.Dispose();
