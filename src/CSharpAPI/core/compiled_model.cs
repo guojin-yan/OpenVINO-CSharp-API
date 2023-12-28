@@ -20,7 +20,7 @@ namespace OpenVinoSharp
         /// <summary>
         /// [private]CompiledModel class pointer.
         /// </summary>
-        private IntPtr m_ptr;
+        private IntPtr m_ptr = IntPtr.Zero;
         /// <summary>
         /// [private]CompiledModel class pointer.
         /// </summary>
@@ -28,6 +28,12 @@ namespace OpenVinoSharp
         { 
             get { return m_ptr; } 
             set { m_ptr = value; } 
+        }
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public CompiledModel()
+        {
         }
 
         /// <summary>
