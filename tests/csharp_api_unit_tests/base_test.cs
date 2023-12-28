@@ -8,31 +8,50 @@ namespace OpenVinoSharp.Tests
 {
     public class OVBaseTest
     {
-        private string model_xml = "..\\..\\..\\..\\..\\tests\\test_data\\model\\yolov8\\yolov8s.xml";
-        private string model_bin = "..\\..\\..\\..\\..\\tests\\test_data\\model\\yolov8\\yolov8s.bin";
+        public class TestModelInfo
+        {
+            public string model_xml = "..\\..\\..\\..\\..\\tests\\test_data\\model\\yolov8\\yolov8s.xml";
+            public string model_bin = "..\\..\\..\\..\\..\\tests\\test_data\\model\\yolov8\\yolov8s.bin";
+            public string input_name = "images";
+            public string output_name = "output0";
+
+            public OvType input_type = new OvType(ElementType.F16);
+            public Shape shape = new Shape(new long[] { 1, 3, 640, 640 });
+
+
+        }
+        TestModelInfo model_info = new TestModelInfo();
 
         private string device = "CPU";
         public string get_model_xml_file_name() 
         {
-            if (!File.Exists(model_xml)) 
+            if (!File.Exists(model_info.model_xml)) 
             {
                 Assert.Fail();
             }
-            return model_xml;
+            return model_info.model_xml;
         }
         public string get_model_bin_file_name()
         {
-            if (!File.Exists(model_bin))
+            if (!File.Exists(model_info.model_bin))
             {
                 Assert.Fail();
             }
-            return model_bin;
+            return model_info.model_bin;
         }
         public string get_device() 
         {
             return device;
         }
 
+        public string model_input_name() 
+        {
+            return model_info.input_name;
+        }
+        public string model_output_name()
+        {
+            return model_info.output_name;
+        }
 
         public byte[] content_from_file(string file)
         {
