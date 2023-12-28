@@ -123,5 +123,18 @@ namespace OpenVinoSharp
             s += "}";
             return s;
         }
+        /// <summary>
+        /// Obtain the product of all shape parameters
+        /// </summary>
+        /// <returns>The product of all shape parameters</returns>
+        public long data_size() 
+        {
+            long d = 1;
+            foreach (var i in this)
+            {
+                d *= i;
+            }
+            return d;
+        }
     }
 }
