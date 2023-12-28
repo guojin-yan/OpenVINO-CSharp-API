@@ -29,13 +29,18 @@ namespace OpenVinoSharp
         /// <summary>
         /// Default Constructor
         /// </summary>
+        public Model() 
+        {
+        }
+        /// <summary>
+        /// Constructs Model from the initialized ptr.
+        /// </summary>
         /// <param name="ptr">Model pointer.</param>
         public Model(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
             {
-                System.Diagnostics.Debug.WriteLine("Model init error : ptr is null!");
-                return;
+                throw new OVException(ExceptionStatus.GENERAL_ERROR, "The ptr is null!");
             }
             Ptr = ptr;
         }
