@@ -27,6 +27,10 @@ namespace OpenVinoSharp
         public IntPtr Ptr { get { return m_ptr; } set { m_ptr = value; } }
 
         /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public Tensor() { }
+        /// <summary>
         /// Constructs Tensor from the initialized pointer.
         /// </summary>
         /// <param name="ptr">Tensor pointer.</param>
@@ -51,6 +55,10 @@ namespace OpenVinoSharp
             HandleException.handler(
                 NativeMethods.ov_tensor_create_from_host_ptr
                 ((uint)type.get_type(), shape.shape, Marshal.UnsafeAddrOfPinnedArrayElement(mat, 0), ref m_ptr));
+        }
+        public Tensor(OvType type, Shape shape, byte[] mat)
+            :this(new element.Type(type.get_type()), shape, mat)
+        {
         }
         /// <summary>
         /// Constructs Tensor using element type ,shape and input data. 
@@ -120,7 +128,10 @@ namespace OpenVinoSharp
                 NativeMethods.ov_tensor_create_from_host_ptr
                 ((uint)type.get_type(), shape.shape, host_ptr, ref m_ptr));
         }
-
+        public Tensor(OvType type, Shape shape, IntPtr host_ptr)
+            :this(new element.Type(type.get_type()), shape, host_ptr)
+        {
+        }
         /// <summary>
         /// Constructs Tensor using element type and shape. Allocate internal host storage using default allocator
         /// </summary>
@@ -132,7 +143,10 @@ namespace OpenVinoSharp
                 NativeMethods.ov_tensor_create
                 ((uint)type.get_type(), shape.shape, ref m_ptr));
         }
-
+        public Tensor(OvType type, Shape shape)
+            : this(new element.Type(type.get_type()), shape)
+        {
+        }
         /// <summary>
         /// Default copy constructor
         /// </summary>
