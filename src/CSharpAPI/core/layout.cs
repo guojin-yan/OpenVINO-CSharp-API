@@ -58,11 +58,9 @@ namespace OpenVinoSharp
         public Layout(string layout_desc)
         {
             sbyte[] c_layout_desc = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(layout_desc));
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_layout_create(ref c_layout_desc[0], ref m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("Layout init error : {0}!", status.ToString());
-            }
+            HandleException.handler(
+                NativeMethods.ov_layout_create(ref c_layout_desc[0], ref m_ptr));
+
         }
 
         /// <summary>
