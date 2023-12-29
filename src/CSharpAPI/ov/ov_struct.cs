@@ -109,6 +109,8 @@ namespace OpenVinoSharp
                 /// </summary>
                 EXECUTED
             };
+
+            public Status status;
             /// <summary>
             /// The absolute time, in microseconds, that the node ran (in total).
             /// </summary>
@@ -130,6 +132,7 @@ namespace OpenVinoSharp
             /// </summary>
             public string node_type;
         };
+
         /// <summary>
         /// A list of profiling info data
         /// </summary>
