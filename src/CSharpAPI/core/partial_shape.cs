@@ -82,6 +82,7 @@ namespace OpenVinoSharp
         public PartialShape(long rank, long[] dimensions)
         {
             this.rank = new Dimension(rank);
+            this.dimensions = new Dimension[dimensions.Length];
             for (int i = 0; i < dimensions.Length; ++i)
             {
                 this.dimensions[i] = new Dimension(dimensions[i]);
@@ -169,7 +170,8 @@ namespace OpenVinoSharp
         /// <returns>The shape.</returns>
         public Shape to_shape()
         {
-            IntPtr shape_ptr = IntPtr.Zero;
+            int l = Marshal.SizeOf(typeof(Ov.ov_shape));
+            IntPtr shape_ptr = Marshal.AllocHGlobal(l);
             HandleException.handler(
                 NativeMethods.ov_partial_shape_to_shape(get_partial_shape(), shape_ptr));     
             return new Shape(shape_ptr);
