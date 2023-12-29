@@ -59,7 +59,7 @@ namespace OpenVinoSharp.Tests
 
             Core core = new Core();
             Assert.IsTrue(core.Ptr != IntPtr.Zero);
-            Model model = core.read_model(Path.GetFullPath(get_model_xml_file_name()), tensor);
+            Model model = core.read_model(get_model_xml_file_name(), tensor);
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
         }
 
