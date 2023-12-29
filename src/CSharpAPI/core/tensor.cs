@@ -46,11 +46,66 @@ namespace OpenVinoSharp
         /// <param name="type">Tensor element type</param>
         /// <param name="shape">Tensor shape</param>
         /// <param name="mat">Image data</param>
-        public Tensor(element.Type type, Shape shape, byte[] mat) 
+        public Tensor(element.Type type, Shape shape, byte[] mat)
         {
             HandleException.handler(
                 NativeMethods.ov_tensor_create_from_host_ptr
-                ((uint)type.get_type(), shape.shape, Marshal.UnsafeAddrOfPinnedArrayElement(mat,0), ref m_ptr));
+                ((uint)type.get_type(), shape.shape, Marshal.UnsafeAddrOfPinnedArrayElement(mat, 0), ref m_ptr));
+        }
+        /// <summary>
+        /// Constructs Tensor using element type ,shape and input data. 
+        /// </summary>
+        /// <param name="shape">Tensor shape</param>
+        /// <param name="mat">Input data</param>
+        public Tensor(Shape shape, float[] mat)
+        {
+            HandleException.handler(
+                NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)ElementType.F32, shape.shape, Marshal.UnsafeAddrOfPinnedArrayElement(mat, 0), ref m_ptr));
+        }
+        /// <summary>
+        /// Constructs Tensor using element type ,shape and input data. 
+        /// </summary>
+        /// <param name="shape">Tensor shape</param>
+        /// <param name="mat">Input data</param>
+        public Tensor(Shape shape, double[] mat)
+        {
+            HandleException.handler(
+                NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)ElementType.F64, shape.shape, Marshal.UnsafeAddrOfPinnedArrayElement(mat, 0), ref m_ptr));
+        }
+        /// <summary>
+        /// Constructs Tensor using element type ,shape and input data. 
+        /// </summary>
+        /// <param name="shape">Tensor shape</param>
+        /// <param name="mat">Input data</param>
+        public Tensor(Shape shape, int[] mat)
+        {
+            HandleException.handler(
+                NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)ElementType.I32, shape.shape, Marshal.UnsafeAddrOfPinnedArrayElement(mat, 0), ref m_ptr));
+        }
+        /// <summary>
+        /// Constructs Tensor using element type ,shape and input data. 
+        /// </summary>
+        /// <param name="shape">Tensor shape</param>
+        /// <param name="mat">Input data</param>
+        public Tensor(Shape shape, short[] mat)
+        {
+            HandleException.handler(
+                NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)ElementType.I16, shape.shape, Marshal.UnsafeAddrOfPinnedArrayElement(mat, 0), ref m_ptr));
+        }
+        /// <summary>
+        /// Constructs Tensor using element type ,shape and input data. 
+        /// </summary>
+        /// <param name="shape">Tensor shape</param>
+        /// <param name="mat">Input data</param>
+        public Tensor(Shape shape, long[] mat)
+        {
+            HandleException.handler(
+                NativeMethods.ov_tensor_create_from_host_ptr
+                ((uint)ElementType.I64, shape.shape, Marshal.UnsafeAddrOfPinnedArrayElement(mat, 0), ref m_ptr));
         }
         /// <summary>
         /// Constructs Tensor using element type and shape. Wraps allocated host memory.
