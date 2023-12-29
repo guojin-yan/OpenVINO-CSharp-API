@@ -55,7 +55,6 @@ namespace OpenVinoSharp
         /// <param name="axis_lengths">Initialized list</param>
         public Shape(List<long> axis_lengths)
         {
-         
             for (int i = 0; i < axis_lengths.Count; ++i)
             {
                 this.Add(axis_lengths[i]);
@@ -73,7 +72,6 @@ namespace OpenVinoSharp
         /// <param name="axis_lengths">Initialized array</param>
         public Shape(long[] axis_lengths)
         {
-
             for (int i = 0; i < axis_lengths.Length; ++i)
             {
                 this.Add(axis_lengths[i]);
@@ -94,7 +92,7 @@ namespace OpenVinoSharp
             long[] axis_lengths = new long[data.Length];
             for (int i = 0; i < data.Length; ++i)
             {
-                this.Add(axis_lengths[i]);
+                this.Add(data[i]);
                 axis_lengths[i] = data[i];
             }
             int l = Marshal.SizeOf(typeof(ov_shape));
