@@ -110,6 +110,45 @@ namespace OpenVinoSharp
         /// </param>
         /// <param name="tensor">Reference to a tensor. The element_type and shape of a tensor must match 
         /// the model's input/output element_type and size.</param>
+        public void set_tensor(Input port, Tensor tensor)
+        {
+            if (port.get_node().node_type == Node.NodeType.e_const)
+            {
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_set_tensor_by_const_port(
+                        m_ptr, port.get_node().Ptr, tensor.Ptr));
+            }
+            else
+            {
+                HandleException.handler(
+                    NativeMethods.ov_infer_request_set_tensor_by_port(
+                        m_ptr, port.get_node().Ptr, tensor.Ptr));
+            }
+        }
+        /// <summary>
+        /// Sets an input/output tensor to infer.
+        /// </summary>
+        /// <param name="port">
+        /// Port of the input or output tensor. Use the following methods to get the ports:
+        /// - Model.input() 
+        /// - Model.const_input()   
+        /// - Model.inputs()    
+        /// - Model.const_inputs()  
+        /// - Model.output()    
+        /// - Model.const_output()  
+        /// - Model.outputs()   
+        /// - Model.const_outputs()    
+        /// - CompiledModel.input() 
+        /// - CompiledModel.const_input() 
+        /// - CompiledModel.inputs()    
+        /// - CompiledModel.const_inputs()    
+        /// - CompiledModel.output()  
+        /// - CompiledModel.const_output()   
+        /// - CompiledModel.outputs()   
+        /// - CompiledModel.const_outputs()  
+        /// </param>
+        /// <param name="tensor">Reference to a tensor. The element_type and shape of a tensor must match 
+        /// the model's input/output element_type and size.</param>
         public void set_tensor(Output port, Tensor tensor)
         {
             if (port.get_node().node_type == Node.NodeType.e_const)
@@ -243,6 +282,12 @@ namespace OpenVinoSharp
             }
             return new Tensor(tensor_ptr);
         }
+        /// <summary>
+        /// Gets an input/output tensor for inference.
+        /// </summary>
+        /// <exception cref="">If the tensor with the specified @p port is not found, an exception is thrown.</exception>
+        /// <param name="port">Port of the tensor to get.</param>
+        /// <returns>Tensor for the port @p port.</returns>
         public Tensor get_tensor(Input port)
         {
             IntPtr tensor_ptr = IntPtr.Zero;
@@ -379,18 +424,31 @@ namespace OpenVinoSharp
         /// <returns>List of profiling information for operations in a model.</returns>
         public List<Ov.ProfilingInfo> get_profiling_info()
         {
+            int l = Marshal.SizeOf(typeof(ov_profiling_info_list));
+            IntPtr ptr = Marshal.AllocHGlobal(l);
             ov_profiling_info_list profiling_info_list = new ov_profiling_info_list();
+
+            profiling_info_list.size = 0;
+            profiling_info_list.profiling_infos = IntPtr.Zero;
+
+            Marshal.StructureToPtr(profiling_info_list, ptr, false);
+
             HandleException.handler( 
-                NativeMethods.ov_infer_request_get_profiling_info(m_ptr, ref profiling_info_list));
-            IntPtr[] profiling_infos_ptr = new IntPtr[profiling_info_list.size];
-            Marshal.Copy(profiling_info_list.profiling_infos, profiling_infos_ptr, 0, (int)profiling_info_list.size);
+                NativeMethods.ov_infer_request_get_profiling_info(m_ptr, ptr));
+
+            var tempp = Marshal.PtrToStructure(ptr, typeof(ov_profiling_info_list));
+            profiling_info_list = (ov_profiling_info_list)tempp;
+            l = Marshal.SizeOf(typeof(Ov.ProfilingInfo));
+
             List<Ov.ProfilingInfo> profiling_infos = new List<ProfilingInfo>();
             for (int i = 0; i < (int)profiling_info_list.size; ++i) 
             {
-                var temp = Marshal.PtrToStructure(profiling_infos_ptr[i], typeof(Ov.ProfilingInfo));
-                Ov.ProfilingInfo profiling_info = (Ov.ProfilingInfo)temp;
+                var tempt = Marshal.PtrToStructure(profiling_info_list.profiling_infos, typeof(Ov.ProfilingInfo));
+                Ov.ProfilingInfo profiling_info = (Ov.ProfilingInfo)tempt;
                 profiling_infos.Add(profiling_info);
             }
+            HandleException.handler(
+                NativeMethods.ov_profiling_info_list_free(ptr));
             return profiling_infos;
         }
     }

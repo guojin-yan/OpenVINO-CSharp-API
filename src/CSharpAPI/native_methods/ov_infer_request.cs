@@ -260,7 +260,7 @@ namespace OpenVinoSharp
         /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport(dll_extern, EntryPoint = "ov_infer_request_get_profiling_info",
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_infer_request_get_profiling_info(IntPtr infer_request, ref Ov.ov_profiling_info_list profiling_infos);
+        public extern static ExceptionStatus ov_infer_request_get_profiling_info(IntPtr infer_request, IntPtr profiling_infos);
 
         /// <summary>
         /// Release the memory allocated by ov_profiling_info_list_t.
