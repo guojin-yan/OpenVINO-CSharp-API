@@ -24,7 +24,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="node">The node for the output handle.</param>
         /// <param name="index">The index of the output.</param>
-        public Output(Node node, ulong index)
+        public Output(Node node, ulong index=0)
         {
             m_node = node;
             m_index = index;
