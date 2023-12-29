@@ -63,7 +63,7 @@ namespace OpenVinoSharp
         /// <param name="tensor_index">The order of input.</param>
         /// <param name="preprocess_input_info">A pointer to the ov_preprocess_input_info_t.</param>
         /// <returns>Status code of the operation: OK(0) for success.</returns>
-        [DllImport(dll_extern, EntryPoint = "ov_preprocess_prepostprocessor_free", 
+        [DllImport(dll_extern, EntryPoint = "ov_preprocess_prepostprocessor_get_input_info_by_index", 
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_get_input_info_by_index(
             IntPtr preprocess,
@@ -74,7 +74,7 @@ namespace OpenVinoSharp
         /// Release the memory allocated by ov_preprocess_input_info_t.
         /// </summary>
         /// <param name="preprocess_input_info">A pointer to the ov_preprocess_input_info_t to free memory.</param>
-        [DllImport(dll_extern, EntryPoint = "ov_preprocess_prepostprocessor_free", 
+        [DllImport(dll_extern, EntryPoint = "ov_preprocess_input_info_free", 
             CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_preprocess_input_info_free(
             IntPtr preprocess_input_info);
