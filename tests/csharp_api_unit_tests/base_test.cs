@@ -15,10 +15,11 @@ namespace OpenVinoSharp.Tests
             public string input_name = "images";
             public string output_name = "output0";
 
-            public OvType input_type = new OvType(ElementType.F16);
-            public Shape shape = new Shape(new long[] { 1, 3, 640, 640 });
+            public OvType input_type = new OvType(ElementType.F32);
+            public Shape input_shape = new Shape(new long[] { 1, 3, 640, 640 });
 
-
+            public OvType output_type = new OvType(ElementType.F16);
+            public Shape output_shape = new Shape(new long[] { 1, 84, 8400 });
         }
         TestModelInfo model_info = new TestModelInfo();
 
@@ -51,6 +52,26 @@ namespace OpenVinoSharp.Tests
         public string model_output_name()
         {
             return model_info.output_name;
+        }
+
+        public Shape model_input_shape() 
+        {
+            return model_info.input_shape;
+        }
+
+        public OvType model_input_type()
+        {
+            return model_info.input_type;
+        }
+
+        public Shape model_output_shape()
+        {
+            return model_info.output_shape;
+        }
+
+        public OvType model_output_type()
+        {
+            return model_info.output_type;
         }
 
         public byte[] content_from_file(string file)
