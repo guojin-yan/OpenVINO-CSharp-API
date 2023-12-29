@@ -33,8 +33,7 @@ namespace OpenVinoSharp.preprocess
         {
             if (ptr == IntPtr.Zero)
             {
-                System.Diagnostics.Debug.WriteLine("InputInfo init error : ptr is null!");
-                return;
+                throw new OVException(ExceptionStatus.GENERAL_ERROR, "The ptr is null!");
             }
             this.m_ptr = ptr;
         }
