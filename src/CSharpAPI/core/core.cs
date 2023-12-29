@@ -188,7 +188,6 @@ namespace OpenVinoSharp
             byte[] data = new byte[len + 1];
             fs.Read(data, 0, (int)len);
             IntPtr model_ptr = new IntPtr();
-            sbyte[] c_model_path = (sbyte[])((Array)System.Text.Encoding.Default.GetBytes(model_path));
             HandleException.handler(
                 NativeMethods.ov_core_read_model_from_memory(m_ptr, ref data[0], weights.Ptr, ref model_ptr));
             return new Model(model_ptr);
