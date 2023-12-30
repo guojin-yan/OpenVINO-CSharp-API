@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -66,22 +67,34 @@ namespace OpenVinoSharp.preprocess
         /// </remarks>
         /// <param name="format">Color format of input image.</param>
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
-        public InputTensorInfo set_color_format(ColorFormat format)
+        public InputTensorInfo set_color_format(ColorFormat format, params string[] properties)
         {
-            HandleException.handler(
-                NativeMethods.ov_preprocess_input_tensor_info_set_color_format(m_ptr, (uint)format));
-            return this;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="format"></param>
-        /// <param name="sub_names_size"></param>
-        /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
-        public InputTensorInfo set_color_format(ColorFormat format, ulong sub_names_size)
-        {
-            HandleException.handler(
-                NativeMethods.ov_preprocess_input_tensor_info_set_color_format_with_subname(m_ptr, (uint)format, sub_names_size));
+            IntPtr[] p = new IntPtr[properties.Length];
+            for (int i = 0; i < properties.Length; ++i) 
+            {
+                p[i] = Marshal.StringToHGlobalAnsi(properties[i]);
+            }
+            switch (p.Length) 
+            {
+                case 0:
+                    HandleException.handler(NativeMethods.ov_preprocess_input_tensor_info_set_color_format(m_ptr, (uint)format));
+                    break;
+                case 1: 
+                    NativeMethods.ov_preprocess_input_tensor_info_set_color_format_with_subname(m_ptr, (uint)format, (ulong)properties.Length, p[0]);
+                    break;
+                case 2:
+                    NativeMethods.ov_preprocess_input_tensor_info_set_color_format_with_subname(m_ptr, (uint)format, (ulong)properties.Length, p[0], p[1]);
+                    break;
+                case 3:
+                    NativeMethods.ov_preprocess_input_tensor_info_set_color_format_with_subname(m_ptr, (uint)format, (ulong)properties.Length, p[0], p[1], p[2]);
+                    break;
+                case 4:
+                    NativeMethods.ov_preprocess_input_tensor_info_set_color_format_with_subname(m_ptr, (uint)format, (ulong)properties.Length, p[0], p[1], p[2], p[3]);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("Properties count > 4 not supported");
+
+            }
             return this;
         }
 
