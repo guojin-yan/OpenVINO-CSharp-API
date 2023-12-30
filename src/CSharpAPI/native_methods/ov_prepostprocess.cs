@@ -242,8 +242,29 @@ namespace OpenVinoSharp
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_color_format_with_subname(
             IntPtr preprocess_input_tensor_info,
             uint color_format,
-            ulong sub_names_size);
-
+            ulong sub_names_size,
+            IntPtr k1);
+        [DllImport(dll_extern, EntryPoint = "ov_preprocess_input_tensor_info_set_color_format_with_subname",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_color_format_with_subname(
+            IntPtr preprocess_input_tensor_info,
+            uint color_format,
+            ulong sub_names_size,
+            IntPtr k1, IntPtr k2);
+        [DllImport(dll_extern, EntryPoint = "ov_preprocess_input_tensor_info_set_color_format_with_subname",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_color_format_with_subname(
+            IntPtr preprocess_input_tensor_info,
+            uint color_format,
+            ulong sub_names_size,
+            IntPtr k1, IntPtr k2, IntPtr k3);
+        [DllImport(dll_extern, EntryPoint = "ov_preprocess_input_tensor_info_set_color_format_with_subname",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_color_format_with_subname(
+            IntPtr preprocess_input_tensor_info,
+            uint color_format,
+            ulong sub_names_size,
+            IntPtr k1, IntPtr k2, IntPtr k3, IntPtr k4);
 
         /// <summary>
         /// Set ov_preprocess_input_tensor_info_t spatial_static_shape.
