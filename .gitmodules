@@ -1,1 +1,3 @@
-
+[submodule "samples"]
+	path = samples
+	url = https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples.git
