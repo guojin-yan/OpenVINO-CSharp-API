@@ -61,12 +61,9 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public PreProcessSteps resize(ResizeAlgorithm resize) 
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_preprocess_preprocess_steps_resize(
-                m_ptr, (int)resize);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PreProcessSteps resize error : {0}!", status.ToString());
-            }
+            HandleException.handler(NativeMethods.ov_preprocess_preprocess_steps_resize(
+                m_ptr, (int)resize));
+
             return this;
         }
 
@@ -78,12 +75,9 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public PreProcessSteps scale(float value)
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_preprocess_preprocess_steps_scale(
-                m_ptr, value);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PreProcessSteps resize error : {0}!", status.ToString());
-            }
+            HandleException.handler(NativeMethods.ov_preprocess_preprocess_steps_scale(
+                m_ptr, value));
+
             return this;
         }
 
@@ -94,12 +88,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public PreProcessSteps mean(float value)
         {
-            ExceptionStatus status = (ExceptionStatus)NativeMethods.ov_preprocess_preprocess_steps_mean(
-                m_ptr, value);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PreProcessSteps mean error : {0}!", status.ToString());
-            }
+            HandleException.handler(NativeMethods.ov_preprocess_preprocess_steps_mean(
+                m_ptr, value));
             return this;
         }
 
@@ -115,12 +105,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public PreProcessSteps crop(int[] begin, int[] end)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_preprocess_steps_crop(
-                m_ptr, ref begin[0], begin.Length, ref end[0], end.Length);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PreProcessSteps crop error : {0}!", status.ToString());
-            }
+            HandleException.handler(NativeMethods.ov_preprocess_preprocess_steps_crop(
+                m_ptr, ref begin[0], begin.Length, ref end[0], end.Length));
             return this;
         }
         /// <summary>
@@ -136,12 +122,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public PreProcessSteps crop(List<int> begin, List<int> end)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_preprocess_steps_crop(
-                m_ptr, ref begin.ToArray()[0], begin.Count, ref end.ToArray()[0], end.Count);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PreProcessSteps crop error : {0}!", status.ToString());
-            }
+            HandleException.handler(NativeMethods.ov_preprocess_preprocess_steps_crop(
+                m_ptr, ref begin.ToArray()[0], begin.Count, ref end.ToArray()[0], end.Count));
             return this;
         }
 
@@ -166,12 +148,9 @@ namespace OpenVinoSharp.preprocess
         /// </example>
         public PreProcessSteps convert_layout(Layout layout)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_preprocess_steps_convert_layout(
-                m_ptr, layout.Ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PreProcessSteps convert_layout error : {0}!", status.ToString());
-            }
+            HandleException.handler(NativeMethods.ov_preprocess_preprocess_steps_convert_layout(
+                m_ptr, layout.Ptr));
+          
             return this;
         }
 
@@ -193,12 +172,8 @@ namespace OpenVinoSharp.preprocess
         /// </example>
         public PreProcessSteps reverse_channels()
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_preprocess_steps_reverse_channels(
-                m_ptr);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PreProcessSteps reverse_channels error : {0}!", status.ToString());
-            }
+            HandleException.handler(NativeMethods.ov_preprocess_preprocess_steps_reverse_channels(
+                m_ptr));
             return this;
         }
 
@@ -210,12 +185,8 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public PreProcessSteps convert_color(ColorFormat format) 
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_preprocess_steps_convert_color(
-                m_ptr, (uint)format);
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PreProcessSteps convert_element_type error : {0}!", status.ToString());
-            }
+            HandleException.handler(NativeMethods.ov_preprocess_preprocess_steps_convert_color(
+                m_ptr, (uint)format));
             return this;
         }
 
@@ -226,12 +197,9 @@ namespace OpenVinoSharp.preprocess
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
         public PreProcessSteps convert_element_type(OvType type)
         {
-            ExceptionStatus status = NativeMethods.ov_preprocess_preprocess_steps_convert_element_type(
-                m_ptr, (uint)type.get_type());
-            if (status != 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PreProcessSteps convert_element_type error : {0}!", status.ToString());
-            }
+            HandleException.handler(NativeMethods.ov_preprocess_preprocess_steps_convert_element_type(
+                m_ptr, (uint)type.get_type()));
+
             return this;
         }
     }
