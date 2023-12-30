@@ -113,6 +113,16 @@ namespace OpenVinoSharp.preprocess.Tests
             Model model = core.read_model(get_model_xml_file_name());
             Assert.IsTrue(model.Ptr != IntPtr.Zero);
             PrePostProcessor processor = new PrePostProcessor(model);
+
+            Tensor input_tensor = new Tensor(new OvType(ElementType.U8), new Shape(1, 640, 640, 3));
+            InputInfo input_info = processor.input(0);
+            InputTensorInfo input_tensor_info = input_info.tensor();
+            input_tensor_info.set_from(input_tensor).set_layout(new Layout("NHWC")).set_color_format(ColorFormat.BGR);
+
+            PreProcessSteps process_steps = input_info.preprocess();
+            process_steps.convert_color(ColorFormat.RGB).resize(ResizeAlgorithm.RESIZE_LINEAR)
+                .convert_element_type(new OvType(ElementType.F32)).scale(255.0f).convert_layout(new Layout("NCHW"));
+
             Model new_model = processor.build();
             new_model.Dispose();
             processor.Dispose();
