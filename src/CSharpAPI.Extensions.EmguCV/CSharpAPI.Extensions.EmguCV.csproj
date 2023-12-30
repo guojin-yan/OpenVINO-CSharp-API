@@ -20,6 +20,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>This assembly is for OpenVINO CSharp API. The expansion of API mainly involves encapsulating the inference process of common models and the pre-processing and post-processing methods of data.The image processing library uses EmguCV.</PackageReleaseNotes>
     <PackageOutputPath>../../nuget</PackageOutputPath>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +31,10 @@
 
   <ItemGroup>
     <None Include="..\..\nuget\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\nuget\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
