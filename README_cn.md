@@ -5,8 +5,10 @@
         <img src="https://img.shields.io/github/license/guojin-yan/openvinosharp.svg">
     </a>    
     <a >
-        <img src="https://img.shields.io/badge/Framework-.NET5.0%2C%20.NET6.0%2C%20.NET48-pink.svg">
+        <img src="https://img.shields.io/badge/Framework-.NET 8.0%2C%20.NET 6.0%2C%20.NET 5.0%2C%20.NET Framework 4.8%2C%20.NET Framework 4.7.2%2C%20.NET Framework 4.6%2C%20.NET Core 3.1-pink.svg">
     </a>    
+</p>
+
 
 简体中文| [English](README.md)
 
