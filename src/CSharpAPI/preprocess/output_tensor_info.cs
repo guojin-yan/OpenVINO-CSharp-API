@@ -58,10 +58,10 @@ namespace OpenVinoSharp.preprocess
         /// </summary>
         /// <param name="type">Element type for user's output tensor.</param>
         /// <returns>Reference to 'this' to allow chaining with other calls in a builder-like manner.</returns>
-        public OutputTensorInfo set_element_type(ElementType type)
+        public OutputTensorInfo set_element_type(OvType type)
         {
             HandleException.handler(
-                NativeMethods.ov_preprocess_output_set_element_type(m_ptr, (uint)type));
+                NativeMethods.ov_preprocess_output_set_element_type(m_ptr, (uint)type.get_type()));
             return this;
         }
     }
