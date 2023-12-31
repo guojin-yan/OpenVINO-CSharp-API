@@ -14,17 +14,21 @@ namespace OpenVinoSharp.Extensions.model.Tests
     [TestClass()]
     public class Yolov8SegTests
     {
+        public string model_xml_path = "..\\..\\..\\..\\..\\tests\\test_data\\model\\yolov8\\yolov8s-seg.xml";
+        public string image_path = "..\\..\\..\\..\\..\\tests\\test_data\\image\\demo_1.jpg";
+        public string image_path1 = "..\\..\\..\\..\\..\\tests\\test_data\\image\\demo_2.jpg";
+        public string image_path2 = "..\\..\\..\\..\\..\\tests\\test_data\\image\\demo_3.jpg";
         [TestMethod()]
         public void Yolov8Seg_test()
         {
-            Yolov8Seg yolo = new Yolov8Seg("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s-seg.xml");
+            Yolov8Seg yolo = new Yolov8Seg(model_xml_path);
         }
 
         [TestMethod()]
         public void predict_test()
         {
-            Yolov8Seg yolo = new Yolov8Seg("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s-seg.xml");
-            Mat image = CvInvoke.Imread("..\\..\\..\\..\\..\\dataset\\image\\demo_2.jpg");
+            Yolov8Seg yolo = new Yolov8Seg(model_xml_path);
+            Mat image = CvInvoke.Imread(image_path1);
             SegResult result = yolo.predict(image);
             //CvInvoke.Imshow("aa", result.datas[0].mask);
             //CvInvoke.Imshow("bb", result.datas[1].mask);
@@ -40,8 +44,8 @@ namespace OpenVinoSharp.Extensions.model.Tests
         [TestMethod()]
         public void predict_test1()
         {
-            Yolov8Seg yolo = new Yolov8Seg("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s-seg.xml");
-            Mat image = CvInvoke.Imread("..\\..\\..\\..\\..\\dataset\\image\\demo_2.jpg");
+            Yolov8Seg yolo = new Yolov8Seg(model_xml_path);
+            Mat image = CvInvoke.Imread(image_path1);
             List<Mat> images = new List<Mat>();
             images.Add(image);
             List<SegResult> result = yolo.predict(images);

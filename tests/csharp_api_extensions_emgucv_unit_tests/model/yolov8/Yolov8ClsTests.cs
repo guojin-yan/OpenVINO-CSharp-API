@@ -14,11 +14,15 @@ namespace OpenVinoSharp.Extensions.model.Tests
     [TestClass()]
     public class Yolov8ClsTests
     {
+        public string model_xml_path = "..\\..\\..\\..\\..\\tests\\test_data\\model\\yolov8\\yolov8s-cls.xml";
+        public string image_path = "..\\..\\..\\..\\..\\tests\\test_data\\image\\demo_4.jpg";
+        public string image_path1 = "..\\..\\..\\..\\..\\tests\\test_data\\image\\demo_6.jpg";
+        public string image_path2 = "..\\..\\..\\..\\..\\tests\\test_data\\image\\demo_7.jpg";
         [TestMethod()]
         public void predict_test()
         {
-            Yolov8Cls yolo = new Yolov8Cls("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s-cls.xml");
-            Mat image = CvInvoke.Imread("..\\..\\..\\..\\..\\dataset\\image\\demo_4.jpg");
+            Yolov8Cls yolo = new Yolov8Cls(model_xml_path);
+            Mat image = CvInvoke.Imread(image_path);
             ClsResult result = yolo.predict(image);
             result.update_lable(ImageNetOption.lables);
             Assert.IsNotNull(result);
@@ -27,11 +31,11 @@ namespace OpenVinoSharp.Extensions.model.Tests
         [TestMethod()]
         public void predict_test1()
         {
-            Yolov8Cls yolo = new Yolov8Cls("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s-cls.xml");
+            Yolov8Cls yolo = new Yolov8Cls(model_xml_path);
             List<Mat> images = new List<Mat>();
-            images.Add(CvInvoke.Imread("..\\..\\..\\..\\..\\dataset\\image\\demo_4.jpg"));
-            images.Add(CvInvoke.Imread("..\\..\\..\\..\\..\\dataset\\image\\demo_6.jpg"));
-            images.Add(CvInvoke.Imread("..\\..\\..\\..\\..\\dataset\\image\\demo_7.jpg"));
+            images.Add(CvInvoke.Imread(image_path));
+            images.Add(CvInvoke.Imread(image_path1));
+            images.Add(CvInvoke.Imread(image_path2));
             List<ClsResult> results = yolo.predict(images);
             results[0].update_lable(ImageNetOption.lables);
             results[1].update_lable(ImageNetOption.lables);
@@ -42,7 +46,7 @@ namespace OpenVinoSharp.Extensions.model.Tests
         [TestMethod()]
         public void Yolov8Cls_test()
         {
-            Yolov8Cls yolo = new Yolov8Cls("..\\..\\..\\..\\..\\model\\yolov8\\yolov8s-cls.xml");
+            Yolov8Cls yolo = new Yolov8Cls(model_xml_path);
         }
     }
 }
