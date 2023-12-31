@@ -12,7 +12,6 @@ namespace OpenVinoSharp.Extensions.model
 {
     public class Yolov8Pose : Predictor
     {
-        private int m_categ_nums;
         private float m_det_thresh;
         private float m_det_nms_thresh;
         private float[] m_factors;
@@ -20,13 +19,11 @@ namespace OpenVinoSharp.Extensions.model
         private int m_batch_num;
         private int m_output_length;
 
-        public Yolov8Pose(string model_path, string? device = null, int? categ_nums = null, bool? use_gpu = null,
-            long[]? input_size = null, int? batch_num = null, string? cache_dir = null, float? det_thresh = null,
-            float? det_nms_thresh = null)
+        public Yolov8Pose(string model_path, string? device = null, bool? use_gpu = null,long[]? input_size = null, 
+            int? batch_num = null, string? cache_dir = null, float? det_thresh = null, float? det_nms_thresh = null)
             : base(model_path, device ?? Yolov8PoseOption.device, cache_dir ?? Yolov8PoseOption.cache_dir,
                   use_gpu ?? Yolov8PoseOption.use_gpu, input_size ?? Yolov8PoseOption.input_size)
         {
-            m_categ_nums = categ_nums ?? Yolov8DetOption.categ_nums;
             m_det_thresh = det_thresh ?? Yolov8DetOption.det_thresh;
             m_det_nms_thresh = det_nms_thresh ?? Yolov8DetOption.det_nms_thresh;
             m_input_size = input_size ?? Yolov8DetOption.input_size;
@@ -36,6 +33,17 @@ namespace OpenVinoSharp.Extensions.model
             m_batch_num = batch_num ?? Yolov8DetOption.batch_num;
         }
 
+        public Yolov8Pose(Yolov8PoseConfig config)
+            : base(config.model_path, config.device, config.cache_dir, config.use_gpu, config.input_size)
+        {
+            m_det_thresh = config.det_thresh;
+            m_det_nms_thresh = config.det_nms_thresh;
+            m_input_size = config.input_size ?? Yolov8DetOption.input_size;
+            m_output_length = (int)m_input_size[2] / 8 * (int)m_input_size[2] / 8 +
+                 (int)m_input_size[2] / 16 * (int)m_input_size[2] / 16 +
+                 (int)m_input_size[2] / 32 * (int)m_input_size[2] / 32;
+            m_batch_num = config.batch_num;
+        }
         public PoseResult predict(Mat image)
         {
             Mat mat = new Mat();

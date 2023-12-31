@@ -53,5 +53,12 @@ namespace OpenVinoSharp.Extensions.model.Tests
         public void process_result_test()
         {
         }
+
+        [TestMethod()]
+        public void Yolov8Pose_test1()
+        {
+            Config config = new Yolov8PoseConfig(model_xml_path);
+            Yolov8Pose yolo = new Yolov8Pose((Yolov8PoseConfig)config);
+        }
     }
 }

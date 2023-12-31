@@ -28,6 +28,15 @@ namespace OpenVinoSharp.Extensions.model
             m_result_num = result_num ?? Yolov8ClsOption.result_num;
         }
 
+        public Yolov8Cls(Yolov8ClsConfig config)
+            : base(config.model_path, config.device, config.cache_dir,config.use_gpu, config.input_size)
+        {
+            m_categ_nums = config.categ_nums;
+            m_input_size = config.input_size;
+            m_batch_num = config.batch_num;
+            m_result_num = config. result_num;
+        }
+
         public ClsResult predict(Mat image)
         {
             Mat mat = new Mat();

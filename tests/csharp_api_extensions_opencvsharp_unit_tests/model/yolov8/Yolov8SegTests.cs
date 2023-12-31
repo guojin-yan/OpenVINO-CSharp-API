@@ -35,7 +35,8 @@ namespace OpenVinoSharp.Extensions.model.Tests
         [TestMethod()]
         public void predict_test1()
         {
-            Yolov8Seg yolo = new Yolov8Seg(model_xml_path);
+            Config config = new Yolov8SegConfig(model_xml_path);
+            Yolov8Seg yolo = new Yolov8Seg((Yolov8SegConfig)config);
             List<Mat> images = new List<Mat>();
             images.Add(Cv2.ImRead(image_path));
             images.Add(Cv2.ImRead(image_path1));
@@ -47,6 +48,13 @@ namespace OpenVinoSharp.Extensions.model.Tests
         [TestMethod()]
         public void process_result_test()
         {
+        }
+
+        [TestMethod()]
+        public void Yolov8Seg_test1()
+        {
+           Config config = new Yolov8SegConfig(model_xml_path);
+            Yolov8Seg yolo = new Yolov8Seg((Yolov8SegConfig)config);
         }
     }
 }
