@@ -65,8 +65,9 @@ namespace OpenVinoSharp.Extensions.model
 
             Tensor output_tensor = m_infer_request.get_output_tensor(0);
             float[] result = output_tensor.get_data<float>((int)output_tensor.get_size());
-
-            results = postprocess(result, null, 1)[0];
+            Tensor output_tensor1 = m_infer_request.get_output_tensor(1);
+            int[] result1 = output_tensor1.get_data<int>((int)output_tensor1.get_size());
+            results = postprocess(result, result1, 1)[0];
 
 
             return results;
