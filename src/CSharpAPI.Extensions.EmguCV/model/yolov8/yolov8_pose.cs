@@ -37,7 +37,17 @@ namespace OpenVinoSharp.Extensions.model
                  (int)m_input_size[2] / 32 * (int)m_input_size[2] / 32;
             m_batch_num = batch_num ?? Yolov8DetOption.batch_num;
         }
-
+        public Yolov8Pose(Yolov8PoseConfig config)
+            : base(config.model_path, config.device, config.cache_dir, config.use_gpu, config.input_size)
+        {
+            m_det_thresh = config.det_thresh;
+            m_det_nms_thresh = config.det_nms_thresh;
+            m_input_size = config.input_size ?? Yolov8DetOption.input_size;
+            m_output_length = (int)m_input_size[2] / 8 * (int)m_input_size[2] / 8 +
+                 (int)m_input_size[2] / 16 * (int)m_input_size[2] / 16 +
+                 (int)m_input_size[2] / 32 * (int)m_input_size[2] / 32;
+            m_batch_num = config.batch_num;
+        }
         public PoseResult predict(Mat image)
         {
             Mat mat = new Mat();

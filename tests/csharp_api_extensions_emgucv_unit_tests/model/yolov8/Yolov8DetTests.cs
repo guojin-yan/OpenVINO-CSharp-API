@@ -21,14 +21,14 @@ namespace OpenVinoSharp.Extensions.model.Tests
         public void Yolov8Det_test()
         {
             Yolov8Det yolo = new Yolov8Det(model_xml_path);
-            
+
         }
 
         [TestMethod()]
         public void predict_test()
         {
             Yolov8Det yolo = new Yolov8Det(model_xml_path);
-            Mat image =CvInvoke.Imread(image_path);
+            Mat image = CvInvoke.Imread(image_path);
             DetResult result = yolo.predict(image);
             Assert.IsNotNull(result);
         }
@@ -48,7 +48,14 @@ namespace OpenVinoSharp.Extensions.model.Tests
         [TestMethod()]
         public void process_result_test()
         {
-            
+
+        }
+
+        [TestMethod()]
+        public void Yolov8Det_test1()
+        {
+            Config config = new Yolov8DetConfig(model_xml_path);
+            Yolov8Det yolo = new Yolov8Det((Yolov8DetConfig)config);
         }
     }
 }

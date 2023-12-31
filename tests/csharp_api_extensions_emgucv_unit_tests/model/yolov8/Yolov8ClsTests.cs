@@ -48,5 +48,12 @@ namespace OpenVinoSharp.Extensions.model.Tests
         {
             Yolov8Cls yolo = new Yolov8Cls(model_xml_path);
         }
+
+        [TestMethod()]
+        public void Yolov8Cls_test1()
+        {
+            Config config = new Yolov8ClsConfig(model_path: model_xml_path);
+            Yolov8Cls yolo = new Yolov8Cls((Yolov8ClsConfig)config);
+        }
     }
 }

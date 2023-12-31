@@ -49,10 +49,10 @@ namespace OpenVinoSharp.Extensions.model.Tests
             Mat im = Visualize.draw_poses(results[0], images[0], 0.2f);
             //CvInvoke.Imshow("ww", im);
             //CvInvoke.WaitKey(0);
-             im = Visualize.draw_poses(results[1], images[1], 0.2f);
+            im = Visualize.draw_poses(results[1], images[1], 0.2f);
             //CvInvoke.Imshow("ww", im);
             //CvInvoke.WaitKey(0);
-             im = Visualize.draw_poses(results[2], images[2], 0.2f);
+            im = Visualize.draw_poses(results[2], images[2], 0.2f);
             //CvInvoke.Imshow("ww", im);
             //CvInvoke.WaitKey(0);
             Assert.IsNotNull(results);
@@ -61,7 +61,14 @@ namespace OpenVinoSharp.Extensions.model.Tests
         [TestMethod()]
         public void process_result_test()
         {
-           
+
+        }
+
+        [TestMethod()]
+        public void Yolov8Pose_test1()
+        {
+            Config config = new Yolov8PoseConfig(model_xml_path);
+            Yolov8Pose yolo = new Yolov8Pose((Yolov8PoseConfig)config);
         }
     }
 }

@@ -63,7 +63,14 @@ namespace OpenVinoSharp.Extensions.model.Tests
         [TestMethod()]
         public void process_result_test()
         {
-            
+
+        }
+
+        [TestMethod()]
+        public void Yolov8Seg_test1()
+        {
+            Config config = new Yolov8SegConfig(model_xml_path);
+            Yolov8Seg yolo = new Yolov8Seg((Yolov8SegConfig)config);
         }
     }
 }
