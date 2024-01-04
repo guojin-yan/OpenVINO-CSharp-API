@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>OpenVINO.CSharp.API.Extensions.EmguCV</PackageId>
     <Title>OpenVINO C# API Extensions by EmguCV</Title>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Guojin Yan</Authors>
     <Product>OpenVINO C# API Extensions by EmguCV</Product>
     <Description>Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
