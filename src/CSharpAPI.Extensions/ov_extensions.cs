@@ -8,6 +8,10 @@ namespace OpenVinoSharp.Extensions
 {
     public static class OvExtensions
     {
+        /// <summary>
+        /// Print the input and output information of the model
+        /// </summary>
+        /// <param name="model">The openvino model.</param>
         public static void printf_model_info(Model model)
         {
             Slog.INFO("Inference Model");

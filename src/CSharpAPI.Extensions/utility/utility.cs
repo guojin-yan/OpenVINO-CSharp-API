@@ -8,6 +8,11 @@ namespace OpenVinoSharp.Extensions.utility
 {
     public static partial class Utility
     {
+        /// <summary>
+        /// Obtain the original position of the arranged array.
+        /// </summary>
+        /// <param name="array">The original array.</param>
+        /// <returns>The position after arrangement.</returns>
         public static List<int> argsort(List<float> array)
         {
             int array_len = array.Count;
@@ -28,6 +33,11 @@ namespace OpenVinoSharp.Extensions.utility
             }
             return array_index;
         }
+        /// <summary>
+        /// Obtain the original position of the arranged array.
+        /// </summary>
+        /// <param name="array">The original array.</param>
+        /// <returns>The position after arrangement.</returns>
         public static List<int> argsort(float[] array) 
         {
             return argsort(new List<float>(array));

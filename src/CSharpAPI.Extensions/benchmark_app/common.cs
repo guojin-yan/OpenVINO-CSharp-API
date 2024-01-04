@@ -8,8 +8,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenVinoSharp.Extensions.benchmark_app
+namespace OpenVinoSharp.Extensions
 {
+    /// <summary>
+    /// Public method class.
+    /// </summary>
     public static class Common
     {
         static Random rd = new Random((int)DateTime.Now.Ticks);
@@ -90,7 +93,10 @@ namespace OpenVinoSharp.Extensions.benchmark_app
             return result;
         }
 
-
+        /// <summary>
+        /// Fill the tensor with random data.
+        /// </summary>
+        /// <param name="tensor">The model tensor.</param>
         public static void fill_tensor_random(Tensor tensor) 
         {
             OvType type = tensor.get_element_type();

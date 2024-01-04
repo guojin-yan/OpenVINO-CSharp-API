@@ -5,13 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using OpenVinoSharp.Extensions.benchmark_app;
 using OpenVinoSharp.Extensions.utility;
 
 namespace OpenVinoSharp.Extensions
 {
+    /// <summary>
+    /// Model performance evaluation class
+    /// </summary>
     public static class Benchmark
     {
+        /// <summary>
+        /// This sample demonstrates how to estimate performance of a model using Synchronous Inference Request API. 
+        /// </summary>
+        /// <param name="model_path">The inference model path.</param>
+        /// <param name="device_name">The device name, default="CPU".</param>
+        /// <returns>Running status code.</returns>
         public static int sync_benchmark(string model_path, string device_name = "CPU") 
         {
             try
