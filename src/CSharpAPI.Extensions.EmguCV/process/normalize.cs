@@ -9,8 +9,19 @@ using System.Threading.Tasks;
 
 namespace OpenVinoSharp.Extensions.process
 {
+    /// <summary>
+    /// Normalize data classes using EmguCV.
+    /// </summary>
     public static class Normalize
     {
+        /// <summary>
+        /// Run normalize data classes.
+        /// </summary>
+        /// <param name="im">The image mat.</param>
+        /// <param name="mean">Channel mean.</param>
+        /// <param name="scale">Channel variance.</param>
+        /// <param name="is_scale">Whether to divide by 255.</param>
+        /// <returns>The normalize data.</returns>
         public static Mat run(Mat im, float[] mean, float[] scale, bool is_scale)
         {
             double e = 1.0;
@@ -31,7 +42,12 @@ namespace OpenVinoSharp.Extensions.process
             CvInvoke.Merge(bgr_channels, re);
             return re;
         }
-
+        /// <summary>
+        /// Run normalize data classes.
+        /// </summary>
+        /// <param name="im">The image mat.</param>
+        /// <param name="is_scale">Whether to divide by 255.</param>
+        /// <returns>The normalize data.</returns>
         public static Mat run(Mat im, bool is_scale)
         {
             double e = 1.0;
