@@ -278,7 +278,7 @@ namespace OpenVinoSharp
             string t = typeof(T).ToString();
             if (t == "System.Byte")
             {
-                float[] data = (float[])Convert.ChangeType(input_data, typeof(float[]));
+                byte[] data = (byte[])Convert.ChangeType(input_data, typeof(byte[]));
                 Marshal.Copy(data, 0, data_ptr, length);
             }
             else if (t == "System.Int32")
