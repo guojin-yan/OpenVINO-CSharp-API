@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>OpenVINO.CSharp.API.Extensions.OpenCvSharp</PackageId>
     <Title>OpenVINO C# API Extensions by OpenCvSharp</Title>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>Guojin Yan</Authors>
     <Product>OpenVINO C# API Extensions by OpenCvSharp</Product>
     <Description>Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
