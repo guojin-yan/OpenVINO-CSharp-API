@@ -12,11 +12,7 @@
 
 简体中文| [English](README.md)
 
-## 这是OpenVINO™ C# API，该项目还在建设中，功能还未完善，如使用中有问题，欢迎与我沟通联系。如果对该项目感兴趣，也可以加入到我们的开发中来。🥰🥰🥰🥰
-
-
-
-## 📚 简介
+# 📚 简介
 
 [OpenVINO™ ](www.openvino.ai)是一个用于优化和部署 AI 推理的开源工具包。
 
@@ -26,16 +22,18 @@
 
 &emsp;    该项目基于OpenVINO™工具套件推出了 OpenVINO™ C# API，旨在推动 OpenVINO™在C#领域的应用。OpenVINO™ C# API 由于是基于 OpenVINO™ 开发，所支持的平台与OpenVINO™ 一致，具体信息可以参考 OpenVINO™。
 
-## <img title="NuGet" src="https://s2.loli.net/2023/01/26/ks9BMwXaHqQnKZP.png" alt="" width="40">NuGet 包
+# <img title="NuGet" src="https://s2.loli.net/2023/08/08/jE6BHu59L4WXQFg.png" alt="" width="40">NuGet Package
 
-### Managed libraries
+## Core Managed Libraries
 
-| Package                     | Description                    | Link                                                         |
-| --------------------------- | ------------------------------ | ------------------------------------------------------------ |
-| **OpenVINO.CSharp.API**     | OpenVINO C# API core libraries | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API/) |
-| **OpenVINO.CSharp.Windows** | All-in-one package for Windows | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.Windows.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.Windows/) |
+| Package                                        | Description                                               | Link                                                         |
+| ---------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------ |
+| **OpenVINO.CSharp.API**                        | OpenVINO C# API core libraries                            | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API/) |
+| **OpenVINO.CSharp.API.Extensions**             | OpenVINO C# API core extensions libraries                 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.API.Extensions.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API.Extensions/) |
+| **OpenVINO.CSharp.API.Extensions.OpenCvSharp** | OpenVINO C# API core extensions libraries use OpenCvSharp | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.API.Extensions.OpenCvSharp.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API.Extensions.OpenCvSharp/) |
+| **OpenVINO.CSharp.API.Extensions.EmguCV**      | OpenVINO C# API core extensions libraries use EmguCV      | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.API.Extensions.EmguCV.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API.Extensions.EmguCV/) |
 
-### Native bindings
+## Native Runtime Libraries
 
 | Package                               | Description                          | Link                                                         |
 | ------------------------------------- | ------------------------------------ | ------------------------------------------------------------ |
@@ -44,26 +42,35 @@
 | **OpenVINO.runtime.ubuntu.20-x86_64** | Native bindings for ubuntu.20-x86_64 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.20-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.20-x86_64/) |
 | **OpenVINO.runtime.ubuntu.18-x86_64** | Native bindings for ubuntu.18-x86_64 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.18-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.18-x86_64/) |
 | **OpenVINO.runtime.debian9-arm64**    | Native bindings for debian9-arm64    | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
+| **OpenVINO.runtime.debian9-armhf **   | Native bindings for debian9-armhf    | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.debian9-armhf.svg)](https://www.nuget.org/packages/OpenVINO.runtime.debian9-armhf/) |
 | **OpenVINO.runtime.centos7-x86_64**   | Native bindings for centos7-x86_64   | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.centos7-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.centos7-x86_64/) |
+| **OpenVINO.runtime.rhel8-x86_64**     | Native bindings for rhel8-x86_64     | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.rhel8-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.rhel8-x86_64/) |
+| **OpenVINO.runtime.macos-x86_64**     | Native bindings for macos-x86_64     | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.macos-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.macos-x86_64/) |
+| **OpenVINO.runtime.macos-arm64**      | Native bindings for macos-arm64      | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.macos-arm64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.macos-arm64/) |
 
 
+## Integration Library
 
-## ⚙ 如何安装
+| Package                     | Description                    | Link                                                         |
+| --------------------------- | ------------------------------ | ------------------------------------------------------------ |
+| **OpenVINO.CSharp.Windows** | All-in-one package for Windows | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.Windows.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.Windows/) |
+
+# ⚙ 如何安装
 
 以下提供了OpenVINO™ C# API在不同平台的安装方法，可以根据自己使用平台进行安装。
 
-### 	**Windows**
+## 	Windows
 
 通过``dotnet add package``指令安装或通过Visual Studio安装以下程序包
 
 ```shell
 dotnet add package OpenVINO.CSharp.API
 dotnet add package OpenVINO.runtime.win
-或者安装集成包=》
+或者安装集成包——>
 dotnet add package OpenVINO.CSharp.Windows
 ```
 
-### 	**Linux**
+## 	Linux
 
 &emsp;    **linux**平台我们根据官方编译的平台制作了对应的NuGet Package，以**ubuntu.22-x86_64**为例，通过``dotnet add package``指令安装：
 
@@ -74,9 +81,9 @@ dotnet add package OpenVINO.runtime.ubuntu.22-x86_64
 
 &emsp;    运行一次程序后，添加环境变量：
 
-```
+```shell
 export LD_LIBRARY_PATH={Program generated executable file directory}/runtimes/ubuntu.22-x86_64/native
-例如=》
+例如——>
 export LD_LIBRARY_PATH=/home/ygj/Program/sample1/bin/Debug/net6.0/runtimes/ubuntu.22-x86_64/native
 ```
 
@@ -85,6 +92,17 @@ export LD_LIBRARY_PATH=/home/ygj/Program/sample1/bin/Debug/net6.0/runtimes/ubunt
 ```shell
 sudo -E ./install_openvino_dependencies.sh
 ```
+
+## Mac OS
+
+通过``dotnet add package``指令安装以下程序包
+
+```shell
+dotnet add package OpenVINO.CSharp.API
+dotnet add package OpenVINO.runtime.macos-arm64
+```
+
+
 
 ## 🏷开始使用
 
@@ -127,27 +145,6 @@ namespace test
 ## 🗂 API 文档
 
 如果想了解更多信息，可以参阅：[OpenVINO™ C# API API Documented](https://guojin-yan.github.io/OpenVINO-CSharp-API.docs/index.html)
-
-## 🔃 更新日志
-
-#### 🔥 **2023.10.22 ：更新OpenVINO™ C# API **
-
-- 🗳 **OpenVINO™ C# API 库：**
-  - 修改OpenVINO™ C# API 中的错误，并对代码板块进行整合，添加异常处理机制。
-- 🛹**应用案例：**
-  - 行人摔倒检测 — 基于 OpenVINO C# API 部署PP-Human
-  - 基于 OpenVINO 部署 RT-DETR
-- 🔮 **NuGet包：**
-  - 废除之前发布的NuGet包，发布更新新的安装包，发布三类NuGet包，包括**OpenVINO.CSharp.API**：核心代码包，**OpenVINO.CSharp.Windows**：Windows平台整合包、**OpenVINO.runtime.win**：Windows平台运行库包。
-
-####  **2023.6.19 ：发布 OpenVINO™ C# API 3.0**
-
-- 🗳 **OpenVINO™ C# API 库：**
-  - 升级OpenVINO™ C# API 2.0 到 OpenVINO™ C# API 3.0 版本，由原来的重构 C++ API 改为直接读取 OpenVINO™ 官方 C API，使得应用更加灵活，所支持的功能更加丰富。
-- 🛹**应用案例：**
-  - OpenVINO™ C# API部署Yolov8模型实例。
-- 🔮 **NuGet包：**
-  - 制作并发布NuGet包，发布**OpenVINO™ C# API.win 3.0.120**  ，包含OpenVINO 2023.0 依赖项。
 
 ## 🎖 贡献
 
