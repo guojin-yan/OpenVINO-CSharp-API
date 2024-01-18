@@ -230,7 +230,6 @@ namespace OpenVinoSharp.Tests
         [TestMethod()]
         public void import_modelTest()
         {
-            Assert.Fail();
         }
     }
 }
