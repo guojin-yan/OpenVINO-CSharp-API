@@ -69,8 +69,6 @@ namespace OpenVinoSharp
                 HandleException.handler(
                 NativeMethods.ov_core_create(ref m_ptr));
             }
-
-
         }
         /// <summary>
         /// Core's destructor
@@ -187,11 +185,27 @@ namespace OpenVinoSharp
             fs.Seek(0, SeekOrigin.Begin);
             byte[] data = new byte[len + 1];
             fs.Read(data, 0, (int)len);
+            fs.Close();
             IntPtr model_ptr = new IntPtr();
             HandleException.handler(
                 NativeMethods.ov_core_read_model_from_memory(m_ptr, ref data[0], weights.Ptr, ref model_ptr));
             return new Model(model_ptr);
         }
+        /// <summary>
+        /// Reads models from IR / ONNX / PDPD / TF / TFLite formats.
+        /// </summary>
+        /// <param name="model_str">String with a model in IR / ONNX / PDPD / TF / TFLite format, 
+        /// You can obtain input content through the Ov.content_from_file() method.</param>
+        /// <param name="weights">Shared pointer to a constant tensor with weights.</param>
+        /// <returns></returns>
+        public Model read_model(byte[] model_str, Tensor weights) 
+        {
+            IntPtr model_ptr = new IntPtr();
+            HandleException.handler(
+                NativeMethods.ov_core_read_model_from_memory(m_ptr, ref model_str[0], weights.Ptr, ref model_ptr));
+            return new Model(model_ptr);
+        }
+
 
         /// <summary>
         /// Creates a compiled model from a source model object.
