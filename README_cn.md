@@ -102,13 +102,7 @@ dotnet add package OpenVINO.CSharp.API
 dotnet add package OpenVINO.runtime.macos-arm64
 ```
 
-
-
 ## 🏷开始使用
-
-- **快速体验**
-
-  [使用OpenVINO™ C# API部署Yolov8全系列模型](demos/yolov8/README_cn.md)
 
 - **使用方法**
 
@@ -138,9 +132,7 @@ namespace test
 
 ## 💻 应用案例
 
-- [爱克斯开发板使用OpenVINO™ C# API部署Yolov8模型](tutorial_examples/AlxBoard_deploy_yolov8/README_cn.md)
--  [行人摔倒检测 — 基于 OpenVINO C# API 部署PP-Human](tutorial_examples\PP-Human_Fall_Detection\README_cn.md) 
-- [基于 OpenVINO 部署 RT-DETR](https://github.com/guojin-yan/RT-DETR-OpenVINO)
+
 
 ## 🗂 API 文档
 

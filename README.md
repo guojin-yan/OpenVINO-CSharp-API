@@ -11,8 +11,6 @@
 
 [简体中文](README_cn.md) | English
 
-## This is OpenVINO ™  C # API, this project is still under construction and its functions are not yet fully developed. If you have any problems using it, please feel free to communicate with me. If you are interested in this project, you can also join our development.🥰🥰🥰🥰🥰
-
 ## 📚 What is OpenVINO™ C# API ?
 
 [OpenVINO™](www.openvino.ai)  is an open-source toolkit for optimizing and deploying AI inference.
@@ -95,10 +93,19 @@ export LD_LIBRARY_PATH=/home/ygj/Program/sample1/bin/Debug/net6.0/runtimes/ubunt
 sudo -E ./install_openvino_dependencies.sh
 ```
 
+## Mac OS
+
+Install the following package using the ``dotnet add package``command
+
+```shell
+dotnet add package OpenVINO.CSharp.API
+dotnet add package OpenVINO.runtime.macos-arm64
+```
+
+## 🏷开始使用
+
 ## 🏷How to use OpenVINO™ C# API?
 
-- **Quick start**
-  - [Deploying the Yolov8 full series model using OpenVINO™ C# API](demos/yolov8/README.md)
 - **Simple usage**
 
 If you don't know how to use it, simply understand the usage method through the following code.
@@ -127,34 +134,11 @@ The classes and objects encapsulated in the project, such as Core, Model, Tensor
 
 ## 💻 Tutorial Examples
 
-- [Using OpenVINO™ C# API to Deploy the Yolov8 Model on the AIxBoard](tutorial_examples/AlxBoard_deploy_yolov8/README.md)
-- [Pedestrian fall detection - Deploying PP-Human based on OpenVINO C # API](tutorial_examples\PP-Human_Fall_Detection\README.md) 
-- [Deploying RT-DETR based on OpenVINO](https://github.com/guojin-yan/RT-DETR-OpenVINO)
+
 
 ## 🗂 API Reference
 
 If you want to learn more information, you can refer to: [OpenVINO™ C# API API Documented](https://guojin-yan.github.io/OpenVINO-CSharp-API.docs/index.html)
-
-## 🔃 Update log
-
-#### 🔥 **2023.10.22 ：Update OpenVINO™ C# API **
-
-- 🗳 **OpenVINO™ C# API ：**
-  - Modify OpenVINO™  errors in the C # API, and integration of code sections to add exception handling mechanisms.
-- 🛹**Application Cases：**
-  - Pedestrian fall detection - Deploying PP-Human based on OpenVINO C # API
-  - Deploying RT-DETR based on OpenVINO
-- 🔮 **NuGet：**
-  - Abolish the previously released NuGet package, release updated installation packages, and release three types of NuGet packages, including **OpenVINO. CSharp. API **: core code package, **OpenVINO. CSharp. Windows **: Windows platform integration package, and **OpenVINO. runtime. win **: Windows platform runtime package.
-
-####  **2023.6.19 ： release OpenVINO™ C# API 3.0**
-
-- 🗳OpenVINO™ C# API ：
-  - Upgrade OpenVINO™ C# API 2.0 to OpenVINO™ C# API 3.0, changing from refactoring the C++API to directly reading OpenVino ™ The official C API makes the application more flexible and supports a richer range of functions.
-- 🛹Application Cases：
-  - OpenVINO™ C# API Deployment Yolov8 Model Example。
-- 🔮NuGet：
-  - Create and publish NuGet package, release * * OpenVINO™ C# API. win 3.0.120 * *, including OpenVino 2023.0 dependencies.
 
 ## 🎖 Contribute
 
