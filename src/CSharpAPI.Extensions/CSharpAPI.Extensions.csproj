@@ -21,9 +21,16 @@
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>OpenVINO;CSharp-API;C#-API;Extensions;</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\..\nuget\logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

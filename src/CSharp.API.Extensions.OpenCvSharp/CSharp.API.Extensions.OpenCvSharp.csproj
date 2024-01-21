@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>OpenVINO.CSharp.API.Extensions.OpenCvSharp</PackageId>
     <Title>OpenVINO C# API Extensions by OpenCvSharp</Title>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Authors>Guojin Yan</Authors>
     <Product>OpenVINO C# API Extensions by OpenCvSharp</Product>
     <Description>Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
@@ -21,11 +21,18 @@
     <PackageReleaseNotes>This assembly is for OpenVINO CSharp API. The expansion of API mainly involves encapsulating the inference process of common models and the pre-processing and post-processing methods of data.The image processing library uses OpenCvSharp.</PackageReleaseNotes>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>OpenVINO;CSharp-API;C#-API;Extensions;OpenCvSharp</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
 
 
   <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\..\nuget\logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -39,8 +46,8 @@
 
 
   <ItemGroup>
-    <PackageReference Include="OpenCvSharp4" Version="4.8.0.20230708" />
-    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.8.0.20230708" />
+    <PackageReference Include="OpenCvSharp4" Version="4.9.0.20240103" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.9.0.20240103" />
   </ItemGroup>
 
   <ItemGroup>

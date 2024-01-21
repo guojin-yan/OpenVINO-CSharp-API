@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>OpenVINO.CSharp.API.Extensions.EmguCV</PackageId>
     <Title>OpenVINO C# API Extensions by EmguCV</Title>
-    <Version>1.0.1</Version>
+    <Version>1.0.4</Version>
     <Authors>Guojin Yan</Authors>
     <Product>OpenVINO C# API Extensions by EmguCV</Product>
     <Description>Based on the C # platform, call the OpenVINO suite to deploy a deep learning model.</Description>
@@ -21,6 +21,9 @@
     <PackageReleaseNotes>This assembly is for OpenVINO CSharp API. The expansion of API mainly involves encapsulating the inference process of common models and the pre-processing and post-processing methods of data.The image processing library uses EmguCV.</PackageReleaseNotes>
     <PackageOutputPath>../../nuget</PackageOutputPath>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>OpenVINO;CSharp-API;C#-API;Extensions;EmguCV</PackageTags>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\..\nuget\logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

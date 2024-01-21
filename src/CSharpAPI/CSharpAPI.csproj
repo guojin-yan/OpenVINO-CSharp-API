@@ -23,11 +23,18 @@
     <PackageReleaseNotes>This version is a pre release version of OpenVINO™ C# API 3.0 and its features are not yet fully developed. If there are any issues during use, please feel free to contact me.</PackageReleaseNotes>
     <RootNamespace>OpenVinoSharp</RootNamespace>
     <AssemblyName>OpenVINO_CSharp_API</AssemblyName>
+    <PackageTags>OpenVINO;CSharp-API;C#-API</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
 
   <!--Add build file.-->
   <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\..\nuget\logo.png" Link="build\logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
