@@ -20,7 +20,7 @@
 - 使用流行框架（如TensorFlow，PyTorch等）训练的模型
 - 减少资源需求，并在从边缘到云的一系列英特尔®平台上高效部署
 
-&emsp;    该项目基于OpenVINO™工具套件推出了 OpenVINO™ C# API，旨在推动 OpenVINO™在C#领域的应用。OpenVINO™ C# API 由于是基于 OpenVINO™ 开发，所支持的平台与OpenVINO™ 一致，具体信息可以参考 OpenVINO™。
+&emsp;    OpenVINO™ C# API 是一个 OpenVINO™ 的 .Net wrapper，应用最新的 OpenVINO™ 库开发，通过 OpenVINO™ C API 实现 .Net 对 OpenVINO™ Runtime 调用，使用习惯与 OpenVINO™ C++ API 一致。OpenVINO™ C# API 由于是基于 OpenVINO™ 开发，所支持的平台与 OpenVINO™ 完全一致，具体信息可以参考 OpenVINO™。通过使用 OpenVINO™ C# API，可以在 .NET、.NET Framework等框架下使用 C# 语言实现深度学习模型在指定平台推理加速。
 
 # <img title="NuGet" src="https://s2.loli.net/2023/08/08/jE6BHu59L4WXQFg.png" alt="" width="40">NuGet Package
 
@@ -132,7 +132,7 @@ namespace test
 
 ## 💻 应用案例
 
-
+获取耕读应用案例请参考：[OpenVINO-CSharp-API-Samples](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples)
 
 ## 🗂 API 文档
 
