@@ -33,7 +33,7 @@ namespace OpenVinoSharp.Extensions.process
             VectorOfMat bgr_channels = new VectorOfMat();
 
             CvInvoke.Split(im, bgr_channels);
-            for (var i = 0; i < bgr_channels.Length; i++)
+            for (var i = 0; i < bgr_channels.Size; i++)
             {
                 bgr_channels[i].ConvertTo(bgr_channels[i], DepthType.Cv32F, 1.0 * scale[i],
                     (0.0 - mean[i]) * scale[i]);
