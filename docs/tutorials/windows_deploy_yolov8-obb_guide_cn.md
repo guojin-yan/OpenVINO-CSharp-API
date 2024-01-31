@@ -1,8 +1,9 @@
 <div><center><b>
     <font color="34,63,93" size="7"> 
-        在 Windows 上使用 OpenVINO C# API 部署 Yolov8-obb
+        在 Windows 上使用 OpenVINO™ C# API 部署 Yolov8-obb
     </font>
 </b></center></div>
+
 
 
 
@@ -10,7 +11,7 @@
 > <div><b>
 > <font color=red size="5">&emsp;前言</font>
 > </b></div>
-> Ultralytics YOLOv8 基于深度学习和计算机视觉领域的尖端技术，在速度和准确性方面具有无与伦比的性能。其流线型设计使其适用于各种应用，并可轻松适应从边缘设备到云 API 等不同硬件平台。YOLOv8 OBB 模型是YOLOv8系列模型最新推出的任意方向的目标检测模型，可以检测任意方向的对象，大大提高了物体检测的精度。同时官方发布的模型已经支持 OpenVINO™ 部署工具加速模型推理，因此在该项目中，我们将结合之前开发的 OpenVINO C# API 部署YOLOv8 OBB 模型实现旋转物体对象检测。
+> Ultralytics YOLOv8 基于深度学习和计算机视觉领域的尖端技术，在速度和准确性方面具有无与伦比的性能。其流线型设计使其适用于各种应用，并可轻松适应从边缘设备到云 API 等不同硬件平台。YOLOv8 OBB 模型是YOLOv8系列模型最新推出的任意方向的目标检测模型，可以检测任意方向的对象，大大提高了物体检测的精度。同时官方发布的模型已经支持 OpenVINO™ 部署工具加速模型推理，因此在该项目中，我们将结合之前开发的 OpenVINO™ C# API 部署YOLOv8 OBB 模型实现旋转物体对象检测。
 >
 > 项目链接为：
 >
@@ -90,7 +91,7 @@ yolo export model=yolov8s-obb.pt format=onnx
 
 ### 2.3 转换 IR 模型
 
-接下来直接使用OpenVINO工具直接进行模型转换，在CMD中输入以下指令即可：
+接下来直接使用OpenVINO™工具直接进行模型转换，在CMD中输入以下指令即可：
 
 ```
 ovc yolov8s-obb.onnx
@@ -557,6 +558,6 @@ dotnet run --no-build
 
 ## 6. 总结
 
-在该项目中，我们结合之前开发的 OpenVINO C# API 项目部署YOLOv8 OBB 模型，成功实现了旋转对象目标检测，并且根据不同开发者的使用习惯，同时提供了OpenCvSharp以及Emgu.CV两种版本，供各位开发者使用。最后如果各位开发者在使用中有任何问题，欢迎大家与我联系。
+在该项目中，我们结合之前开发的 OpenVINO™ C# API 项目部署YOLOv8 OBB 模型，成功实现了旋转对象目标检测，并且根据不同开发者的使用习惯，同时提供了OpenCvSharp以及Emgu.CV两种版本，供各位开发者使用。最后如果各位开发者在使用中有任何问题，欢迎大家与我联系。
 
 <div align=center><img src="https://s2.loli.net/2024/01/29/VIPU1MSwjEh2QAY.png" width=800></div>
