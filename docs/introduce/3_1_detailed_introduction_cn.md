@@ -2,12 +2,12 @@
 
 > 前言
 >
-> OpenVINO™ C# API项目自创建以来，就在不断维护与更新，并且随着对该项目的深入研究，目前已经形成了固定的API接口以及比较稳定的运行版本。在之前的版本中，项目实现主要是通过自定义封装固定的接口实现，自 OpenVINO™ 官方发布的版本扩展了 C API 之后， OpenVINO™ C# API 也同步更新了3.0版本，其接口也更加灵活。
+> OpenVINO™ C# API项目自创建以来，就在不断维护与更新，并且随着对该项目的深入研究，目前已经形成了固定的API接口以及比较稳定的运行版本。在之前的版本中，项目实现主要是通过自定义封装固定的接口实现，自 OpenVINO™ 官方发布的版本扩展了 C API 之后， OpenVINO™ C# API 也同步更新了 3.0 版本，其接口也更加灵活。
 >
 > 目前，该项目已经完成了3.1版本的升级，在3.0基础上，又增加了许多新功能，并且修复了3.0代码中出现的问题，同时支持更多平台与使用案例。
 > 
 
-# 项目介绍
+## 项目介绍
 &emsp;    [OpenVINO™](www.openvino.ai) 是一个用于优化和部署 AI 推理的开源工具包。
 
 - 提升深度学习在计算机视觉、自动语音识别、自然语言处理和其他常见任务中的性能
@@ -16,7 +16,7 @@
 
 &emsp;    OpenVINO™ C# API 是一个 OpenVINO™ 的 .Net wrapper，应用最新的 OpenVINO™ 库开发，通过 OpenVINO™ C API 实现 .Net 对 OpenVINO™ Runtime 调用，使用习惯与 OpenVINO™ C++ API 一致。OpenVINO™ C# API 由于是基于 OpenVINO™ 开发，所支持的平台与 OpenVINO™ 完全一致，具体信息可以参考 OpenVINO™。通过使用 OpenVINO™ C# API，可以在 .NET、.NET Framework等框架下使用 C# 语言实现深度学习模型在指定平台推理加速。
 
-# 项目特性
+## 项目特性
 - **OpenVINO™ C# API 支持全部的 C API 功能，并通过 C# 特性进行封装，使用起来更加容易；**
   - 1. 项目实现原理是通过 OpenVINO™ C API 实现 .Net 对 OpenVINO™ Runtime 调用，因此项目中实现了全部了OpenVINO™ C API；
   - 2. 基于C#语言面向对象的特征，对转换后的API进行了上层封装，并参考OpenVINO™ C++ API 的接口特点，对接口进行了进一步定义和封装，对接触过 C++ API 的用户十分友好；
@@ -39,7 +39,7 @@
 - **提供了更多完整的的项目案例，支持更多的常见模型部署案例；**
   - 使用最新版的 OpenVINO™ C# API 开发了更完善的模型部署案例，并配备了更加完善的项目开发文档，可以让更多新手开发者快速上手。
 
-# Nuget Package
+## Nuget Package
 
 NuGet 是免费、开源的包管理开发工具，专注于在 .NET 应用开发过程中，安装第三方的组件库。因此当前项目已经进行了 Nuget Package 封装，用户可以实现通过 Nuget Package 快速安装当前项目。
 
@@ -89,9 +89,9 @@ NuGet 是免费、开源的包管理开发工具，专注于在 .NET 应用开�
 | **OpenVINO.CSharp.Windows** | All-in-one package for Windows | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.Windows.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.Windows/) |
 
 
-# 程序集介绍
+## 程序集介绍
 
-## 核心程序集
+### 核心程序集
 
 在OpenVINO™ C# API中，主要包含以下几个命名空间：
 ```csharp
@@ -116,7 +116,7 @@ using OpenVinoSharp.preprocess;
 | Shape class | ov::Shape | Shape| 节点张量形状类 |
 | PartialShape class | ov::PartialShape | PartialShape | 节点张量动态形状类 |
 
-## 核心扩展程序集
+### 核心扩展程序集
 
 OpenVINO™ C# API 核心扩展程序集主要是封装了一些常用的函数方法以及常见模型的模型部署接口，主要包含了图片数据处理方法、Yolov8、PP-Yoloe、RT-DETR、PP-OCR等模型的结果对象以及推理方式。同时在封装时充分考虑了图片数据的处理方式，分别使用 **OpenCvSharp** 以及 **Emgu.CV** 两种开源库。
 
@@ -137,21 +137,66 @@ using OpenVinoSharp.Extensions.result;
 
 此处主要是简单介绍了一下``OpenVinoSharp``命名空间下主要对象，有关详细介绍可以参考以下文章：[《OpenVINO™ C# API 详解与演示(基础接口)》]()、[《OpenVINO™ C# API 详解与演示(预处理接口)》]()、[《OpenVINO™ C# API 详解与演示(扩展接口)》]()。
 
+## 使用案例
 
-# 使用案例
+为了让大家更快的上手该项目，本项目中专门创建了案例仓库：[OpenVINO C# API Samples](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples)，目前已经更新了一些常见的模型部署案例：
+
+### 常规目标检测案例
+
+| 案例名称                                | 运行效果                                                     | 链接                                                         |
+| --------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 使用OpenVINO™ C# API 部署Yolov5-det模型 | <img src="https://s2.loli.net/2024/02/01/DhRioXwzYEMyUfI.png" width="200">  <img src="https://s2.loli.net/2024/02/01/ljRezkToBU37cAN.png" width="300"> | 项目链接：[yolov5_det_opencvsharp](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov5/yolov5_det_opencvsharp)、[yolov5_det_emgucv](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov5/yolov5_det_emgucv)<br>模型链接：[yolov5](https://github.com/ultralytics/yolov5)<br>博客链接：[在 MacOS 上使用 OpenVINO™ C# API 部署 Yolov5](https://blog.csdn.net/grape_yan/article/details/136053953) |
+| 使用OpenVINO™ C# API 部署Yolov6-det模型 | <img src="https://s2.loli.net/2024/02/07/tTJRKOgieI9fBpy.png" width="200"><img src="https://s2.loli.net/2024/02/07/pZfRKq6IDXBzsxb.png" width="300"> | [yolov6_det_opencvsharp](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov6/yolov6_det_opencvsharp)<br>[yolov6_det_emgucv](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov6/yolov6_det_emgucv) |
+| 使用OpenVINO™ C# API 部署Yolov7-det模型 | <img src="https://s2.loli.net/2024/02/07/bjefx3WpPgVwhry.png" width="200"><img src="https://s2.loli.net/2024/02/07/RnEYv3bCGuOZilz.png" width="300"> | [yolov7_det_opencvsharp](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov7/yolov7_det_opencvsharp)<br>[yolov7_det_emgucv](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov7/yolov7_det_emgucv) |
+| 使用OpenVINO™ C# API 部署Yolov8-det模型 | <img src="https://s2.loli.net/2024/02/07/IrPzpqMwYgnkvcV.png" width="200"><img src="https://s2.loli.net/2024/02/07/qRiSnjg65WXVLZp.png" width="300"> | [yolov8_det_opencvsharp](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov8/yolov8_det_opencvsharp)<br>[yolov8_det_emgucv](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov8/yolov8_det_emgucv) |
+| 使用OpenVINO™ C# API 部署 PP-YOLOE 模型 | <img src="https://s2.loli.net/2024/02/07/znksi2m8lfKF4We.png" width="200"><img src="https://s2.loli.net/2024/02/07/avXK9WQ8noSNETd.png" width="300"> | [yolov8_det_opencvsharp]()<br/>[yolov8_det_emgucv]()         |
+| 使用OpenVINO™ C# API 部署 RT-DETR 模型  | <img src="https://s2.loli.net/2024/02/07/XLQinEmgZ4U1AB3.png" width="200"><img src="https://s2.loli.net/2024/02/07/bMeElhfoRxpSzrI.png" width="300"> | [yolov8_det_opencvsharp]()<br/>[yolov8_det_emgucv]()         |
 
 
-# 贡献
+
+### 旋转目标检测案例
+
+| 案例名称                                  | 运行效果                                                     | 链接                                                         |
+| ----------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 使用OpenVINO™ C# API 部署 Yolov8-obb 模型 | <img src="https://s2.loli.net/2024/02/10/DMQ1IWhRHjo7pEA.png" width="200"><img src="https://s2.loli.net/2024/02/10/WqhYaVNtDIrC9jy.jpg" width="300"> | [yolov8_obb_opencvsharp](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov8/yolov8_obb_opencvsharp)<br/>[yolov8_obb_emgucv](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/yolov8/yolov8_obb_emgucv) |
+| 使用OpenVINO™ C# API 部署 PP-YOLOE-R 模型 | <img src="https://s2.loli.net/2024/02/10/Glp97SaQRKM5ZqH.png" width="200"><img src="https://s2.loli.net/2024/02/10/ZUR6k5i4ouBN7LV.jpg" width="300"> | [ppyoloe_r_opencvsharp](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/ppyoloe/ppyoloe_r_opencvsharp) |
+
+
+
+### 人脸识别案例
+
+| 案例名称                                  | 运行效果                                                     | 链接                                                         |
+| ----------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 使用OpenVINO™ C# API 部署 Blaze Face 模型 | <img src="https://s2.loli.net/2024/02/10/Lvoj8wGSCps2zD3.png" width="200"><img src="https://s2.loli.net/2024/02/10/SnW7qzC568hvfLD.png" width="300"> | [blazeface_opencvsharp](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/face_detection/blazeface_opencvsharp)<br/>[blazeface_emgucv](https://github.com/guojin-yan/OpenVINO-CSharp-API-Samples/tree/master/model_samples/face_detection/blazeface_emgucv) |
+|                                           |                                                              |                                                              |
+
+
+
+### OCR 文本识别案例
+
+| 案例名称                                  | 运行效果                                                     | 链接                                                         |
+| ----------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 使用OpenVINO™ C# API 部署 Paddle OCR 模型 | <img src="https://s2.loli.net/2023/12/23/pJBGrle9AFDjOEP.png" width="600"><img src="https://s2.loli.net/2023/12/22/ESbjL24Ydxq1ePH.png" width=400 /> | [PaddleOCR-OpenVINO-CSharp](https://github.com/guojin-yan/PaddleOCR-OpenVINO-CSharp) |
+|                                           |                                                              |                                                              |
+
+
+
+
+
+
+## 贡献
 目前该项目尚在开发阶段，基本已经完成了对当前 OpenVINO™ 官方封装的 C API，但是目前 OpenVINO™ C API 并没有完全实现 C++ API。因此如果大家有兴趣，可以为 OpenVINO™ 官方源码的 C API 提交 issues 或着提交 Pr，继续丰富官方的 C API。关于在 OpenVINO™ 中提交贡献可以参考一下文章：[CONTRIBUTING](https://github.com/openvinotoolkit/openvino/blob/master/CONTRIBUTING.md)
 
 此外，如果您对该项目有兴趣，也可以向该项目提交贡献，可以对当前项目代码进行优化、完善接口测试、添加扩展接口等内容。关于在 OpenVINO™ C# API 做贡献，可以参考以下文章：[为 OpenVINO™ C# API 做贡献](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.1/CONTRIBUTING_cn.md)
 
 
-# 联系方式
+## 联系方式
 如果您在使用过程中有问题，可以通过提交 issues 进行解决，由于本人精力有限，可能来不及回复，可以通过以下方式获取更多的信息或者添加我的联系方式：
 
+<div align=center><img src="https://s2.loli.net/2024/01/29/VIPU1MSwjEh2QAY.png" width=800></div>
 
-# 参考
+
+## 参考
 想要获取更多信息，请参考：
 - [OpenVINO GitHub](https://github.com/openvinotoolkit/openvino)
 

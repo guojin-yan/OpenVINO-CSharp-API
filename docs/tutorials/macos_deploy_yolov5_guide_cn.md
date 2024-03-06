@@ -1,14 +1,15 @@
 <div><center><b>
     <font color="34,63,93" size="7"> 
-        在 MacOS 上使用 OpenVINO C# API 部署 Yolov5
+        在 MacOS 上使用 OpenVINO™ C# API 部署 Yolov5
     </font>
 </b></center></div>
+
 
 > <div><b>
 > <font color=red size="5">前言</font>
 > </b></div>
 >
-> YOLOv5 是革命性的 "单阶段"对象检测模型的第五次迭代，旨在实时提供高速、高精度的结果，是世界上最受欢迎的视觉人工智能模型，代表了Ultralytics对未来视觉人工智能方法的开源研究，融合了数千小时研发中积累的经验教训和最佳实践。同时官方发布的模型已经支持 OpenVINO™ 部署工具加速模型推理，因此在该项目中，我们将结合之前开发的 OpenVINO C# API 部署 YOLOv5 DET 模型实现物体对象检测。
+> YOLOv5 是革命性的 "单阶段"对象检测模型的第五次迭代，旨在实时提供高速、高精度的结果，是世界上最受欢迎的视觉人工智能模型，代表了Ultralytics对未来视觉人工智能方法的开源研究，融合了数千小时研发中积累的经验教训和最佳实践。同时官方发布的模型已经支持 OpenVINO™ 部署工具加速模型推理，因此在该项目中，我们将结合之前开发的 OpenVINO™ C# API 部署 YOLOv5 DET 模型实现物体对象检测。
 >
 > 项目链接为：
 >
