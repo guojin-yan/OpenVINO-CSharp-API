@@ -68,6 +68,12 @@ namespace OpenVinoSharp
         /// </summary>
         CACHE_DIR,
         /// <summary>
+        /// Read-write property<string> to select the cache mode between optimize_size and optimize_speed. 
+        /// If optimize_size is selected, smaller cache files will be created. 
+        /// And if optimize_speed is selected, loading time will decrease but the cache file size will increase. 
+        /// </summary>
+        CACHE_MODE,
+        /// <summary>
         /// Read-write property(uint32_t string) to set/get the number of executor logical partitions.
         /// </summary>
         NUM_STREAMS,
