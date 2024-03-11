@@ -1,13 +1,3 @@
-![OpenVINO™ C# API](https://socialify.git.ci/guojin-yan/OpenVINO-CSharp-API/image?description=1&descriptionEditable=💞%20OpenVINO%20wrapper%20for%20.NET💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
-
-<p align="center">    
-    <a href="./LICENSE.txt">
-        <img src="https://img.shields.io/github/license/guojin-yan/openvinosharp.svg">
-    </a>    
-    <a >
-        <img src="https://img.shields.io/badge/Framework-.NET 8.0%2C%20.NET 6.0%2C%20.NET 5.0%2C%20.NET Framework 4.8%2C%20.NET Framework 4.7.2%2C%20.NET Framework 4.6%2C%20.NET Core 3.1-pink.svg">
-    </a>    
-</p>
 
 ## 📚 **简介(Introduction)**
 
@@ -51,7 +41,9 @@
 | **OpenVINO.runtime.ubuntu.20-x86_64** | Native bindings for ubuntu.20-x86_64 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.20-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.20-x86_64/) |
 | **OpenVINO.runtime.ubuntu.18-x86_64** | Native bindings for ubuntu.18-x86_64 | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.18-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.18-x86_64/) |
 | **OpenVINO.runtime.debian9-arm64**    | Native bindings for debian9-arm64    | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
+| **OpenVINO.runtime.debian9-armhf**    | Native bindings for debian9-armhf    | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.debian9-armhf.svg)](https://www.nuget.org/packages/OpenVINO.runtime.debian9-armhf/) |
 | **OpenVINO.runtime.centos7-x86_64**   | Native bindings for centos7-x86_64   | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.centos7-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.centos7-x86_64/) |
+| **OpenVINO.runtime.rhel8-x86_64**     | Native bindings for rhel8-x86_64     | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.rhel8-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.rhel8-x86_64/) |
 | **OpenVINO.runtime.macos-x86_64**     | Native bindings for macos-x86_64     | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.macos-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.macos-x86_64/) |
 | **OpenVINO.runtime.macos-arm64**      | Native bindings for macos-arm64      | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.macos-arm64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.macos-arm64/) |
 
@@ -161,19 +153,19 @@ If you want to learn more information, you can refer to: [OpenVINO™ C# API API
 
 **以下是我的联系方式：**
 
-&emsp;    **E-mail：**guojin_yjs@cumt.edu.cn
+&emsp;    **E-mail**：guojin_yjs@cumt.edu.cn
 
-&emsp;    **CSDN博客：**https://guojin.blog.csdn.net
+&emsp;    **CSDN博客**：https://guojin.blog.csdn.net
 
-&emsp;    **GitHub：**https://github.com/guojin-yan
+&emsp;    **GitHub**：https://github.com/guojin-yan
 
-&emsp;    **Gitee：**https://gitee.com/guojin-yan
+&emsp;    **Gitee**：https://gitee.com/guojin-yan
 
-&emsp;    **开源项目OpenVINO CSharp API：**https://github.com/guojin-yan/OpenVINO-CSharp-API
+&emsp;    **开源项目OpenVINO CSharp API**：https://github.com/guojin-yan/OpenVINO-CSharp-API
 
-&emsp;    **视频网站：**https://space.bilibili.com/222626791
+&emsp;    **视频网站**：https://space.bilibili.com/222626791
 
-&emsp;    **微信公众号：**CSharp与边缘模型部署
+&emsp;    **微信公众号**：CSharp与边缘模型部署
 
 ## 📖 **许可证书(License)**
 
@@ -181,3 +173,4 @@ If you want to learn more information, you can refer to: [OpenVINO™ C# API API
 
 The release of this project is certified under the [Apache 2.0 license](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.0/LICENSE.txt).
 
+<div align=center><img src="https://s2.loli.net/2024/01/29/VIPU1MSwjEh2QAY.png" width=800></div>
