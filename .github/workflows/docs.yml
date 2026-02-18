@@ -7,7 +7,7 @@
 name: Documentation
 
 on:
-  # 在推送到 main/csharp3.2 分支时触发 / Trigger on push to main/csharp3.2 branch
+  # 在推送到 csharp3.2 分支时触发 / Trigger on push to csharp3.2 branch
   push:
     branches: [ csharp3.2 ]
     paths:
@@ -49,25 +49,21 @@ jobs:
         dotnet tool install -g docfx
         
     - name: Restore packages / 还原包
-      run: |
-        cd OpenVINO.CSharp.API
-        dotnet restore
+      run: dotnet restore
         
     - name: Build project / 构建项目
-      run: |
-        cd OpenVINO.CSharp.API
-        dotnet build -c Release --no-restore
+      run: dotnet build -c Release --no-restore
         
     - name: Generate API documentation / 生成 API 文档
       run: |
-        cd OpenVINO.CSharp.API/docs
+        cd docs
         docfx metadata docfx.json
         docfx build docfx.json
         
     - name: Upload artifact / 上传构建产物
       uses: actions/upload-pages-artifact@v3
       with:
-        path: OpenVINO.CSharp.API/_site
+        path: _site
 
   # 部署到 GitHub Pages / Deploy to GitHub Pages
   deploy:
