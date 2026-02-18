@@ -1,0 +1,150 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 多目标框架支持: .NET Framework 4.6-4.8 和 .NET 5-10 -->
+    <TargetFrameworks>net46;net461;net462;net47;net471;net472;net48;net481;net5.0;net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    
+    <!-- 程序集信息 -->
+    <AssemblyName>OpenVINO.CSharp.API</AssemblyName>
+    <RootNamespace>OpenVinoSharp</RootNamespace>
+	
+    <Version>4.0.0.0</Version>
+    <Authors>Guojin Yan</Authors>
+    <Company>Guojin Yan</Company>
+    <Product>OpenVINO C# API</Product>
+    <Description>
+      OpenVINO C# API - A .NET wrapper for OpenVINO C API.
+      Supports .NET Framework 4.6-4.8 and .NET 5-10.
+      Cross-platform support for Windows, Linux, and macOS.
+    </Description>
+    <PackageProjectUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>OpenVINO;CSharp-API;C#-API;DeepLearning;AI;Inference</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NeutralLanguage>zh</NeutralLanguage>
+    <LangVersion Condition="'$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">8.0</LangVersion>
+    <LangVersion Condition="'$(TargetFramework)' == 'net5.0'">9.0</LangVersion>
+    <LangVersion Condition="'$(TargetFramework)' == 'net6.0'">10.0</LangVersion>
+    <LangVersion Condition="'$(TargetFramework)' == 'net7.0'">11.0</LangVersion>
+    <LangVersion Condition="'$(TargetFramework)' == 'net8.0'">12.0</LangVersion>
+    <LangVersion Condition="'$(TargetFramework)' == 'net9.0'">13.0</LangVersion>
+    <LangVersion Condition="'$(TargetFramework)' == 'net10.0'">14.0</LangVersion>
+    <Nullable Condition="'$(TargetFramework)' != 'net46' and '$(TargetFramework)' != 'net461' and '$(TargetFramework)' != 'net462' and '$(TargetFramework)' != 'net47' and '$(TargetFramework)' != 'net471' and '$(TargetFramework)' != 'net472' and '$(TargetFramework)' != 'net48' and '$(TargetFramework)' != 'net481'">annotations</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <!-- 编译常量定义 - 用于条件编译 -->
+  <!-- .NET Framework 定义 -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">
+    <DefineConstants>$(DefineConstants);NETFRAMEWORK;NETFRAMEWORK_LEGACY</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- .NET Framework 4.6+ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462'">
+    <DefineConstants>$(DefineConstants);NET46;NET46_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- .NET Framework 4.7+ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472'">
+    <DefineConstants>$(DefineConstants);NET47;NET47_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- .NET Framework 4.8+ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">
+    <DefineConstants>$(DefineConstants);NET48;NET48_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- .NET Core / .NET 5+ 定义 -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP;NET5_0;NET5_0_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP;NET6_0;NET6_0_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP;NET7_0;NET7_0_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP;NET8_0;NET8_0_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP;NET9_0;NET9_0_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP;NET10_0;NET10_0_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- 功能特性定义 -->
+  <!-- Span<T> 支持: .NET Core 2.1+, .NET 5+, .NET Framework 4.7.2+ (需要 NuGet 包) -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+    <DefineConstants>$(DefineConstants);HAS_SPAN</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- Memory<T> 支持: .NET Core 2.1+, .NET 5+, .NET Framework 4.7.2+ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+    <DefineConstants>$(DefineConstants);HAS_MEMORY</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- Unsafe 类支持: .NET Core 2.0+, .NET 5+, .NET Framework 4.5+ -->
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);HAS_UNSAFE</DefineConstants>
+    <PackageId>JYPPX.OpenVINO.CSharp.API</PackageId>
+    <Title>OpenVINO.CSharp.API</Title>
+  </PropertyGroup>
+  
+  <!-- NativeLibrary 类支持 (.NET Core 3.0+, .NET 5+) -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+    <DefineConstants>$(DefineConstants);HAS_NATIVELIBRARY</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- Index/Range 支持 (.NET Core 3.0+, .NET 5+) -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+    <DefineConstants>$(DefineConstants);HAS_INDEX_RANGE</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- IAsyncEnumerable 支持 (.NET Core 3.0+, .NET 5+) -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+    <DefineConstants>$(DefineConstants);HAS_ASYNC_ENUMERABLE</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- .NET Framework 特定引用 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.InteropServices" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  
+  <!-- Span/Memory 支持的 NuGet 包引用 (旧版 .NET Framework 需要) -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Buffers" Version="4.5.1" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+  </ItemGroup>
+  
+  <!-- ValueTuple 支持 (.NET Framework 4.6-4.7 需要) -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471'">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+  <!-- 包文件 -->
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+  </ItemGroup>
+  
+  <!-- 包含 README 文件到 NuGet 包 -->
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

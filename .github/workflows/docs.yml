@@ -1,0 +1,83 @@
+# Copyright (c) 2024 Guojin Yan
+# Licensed under the MIT License.
+
+# GitHub Actions workflow to build and deploy documentation to GitHub Pages
+# 构建并部署文档到 GitHub Pages 的工作流
+
+name: Documentation
+
+on:
+  # 在推送到 main 分支时触发 / Trigger on push to main branch
+  push:
+    branches: [ main, master ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+  
+  # 允许手动触发 / Allow manual trigger
+  workflow_dispatch:
+
+# 设置 GITHUB_TOKEN 权限 / Set GITHUB_TOKEN permissions
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 允许一个并发部署 / Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # 构建文档 / Build documentation
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout / 检出代码
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET / 设置 .NET 环境
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Setup DocFX / 设置 DocFX
+      run: |
+        dotnet tool install -g docfx
+        
+    - name: Restore packages / 还原包
+      run: |
+        cd OpenVINO.CSharp.API
+        dotnet restore
+        
+    - name: Build project / 构建项目
+      run: |
+        cd OpenVINO.CSharp.API
+        dotnet build -c Release --no-restore
+        
+    - name: Generate API documentation / 生成 API 文档
+      run: |
+        cd OpenVINO.CSharp.API/docs
+        docfx metadata docfx.json
+        docfx build docfx.json
+        
+    - name: Upload artifact / 上传构建产物
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: OpenVINO.CSharp.API/_site
+
+  # 部署到 GitHub Pages / Deploy to GitHub Pages
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - name: Deploy to GitHub Pages / 部署到 GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

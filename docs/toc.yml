@@ -1,0 +1,7 @@
+# 文档目录结构 / Documentation table of contents
+
+- name: 首页 / Home
+  href: index.md
+- name: API 文档 / API Documentation
+  href: api/
+  homepage: api/OpenVinoSharp.yml

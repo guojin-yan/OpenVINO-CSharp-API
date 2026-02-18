@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11505.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{83AEB31C-DFE0-4175-A76D-2B5135170D8F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B037FBFA-962B-44B3-8B9F-2C9030CBBA9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVINO.CSharp.API", "src\OpenVINO.CSharp.API\OpenVINO.CSharp.API.csproj", "{DFE034B3-FD0D-9369-B403-2FE3715BA7BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVINO.CSharp.API.Tests", "tests\OpenVINO.CSharp.API.Tests\OpenVINO.CSharp.API.Tests.csproj", "{10C03195-A085-1309-C2D0-CB2A45ED5DEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFE034B3-FD0D-9369-B403-2FE3715BA7BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFE034B3-FD0D-9369-B403-2FE3715BA7BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFE034B3-FD0D-9369-B403-2FE3715BA7BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFE034B3-FD0D-9369-B403-2FE3715BA7BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10C03195-A085-1309-C2D0-CB2A45ED5DEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10C03195-A085-1309-C2D0-CB2A45ED5DEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10C03195-A085-1309-C2D0-CB2A45ED5DEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10C03195-A085-1309-C2D0-CB2A45ED5DEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DFE034B3-FD0D-9369-B403-2FE3715BA7BE} = {83AEB31C-DFE0-4175-A76D-2B5135170D8F}
+		{10C03195-A085-1309-C2D0-CB2A45ED5DEC} = {B037FBFA-962B-44B3-8B9F-2C9030CBBA9A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17497793-127C-4443-9035-FB5BF6F7FB0A}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,162 @@
+// Copyright (c) 2024 Guojin Yan
+// Licensed under the MIT License.
+
+using Xunit;
+
+namespace OpenVinoSharp.Tests.UnitTests
+{
+    /// <summary>
+    /// NodeInput 类单元测试 / NodeInput class unit tests
+    /// </summary>
+    public class NodeInputTests
+    {
+        [OpenVINOFact]
+        [Trait("Category", TestCategories.Unit)]
+        [Trait("Category", TestCategories.RequiresOpenVINO)]
+        public void Constructor_WithValidPointer_CreatesNodeInput()
+        {
+            // Arrange
+            using var core = new Core();
+            if (!System.IO.File.Exists("test_model.xml"))
+            {
+                return;
+            }
+            using var model = core.read_model("test_model.xml");
+            
+            // Act
+            using var input = model.get_input(0);
+            
+            // Assert
+            Assert.NotNull(input);
+            Assert.True(input.IsValid);
+        }
+
+        [OpenVINOFact]
+        [Trait("Category", TestCategories.Unit)]
+        [Trait("Category", TestCategories.RequiresOpenVINO)]
+        public void GetElementType_ReturnsValidType()
+        {
+            // Arrange
+            using var core = new Core();
+            if (!System.IO.File.Exists("test_model.xml"))
+            {
+                return;
+            }
+            using var model = core.read_model("test_model.xml");
+            using var input = model.get_input(0);
+
+            // Act
+            var elementType = input.get_element_type();
+
+            // Assert
+            Assert.NotNull(elementType);
+        }
+
+        [OpenVINOFact]
+        [Trait("Category", TestCategories.Unit)]
+        [Trait("Category", TestCategories.RequiresOpenVINO)]
+        public void GetShape_ReturnsValidShape()
+        {
+            // Arrange
+            using var core = new Core();
+            if (!System.IO.File.Exists("test_model.xml"))
+            {
+                return;
+            }
+            using var model = core.read_model("test_model.xml");
+            using var input = model.get_input(0);
+
+            // Act
+            using var shape = input.get_shape();
+
+            // Assert
+            Assert.NotNull(shape);
+            Assert.True(shape.get_rank() > 0);
+        }
+
+        [OpenVINOFact]
+        [Trait("Category", TestCategories.Unit)]
+        [Trait("Category", TestCategories.RequiresOpenVINO)]
+        public void GetPartialShape_ReturnsValidPartialShape()
+        {
+            // Arrange
+            using var core = new Core();
+            if (!System.IO.File.Exists("test_model.xml"))
+            {
+                return;
+            }
+            using var model = core.read_model("test_model.xml");
+            using var input = model.get_input(0);
+
+            // Act
+            using var partialShape = input.get_partial_shape();
+
+            // Assert
+            Assert.NotNull(partialShape);
+        }
+
+        [OpenVINOFact]
+        [Trait("Category", TestCategories.Unit)]
+        [Trait("Category", TestCategories.RequiresOpenVINO)]
+        public void GetAnyName_ReturnsValidName()
+        {
+            // Arrange
+            using var core = new Core();
+            if (!System.IO.File.Exists("test_model.xml"))
+            {
+                return;
+            }
+            using var model = core.read_model("test_model.xml");
+            using var input = model.get_input(0);
+
+            // Act
+            string name = input.get_any_name();
+
+            // Assert
+            Assert.NotNull(name);
+            Assert.False(string.IsNullOrEmpty(name));
+        }
+
+        [OpenVINOFact]
+        [Trait("Category", TestCategories.Unit)]
+        [Trait("Category", TestCategories.RequiresOpenVINO)]
+        public void Ptr_ReturnsValidPointer()
+        {
+            // Arrange
+            using var core = new Core();
+            if (!System.IO.File.Exists("test_model.xml"))
+            {
+                return;
+            }
+            using var model = core.read_model("test_model.xml");
+            using var input = model.get_input(0);
+
+            // Act
+            System.IntPtr ptr = input.Ptr;
+
+            // Assert
+            Assert.NotEqual(System.IntPtr.Zero, ptr);
+        }
+
+        [OpenVINOFact]
+        [Trait("Category", TestCategories.Unit)]
+        [Trait("Category", TestCategories.RequiresOpenVINO)]
+        public void Dispose_CleansUpResources()
+        {
+            // Arrange
+            using var core = new Core();
+            if (!System.IO.File.Exists("test_model.xml"))
+            {
+                return;
+            }
+            using var model = core.read_model("test_model.xml");
+            var input = model.get_input(0);
+
+            // Act
+            input.Dispose();
+
+            // Assert
+            Assert.True(input.IsDisposed);
+        }
+    }
+}
