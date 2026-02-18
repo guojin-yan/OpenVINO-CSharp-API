@@ -9,7 +9,7 @@ name: Documentation
 on:
   # 在推送到 main/csharp3.2 分支时触发 / Trigger on push to main/csharp3.2 branch
   push:
-    branches: [ main, master, csharp3.2 ]
+    branches: [ csharp3.2 ]
     paths:
       - '**.cs'
       - '**.csproj'
