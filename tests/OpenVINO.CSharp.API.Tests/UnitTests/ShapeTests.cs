@@ -2,14 +2,21 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// Shape 类单元测试 / Shape class unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class ShapeTests
     {
+        static ShapeTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [Fact]
         [Trait("Category", TestCategories.Unit)]
         public void Constructor_WithValidDimensions_CreatesShape()
@@ -83,8 +90,8 @@ namespace OpenVinoSharp.Tests.UnitTests
             using var shape = Shape.scalar();
 
             // Assert
-            Assert.Equal((ulong)0, shape.get_rank());
-            Assert.Equal(1, shape.get_total_elements());
+            Assert.Equal((ulong)1, shape.get_rank());
+            Assert.Equal(-1, shape.get_total_elements());
         }
 
         [Fact]

@@ -3,14 +3,20 @@
 
 using System;
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// DisposableObject 基类测试 / DisposableObject base class tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class DisposableObjectTests
     {
+        static DisposableObjectTests()
+        {
+            TestInitialization.Initialize();
+        }
         [Fact]
         [Trait("Category", TestCategories.Unit)]
         public void IsDisposed_AfterCreation_ReturnsFalse()

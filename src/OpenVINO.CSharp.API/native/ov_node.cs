@@ -67,16 +67,10 @@ namespace OpenVinoSharp.native
         /// <summary>
         /// Get the element type of the output port.
         /// </summary>
-        [DllImport("openvino_c", EntryPoint = "ov_output_get_element_type",
+        [DllImport("openvino_c", EntryPoint = "ov_port_get_element_type",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_output_get_element_type(IntPtr output, ref uint type);
+        public extern static ExceptionStatus ov_port_get_element_type(IntPtr output, ref uint type);
 
-        /// <summary>
-        /// Get the shape of the output port.
-        /// </summary>
-        [DllImport("openvino_c", EntryPoint = "ov_output_get_shape",
-            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_output_get_shape(IntPtr output, IntPtr shape);
 
         /// <summary>
         /// Get the partial shape of the output port.
@@ -85,18 +79,34 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_output_get_partial_shape(IntPtr output, IntPtr partial_shape);
 
-        /// <summary>
-        /// Get the tensor name of the output port.
-        /// </summary>
-        [DllImport("openvino_c", EntryPoint = "ov_output_get_any_name",
+        // Port shape
+        [DllImport("openvino_c", EntryPoint = "ov_const_port_get_shape",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_output_get_any_name(IntPtr output, ref IntPtr name);
+        public extern static ExceptionStatus ov_const_port_get_shape(IntPtr port, IntPtr shape);
 
-        /// <summary>
-        /// Get the index of the output port.
-        /// </summary>
-        [DllImport("openvino_c", EntryPoint = "ov_output_get_index",
+        [DllImport("openvino_c", EntryPoint = "ov_port_get_shape",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_output_get_index(IntPtr output, ref ulong idx);
+        public extern static ExceptionStatus ov_port_get_shape(IntPtr port, IntPtr shape);
+
+        // Port partial shape
+        [DllImport("openvino_c", EntryPoint = "ov_port_get_partial_shape",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_port_get_partial_shape(IntPtr port, IntPtr partial_shape);
+
+
+        // Port name
+        [DllImport("openvino_c", EntryPoint = "ov_port_get_any_name",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_port_get_any_name(IntPtr port, ref IntPtr tensor_name);
+
+        // Free ports
+        [DllImport("openvino_c", EntryPoint = "ov_output_port_free",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static void ov_output_port_free(IntPtr port);
+
+        [DllImport("openvino_c", EntryPoint = "ov_output_const_port_free",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static void ov_output_const_port_free(IntPtr port);
+
     }
 }

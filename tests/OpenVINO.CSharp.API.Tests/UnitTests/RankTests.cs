@@ -2,14 +2,21 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// Rank 结构单元测试 / Rank structure unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class RankTests
     {
+        static RankTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [Fact]
         [Trait("Category", TestCategories.Unit)]
         public void Constructor_WithStaticValue_CreatesStaticRank()

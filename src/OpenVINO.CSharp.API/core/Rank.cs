@@ -60,7 +60,7 @@ namespace OpenVinoSharp
         /// <returns>是否为动态 / Whether dynamic</returns>
         public bool is_dynamic()
         {
-            return min != max;
+            return min != max  || (min == max && min < 0 && max < 0);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace OpenVinoSharp
         /// <returns>是否为静态 / Whether static</returns>
         public bool is_static()
         {
-            return min == max;
+            return min == max && max > 0 && min > 0;
         }
 
         /// <summary>

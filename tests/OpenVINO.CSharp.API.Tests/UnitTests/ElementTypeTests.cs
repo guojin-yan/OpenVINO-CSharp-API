@@ -2,14 +2,21 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// ElementType 枚举测试 / ElementType enumeration tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class ElementTypeTests
     {
+        static ElementTypeTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [Theory]
         [InlineData(ElementType.UNDEFINED, 0U)]
         [InlineData(ElementType.BOOLEAN, 1U)]

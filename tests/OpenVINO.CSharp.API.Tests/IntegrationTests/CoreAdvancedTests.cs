@@ -3,14 +3,22 @@
 
 using System.Collections.Generic;
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.IntegrationTests
 {
     /// <summary>
     /// Core 类高级集成测试 / Core class advanced integration tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class CoreAdvancedTests
     {
+        static CoreAdvancedTests()
+        {
+            // 确保 OpenVINO 原生库已加载
+            // Ensure OpenVINO native library is loaded
+            TestInitialization.Initialize();
+        }
         [OpenVINOFact]
         [Trait("Category", TestCategories.Integration)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]
@@ -18,7 +26,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
@@ -29,7 +37,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             };
 
             // Act
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", properties);
 
             // Assert
@@ -43,13 +51,13 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
 
             // Act
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
 
             // Assert
             Assert.NotNull(model);
@@ -110,11 +118,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
 
             // Act
             using var compiled = core.compile_model(model, "CPU", null);

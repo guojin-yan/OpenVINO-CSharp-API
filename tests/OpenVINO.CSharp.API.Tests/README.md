@@ -82,10 +82,10 @@ dotnet test tests/OpenVINO.CSharp.API.Tests --filter "FullyQualifiedName~ShapeTe
 
 ## 测试数据
 
-集成测试需要实际的模型文件。测试会检查 `test_model.xml` 文件是否存在，如果不存在则跳过相关测试。
+集成测试需要实际的模型文件。测试会检查 `model/yolo26n.xml` 文件是否存在，如果不存在则跳过相关测试。
 
 要运行完整的集成测试，请提供测试模型文件：
-1. 将模型文件（`test_model.xml` 和 `test_model.bin`）放在测试输出目录
+1. 将模型文件（`model/yolo26n.xml` ）放在测试输出目录
 2. 或在测试代码中修改模型路径
 
 ## 添加新测试

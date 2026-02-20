@@ -2,14 +2,22 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.IntegrationTests
 {
     /// <summary>
     /// CompiledModel 高级集成测试 / CompiledModel advanced integration tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class CompiledModelAdvancedTests
     {
+        static CompiledModelAdvancedTests()
+        {
+            // 确保 OpenVINO 原生库已加载
+            // Ensure OpenVINO native library is loaded
+            TestInitialization.Initialize();
+        }
         [OpenVINOFact]
         [Trait("Category", TestCategories.Integration)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]
@@ -17,11 +25,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var compiled = core.compile_model(modelObj, "CPU", null);
 
             // Act
@@ -39,11 +47,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var compiled = core.compile_model(modelObj, "CPU", null);
             
             // 获取输入名称
@@ -64,11 +72,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var compiled = core.compile_model(modelObj, "CPU", null);
             
             // 获取输出名称
@@ -89,11 +97,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var compiled = core.compile_model(modelObj, "CPU", null);
 
             // Act
@@ -110,11 +118,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var compiled = core.compile_model(modelObj, "CPU", null);
             
             string exportPath = "exported_model.bin";
@@ -144,11 +152,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var compiled = core.compile_model(modelObj, "CPU", null);
 
             // Act
@@ -165,11 +173,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var compiled = core.compile_model(modelObj, "CPU", null);
 
             // Act
@@ -179,27 +187,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             Assert.True(size > 0);
         }
 
-        [OpenVINOFact]
-        [Trait("Category", TestCategories.Integration)]
-        [Trait("Category", TestCategories.RequiresOpenVINO)]
-        public void NodeOutput_GetIndex_ReturnsValidIndex()
-        {
-            // Arrange
-            using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
-            {
-                return;
-            }
-            using var modelObj = core.read_model("test_model.xml");
-            using var compiled = core.compile_model(modelObj, "CPU", null);
-            using var output = compiled.get_output(0);
 
-            // Act
-            ulong index = output.get_index();
-
-            // Assert
-            Assert.Equal(0UL, index);
-        }
 
         [OpenVINOFact]
         [Trait("Category", TestCategories.Integration)]
@@ -208,11 +196,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var compiled = core.compile_model(modelObj, "CPU", null);
             using var output = compiled.get_output(0);
 

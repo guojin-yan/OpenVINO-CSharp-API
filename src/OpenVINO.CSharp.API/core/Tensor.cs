@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
+using OpenVinoSharp.native;
+
 
 #if HAS_SPAN
 using System.Buffers;
@@ -38,7 +40,7 @@ namespace OpenVinoSharp
             if (shape == null)
                 throw new ArgumentNullException(nameof(shape));
             IntPtr ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_tensor_create((uint)type, shape.OvPtr, ref ptr));
+            ExceptionHandler.ThrowOnError(ov_tensor_create((uint)type, Marshal.PtrToStructure<ov_shape_t>(shape.OvPtr), ref ptr));
             _ptr = ptr;
         }
 
@@ -59,7 +61,7 @@ namespace OpenVinoSharp
                 fixed (void* dataPtr = input_data)
                 {
                     ExceptionHandler.ThrowOnError(
-                        ov_tensor_create_from_host_ptr((uint)ElementType.F32, shape.OvPtr, (IntPtr)dataPtr, ref _ptr));
+                        ov_tensor_create_from_host_ptr((uint)ElementType.F32, Marshal.PtrToStructure<ov_shape_t>(shape.OvPtr), (IntPtr)dataPtr, ref _ptr));
                 }
             }
         }
@@ -80,7 +82,7 @@ namespace OpenVinoSharp
                 fixed (float* dataPtr = input_data)
                 {
                     ExceptionHandler.ThrowOnError(
-                        ov_tensor_create_from_host_ptr((uint)ElementType.F32, shape.OvPtr, (IntPtr)dataPtr, ref _ptr));
+                        ov_tensor_create_from_host_ptr((uint)ElementType.F32, Marshal.PtrToStructure<ov_shape_t>(shape.OvPtr), (IntPtr)dataPtr, ref _ptr));
                 }
             }
         }
@@ -98,7 +100,7 @@ namespace OpenVinoSharp
             if (shape == null)
                 throw new ArgumentNullException(nameof(shape));
             ExceptionHandler.ThrowOnError(
-                ov_tensor_create_from_host_ptr((uint)element_type, shape.OvPtr, data, ref _ptr));
+                ov_tensor_create_from_host_ptr((uint)element_type, Marshal.PtrToStructure<ov_shape_t>(shape.OvPtr), data, ref _ptr));
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace OpenVinoSharp
             if (shape == null)
                 throw new ArgumentNullException(nameof(shape));
             IntPtr ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_tensor_create((uint)element_type, shape.OvPtr, ref ptr));
+            ExceptionHandler.ThrowOnError(ov_tensor_create((uint)element_type, Marshal.PtrToStructure<ov_shape_t>(shape.OvPtr), ref ptr));
             return new Tensor(ptr);
         }
 
@@ -126,7 +128,7 @@ namespace OpenVinoSharp
         {
             if (shape == null)
                 throw new ArgumentNullException(nameof(shape));
-            ExceptionHandler.ThrowOnError(ov_tensor_create_from_host_ptr((uint)element_type, shape.OvPtr, (IntPtr)data, ref _ptr));
+            ExceptionHandler.ThrowOnError(ov_tensor_create_from_host_ptr((uint)element_type, Marshal.PtrToStructure<ov_shape_t>(shape.OvPtr), (IntPtr)data, ref _ptr));
         }
 
         #endregion
@@ -155,7 +157,7 @@ namespace OpenVinoSharp
             get
             {
                 ThrowIfDisposed();
-                IntPtr ptr = IntPtr.Zero;
+                IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ov_shape_t)));
                 ExceptionHandler.ThrowOnError(ov_tensor_get_shape(_ptr, ptr));
                 return new Shape(ptr);
             }

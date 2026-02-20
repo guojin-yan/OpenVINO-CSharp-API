@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net6.0;net48</TargetFrameworks>
@@ -8,10 +8,12 @@
     <RootNamespace>OpenVinoSharp.Tests</RootNamespace>
     <AssemblyName>OpenVINO.CSharp.API.Tests</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="OpenVINO.runtime.win" Version="2025.4.0" />
     <PackageReference Include="xunit" Version="2.6.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -37,6 +39,14 @@
   <ItemGroup>
     <None Update="TestModels\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\model\yolo26n.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>model\yolo26n.xml</Link>
+    </None>
+    <None Include="..\..\model\yolo26n.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>model\yolo26n.bin</Link>
     </None>
   </ItemGroup>
 

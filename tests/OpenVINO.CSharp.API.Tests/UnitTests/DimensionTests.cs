@@ -2,14 +2,21 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// Dimension 类单元测试 / Dimension class unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class DimensionTests
     {
+        static DimensionTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [Fact]
         [Trait("Category", TestCategories.Unit)]
         public void Constructor_WithStaticValue_CreatesStaticDimension()

@@ -5,6 +5,7 @@ using System;
 using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
+using OpenVinoSharp.native;
 
 namespace OpenVinoSharp
 {
@@ -32,11 +33,12 @@ namespace OpenVinoSharp
 
         #region 字段 / Fields
 
-        /// <summary>
-        /// 内部形状指针 / Internal shape pointer
-        /// </summary>
-        internal new IntPtr _ptr;
+        ///// <summary>
+        ///// 内部形状指针 / Internal shape pointer
+        ///// </summary>
+        //internal new IntPtr _ptr;
 
+        public IntPtr Ptr => OvPtr;
         /// <summary>
         /// 维度数据指针 / Dimension data pointer
         /// </summary>
@@ -67,29 +69,15 @@ namespace OpenVinoSharp
         public Shape(long[] dims) : base()
         {
             _dims_array = dims ?? throw new ArgumentNullException(nameof(dims));
-            int size = dims.Length;
 
-            // 分配非托管内存 / Allocate unmanaged memory
-            _dims_ptr = Marshal.AllocHGlobal(sizeof(long) * size);
-            unsafe
-            {
-                fixed (void* srcPtr = dims)
-                {
-                    Buffer.MemoryCopy(
-                        srcPtr,
-                        _dims_ptr.ToPointer(),
-                        sizeof(long) * size,
-                        sizeof(long) * size);
-                }
-            }
-
-            // 分配形状结构体内存 / Allocate shape structure memory
+            // 使用原生 API 创建形状 / Use native API to create shape
+            OpenVinoSharp.native.ov_shape_t shapeStruct = new OpenVinoSharp.native.ov_shape_t();
+            ExceptionHandler.ThrowOnError(ov_shape_create(dims.Length, dims, ref shapeStruct));
+            
+            // 保存指针和维度数据 / Save pointer and dimension data
             _ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ov_shape_t)));
-            Marshal.StructureToPtr(new ov_shape_t
-            {
-                rank = (ulong)size,
-                dims = _dims_ptr
-            }, _ptr, false);
+            Marshal.StructureToPtr(shapeStruct, _ptr, false);
+            _dims_ptr = shapeStruct.dims;
         }
 
         /// <summary>
@@ -115,17 +103,13 @@ namespace OpenVinoSharp
         /// <inheritdoc/>
         protected override void DisposeUnmanaged()
         {
-            // 释放形状结构体 / Free shape structure
-            if (_ptr != IntPtr.Zero && _dims_array != null)
+            // 使用原生 API 释放形状 / Use native API to free shape
+            if (_ptr != IntPtr.Zero && IsEnabledDispose)
             {
+                OpenVinoSharp.native.ov_shape_t shape = Marshal.PtrToStructure<OpenVinoSharp.native.ov_shape_t>(_ptr);
+                ov_shape_free(ref shape);
                 Marshal.FreeHGlobal(_ptr);
                 _ptr = IntPtr.Zero;
-            }
-
-            // 释放维度数组内存 / Free dimension array memory
-            if (_dims_ptr != IntPtr.Zero)
-            {
-                Marshal.FreeHGlobal(_dims_ptr);
                 _dims_ptr = IntPtr.Zero;
             }
 
@@ -215,13 +199,30 @@ namespace OpenVinoSharp
 
         #endregion
 
+        #region 转换方法 / Conversion Methods
+
+        /// <summary>
+        /// 转换为 ov_partial_shape_t 结构体 / Convert to ov_partial_shape_t structure
+        /// </summary>
+        /// <returns>ov_partial_shape_t 结构体 / ov_partial_shape_t structure</returns>
+        internal ov_partial_shape_t ToPartialShapeStruct()
+        {
+            // 使用原生 API 将 shape 转换为 partial_shape / Use native API to convert shape to partial_shape
+            OpenVinoSharp.native.ov_shape_t shape = Marshal.PtrToStructure<OpenVinoSharp.native.ov_shape_t>(_ptr);
+            ov_partial_shape_t partialShape = new ov_partial_shape_t();
+            ExceptionHandler.ThrowOnError(ov_shape_to_partial_shape(shape, ref partialShape));
+            return partialShape;
+        }
+
+        #endregion
+
         #region 工厂方法 / Factory Methods
 
         /// <summary>
         /// 创建标量形状 / Create scalar shape
         /// </summary>
         /// <returns>标量形状 / Scalar shape</returns>
-        public static Shape scalar() => new Shape(new long[0]);
+        public static Shape scalar() => new Shape(new long[1] { 0});
 
         /// <summary>
         /// 创建一维形状 / Create one-dimensional shape

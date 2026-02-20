@@ -2,6 +2,8 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Runtime.InteropServices;
+using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
 
 namespace OpenVinoSharp
@@ -12,18 +14,13 @@ namespace OpenVinoSharp
     /// </summary>
     public class Layout : DisposableOvObject
     {
+        #region 字段 / Fields
+
+        private string? _layoutDesc;
+
+        #endregion
+
         #region 构造函数 / Constructors
-
-        /// <summary>
-        /// 默认构造函数 / Default constructor
-        /// </summary>
-        public Layout() : base() { }
-
-        /// <summary>
-        /// 从原生指针构造 / Construct from native pointer
-        /// </summary>
-        /// <param name="ptr">原生布局指针 / Native layout pointer</param>
-        public Layout(IntPtr ptr) : base(ptr) { }
 
         /// <summary>
         /// 从布局字符串构造 / Construct from layout string
@@ -31,8 +28,20 @@ namespace OpenVinoSharp
         /// <param name="layout">布局字符串 / Layout string</param>
         public Layout(string layout) : base()
         {
-            // 需要原生API实现 / Would need native API to create from string
+            if (string.IsNullOrEmpty(layout))
+                throw new ArgumentException("Layout string cannot be null or empty", nameof(layout));
+
+            _layoutDesc = layout;
+            IntPtr ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_layout_create(layout, ref ptr));
+            _ptr = ptr;
         }
+
+        /// <summary>
+        /// 从原生指针构造 / Construct from native pointer
+        /// </summary>
+        /// <param name="ptr">原生布局指针 / Native layout pointer</param>
+        public Layout(IntPtr ptr) : base(ptr) { }
 
         #endregion
 
@@ -41,6 +50,10 @@ namespace OpenVinoSharp
         /// <inheritdoc/>
         protected override void DisposeUnmanaged()
         {
+            if (_ptr != IntPtr.Zero && IsEnabledDispose)
+            {
+                ov_layout_free(_ptr);
+            }
             base.DisposeUnmanaged();
         }
 
@@ -125,7 +138,13 @@ namespace OpenVinoSharp
         /// <inheritdoc/>
         public override string ToString()
         {
-            return _ptr == IntPtr.Zero ? "<empty>" : $"Layout({_ptr:X})";
+            if (_ptr == IntPtr.Zero)
+                return _layoutDesc ?? "<empty>";
+
+            IntPtr strPtr = ov_layout_to_string(_ptr);
+            string result = Marshal.PtrToStringAnsi(strPtr) ?? _layoutDesc ?? "<empty>";
+            ov_free(strPtr);
+            return result;
         }
 
         #endregion

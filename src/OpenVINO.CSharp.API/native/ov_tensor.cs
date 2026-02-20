@@ -13,14 +13,14 @@ namespace OpenVinoSharp.native
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_tensor_create",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_tensor_create(uint type, IntPtr shape, ref IntPtr tensor);
+        public extern static ExceptionStatus ov_tensor_create(uint type, ov_shape_t shape, ref IntPtr tensor);
 
         /// <summary>
         /// Create a tensor from host pointer.
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_tensor_create_from_host_ptr",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_tensor_create_from_host_ptr(uint type, IntPtr shape, IntPtr host_ptr, ref IntPtr tensor);
+        public extern static ExceptionStatus ov_tensor_create_from_host_ptr(uint type, ov_shape_t shape, IntPtr host_ptr, ref IntPtr tensor);
 
         /// <summary>
         /// Release the memory allocated by ov_tensor_t.
@@ -34,7 +34,7 @@ namespace OpenVinoSharp.native
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_tensor_set_shape",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_tensor_set_shape(IntPtr tensor, IntPtr shape);
+        public extern static ExceptionStatus ov_tensor_set_shape(IntPtr tensor, ov_shape_t shape);
 
         /// <summary>
         /// Get the tensor shape.
@@ -70,5 +70,26 @@ namespace OpenVinoSharp.native
         [DllImport("openvino_c", EntryPoint = "ov_tensor_data",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_tensor_data(IntPtr tensor, ref IntPtr data);
+
+        /// <summary>
+        /// Create a tensor from string array.
+        /// </summary>
+        [DllImport("openvino_c", EntryPoint = "ov_tensor_create_from_string_array",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_tensor_create_from_string_array(
+            IntPtr string_array,
+            ulong array_size,
+            ov_shape_t shape,
+            ref IntPtr tensor);
+
+        /// <summary>
+        /// Set string data for tensor.
+        /// </summary>
+        [DllImport("openvino_c", EntryPoint = "ov_tensor_set_string_data",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_tensor_set_string_data(
+            IntPtr tensor,
+            IntPtr string_array,
+            ulong array_size);
     }
 }

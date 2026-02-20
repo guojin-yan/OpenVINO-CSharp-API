@@ -4,10 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
+using OpenVinoSharp.native;
 
 namespace OpenVinoSharp
 {
@@ -18,6 +20,27 @@ namespace OpenVinoSharp
     /// </summary>
     public class InferRequest : DisposableOvObject
     {
+        #region 字段 / Fields
+
+        // 静态回调字典，防止委托被垃圾回收 / Static callback dictionary to prevent delegates from being GC'd
+        private static readonly Dictionary<IntPtr, Action> _callbackRegistry = new Dictionary<IntPtr, Action>();
+        private static readonly object _registryLock = new object();
+        
+        // 空操作回调委托（用于清除回调）/ No-op callback delegate (used for clearing callback)
+        private static readonly ov_infer_request_callback_func _noOpCallback = (IntPtr args) => { };
+        private static readonly IntPtr _noOpCallbackPtr = Marshal.GetFunctionPointerForDelegate(_noOpCallback);
+        
+        // 当前请求注册的回调 / Currently registered callback for this request
+        private Action? _currentCallback;
+        
+        // 原生回调委托实例（保持引用防止GC）/ Native callback delegate instance (keep reference to prevent GC)
+        private ov_infer_request_callback_func? _nativeCallbackDelegate;
+        
+        // 原生回调结构体（必须保持生命周期，C++保存了指针）/ Native callback struct (must keep alive, C++ stores pointer)
+        private ov_callback_t _callbackStruct;
+
+        #endregion
+
         #region 构造函数 / Constructors
 
         /// <summary>
@@ -37,6 +60,17 @@ namespace OpenVinoSharp
         /// <inheritdoc/>
         protected override void DisposeUnmanaged()
         {
+            // 从注册表中移除回调 / Remove callback from registry
+            if (_currentCallback != null)
+            {
+                lock (_registryLock)
+                {
+                    _callbackRegistry.Remove(_ptr);
+                }
+                _currentCallback = null;
+                _nativeCallbackDelegate = null;
+            }
+
             if (_ptr != IntPtr.Zero && IsEnabledDispose)
             {
                 ov_infer_request_free(_ptr);
@@ -162,6 +196,40 @@ namespace OpenVinoSharp
                 ov_infer_request_set_tensor(_ptr, tensor_name, tensor.OvPtr));
         }
 
+        /// <summary>
+        /// 通过端口设置张量 / Set tensor by port
+        /// </summary>
+        /// <param name="port">节点端口 / Node port</param>
+        /// <param name="tensor">张量 / Tensor</param>
+        public void set_tensor_by_port(NodeOutput port, Tensor tensor)
+        {
+            ThrowIfDisposed();
+            if (port == null)
+                throw new ArgumentNullException(nameof(port));
+            if (tensor == null)
+                throw new ArgumentNullException(nameof(tensor));
+
+            ExceptionHandler.ThrowOnError(
+                ov_infer_request_set_tensor_by_port(_ptr, port.OvPtr, tensor.OvPtr));
+        }
+
+        /// <summary>
+        /// 通过常量端口设置张量 / Set tensor by const port
+        /// </summary>
+        /// <param name="port">常量节点端口 / Const node port</param>
+        /// <param name="tensor">张量 / Tensor</param>
+        public void set_tensor_by_const_port(NodeInput port, Tensor tensor)
+        {
+            ThrowIfDisposed();
+            if (port == null)
+                throw new ArgumentNullException(nameof(port));
+            if (tensor == null)
+                throw new ArgumentNullException(nameof(tensor));
+
+            ExceptionHandler.ThrowOnError(
+                ov_infer_request_set_tensor_by_const_port(_ptr, port.OvPtr, tensor.OvPtr));
+        }
+
         #endregion
 
         #region 张量获取 / Tensor Getting
@@ -247,6 +315,40 @@ namespace OpenVinoSharp
             return get_tensor(tensor_name);
         }
 
+        /// <summary>
+        /// 通过端口获取张量 / Get tensor by port
+        /// </summary>
+        /// <param name="port">节点端口 / Node port</param>
+        /// <returns>张量 / Tensor</returns>
+        public Tensor get_tensor_by_port(NodeOutput port)
+        {
+            ThrowIfDisposed();
+            if (port == null)
+                throw new ArgumentNullException(nameof(port));
+
+            IntPtr tensor_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(
+                ov_infer_request_get_tensor_by_port(_ptr, port.OvPtr, ref tensor_ptr));
+            return new Tensor(tensor_ptr);
+        }
+
+        /// <summary>
+        /// 通过常量端口获取张量 / Get tensor by const port
+        /// </summary>
+        /// <param name="port">常量节点端口 / Const node port</param>
+        /// <returns>张量 / Tensor</returns>
+        public Tensor get_tensor_by_const_port(NodeInput port)
+        {
+            ThrowIfDisposed();
+            if (port == null)
+                throw new ArgumentNullException(nameof(port));
+
+            IntPtr tensor_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(
+                ov_infer_request_get_tensor_by_const_port(_ptr, port.OvPtr, ref tensor_ptr));
+            return new Tensor(tensor_ptr);
+        }
+
         #endregion
 
         #region 推理执行 / Inference Execution
@@ -320,6 +422,76 @@ namespace OpenVinoSharp
             ExceptionHandler.ThrowOnError(ov_infer_request_cancel(_ptr));
         }
 
+        /// <summary>
+        /// 静态原生回调函数 / Static native callback function
+        /// <para>通过 args 参数获取用户回调并执行。</para>
+        /// </summary>
+        private static void NativeCallbackHandler(IntPtr args)
+        {
+            if (args == IntPtr.Zero) return;
+            
+            Action? callback = null;
+            lock (_registryLock)
+            {
+                _callbackRegistry.TryGetValue(args, out callback);
+            }
+            callback?.Invoke();
+        }
+
+        /// <summary>
+        /// 设置异步推理完成回调 / Set callback for async inference completion
+        /// <para>当异步推理完成时，将调用此回调函数。</para>
+        /// </summary>
+        /// <param name="callback">回调函数 / Callback function</param>
+        public void set_callback(Action callback)
+        {
+            ThrowIfDisposed();
+            
+            // 清除之前的回调 / Clear previous callback
+            if (_currentCallback != null)
+            {
+                lock (_registryLock)
+                {
+                    _callbackRegistry.Remove(_ptr);
+                }
+                _currentCallback = null;
+                _nativeCallbackDelegate = null;
+            }
+
+            if (callback == null)
+            {
+                // 清除回调 - 使用空操作回调而不是空指针 / Clear callback - use no-op callback instead of null pointer
+                // C++ 代码总会调用 callback_func，所以不能传空指针
+                _callbackStruct = new ov_callback_t
+                {
+                    callback_func = _noOpCallbackPtr,
+                    args = IntPtr.Zero
+                };
+                ExceptionHandler.ThrowOnError(ov_infer_request_set_callback(_ptr, ref _callbackStruct));
+                return;
+            }
+
+            // 保存当前回调 / Save current callback
+            _currentCallback = callback;
+            
+            // 创建并保存原生回调委托 / Create and save native callback delegate
+            _nativeCallbackDelegate = NativeCallbackHandler;
+
+            lock (_registryLock)
+            {
+                _callbackRegistry[_ptr] = callback;
+            }
+
+            // 保存到实例字段，确保生命周期与对象相同 / Save to instance field to ensure same lifetime as object
+            _callbackStruct = new ov_callback_t
+            {
+                callback_func = Marshal.GetFunctionPointerForDelegate(_nativeCallbackDelegate),
+                args = _ptr  // 使用请求指针作为 key / Use request pointer as key
+            };
+
+            ExceptionHandler.ThrowOnError(ov_infer_request_set_callback(_ptr, ref _callbackStruct));
+        }
+
 #if HAS_ASYNC_ENUMERABLE
         /// <summary>
         /// 执行异步推理（async/await 模式）/ Perform asynchronous inference (async/await pattern)
@@ -359,6 +531,54 @@ namespace OpenVinoSharp
             return new Tensor[] { get_output_tensor() };
         }
 #endif
+
+        #endregion
+
+        #region 性能分析 / Profiling
+
+        /// <summary>
+        /// 获取性能分析信息 / Get profiling information
+        /// <para>返回每个层的性能测量数据，用于识别最耗时的操作。</para>
+        /// </summary>
+        /// <returns>性能分析信息列表 / List of profiling information</returns>
+        public ProfilingInfo[] get_profiling_info()
+        {
+            ThrowIfDisposed();
+            
+            ov_profiling_info_list_t info_list = new ov_profiling_info_list_t();
+            try
+            {
+                ExceptionHandler.ThrowOnError(ov_infer_request_get_profiling_info(_ptr, ref info_list));
+                
+                ProfilingInfo[] result = new ProfilingInfo[info_list.size];
+                int structSize = Marshal.SizeOf(typeof(ov_profiling_info_t));
+                
+                for (ulong i = 0; i < info_list.size; i++)
+                {
+                    IntPtr ptr = new IntPtr(info_list.profiling_infos.ToInt64() + (long)(i * (ulong)structSize));
+                    ov_profiling_info_t native_info = Marshal.PtrToStructure<ov_profiling_info_t>(ptr);
+                    
+                    result[i] = new ProfilingInfo
+                    {
+                        status = (ProfilingInfo.Status)(int)native_info.status,
+                        real_time = native_info.real_time,
+                        cpu_time = native_info.cpu_time,
+                        node_name = Marshal.PtrToStringAnsi(native_info.node_name) ?? string.Empty,
+                        exec_type = Marshal.PtrToStringAnsi(native_info.exec_type) ?? string.Empty,
+                        node_type = Marshal.PtrToStringAnsi(native_info.node_type) ?? string.Empty
+                    };
+                }
+                
+                return result;
+            }
+            finally
+            {
+                if (info_list.profiling_infos != IntPtr.Zero)
+                {
+                    ov_profiling_info_list_free(ref info_list);
+                }
+            }
+        }
 
         #endregion
 

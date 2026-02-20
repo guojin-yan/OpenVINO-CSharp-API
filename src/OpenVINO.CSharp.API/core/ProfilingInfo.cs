@@ -68,28 +68,4 @@ namespace OpenVinoSharp
             return $"{node_name}: status={status}, real_time={real_time}us, cpu_time={cpu_time}us, exec_type={exec_type}";
         }
     }
-
-    /// <summary>
-    /// Native structure for profiling info
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct ov_profiling_info_t
-    {
-        public ProfilingInfo.Status status;
-        public long real_time;
-        public long cpu_time;
-        public IntPtr node_name;
-        public IntPtr exec_type;
-        public IntPtr node_type;
-    }
-
-    /// <summary>
-    /// List of profiling info
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct ov_profiling_info_list_t
-    {
-        public IntPtr profiling_infos;
-        public ulong size;
-    }
 }

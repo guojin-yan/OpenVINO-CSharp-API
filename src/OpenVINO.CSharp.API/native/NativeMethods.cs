@@ -12,6 +12,13 @@ namespace OpenVinoSharp.native
     /// </summary>
     public static partial class NativeMethods
     {
+        // 静态构造函数 - 确保在使用任何 P/Invoke 方法之前加载原生库
+        // Static constructor - ensure native library is loaded before any P/Invoke call
+        static NativeMethods()
+        {
+            NativeLibraryLoader.EnsureLoaded();
+        }
+
         // 动态 DLL 名称 - 允许运行时配置
         private static string _dllName = "openvino_c";
         

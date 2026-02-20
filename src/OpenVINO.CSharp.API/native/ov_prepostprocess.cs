@@ -8,7 +8,8 @@ namespace OpenVinoSharp.native
 {
     public static partial class NativeMethods
     {
-        // PrePostProcessor
+        #region PrePostProcessor Creation and Destruction
+
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_create",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_create(IntPtr model, ref IntPtr preprocess);
@@ -21,7 +22,10 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_build(IntPtr preprocess, ref IntPtr model);
 
-        // Input Info
+        #endregion
+
+        #region Input Info
+
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_get_input_info",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_get_input_info(IntPtr preprocess, ref IntPtr input_info);
@@ -38,7 +42,10 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_preprocess_input_info_free(IntPtr input_info);
 
-        // Input Tensor Info
+        #endregion
+
+        #region Input Tensor Info
+
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_info_get_tensor_info",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_info_get_tensor_info(IntPtr input_info, ref IntPtr tensor_info);
@@ -55,6 +62,14 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_color_format(IntPtr tensor_info, uint color_format);
 
+        [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_color_format_with_subname",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_color_format_with_subname(
+            IntPtr tensor_info,
+            uint color_format,
+            ulong sub_names_size,
+            IntPtr sub_names);
+
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_layout",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_layout(IntPtr tensor_info, IntPtr layout);
@@ -63,7 +78,18 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_spatial_static_shape(IntPtr tensor_info, ulong input_height, ulong input_width);
 
-        // Preprocess Steps
+        [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_memory_type",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_memory_type(IntPtr tensor_info, string mem_type);
+
+        [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_from",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_from(IntPtr tensor_info, IntPtr tensor);
+
+        #endregion
+
+        #region Preprocess Steps
+
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_info_get_preprocess_steps",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_info_get_preprocess_steps(IntPtr input_info, ref IntPtr steps);
@@ -80,13 +106,32 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_scale(IntPtr steps, float value);
 
+        [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_scale_multi_channels",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_preprocess_preprocess_steps_scale_multi_channels(
+            IntPtr steps,
+            [MarshalAs(UnmanagedType.LPArray)] float[] values,
+            int value_size);
+
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_mean",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_mean(IntPtr steps, float value);
 
+        [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_mean_multi_channels",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_preprocess_preprocess_steps_mean_multi_channels(
+            IntPtr steps,
+            [MarshalAs(UnmanagedType.LPArray)] float[] values,
+            int value_size);
+
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_crop",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_preprocess_preprocess_steps_crop(IntPtr steps, int[] begin, int begin_size, int[] end, int end_size);
+        public extern static ExceptionStatus ov_preprocess_preprocess_steps_crop(
+            IntPtr steps,
+            [MarshalAs(UnmanagedType.LPArray)] int[] begin,
+            int begin_size,
+            [MarshalAs(UnmanagedType.LPArray)] int[] end,
+            int end_size);
 
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_convert_layout",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
@@ -104,7 +149,21 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_reverse_channels(IntPtr steps);
 
-        // Output Info
+        [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_pad",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_preprocess_preprocess_steps_pad(
+            IntPtr steps,
+            [MarshalAs(UnmanagedType.LPArray)] int[] pads_begin,
+            ulong pads_begin_size,
+            [MarshalAs(UnmanagedType.LPArray)] int[] pads_end,
+            ulong pads_end_size,
+            float value,
+            uint mode);
+
+        #endregion
+
+        #region Output Info
+
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_get_output_info",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_get_output_info(IntPtr preprocess, ref IntPtr output_info);
@@ -133,7 +192,10 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_output_set_element_type(IntPtr tensor_info, uint element_type);
 
-        // Model Info
+        #endregion
+
+        #region Model Info
+
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_info_get_model_info",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_info_get_model_info(IntPtr input_info, ref IntPtr model_info);
@@ -145,5 +207,7 @@ namespace OpenVinoSharp.native
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_model_info_set_layout",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_model_info_set_layout(IntPtr model_info, IntPtr layout);
+
+        #endregion
     }
 }

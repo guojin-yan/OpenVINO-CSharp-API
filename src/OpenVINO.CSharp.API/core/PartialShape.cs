@@ -2,8 +2,10 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Runtime.InteropServices;
 using System.Text;
 using OpenVinoSharp.Internal;
+using OpenVinoSharp.native;
 
 namespace OpenVinoSharp
 {
@@ -84,6 +86,49 @@ namespace OpenVinoSharp
         /// 获取维度 / Get dimensions
         /// </summary>
         public Dimension[] dims => _dims;
+
+        #endregion
+
+        #region 转换方法 / Conversion Methods
+
+        /// <summary>
+        /// 转换为 ov_partial_shape_t 结构体 / Convert to ov_partial_shape_t structure
+        /// </summary>
+        /// <returns>ov_partial_shape_t 结构体 / ov_partial_shape_t structure</returns>
+        internal ov_partial_shape_t ToNativeStruct()
+        {
+            int rank = _dims.Length;
+            
+            // 如果秩是动态的 / If rank is dynamic
+            if (_rank.is_dynamic())
+            {
+                return new ov_partial_shape_t
+                {
+                    rank = ov_rank_t.Dynamic,
+                    dims = IntPtr.Zero
+                };
+            }
+
+            // 分配维度数组内存 / Allocate dimension array memory
+            ov_dimension_t[] dimensions = new ov_dimension_t[rank];
+            for (int i = 0; i < rank; i++)
+            {
+                dimensions[i] = _dims[i].ToNativeStruct();
+            }
+
+            IntPtr dimsPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ov_dimension_t)) * rank);
+            for (int i = 0; i < rank; i++)
+            {
+                IntPtr offset = new IntPtr(dimsPtr.ToInt64() + Marshal.SizeOf(typeof(ov_dimension_t)) * i);
+                Marshal.StructureToPtr(dimensions[i], offset, false);
+            }
+
+            return new ov_partial_shape_t
+            {
+                rank = ov_rank_t.Static(rank),
+                dims = dimsPtr
+            };
+        }
 
         #endregion
 

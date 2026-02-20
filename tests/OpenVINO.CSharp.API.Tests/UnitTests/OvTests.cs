@@ -3,14 +3,21 @@
 
 using System;
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// Ov 静态类测试 / Ov static class tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class OvTests
     {
+        static OvTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [OpenVINOFact]
         [Trait("Category", TestCategories.Unit)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]

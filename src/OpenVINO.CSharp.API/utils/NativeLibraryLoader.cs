@@ -23,8 +23,7 @@ namespace OpenVinoSharp
         private static readonly string[] OpenVINOPackageNames = new[]
         {
             "openvino.runtime",
-            "openvino.runtime.win-x64",
-            "openvino.runtime.win-x86",
+            "openvino.runtime.win",
             "openvino.runtime.linux-x64",
             "openvino.runtime.linux-arm64",
             "openvino.runtime.osx-x64",
@@ -92,10 +91,11 @@ namespace OpenVinoSharp
                     return _libraryHandle;
 
                 string libName = libraryPath ?? GetLibraryName();
-                
                 // 尝试加载库
-                _libraryHandle = LoadLibraryInternal(libName);
-                
+                if (File.Exists(libraryPath))
+                {
+                    _libraryHandle = LoadLibraryInternal(libraryPath);
+                }
                 if (_libraryHandle == IntPtr.Zero)
                 {
                     // 尝试从常见路径加载
@@ -378,13 +378,6 @@ namespace OpenVinoSharp
             // 平台特定子目录
             string platform = GetPlatformIdentifier();
             string arch = GetArchitectureIdentifier();
-            
-            // 常见的库路径结构
-            paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, platform, arch, libName));
-            paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, platform, libName));
-            paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, arch, libName));
-            paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtimes", $"{platform}-{arch}", "native", libName));
-            
             // Windows 特定路径
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -393,18 +386,21 @@ namespace OpenVinoSharp
                 string assemblyLocation = typeof(NativeLibraryLoader).Assembly.Location;
                 if (!string.IsNullOrEmpty(assemblyLocation))
                 {
+                    // 测试项目路径存在问题
                     string assemblyDir = Path.GetDirectoryName(assemblyLocation);
                     paths.Add(Path.Combine(assemblyDir, libName));
-                    paths.Add(Path.Combine(assemblyDir, platform, arch, libName));
-                    paths.Add(Path.Combine(assemblyDir, "runtimes", $"{platform}-{arch}", "native", libName));
+                    paths.Add(Path.Combine(assemblyDir, "dll", "win-x64", libName));
+                    paths.Add(Path.Combine(assemblyDir, "runtimes", "win-x64", "native", libName));
+                    paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dll", "win-x64", libName));
+                    paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtimes", "win-x64", "native", libName));
                 }
                 
                 // 检查 OPENVINO_DIR 环境变量
                 string openvinoDir = Environment.GetEnvironmentVariable("INTEL_OPENVINO_DIR");
                 if (!string.IsNullOrEmpty(openvinoDir))
                 {
-                    paths.Add(Path.Combine(openvinoDir, "runtime", "bin", arch, libName));
-                    paths.Add(Path.Combine(openvinoDir, "runtime", "lib", arch, libName));
+                    paths.Add(Path.Combine(openvinoDir, "runtime", "bin", "intel64", "Release", libName));
+                    paths.Add(Path.Combine(openvinoDir, libName));
                 }
             }
             // Linux/macOS 特定路径
@@ -440,9 +436,9 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 确保库已加载
+        /// 确保库已加载（如果尚未加载则自动加载）
         /// </summary>
-        private static void EnsureLoaded()
+        public static void EnsureLoaded()
         {
             if (!_isLoaded || _libraryHandle == IntPtr.Zero)
             {
@@ -500,7 +496,17 @@ namespace OpenVinoSharp
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return LoadLibrary_Windows(libraryPath);
+                //return LoadLibrary_Windows(libraryPath);
+                SetDllDirectory_Windows(Path.GetDirectoryName(libraryPath));
+                IntPtr handle = LoadLibrary_Windows(libraryPath);
+        
+                if (handle == IntPtr.Zero)
+                {
+                    // 获取系统错误码
+                    int errorCode = Marshal.GetLastWin32Error();
+                    //throw new Exception($"无法加载 DLL: {libraryPath}。系统错误码: {errorCode}");
+                }
+                return handle;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
@@ -549,6 +555,12 @@ namespace OpenVinoSharp
 
         [DllImport("kernel32", EntryPoint = "FreeLibrary", SetLastError = true)]
         private static extern bool FreeLibrary_Windows(IntPtr hModule);
+
+        // 导入 API
+        [DllImport("kernel32.dll", EntryPoint = "SetDllDirectory", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern bool SetDllDirectory_Windows(string lpPathName);
+
+
 
         // Linux API
         private const int RTLD_LAZY = 0x00001;

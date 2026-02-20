@@ -2,14 +2,21 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// ExceptionStatus 枚举测试 / ExceptionStatus enumeration tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class ExceptionStatusTests
     {
+        static ExceptionStatusTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [Fact]
         [Trait("Category", TestCategories.Unit)]
         public void OK_HasValueZero()

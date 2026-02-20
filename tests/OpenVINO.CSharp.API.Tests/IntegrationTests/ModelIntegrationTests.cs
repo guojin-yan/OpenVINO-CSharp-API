@@ -2,14 +2,22 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.IntegrationTests
 {
     /// <summary>
     /// Model 类集成测试 / Model class integration tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class ModelIntegrationTests
     {
+        static ModelIntegrationTests()
+        {
+            // 确保 OpenVINO 原生库已加载
+            // Ensure OpenVINO native library is loaded
+            TestInitialization.Initialize();
+        }
         [OpenVINOFact]
         [Trait("Category", TestCategories.Integration)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]
@@ -17,11 +25,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
 
             // Act
             string name = model.get_friendly_name();
@@ -38,11 +46,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
 
             // Act
             ulong size = model.get_inputs_size();
@@ -58,11 +66,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
 
             // Act
             ulong size = model.get_outputs_size();
@@ -78,11 +86,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
 
             // Act
             using var input = model.get_input(0);
@@ -98,11 +106,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
 
             // Act
             using var output = model.get_output(0);
@@ -118,11 +126,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
 
             // Act
             bool isDynamic = model.is_dynamic();
@@ -138,11 +146,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             
             // 获取原始输入形状
             using var input = model.get_input(0);
@@ -174,11 +182,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var input = model.get_input(0);
 
             // Act
@@ -195,11 +203,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var input = model.get_input(0);
 
             // Act
@@ -217,11 +225,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var input = model.get_input(0);
 
             // Act
@@ -238,11 +246,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var output = model.get_output(0);
 
             // Act
@@ -259,11 +267,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var output = model.get_output(0);
 
             // Act
@@ -273,25 +281,5 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             Assert.NotNull(shape);
         }
 
-        [OpenVINOFact]
-        [Trait("Category", TestCategories.Integration)]
-        [Trait("Category", TestCategories.RequiresOpenVINO)]
-        public void NodeOutput_GetIndex_ReturnsValidIndex()
-        {
-            // Arrange
-            using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
-            {
-                return;
-            }
-            using var model = core.read_model("test_model.xml");
-            using var output = model.get_output(0);
-
-            // Act
-            ulong index = output.get_index();
-
-            // Assert
-            Assert.Equal(0UL, index);
-        }
     }
 }

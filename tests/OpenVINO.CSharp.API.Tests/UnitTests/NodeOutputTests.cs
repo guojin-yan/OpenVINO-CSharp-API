@@ -2,14 +2,21 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// NodeOutput 类单元测试 / NodeOutput class unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class NodeOutputTests
     {
+        static NodeOutputTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [OpenVINOFact]
         [Trait("Category", TestCategories.Unit)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]
@@ -17,11 +24,11 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             
             // Act
             using var output = model.get_output(0);
@@ -38,11 +45,11 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var output = model.get_output(0);
 
             // Act
@@ -59,11 +66,11 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var output = model.get_output(0);
 
             // Act
@@ -81,11 +88,11 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var output = model.get_output(0);
 
             // Act
@@ -102,11 +109,11 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var output = model.get_output(0);
 
             // Act
@@ -117,61 +124,7 @@ namespace OpenVinoSharp.Tests.UnitTests
             Assert.False(string.IsNullOrEmpty(name));
         }
 
-        [OpenVINOFact]
-        [Trait("Category", TestCategories.Unit)]
-        [Trait("Category", TestCategories.RequiresOpenVINO)]
-        public void GetIndex_ReturnsValidIndex()
-        {
-            // Arrange
-            using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
-            {
-                return;
-            }
-            using var model = core.read_model("test_model.xml");
-            using var output = model.get_output(0);
-
-            // Act
-            ulong index = output.get_index();
-
-            // Assert
-            Assert.Equal(0UL, index);
-        }
-
-        [OpenVINOFact]
-        [Trait("Category", TestCategories.Unit)]
-        [Trait("Category", TestCategories.RequiresOpenVINO)]
-        public void GetIndex_WithMultipleOutputs_ReturnsCorrectIndex()
-        {
-            // Arrange
-            using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
-            {
-                return;
-            }
-            using var model = core.read_model("test_model.xml");
-            
-            // 获取第一个输出
-            using var output0 = model.get_output(0);
-            ulong index0 = output0.get_index();
-            
-            // 如果有多于一个输出，测试第二个
-            ulong outputSize = model.get_outputs_size();
-            if (outputSize > 1)
-            {
-                using var output1 = model.get_output(1);
-                ulong index1 = output1.get_index();
-                
-                // Assert - 索引应该是递增的
-                Assert.Equal(0UL, index0);
-                Assert.Equal(1UL, index1);
-            }
-            else
-            {
-                // 只有一个输出时，索引应该是0
-                Assert.Equal(0UL, index0);
-            }
-        }
+  
 
         [OpenVINOFact]
         [Trait("Category", TestCategories.Unit)]
@@ -180,11 +133,11 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             using var output = model.get_output(0);
 
             // Act
@@ -201,11 +154,11 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var model = core.read_model("test_model.xml");
+            using var model = core.read_model("model/yolo26n.xml");
             var output = model.get_output(0);
 
             // Act

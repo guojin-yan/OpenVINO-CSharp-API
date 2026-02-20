@@ -4,14 +4,21 @@
 using System;
 using OpenVinoSharp.Internal;
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// Logger 类单元测试 / Logger class unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class LoggerTests : IDisposable
     {
+        static LoggerTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         private LogLevel _originalLevel;
 
         public LoggerTests()

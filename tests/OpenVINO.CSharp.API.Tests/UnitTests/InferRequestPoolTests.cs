@@ -5,14 +5,21 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// InferRequestPool 单元测试 / InferRequestPool unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class InferRequestPoolTests
     {
+        static InferRequestPoolTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [OpenVINOFact]
         [Trait("Category", TestCategories.Unit)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]
@@ -20,7 +27,7 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
 
             // Act
@@ -38,7 +45,7 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             using var pool = new InferRequestPool(model, initialSize: 1, maxSize: 2);
 
@@ -60,7 +67,7 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             using var pool = new InferRequestPool(model, initialSize: 0, maxSize: 1);
 
@@ -82,7 +89,7 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             using var pool = new InferRequestPool(model, initialSize: 1, maxSize: 2);
             var request = pool.Rent();
@@ -102,7 +109,7 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             using var core = new Core();
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             var pool = new InferRequestPool(model, initialSize: 2, maxSize: 4);
 

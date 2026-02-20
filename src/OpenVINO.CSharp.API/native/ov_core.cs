@@ -8,11 +8,11 @@ namespace OpenVinoSharp.native
 {
     public static partial class NativeMethods
     {
+        #region Version
+
         /// <summary>
         /// Get version of OpenVINO.
         /// </summary>
-        /// <param name="version">a pointer to the version</param>
-        /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport("openvino_c", EntryPoint = "ov_get_openvino_version",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_get_openvino_version(IntPtr version);
@@ -20,25 +20,44 @@ namespace OpenVinoSharp.native
         /// <summary>
         /// Release the memory allocated by ov_version_t.
         /// </summary>
-        /// <param name="version">A pointer to the ov_version_t to free memory.</param>
         [DllImport("openvino_c", EntryPoint = "ov_version_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_version_free(IntPtr version);
 
+        #endregion
+
+        #region Log Callback
+
         /// <summary>
-        /// Callback function type for logging messages.
+        /// Callback function type for logging messages (original C API name).
         /// </summary>
-        /// <param name="message">The log message as a null-terminated C string.</param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void ov_util_log_callback_func(IntPtr message);
+
+        /// <summary>
+        /// Callback function type for logging messages (C# friendly alias).
+        /// </summary>
         public delegate void LogCallbackDelegate(string message);
 
         /// <summary>
         /// Sets user log message handling callback.
         /// </summary>
-        /// <param name="func"> The function pointer to user-defined message logging callback. Null pointer is accepted(no logging).</param>
         [DllImport("openvino_c", EntryPoint = "ov_util_set_log_callback",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ov_util_set_log_callback(LogCallbackDelegate func);
+        public static extern void ov_util_set_log_callback(ov_util_log_callback_func func);
+
+        /// <summary>
+        /// Sets user log message handling callback (C# friendly overload).
+        /// </summary>
+        public static void ov_util_set_log_callback(LogCallbackDelegate func)
+        {
+            // Create a wrapper that marshals string from IntPtr
+            ov_util_log_callback_func wrapper = (IntPtr msgPtr) => {
+                string message = Marshal.PtrToStringAnsi(msgPtr) ?? string.Empty;
+                func(message);
+            };
+            ov_util_set_log_callback(wrapper);
+        }
 
         /// <summary>
         /// Resets log message handling callback to its default (standard output).
@@ -47,117 +66,130 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern void ov_util_reset_log_callback();
 
+        #endregion
+
+        #region Core Creation and Destruction
+
         /// <summary>
         /// Constructs OpenVINO Core instance by default.
         /// </summary>
-        /// <param name="core"> A pointer to the newly created ov_core_t.</param>
-        /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_create",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_create(ref IntPtr core);
 
         /// <summary>
-        /// Constructs OpenVINO Core instance using XML configuration file with devices description.
+        /// Constructs OpenVINO Core instance using XML configuration file.
         /// </summary>
-        /// <param name="xml_config_file">A path to .xml file with devices to load from.</param>
-        /// <param name="core">A pointer to the newly created ov_core_t.</param>
-        /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_create_with_config",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_core_create_with_config(string xml_config_file, ref IntPtr core);
+        public extern static ExceptionStatus ov_core_create_with_config(
+            [MarshalAs(UnmanagedType.LPStr)] string xml_config_file,
+            ref IntPtr core);
 
         /// <summary>
         /// Release the memory allocated by ov_core_t.
         /// </summary>
-        /// <param name="core">A pointer to the ov_core_t to free memory.</param>
         [DllImport("openvino_c", EntryPoint = "ov_core_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_core_free(IntPtr core);
 
         /// <summary>
+        /// Shut down the OpenVINO.
+        /// </summary>
+        [DllImport("openvino_c", EntryPoint = "ov_shutdown",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static void ov_shutdown();
+
+        #endregion
+
+        #region Read Model
+
+        /// <summary>
         /// Reads models from IR / ONNX / PDPD / TF / TFLite formats.
         /// </summary>
-        /// <param name="core">A pointer to the ov_core_t instance.</param>
-        /// <param name="model_path">Path to a model.</param>
-        /// <param name="bin_path">Path to a data file.</param>
-        /// <param name="model">A pointer to the newly created model.</param>
-        /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_read_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_read_model(
             IntPtr core,
-            ref sbyte model_path,
-            ref sbyte bin_path,
+            [MarshalAs(UnmanagedType.LPStr)] string model_path,
+            [MarshalAs(UnmanagedType.LPStr)] string bin_path,
             ref IntPtr model);
 
         /// <summary>
         /// Reads models from memory buffer.
         /// </summary>
-        /// <param name="core">A pointer to the ov_core_t instance.</param>
-        /// <param name="xml_model_file_byte">Model data buffer.</param>
-        /// <param name="str_size">The length of model string.</param>
-        /// <param name="weights">Shared pointer to a constant tensor with weights.</param>
-        /// <param name="model">A pointer to the newly created model.</param>
-        /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_read_model_from_memory_buffer",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_read_model_from_memory_buffer(
             IntPtr core,
-            ref byte xml_model_file_byte,
-            ulong str_size,
+            ref byte model_str,
+            ulong str_len,
             IntPtr weights,
             ref IntPtr model);
+
+        #endregion
+
+        #region Compile Model
 
         /// <summary>
         /// Creates a compiled model from a source model object.
         /// </summary>
-        /// <param name="core">A pointer to the ov_core_t instance.</param>
-        /// <param name="model">Model object acquired from Core::read_model.</param>
-        /// <param name="device_name">Name of a device to load a model to.</param>
-        /// <param name="property_args_size">How many properties args will be passed.</param>
-        /// <param name="compiled_model">A pointer to the newly created compiled_model.</param>
-        /// <returns>Status code of the operation: OK(0) for success.</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model(
             IntPtr core,
             IntPtr model,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
             ref IntPtr compiled_model);
 
+        /// <summary>
+        /// Creates a compiled model from a source model object with properties.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model(
             IntPtr core,
             IntPtr model,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
             ref IntPtr compiled_model,
-            IntPtr varg1, IntPtr varg2);
+            IntPtr key1,
+            IntPtr value1);
 
+        /// <summary>
+        /// Creates a compiled model from a source model object with 2 property pairs.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model(
             IntPtr core,
             IntPtr model,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
             ref IntPtr compiled_model,
-            IntPtr varg1, IntPtr varg2,
-            IntPtr varg3, IntPtr varg4);
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2);
 
+        /// <summary>
+        /// Creates a compiled model from a source model object with 3 property pairs.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model(
             IntPtr core,
             IntPtr model,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
             ref IntPtr compiled_model,
-            IntPtr varg1, IntPtr varg2,
-            IntPtr varg3, IntPtr varg4,
-            IntPtr varg5, IntPtr varg6);
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2,
+            IntPtr key3,
+            IntPtr value3);
 
         /// <summary>
         /// Reads a model and creates a compiled model from the IR/ONNX/PDPD file.
@@ -166,61 +198,101 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model_from_file(
             IntPtr core,
-            ref sbyte model_path,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string model_path,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
             ref IntPtr compiled_model);
 
+        /// <summary>
+        /// Reads a model and creates a compiled model from file with 1 property pair.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model_from_file(
             IntPtr core,
-            ref sbyte model_path,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string model_path,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
             ref IntPtr compiled_model,
-            IntPtr varg1, IntPtr varg2);
+            IntPtr key1,
+            IntPtr value1);
 
+        /// <summary>
+        /// Reads a model and creates a compiled model from file with 2 property pairs.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model_from_file(
             IntPtr core,
-            ref sbyte model_path,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string model_path,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
             ref IntPtr compiled_model,
-            IntPtr varg1, IntPtr varg2,
-            IntPtr varg3, IntPtr varg4);
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2);
 
+        /// <summary>
+        /// Reads a model and creates a compiled model from file with 3 property pairs.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model_from_file(
             IntPtr core,
-            ref sbyte model_path,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string model_path,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
             ref IntPtr compiled_model,
-            IntPtr varg1, IntPtr varg2,
-            IntPtr varg3, IntPtr varg4,
-            IntPtr varg5, IntPtr varg6);
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2,
+            IntPtr key3,
+            IntPtr value3);
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Sets properties for a device.
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_set_property",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern ExceptionStatus ov_core_set_property(IntPtr core,
-            ref sbyte device_name, IntPtr varg1, IntPtr varg2);
+        public static extern ExceptionStatus ov_core_set_property(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
+            IntPtr key,
+            IntPtr value);
 
+        /// <summary>
+        /// Sets properties for a device with 2 property pairs.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_set_property",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern ExceptionStatus ov_core_set_property(IntPtr core,
-            ref sbyte device_name, IntPtr varg1, IntPtr varg2, IntPtr varg3, IntPtr varg4);
+        public static extern ExceptionStatus ov_core_set_property(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2);
 
+        /// <summary>
+        /// Sets properties for a device with 3 property pairs.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_set_property",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern ExceptionStatus ov_core_set_property(IntPtr core,
-            ref sbyte device_name, IntPtr varg1, IntPtr varg2, IntPtr varg3, IntPtr varg4, IntPtr varg5, IntPtr varg6);
+        public static extern ExceptionStatus ov_core_set_property(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2,
+            IntPtr key3,
+            IntPtr value3);
 
         /// <summary>
         /// Gets properties related to device behaviour.
@@ -229,9 +301,13 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_get_property(
             IntPtr core,
-            ref sbyte device_name,
-            ref sbyte property_key,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string property_key,
             ref IntPtr property_value);
+
+        #endregion
+
+        #region Available Devices
 
         /// <summary>
         /// Returns devices available for inference.
@@ -249,6 +325,10 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_available_devices_free(IntPtr devices);
 
+        #endregion
+
+        #region Import/Export
+
         /// <summary>
         /// Imports a compiled model from the previously exported one.
         /// </summary>
@@ -258,8 +338,12 @@ namespace OpenVinoSharp.native
             IntPtr core,
             ref byte content,
             ulong content_size,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ref IntPtr compiled_model);
+
+        #endregion
+
+        #region Device Versions
 
         /// <summary>
         /// Returns device plugins version information.
@@ -268,7 +352,7 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_get_versions_by_device_name(
             IntPtr core,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             IntPtr versions);
 
         /// <summary>
@@ -278,14 +362,18 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_core_versions_free(IntPtr versions);
 
+        #endregion
+
+        #region Remote Context
+
         /// <summary>
-        /// Creates a new remote shared context object.
+        /// Creates a new remote shared context object on the specified accelerator device.
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_create_context",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_create_context(
             IntPtr core,
-            ref sbyte device_name,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong context_args_size,
             ref IntPtr context);
 
@@ -302,10 +390,72 @@ namespace OpenVinoSharp.native
             ref IntPtr compiled_model);
 
         /// <summary>
-        /// Gets a pointer to default shared context object.
+        /// Gets a pointer to default shared context object for the specified accelerator device.
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_core_get_default_context",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public extern static ExceptionStatus ov_core_get_default_context(IntPtr core, ref sbyte device_name, ref IntPtr context);
+        public extern static ExceptionStatus ov_core_get_default_context(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPStr)] string device_name,
+            ref IntPtr context);
+
+        #endregion
+
+        #region Extensions
+
+        /// <summary>
+        /// Adds an extension to the core.
+        /// </summary>
+        [DllImport("openvino_c", EntryPoint = "ov_core_add_extension",
+            CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public extern static ExceptionStatus ov_core_add_extension(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPStr)] string path);
+
+        #endregion
     }
+
+    #region Supporting Structures
+
+    /// <summary>
+    /// Structure representing available devices
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ov_available_devices_t
+    {
+        public IntPtr devices;
+        public ulong size;
+    }
+
+    /// <summary>
+    /// Structure representing OpenVINO version
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ov_version_t
+    {
+        public IntPtr buildNumber;
+        public IntPtr description;
+    }
+
+    /// <summary>
+    /// Structure representing core version
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ov_core_version_t
+    {
+        public IntPtr device_name;
+        public ov_version_t version;
+    }
+
+    /// <summary>
+    /// Structure representing core version list
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ov_core_version_list_t
+    {
+        public IntPtr versions;
+        public ulong size;
+    }
+
+    #endregion
 }

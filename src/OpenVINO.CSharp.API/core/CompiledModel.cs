@@ -1,11 +1,11 @@
 // Copyright (c) 2024 Guojin Yan
 // Licensed under the MIT License.
 
+using OpenVinoSharp.Internal;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
-using OpenVinoSharp.Internal;
 
 namespace OpenVinoSharp
 {
@@ -78,9 +78,8 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(tensor_name));
             
             IntPtr node_ptr = IntPtr.Zero;
-            sbyte[] nameBytes = StringUtils.StringToSByteArray(tensor_name);
             ExceptionHandler.ThrowOnError(
-                ov_compiled_model_input_by_name(_ptr, ref nameBytes[0], ref node_ptr));
+                ov_compiled_model_input_by_name(_ptr, tensor_name, ref node_ptr));
             return new NodeInput(node_ptr);
         }
 
@@ -125,9 +124,8 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(tensor_name));
             
             IntPtr node_ptr = IntPtr.Zero;
-            sbyte[] nameBytes = StringUtils.StringToSByteArray(tensor_name);
             ExceptionHandler.ThrowOnError(
-                ov_compiled_model_output_by_name(_ptr, ref nameBytes[0], ref node_ptr));
+                ov_compiled_model_output_by_name(_ptr, tensor_name, ref node_ptr));
             return new NodeOutput(node_ptr);
         }
 
@@ -210,10 +208,26 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(key));
 
             IntPtr value = IntPtr.Zero;
-            sbyte[] keyBytes = StringUtils.StringToSByteArray(key);
             ExceptionHandler.ThrowOnError(
-                ov_compiled_model_get_property(_ptr, ref keyBytes[0], ref value));
+                ov_compiled_model_get_property(_ptr, key, ref value));
             return Marshal.PtrToStringAnsi(value) ?? string.Empty;
+        }
+
+        #endregion
+
+        #region 远程上下文 / Remote Context
+
+        /// <summary>
+        /// 获取远程上下文 / Get remote context
+        /// <para>返回用于创建此编译模型的远程上下文。/ Returns the remote context used to create this compiled model.</para>
+        /// </summary>
+        /// <returns>远程上下文对象 / Remote context object</returns>
+        public RemoteContext get_context()
+        {
+            ThrowIfDisposed();
+            IntPtr context_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_compiled_model_get_context(_ptr, ref context_ptr));
+            return new RemoteContext(context_ptr);
         }
 
         #endregion

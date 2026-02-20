@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
 using OpenVinoSharp.element;
@@ -221,6 +222,78 @@ namespace OpenVinoSharp.preprocess
             ThrowIfDisposed();
             ExceptionHandler.ThrowOnError(ov_preprocess_input_tensor_info_set_spatial_static_shape(_ptr, height, width));
         }
+
+        /// <summary>
+        /// Set color format with sub names
+        /// </summary>
+        /// <param name="color_format">Color format</param>
+        /// <param name="sub_names">Sub names for each plane</param>
+        public void set_color_format(ColorFormat color_format, string[] sub_names)
+        {
+            ThrowIfDisposed();
+            if (sub_names == null || sub_names.Length == 0)
+            {
+                ExceptionHandler.ThrowOnError(ov_preprocess_input_tensor_info_set_color_format(_ptr, (uint)color_format));
+                return;
+            }
+
+            // Convert string array to unmanaged memory
+            IntPtr[] ptrArray = new IntPtr[sub_names.Length];
+            GCHandle[] handles = new GCHandle[sub_names.Length];
+            try
+            {
+                for (int i = 0; i < sub_names.Length; i++)
+                {
+                    handles[i] = GCHandle.Alloc(System.Text.Encoding.ASCII.GetBytes(sub_names[i] + '\0'), GCHandleType.Pinned);
+                    ptrArray[i] = handles[i].AddrOfPinnedObject();
+                }
+
+                GCHandle arrayHandle = GCHandle.Alloc(ptrArray, GCHandleType.Pinned);
+                try
+                {
+                    ExceptionHandler.ThrowOnError(
+                        ov_preprocess_input_tensor_info_set_color_format_with_subname(
+                            _ptr, (uint)color_format, (ulong)sub_names.Length, arrayHandle.AddrOfPinnedObject()));
+                }
+                finally
+                {
+                    arrayHandle.Free();
+                }
+            }
+            finally
+            {
+                for (int i = 0; i < handles.Length; i++)
+                {
+                    if (handles[i].IsAllocated)
+                        handles[i].Free();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set memory type (for GPU/DirectX etc.)
+        /// </summary>
+        /// <param name="mem_type">Memory type string</param>
+        public void set_memory_type(string mem_type)
+        {
+            ThrowIfDisposed();
+            if (string.IsNullOrEmpty(mem_type))
+                throw new ArgumentNullException(nameof(mem_type));
+
+            ExceptionHandler.ThrowOnError(ov_preprocess_input_tensor_info_set_memory_type(_ptr, mem_type));
+        }
+
+        /// <summary>
+        /// Set from existing tensor
+        /// </summary>
+        /// <param name="tensor">Source tensor</param>
+        public void set_from(Tensor tensor)
+        {
+            ThrowIfDisposed();
+            if (tensor == null) throw new ArgumentNullException(nameof(tensor));
+
+            ExceptionHandler.ThrowOnError(ov_preprocess_input_tensor_info_set_from(_ptr, tensor.OvPtr));
+        }
     }
 
     /// <summary>
@@ -313,6 +386,50 @@ namespace OpenVinoSharp.preprocess
         {
             ThrowIfDisposed();
             ExceptionHandler.ThrowOnError(ov_preprocess_preprocess_steps_reverse_channels(_ptr));
+        }
+
+        /// <summary>
+        /// Add scale operation for multiple channels
+        /// </summary>
+        /// <param name="values">Scaling values for each channel</param>
+        public void scale_multi_channels(float[] values)
+        {
+            ThrowIfDisposed();
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
+            ExceptionHandler.ThrowOnError(
+                ov_preprocess_preprocess_steps_scale_multi_channels(_ptr, values, values.Length));
+        }
+
+        /// <summary>
+        /// Add mean operation for multiple channels
+        /// </summary>
+        /// <param name="values">Mean values for each channel</param>
+        public void mean_multi_channels(float[] values)
+        {
+            ThrowIfDisposed();
+            if (values == null) throw new ArgumentNullException(nameof(values));
+
+            ExceptionHandler.ThrowOnError(
+                ov_preprocess_preprocess_steps_mean_multi_channels(_ptr, values, values.Length));
+        }
+
+        /// <summary>
+        /// Add pad operation
+        /// </summary>
+        /// <param name="pads_begin">Number of padding elements to add at the beginning of each axis</param>
+        /// <param name="pads_end">Number of padding elements to add at the end of each axis</param>
+        /// <param name="value">Value to be populated in the padded area (for CONSTANT mode)</param>
+        /// <param name="mode">Padding mode</param>
+        public void pad(int[] pads_begin, int[] pads_end, float value = 0.0f, PaddingMode mode = PaddingMode.CONSTANT)
+        {
+            ThrowIfDisposed();
+            if (pads_begin == null) throw new ArgumentNullException(nameof(pads_begin));
+            if (pads_end == null) throw new ArgumentNullException(nameof(pads_end));
+
+            ExceptionHandler.ThrowOnError(
+                ov_preprocess_preprocess_steps_pad(_ptr, pads_begin, (ulong)pads_begin.Length, 
+                    pads_end, (ulong)pads_end.Length, value, (uint)mode));
         }
     }
 

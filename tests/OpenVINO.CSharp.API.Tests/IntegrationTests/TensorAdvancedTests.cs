@@ -2,14 +2,22 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.IntegrationTests
 {
     /// <summary>
     /// Tensor 高级集成测试 / Tensor advanced integration tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class TensorAdvancedTests
     {
+        static TensorAdvancedTests()
+        {
+            // 确保 OpenVINO 原生库已加载
+            // Ensure OpenVINO native library is loaded
+            TestInitialization.Initialize();
+        }
         [OpenVINOFact]
         [Trait("Category", TestCategories.Integration)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]

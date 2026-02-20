@@ -37,6 +37,19 @@ namespace OpenVinoSharp
             public ulong size;
         }
 
+        #region 静态构造函数 / Static Constructor
+
+        /// <summary>
+        /// 静态构造函数 - 确保原生库在使用任何 Core 功能之前加载
+        /// Static constructor - ensure native library is loaded before any Core functionality
+        /// </summary>
+        static Core()
+        {
+            NativeLibraryLoader.EnsureLoaded();
+        }
+
+        #endregion
+
         #region 构造函数 / Constructors
 
         /// <summary>
@@ -46,17 +59,6 @@ namespace OpenVinoSharp
         {
             Logger.Debug("正在创建 OpenVINO Core 实例... / Creating OpenVINO Core instance...");
             
-            // 尝试加载原生库 / Try to load native library
-            try
-            {
-                NativeLibraryLoader.Load();
-                Logger.Debug("原生库加载成功 / Native library loaded successfully");
-            }
-            catch (DllNotFoundException ex)
-            {
-                Logger.Warn("原生库加载失败，可能已由系统加载 / Failed to load native library, may already be loaded by system: {0}", ex.Message);
-            }
-
             ExceptionHandler.ThrowOnError(ov_core_create(ref _ptr));
             Logger.Info("OpenVINO Core 实例创建成功 / OpenVINO Core instance created successfully");
         }
@@ -129,20 +131,8 @@ namespace OpenVinoSharp
                 throw new ArgumentException("参数不能为空", nameof(model_path));
 
             IntPtr model_ptr = IntPtr.Zero;
-            sbyte[] modelPathBytes = StringUtils.StringToSByteArray(model_path);
-
-            if (string.IsNullOrEmpty(bin_path))
-            {
-                sbyte nullByte = 0;
-                ExceptionHandler.ThrowOnError(
-                    ov_core_read_model(_ptr, ref modelPathBytes[0], ref nullByte, ref model_ptr));
-            }
-            else
-            {
-                sbyte[] binPathBytes = StringUtils.StringToSByteArray(bin_path);
-                ExceptionHandler.ThrowOnError(
-                    ov_core_read_model(_ptr, ref modelPathBytes[0], ref binPathBytes[0], ref model_ptr));
-            }
+            ExceptionHandler.ThrowOnError(
+                ov_core_read_model(_ptr, model_path, bin_path ?? string.Empty, ref model_ptr));
 
             return new Model(model_ptr);
         }
@@ -249,16 +239,15 @@ namespace OpenVinoSharp
                 throw new ArgumentException("参数不能为空", nameof(device_name));
 
             IntPtr compiled_model_ptr = IntPtr.Zero;
-            sbyte[] deviceNameBytes = StringUtils.StringToSByteArray(device_name);
 
             if (properties == null || properties.Count == 0)
             {
                 ExceptionHandler.ThrowOnError(
-                    ov_core_compile_model(_ptr, model.OvPtr, ref deviceNameBytes[0], 0, ref compiled_model_ptr));
+                    ov_core_compile_model(_ptr, model.OvPtr, device_name, 0, ref compiled_model_ptr));
             }
             else
             {
-                CompileModelWithProperties(model.OvPtr, ref deviceNameBytes[0], properties, ref compiled_model_ptr);
+                CompileModelWithProperties(model.OvPtr, device_name, properties, ref compiled_model_ptr);
             }
             return new CompiledModel(compiled_model_ptr);
         }
@@ -308,19 +297,17 @@ namespace OpenVinoSharp
             }
 
             IntPtr compiled_model_ptr = IntPtr.Zero;
-            sbyte[] modelPathBytes = StringUtils.StringToSByteArray(model_path);
-            sbyte[] deviceNameBytes = StringUtils.StringToSByteArray(device_name);
 
             Logger.Debug($"Core: 编译模型 - {model_path} [{device_name}]");
             
             if (properties == null || properties.Count == 0)
             {
                 ExceptionHandler.ThrowOnError(
-                    ov_core_compile_model_from_file(_ptr, ref modelPathBytes[0], ref deviceNameBytes[0], 0, ref compiled_model_ptr));
+                    ov_core_compile_model_from_file(_ptr, model_path, device_name, 0, ref compiled_model_ptr));
             }
             else
             {
-                CompileModelFromFileWithProperties(ref modelPathBytes[0], ref deviceNameBytes[0], properties, ref compiled_model_ptr);
+                CompileModelFromFileWithProperties(model_path, device_name, properties, ref compiled_model_ptr);
             }
             
             var compiledModel = new CompiledModel(compiled_model_ptr);
@@ -337,7 +324,7 @@ namespace OpenVinoSharp
         /// <summary>
         /// 带属性的模型编译（内部方法）/ Compile model with properties (internal method)
         /// </summary>
-        private void CompileModelWithProperties(IntPtr modelPtr, ref sbyte deviceNameBytes, Dictionary<string, string> properties, ref IntPtr compiled_model_ptr)
+        private void CompileModelWithProperties(IntPtr modelPtr, string device_name, Dictionary<string, string> properties, ref IntPtr compiled_model_ptr)
         {
             // 使用ArrayPool减少内存分配 / Use ArrayPool to reduce memory allocation
             IntPtr[] inputs = new IntPtr[properties.Count * 2];
@@ -354,13 +341,13 @@ namespace OpenVinoSharp
                 switch (properties.Count)
                 {
                     case 1:
-                        status = ov_core_compile_model(_ptr, modelPtr, ref deviceNameBytes, 2, ref compiled_model_ptr, inputs[0], inputs[1]);
+                        status = ov_core_compile_model(_ptr, modelPtr, device_name, 2, ref compiled_model_ptr, inputs[0], inputs[1]);
                         break;
                     case 2:
-                        status = ov_core_compile_model(_ptr, modelPtr, ref deviceNameBytes, 4, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3]);
+                        status = ov_core_compile_model(_ptr, modelPtr, device_name, 4, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3]);
                         break;
                     case 3:
-                        status = ov_core_compile_model(_ptr, modelPtr, ref deviceNameBytes, 6, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
+                        status = ov_core_compile_model(_ptr, modelPtr, device_name, 6, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
                         break;
                     default:
                         throw new ArgumentException("仅支持0、1、2、3个属性参数。/ Only supports 0, 1, 2, or 3 property parameters.");
@@ -377,7 +364,7 @@ namespace OpenVinoSharp
             }
         }
 
-        private void CompileModelFromFileWithProperties(ref sbyte modelPathBytes, ref sbyte deviceNameBytes, Dictionary<string, string> properties, ref IntPtr compiled_model_ptr)
+        private void CompileModelFromFileWithProperties(string model_path, string device_name, Dictionary<string, string> properties, ref IntPtr compiled_model_ptr)
         {
             IntPtr[] inputs = new IntPtr[properties.Count * 2];
             int idx = 0;
@@ -393,13 +380,13 @@ namespace OpenVinoSharp
                 switch (properties.Count)
                 {
                     case 1:
-                        status = ov_core_compile_model_from_file(_ptr, ref modelPathBytes, ref deviceNameBytes, 2, ref compiled_model_ptr, inputs[0], inputs[1]);
+                        status = ov_core_compile_model_from_file(_ptr, model_path, device_name, 2, ref compiled_model_ptr, inputs[0], inputs[1]);
                         break;
                     case 2:
-                        status = ov_core_compile_model_from_file(_ptr, ref modelPathBytes, ref deviceNameBytes, 4, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3]);
+                        status = ov_core_compile_model_from_file(_ptr, model_path, device_name, 4, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3]);
                         break;
                     case 3:
-                        status = ov_core_compile_model_from_file(_ptr, ref modelPathBytes, ref deviceNameBytes, 6, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
+                        status = ov_core_compile_model_from_file(_ptr, model_path, device_name, 6, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
                         break;
                     default:
                         throw new ArgumentException("仅支持0、1、2、3个属性参数。/ Only supports 0, 1, 2, or 3 property parameters.");
@@ -446,9 +433,8 @@ namespace OpenVinoSharp
 
             IntPtr value = IntPtr.Zero;
             byte[] data = Ov.content_from_file(model_path);
-            sbyte[] deviceNameBytes = StringUtils.StringToSByteArray(device_name);
             ExceptionHandler.ThrowOnError(
-                ov_core_import_model(_ptr, ref data[0], (ulong)data.Length, ref deviceNameBytes[0], ref value));
+                ov_core_import_model(_ptr, ref data[0], (ulong)data.Length, device_name, ref value));
             return new CompiledModel(value);
         }
 
@@ -471,9 +457,8 @@ namespace OpenVinoSharp
             IntPtr ptr_core_version_s = Marshal.AllocHGlobal(size);
             try
             {
-                sbyte[] deviceNameBytes = StringUtils.StringToSByteArray(device_name);
                 ExceptionHandler.ThrowOnError(
-                    ov_core_get_versions_by_device_name(_ptr, ref deviceNameBytes[0], ptr_core_version_s));
+                    ov_core_get_versions_by_device_name(_ptr, device_name, ptr_core_version_s));
 
                 CoreVersionList core_version_s = Marshal.PtrToStructure<CoreVersionList>(ptr_core_version_s);
                 CoreVersion core_version = Marshal.PtrToStructure<CoreVersion>(core_version_s.core_version);
@@ -536,13 +521,12 @@ namespace OpenVinoSharp
             if (string.IsNullOrEmpty(device_name))
                 throw new ArgumentException("参数不能为空", nameof(device_name));
             
-            sbyte[] deviceNameBytes = StringUtils.StringToSByteArray(device_name);
             IntPtr keyPtr = Marshal.StringToHGlobalAnsi(key);
             IntPtr valuePtr = Marshal.StringToHGlobalAnsi(value);
             try
             {
                 ExceptionHandler.ThrowOnError(
-                    ov_core_set_property(_ptr, ref deviceNameBytes[0], keyPtr, valuePtr));
+                    ov_core_set_property(_ptr, device_name, keyPtr, valuePtr));
             }
             finally
             {
@@ -563,7 +547,6 @@ namespace OpenVinoSharp
                 throw new ArgumentException("参数不能为空", nameof(device_name));
             if (properties == null || properties.Count == 0) return;
 
-            sbyte[] deviceNameBytes = StringUtils.StringToSByteArray(device_name);
             IntPtr[] inputs = new IntPtr[properties.Count * 2];
             int idx = 0;
             foreach (var item in properties)
@@ -578,13 +561,13 @@ namespace OpenVinoSharp
                 switch (properties.Count)
                 {
                     case 1:
-                        status = ov_core_set_property(_ptr, ref deviceNameBytes[0], inputs[0], inputs[1]);
+                        status = ov_core_set_property(_ptr, device_name, inputs[0], inputs[1]);
                         break;
                     case 2:
-                        status = ov_core_set_property(_ptr, ref deviceNameBytes[0], inputs[0], inputs[1], inputs[2], inputs[3]);
+                        status = ov_core_set_property(_ptr, device_name, inputs[0], inputs[1], inputs[2], inputs[3]);
                         break;
                     case 3:
-                        status = ov_core_set_property(_ptr, ref deviceNameBytes[0], inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
+                        status = ov_core_set_property(_ptr, device_name, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
                         break;
                     default:
                         throw new ArgumentException("仅支持1、2、3个属性参数。/ Only supports 1, 2, or 3 property parameters.");
@@ -616,11 +599,66 @@ namespace OpenVinoSharp
                 throw new ArgumentException("参数不能为空", nameof(key));
 
             IntPtr value = IntPtr.Zero;
-            sbyte[] deviceNameBytes = StringUtils.StringToSByteArray(device_name);
-            sbyte[] keyBytes = StringUtils.StringToSByteArray(key);
             ExceptionHandler.ThrowOnError(
-                ov_core_get_property(_ptr, ref deviceNameBytes[0], ref keyBytes[0], ref value));
+                ov_core_get_property(_ptr, device_name, key, ref value));
             return Marshal.PtrToStringAnsi(value) ?? string.Empty;
+        }
+
+        #endregion
+
+        #region 远程上下文 / Remote Context
+
+        /// <summary>
+        /// 创建远程上下文 / Create remote context
+        /// <para>用于GPU等设备的远程内存管理。/ Used for remote memory management on GPU and other devices.</para>
+        /// </summary>
+        /// <param name="device_name">设备名称（如"GPU"）/ Device name (e.g., "GPU")</param>
+        /// <returns>远程上下文指针 / Remote context pointer</returns>
+        public IntPtr create_context(string device_name)
+        {
+            ThrowIfDisposed();
+            if (string.IsNullOrEmpty(device_name))
+                throw new ArgumentException("参数不能为空", nameof(device_name));
+
+            IntPtr context_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_core_create_context(_ptr, device_name, 0, ref context_ptr));
+            return context_ptr;
+        }
+
+        /// <summary>
+        /// 获取默认远程上下文 / Get default remote context
+        /// </summary>
+        /// <param name="device_name">设备名称 / Device name</param>
+        /// <returns>远程上下文指针 / Remote context pointer</returns>
+        public IntPtr get_default_context(string device_name)
+        {
+            ThrowIfDisposed();
+            if (string.IsNullOrEmpty(device_name))
+                throw new ArgumentException("参数不能为空", nameof(device_name));
+
+            IntPtr context_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_core_get_default_context(_ptr, device_name, ref context_ptr));
+            return context_ptr;
+        }
+
+        /// <summary>
+        /// 在远程上下文中编译模型 / Compile model with remote context
+        /// </summary>
+        /// <param name="model">模型对象 / Model object</param>
+        /// <param name="context">远程上下文指针 / Remote context pointer</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel compile_model_with_context(Model model, IntPtr context)
+        {
+            ThrowIfDisposed();
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+            if (context == IntPtr.Zero)
+                throw new ArgumentException("上下文指针不能为空", nameof(context));
+
+            IntPtr compiled_model_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(
+                ov_core_compile_model_with_context(_ptr, model.OvPtr, context, 0, ref compiled_model_ptr));
+            return new CompiledModel(compiled_model_ptr);
         }
 
         #endregion

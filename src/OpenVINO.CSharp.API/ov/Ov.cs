@@ -14,13 +14,37 @@ namespace OpenVinoSharp
     public static partial class Ov
     {
         /// <summary>
+        /// 初始化 OpenVINO 运行时环境，确保原生库已加载
+        /// Initialize OpenVINO runtime environment and ensure native library is loaded
+        /// </summary>
+        /// <remarks>
+        /// 此方法可选，原生库会在第一次使用 OpenVINO 功能时自动加载。
+        /// 但如果您想提前控制加载过程或指定自定义路径，可以调用此方法。
+        /// This method is optional, native library will be loaded automatically on first use.
+        /// But you can call this to control the loading process early or specify custom paths.
+        /// </remarks>
+        /// <param name="libraryPath">原生库路径（可选，默认自动搜索）/ Native library path (optional, auto-search by default)</param>
+        public static void Initialize(string libraryPath = null)
+        {
+            if (!string.IsNullOrEmpty(libraryPath))
+            {
+                NativeLibraryLoader.Load(libraryPath);
+            }
+            else
+            {
+                NativeLibraryLoader.EnsureLoaded();
+            }
+        }
+
+        /// <summary>
         /// Set log callback function
         /// </summary>
-        /// <param name="func"></param>
+        /// <param name="func">Log callback function</param>
         public static void set_log_callback(LogCallbackDelegate func)
         {
             ov_util_set_log_callback(func);
         }
+
 
         /// <summary>
         /// Reset log callback to default

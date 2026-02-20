@@ -2,14 +2,22 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.IntegrationTests
 {
     /// <summary>
     /// InferRequest 集成测试 / InferRequest integration tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class InferRequestIntegrationTests
     {
+        static InferRequestIntegrationTests()
+        {
+            // 确保 OpenVINO 原生库已加载
+            // Ensure OpenVINO native library is loaded
+            TestInitialization.Initialize();
+        }
         [OpenVINOFact]
         [Trait("Category", TestCategories.Integration)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]
@@ -17,11 +25,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             using var request = model.create_infer_request();
 
@@ -40,11 +48,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             using var request = model.create_infer_request();
 
@@ -62,11 +70,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             using var request = model.create_infer_request();
 
@@ -84,11 +92,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             using var request = model.create_infer_request();
 
@@ -103,11 +111,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             using var request = model.create_infer_request();
 
@@ -123,11 +131,11 @@ namespace OpenVinoSharp.Tests.IntegrationTests
         {
             // Arrange
             using var core = new Core();
-            if (!System.IO.File.Exists("test_model.xml"))
+            if (!System.IO.File.Exists("model/yolo26n.xml"))
             {
                 return;
             }
-            using var modelObj = core.read_model("test_model.xml");
+            using var modelObj = core.read_model("model/yolo26n.xml");
             using var model = core.compile_model(modelObj, "CPU", null);
             using var request = model.create_infer_request();
             request.start_async();

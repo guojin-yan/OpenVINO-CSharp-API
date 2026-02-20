@@ -3,14 +3,20 @@
 
 using System;
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// 异常处理测试 / Exception handling tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class ExceptionTests
     {
+        static ExceptionTests()
+        {
+            TestInitialization.Initialize();
+        }
         [Fact]
         [Trait("Category", TestCategories.Unit)]
         public void OVException_Constructor_SetsProperties()

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
+using OpenVinoSharp.native;
 
 namespace OpenVinoSharp
 {
@@ -78,8 +79,7 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
             
             IntPtr node_ptr = IntPtr.Zero;
-            sbyte[] nameBytes = StringUtils.StringToSByteArray(name);
-            ExceptionHandler.ThrowOnError(ov_model_input_by_name(_ptr, ref nameBytes[0], ref node_ptr));
+            ExceptionHandler.ThrowOnError(ov_model_input_by_name(_ptr, name, ref node_ptr));
             return new NodeInput(node_ptr);
         }
 
@@ -140,8 +140,7 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
             
             IntPtr node_ptr = IntPtr.Zero;
-            sbyte[] nameBytes = StringUtils.StringToSByteArray(name);
-            ExceptionHandler.ThrowOnError(ov_model_output_by_name(_ptr, ref nameBytes[0], ref node_ptr));
+            ExceptionHandler.ThrowOnError(ov_model_output_by_name(_ptr, name, ref node_ptr));
             return new NodeOutput(node_ptr);
         }
 
@@ -218,7 +217,18 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             if (partial_shape == null)
                 throw new ArgumentNullException(nameof(partial_shape));
-            ExceptionHandler.ThrowOnError(ov_model_reshape_single_input(_ptr, partial_shape.NativePtr));
+            
+            ov_partial_shape_t nativeShape = partial_shape.ToNativeStruct();
+            try
+            {
+                ExceptionHandler.ThrowOnError(ov_model_reshape_single_input(_ptr, nativeShape));
+            }
+            finally
+            {
+                // 释放维度数组内存 / Free dimension array memory
+                if (nativeShape.dims != IntPtr.Zero)
+                    Marshal.FreeHGlobal(nativeShape.dims);
+            }
         }
 
         /// <summary>
@@ -237,8 +247,18 @@ namespace OpenVinoSharp
                 NodeInput input = get_input(i);
                 try
                 {
-                    ExceptionHandler.ThrowOnError(
-                        ov_model_reshape_input_by_name(_ptr, input.get_any_name(), shape.OvPtr));
+                    ov_partial_shape_t partialShape = shape.ToPartialShapeStruct();
+                    try
+                    {
+                        ExceptionHandler.ThrowOnError(
+                            ov_model_reshape_input_by_name(_ptr, input.get_any_name(), partialShape));
+                    }
+                    finally
+                    {
+                        // 释放维度数组内存 / Free dimension array memory
+                        if (partialShape.dims != IntPtr.Zero)
+                            Marshal.FreeHGlobal(partialShape.dims);
+                    }
                 }
                 finally
                 {
@@ -260,8 +280,18 @@ namespace OpenVinoSharp
             if (shape == null)
                 throw new ArgumentNullException(nameof(shape));
             
-            ExceptionHandler.ThrowOnError(
-                ov_model_reshape_input_by_name(_ptr, input_name, shape.OvPtr));
+            ov_partial_shape_t partialShape = shape.ToPartialShapeStruct();
+            try
+            {
+                ExceptionHandler.ThrowOnError(
+                    ov_model_reshape_input_by_name(_ptr, input_name, partialShape));
+            }
+            finally
+            {
+                // 释放维度数组内存 / Free dimension array memory
+                if (partialShape.dims != IntPtr.Zero)
+                    Marshal.FreeHGlobal(partialShape.dims);
+            }
         }
 
         /// <summary>
@@ -277,8 +307,18 @@ namespace OpenVinoSharp
             if (partial_shape == null)
                 throw new ArgumentNullException(nameof(partial_shape));
             
-            ExceptionHandler.ThrowOnError(
-                ov_model_reshape_input_by_name(_ptr, input_name, partial_shape.NativePtr));
+            ov_partial_shape_t nativeShape = partial_shape.ToNativeStruct();
+            try
+            {
+                ExceptionHandler.ThrowOnError(
+                    ov_model_reshape_input_by_name(_ptr, input_name, nativeShape));
+            }
+            finally
+            {
+                // 释放维度数组内存 / Free dimension array memory
+                if (nativeShape.dims != IntPtr.Zero)
+                    Marshal.FreeHGlobal(nativeShape.dims);
+            }
         }
 
         /// <summary>

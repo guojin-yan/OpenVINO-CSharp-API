@@ -2,14 +2,21 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// Version 结构体测试 / Version structure tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class VersionTests
     {
+        static VersionTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [OpenVINOFact]
         [Trait("Category", TestCategories.Unit)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]

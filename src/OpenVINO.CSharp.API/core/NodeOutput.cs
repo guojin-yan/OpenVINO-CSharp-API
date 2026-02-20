@@ -46,7 +46,7 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             uint type = 0;
-            ExceptionHandler.ThrowOnError(ov_output_get_element_type(_ptr, ref type));
+            ExceptionHandler.ThrowOnError(ov_port_get_element_type(_ptr, ref type));
             return new OvType((ElementType)type);
         }
 
@@ -61,7 +61,7 @@ namespace OpenVinoSharp
             IntPtr shape_ptr = Marshal.AllocHGlobal(size);
             try
             {
-                ExceptionHandler.ThrowOnError(ov_output_get_shape(_ptr, shape_ptr));
+                ExceptionHandler.ThrowOnError(ov_port_get_shape(_ptr, shape_ptr));
                 return new Shape(shape_ptr);
             }
             catch
@@ -96,17 +96,6 @@ namespace OpenVinoSharp
             return name;
         }
 
-        /// <summary>
-        /// 获取端口的索引 / Get the index of this port
-        /// </summary>
-        /// <returns>端口索引 / Port index</returns>
-        public ulong get_index()
-        {
-            ThrowIfDisposed();
-            ulong idx = 0;
-            ExceptionHandler.ThrowOnError(ov_output_get_index(_ptr, ref idx));
-            return idx;
-        }
 
         #endregion
 

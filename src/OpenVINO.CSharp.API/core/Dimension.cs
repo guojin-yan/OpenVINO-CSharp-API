@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Guojin Yan
 // Licensed under the MIT License.
 
+using OpenVinoSharp.native;
 using System;
 using System.Runtime.InteropServices;
 
@@ -60,7 +61,7 @@ namespace OpenVinoSharp
         /// <returns>是否为动态 / Whether dynamic</returns>
         public bool is_dynamic()
         {
-            return min != max;
+            return min != max || min == -1 || max == -1;
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace OpenVinoSharp
         /// <returns>是否为静态 / Whether static</returns>
         public bool is_static()
         {
-            return min == max;
+            return min == max && min != -1 && max != -1;
         }
 
         /// <summary>
@@ -163,6 +164,19 @@ namespace OpenVinoSharp
             if (min == -1 && max == -1)
                 return "?";
             return $"{min}..{max}";
+        }
+
+        #endregion
+
+        #region 转换方法 / Conversion Methods
+
+        /// <summary>
+        /// 转换为 ov_dimension_t 结构体 / Convert to ov_dimension_t structure
+        /// </summary>
+        /// <returns>ov_dimension_t 结构体 / ov_dimension_t structure</returns>
+        internal ov_dimension_t ToNativeStruct()
+        {
+            return new ov_dimension_t { min = this.min, max = this.max };
         }
 
         #endregion

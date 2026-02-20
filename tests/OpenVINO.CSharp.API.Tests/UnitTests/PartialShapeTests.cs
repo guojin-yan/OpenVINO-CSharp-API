@@ -2,14 +2,21 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// PartialShape 类单元测试 / PartialShape class unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class PartialShapeTests
     {
+        static PartialShapeTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [Fact]
         [Trait("Category", TestCategories.Unit)]
         public void Constructor_Default_CreatesDynamicShape()

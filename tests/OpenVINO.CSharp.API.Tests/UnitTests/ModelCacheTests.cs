@@ -4,14 +4,21 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// ModelCache 单元测试 / ModelCache unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class ModelCacheTests : IDisposable
     {
+        static ModelCacheTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         private readonly bool _originalEnabled;
         private readonly int _originalMaxSize;
 

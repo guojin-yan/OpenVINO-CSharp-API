@@ -32,7 +32,9 @@ namespace OpenVinoSharp
         {
             _compiledModel = compiledModel ?? throw new ArgumentNullException(nameof(compiledModel));
             _pool = new ConcurrentBag<InferRequest>();
-            _semaphore = new SemaphoreSlim(initialSize, maxSize);
+            // 信号量表示总共可以租用的对象数（池中对象 + 还可以创建的新对象）
+            // Semaphore represents total rentable objects (in pool + can be created)
+            _semaphore = new SemaphoreSlim(maxSize, maxSize);
             _maxSize = maxSize;
             _currentSize = 0;
 
@@ -214,7 +216,12 @@ namespace OpenVinoSharp
 
             // 池为空但信号量已获取，创建新请求
             Logger.Debug("InferRequestPool: 创建新请求");
-            return CreateRequest();
+            var newRequest = CreateRequest();
+            if (newRequest != null)
+            {
+                Interlocked.Increment(ref _currentSize);
+            }
+            return newRequest;
         }
 
         private async System.Threading.Tasks.Task<InferRequest> RentAsyncCore(

@@ -2,20 +2,27 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// Layout 类单元测试 / Layout class unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class LayoutTests
     {
+        static LayoutTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [Fact]
         [Trait("Category", TestCategories.Unit)]
-        public void Constructor_Default_CreatesLayout()
+        public void Constructor_WithNCHW_CreatesLayout()
         {
             // Act
-            using var layout = new Layout();
+            using var layout = new Layout("NCHW");
 
             // Assert
             Assert.NotNull(layout);

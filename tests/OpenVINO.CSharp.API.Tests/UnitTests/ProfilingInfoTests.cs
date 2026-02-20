@@ -2,14 +2,21 @@
 // Licensed under the MIT License.
 
 using Xunit;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
     /// ProfilingInfo 类单元测试 / ProfilingInfo class unit tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class ProfilingInfoTests
     {
+        static ProfilingInfoTests()
+        {
+            TestInitialization.Initialize();
+        }
+
         [Fact]
         [Trait("Category", TestCategories.Unit)]
         public void Constructor_Default_SetsDefaultValues()

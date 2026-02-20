@@ -3,14 +3,22 @@
 
 using Xunit;
 using OpenVinoSharp.Internal;
+using OpenVinoSharp.Tests.TestHelpers;
 
 namespace OpenVinoSharp.Tests.IntegrationTests
 {
     /// <summary>
     /// Core 类集成测试 / Core class integration tests
     /// </summary>
+    [Collection("OpenVINO Integration Tests")]
     public class CoreIntegrationTests
     {
+        static CoreIntegrationTests()
+        {
+            // 确保 OpenVINO 原生库已加载
+            // Ensure OpenVINO native library is loaded
+            TestInitialization.Initialize();
+        }
         [OpenVINOFact]
         [Trait("Category", TestCategories.Integration)]
         [Trait("Category", TestCategories.RequiresOpenVINO)]
