@@ -6,16 +6,4 @@
   href: api/
   homepage: api/OpenVinoSharp.yml
 - name: 案例应用 / Samples
-  href: articles/samples/
-  homepage: articles/samples/index.md
-  items:
-    - name: 概述 / Overview
-      href: articles/samples/index.md
-    - name: YOLO - .NET 10.0
-      href: articles/samples/yolo-net10.md
-    - name: YOLO - .NET 4.8
-      href: articles/samples/yolo-net48.md
-    - name: YOLO - .NET 4.6
-      href: articles/samples/yolo-net46.md
-    - name: YOLO - .NET Core 3.1
-      href: articles/samples/yolo-netcoreapp31.md
+  href: articles/samples/index.md

@@ -34,10 +34,9 @@
     ],
     "resource": [
       {
-        "files": [ "styles/**", "images/**", "favicon.ico", "logo.svg" ]
+        "files": [ "images/**", "favicon.ico", "logo.svg" ]
       }
     ],
-    "postProcessors": [],
     "overwrite": [
       {
         "files": [ "apidoc/**.md" ],
@@ -59,8 +58,7 @@
         "branch": "main"
       },
       "_gitUrlPattern": "github",
-      "_noindex": false,
-      "_appLogoPath": "images/logo.svg"
+      "_noindex": false
     },
     "dest": "../_site",
     "template": [ "default" ],
