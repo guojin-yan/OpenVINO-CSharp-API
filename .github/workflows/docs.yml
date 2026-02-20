@@ -48,11 +48,11 @@ jobs:
       run: |
         dotnet tool install -g docfx
         
-    - name: Restore packages / 还原包
-      run: dotnet restore
+    - name: Restore API packages / 还原 API 包
+      run: dotnet restore src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj
         
-    - name: Build project / 构建项目
-      run: dotnet build -c Release --no-restore
+    - name: Build API project / 构建 API 项目
+      run: dotnet build src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj -c Release --no-restore
         
     - name: Generate API documentation / 生成 API 文档
       run: |
