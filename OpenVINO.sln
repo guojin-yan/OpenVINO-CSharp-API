@@ -10,6 +10,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVINO.CSharp.API", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenVINO.CSharp.API.Tests", "tests\OpenVINO.CSharp.API.Tests\OpenVINO.CSharp.API.Tests.csproj", "{10C03195-A085-1309-C2D0-CB2A45ED5DEC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{A603E266-B1DA-4AB0-BE33-A5B07E3137B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yolo26Det-net4.8", "samples\Yolo26Det-net4.8\Yolo26Det-net4.8.csproj", "{699669F7-5C8D-4C51-879F-7ED980028219}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yolo26Det-net10.0", "samples\Yolo26Det-net10.0\Yolo26Det-net10.0.csproj", "{7A397269-617D-496B-9BB7-F65E2434E0F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +30,14 @@ Global
 		{10C03195-A085-1309-C2D0-CB2A45ED5DEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10C03195-A085-1309-C2D0-CB2A45ED5DEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10C03195-A085-1309-C2D0-CB2A45ED5DEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{699669F7-5C8D-4C51-879F-7ED980028219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{699669F7-5C8D-4C51-879F-7ED980028219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{699669F7-5C8D-4C51-879F-7ED980028219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{699669F7-5C8D-4C51-879F-7ED980028219}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A397269-617D-496B-9BB7-F65E2434E0F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A397269-617D-496B-9BB7-F65E2434E0F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A397269-617D-496B-9BB7-F65E2434E0F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A397269-617D-496B-9BB7-F65E2434E0F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -31,6 +45,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DFE034B3-FD0D-9369-B403-2FE3715BA7BE} = {83AEB31C-DFE0-4175-A76D-2B5135170D8F}
 		{10C03195-A085-1309-C2D0-CB2A45ED5DEC} = {B037FBFA-962B-44B3-8B9F-2C9030CBBA9A}
+		{699669F7-5C8D-4C51-879F-7ED980028219} = {A603E266-B1DA-4AB0-BE33-A5B07E3137B8}
+		{7A397269-617D-496B-9BB7-F65E2434E0F3} = {A603E266-B1DA-4AB0-BE33-A5B07E3137B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17497793-127C-4443-9035-FB5BF6F7FB0A}

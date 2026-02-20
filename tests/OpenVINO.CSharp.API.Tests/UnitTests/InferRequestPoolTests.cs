@@ -1,5 +1,5 @@
-// Copyright (c) 2024 Guojin Yan
-// Licensed under the MIT License.
+// Copyright (c) 2026 Guojin Yan
+// Licensed under the Apache-2.0 License.
 
 using System;
 using System.Threading;
