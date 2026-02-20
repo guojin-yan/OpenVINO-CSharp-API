@@ -213,4 +213,4 @@ Logger.SetCallback((level, message) =>
 
 ---
 
-*Copyright © 2024 Guojin Yan. All Rights Reserved.*
+*Copyright © 2026 Guojin Yan. All Rights Reserved.*
