@@ -11,11 +11,14 @@
       "includePrivateMembers": false,
       "disableGitFeatures": false,
       "disableDefaultFilter": false,
-      "noRestore": false,
+      "noRestore": true,
       "namespaceLayout": "flattened",
       "memberLayout": "samePage",
       "enumSortOrder": "alphabetic",
-      "allowCompilationErrors": false
+      "allowCompilationErrors": false,
+      "properties": {
+        "TargetFramework": "net8.0"
+      }
     }
   ],
   "build": {
@@ -26,11 +29,7 @@
         "dest": "api"
       },
       {
-        "files": [ "articles/**/*.md", "*.md", "toc.yml", "restapi/**" ]
-      },
-      {
-        "files": [ "../README.md" ],
-        "src": ".."
+        "files": [ "articles/**/*.md", "*.md", "toc.yml" ]
       }
     ],
     "resource": [

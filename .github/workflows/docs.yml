@@ -51,13 +51,17 @@ jobs:
     - name: Restore API packages / 还原 API 包
       run: dotnet restore src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj
         
-    - name: Build API project / 构建 API 项目
-      run: dotnet build src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj -c Release --no-restore
+    - name: Build API project (net8.0 only) / 构建 API 项目 (仅 net8.0)
+      run: dotnet build src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj -c Release --framework net8.0 --no-restore
         
-    - name: Generate API documentation / 生成 API 文档
+    - name: Generate API metadata / 生成 API 元数据
       run: |
         cd docs
         docfx metadata docfx.json
+        
+    - name: Build documentation / 构建文档
+      run: |
+        cd docs
         docfx build docfx.json
         
     - name: Upload artifact / 上传构建产物
