@@ -47,7 +47,7 @@
     "globalMetadata": {
       "_appTitle": "OpenVINO C# API 文档",
       "_appName": "OpenVINO C# API",
-      "_appFooter": "<span>Copyright © 2024 Guojin Yan. Licensed under MIT.</span>",
+      "_appFooter": "<span>Copyright © 2024 Guojin Yan. Licensed under Apache-2.0.</span>",
       "_enableSearch": true,
       "_disableNavbar": false,
       "_disableBreadcrumb": false,
@@ -61,8 +61,7 @@
       "_gitUrlPattern": "github"
     },
     "dest": "../_site",
-    "template": [ "default", "modern" ],
-    "theme": "material",
+    "template": [ "default" ],
     "markdownEngineName": "markdig",
     "markdownEngineProperties": {
       "markdigExtensions": [
@@ -77,7 +76,6 @@
     "sitemap": {
       "baseUrl": "https://guojin-yan.github.io/OpenVINO-CSharp-API",
       "changefreq": "weekly"
-    },
-    "homepage": "../README.md"
+    }
   }
 }
