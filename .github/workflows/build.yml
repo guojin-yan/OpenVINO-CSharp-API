@@ -20,12 +20,12 @@ jobs:
           6.0.x
           8.0.x
     
-    # Linux 上只构建 API 项目（跳过 .NET Framework 测试和示例）
-    - name: Restore API
-      run: dotnet restore src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj
+    # Linux 上只构建 API 项目的 net8.0 目标（跳过 .NET Framework 目标）
+    - name: Restore API (net8.0 only)
+      run: dotnet restore src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj -p:TargetFramework=net8.0
     
-    - name: Build API
-      run: dotnet build src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj --configuration Release --no-restore
+    - name: Build API (net8.0 only)
+      run: dotnet build src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj --configuration Release --framework net8.0 --no-restore
     
     # 构建跨平台示例（.NET Core 3.1 / .NET 10.0）
     - name: Build Cross-Platform Samples
