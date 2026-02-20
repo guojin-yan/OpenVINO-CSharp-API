@@ -12,7 +12,7 @@ OpenVINO.CSharp.API.Tests/
 │   └── TestDataGenerator.cs  # 测试数据生成器
 ├── UnitTests/               # 单元测试（无需 OpenVINO 运行时）
 │   ├── ShapeTests.cs        # Shape 类测试
-│   ├── LoggerTests.cs       # Logger 类测试
+│   ├── OvLoggerTests.cs       # OvLogger 类测试
 │   ├── ExceptionTests.cs    # 异常处理测试
 │   ├── ElementTypeTests.cs  # ElementType 枚举测试
 │   ├── VersionTests.cs      # Version 结构体测试
@@ -46,7 +46,7 @@ OpenVINO.CSharp.API.Tests/
 | **ModelCache** | ✅ 完整 | - | - | 高 |
 | **InferRequestPool** | ✅ 完整 | - | - | 高 |
 | **PrePostProcessor** | - | ✅ 基础 | - | 低 |
-| **Logger** | ✅ 完整 | - | ✅ | 高 |
+| **OvLogger** | ✅ 完整 | - | ✅ | 高 |
 | **ElementType** | ✅ 完整 | - | - | 高 |
 | **ExceptionStatus** | ✅ 完整 | - | - | 高 |
 | **Version** | ✅ | - | - | 高 |

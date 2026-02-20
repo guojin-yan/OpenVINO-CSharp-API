@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- 多目标框架支持: .NET Framework 4.6-4.8 和 .NET 5-10 -->
-    <TargetFrameworks>net46;net461;net462;net47;net471;net472;net48;net481;net5.0;net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net46;net461;net462;net47;net471;net472;net48;net481;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -27,13 +27,14 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <NeutralLanguage>zh</NeutralLanguage>
     <LangVersion Condition="'$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">8.0</LangVersion>
+    <LangVersion Condition="'$(TargetFramework)' == 'netcoreapp3.1'">8.0</LangVersion>
     <LangVersion Condition="'$(TargetFramework)' == 'net5.0'">9.0</LangVersion>
     <LangVersion Condition="'$(TargetFramework)' == 'net6.0'">10.0</LangVersion>
     <LangVersion Condition="'$(TargetFramework)' == 'net7.0'">11.0</LangVersion>
     <LangVersion Condition="'$(TargetFramework)' == 'net8.0'">12.0</LangVersion>
     <LangVersion Condition="'$(TargetFramework)' == 'net9.0'">13.0</LangVersion>
     <LangVersion Condition="'$(TargetFramework)' == 'net10.0'">14.0</LangVersion>
-    <Nullable Condition="'$(TargetFramework)' != 'net46' and '$(TargetFramework)' != 'net461' and '$(TargetFramework)' != 'net462' and '$(TargetFramework)' != 'net47' and '$(TargetFramework)' != 'net471' and '$(TargetFramework)' != 'net472' and '$(TargetFramework)' != 'net48' and '$(TargetFramework)' != 'net481'">annotations</Nullable>
+    <Nullable Condition="'$(TargetFramework)' != 'net46' and '$(TargetFramework)' != 'net461' and '$(TargetFramework)' != 'net462' and '$(TargetFramework)' != 'net47' and '$(TargetFramework)' != 'net471' and '$(TargetFramework)' != 'net472' and '$(TargetFramework)' != 'net48' and '$(TargetFramework)' != 'net481' and '$(TargetFramework)' != 'netcoreapp3.1'">annotations</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
@@ -58,7 +59,12 @@
     <DefineConstants>$(DefineConstants);NET48;NET48_OR_GREATER</DefineConstants>
   </PropertyGroup>
   
-  <!-- .NET Core / .NET 5+ 定义 -->
+  <!-- .NET Core 3.1 定义 -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP;NETCOREAPP3_1;NETCOREAPP3_1_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- .NET 5+ 定义 -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0'">
     <DefineConstants>$(DefineConstants);NETCOREAPP;NET5_0;NET5_0_OR_GREATER</DefineConstants>
   </PropertyGroup>
@@ -84,13 +90,13 @@
   </PropertyGroup>
   
   <!-- 功能特性定义 -->
-  <!-- Span<T> 支持: .NET Core 2.1+, .NET 5+, .NET Framework 4.7.2+ (需要 NuGet 包) -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+  <!-- Span<T> 支持: .NET Core 2.1+, .NET Core 3.1, .NET 5+, .NET Framework 4.7.2+ (需要 NuGet 包) -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481' or '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
     <DefineConstants>$(DefineConstants);HAS_SPAN</DefineConstants>
   </PropertyGroup>
   
-  <!-- Memory<T> 支持: .NET Core 2.1+, .NET 5+, .NET Framework 4.7.2+ -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+  <!-- Memory<T> 支持: .NET Core 2.1+, .NET Core 3.1, .NET 5+, .NET Framework 4.7.2+ -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481' or '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
     <DefineConstants>$(DefineConstants);HAS_MEMORY</DefineConstants>
   </PropertyGroup>
   
@@ -102,17 +108,17 @@
   </PropertyGroup>
   
   <!-- NativeLibrary 类支持 (.NET Core 3.0+, .NET 5+) -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
     <DefineConstants>$(DefineConstants);HAS_NATIVELIBRARY</DefineConstants>
   </PropertyGroup>
   
   <!-- Index/Range 支持 (.NET Core 3.0+, .NET 5+) -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
     <DefineConstants>$(DefineConstants);HAS_INDEX_RANGE</DefineConstants>
   </PropertyGroup>
   
   <!-- IAsyncEnumerable 支持 (.NET Core 3.0+, .NET 5+) -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0'">
     <DefineConstants>$(DefineConstants);HAS_ASYNC_ENUMERABLE</DefineConstants>
   </PropertyGroup>
   

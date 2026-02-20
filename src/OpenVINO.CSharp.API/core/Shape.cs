@@ -118,6 +118,60 @@ namespace OpenVinoSharp
 
         #endregion
 
+        #region 索引器 / Indexer
+
+        /// <summary>
+        /// 通过索引获取维度值 / Get dimension value by index
+        /// <para>允许像数组一样访问形状维度，如 shape[0]、shape[1] 等。/ Allows array-like access to shape dimensions, e.g., shape[0], shape[1], etc.</para>
+        /// </summary>
+        /// <param name="index">维度索引 / Dimension index</param>
+        /// <returns>维度值 / Dimension value</returns>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// var shape = new Shape(new long[] { 1, 3, 224, 224 });
+        /// 
+        /// // 使用索引器访问各维度 / Access dimensions using indexer
+        /// long batch = shape[0];    // 1
+        /// long channels = shape[1]; // 3
+        /// long height = shape[2];   // 224
+        /// long width = shape[3];    // 224
+        /// 
+        /// // 遍历所有维度 / Iterate all dimensions
+        /// for (int i = 0; i &lt; shape.get_rank(); i++)
+        /// {
+        ///     Console.WriteLine($"Dim[{i}] = {shape[i]}");
+        /// }
+        /// </code>
+        /// </example>
+        /// <exception cref="ObjectDisposedException">当形状已被释放时抛出 / Thrown when shape has been disposed</exception>
+        /// <exception cref="IndexOutOfRangeException">当索引越界时抛出 / Thrown when index is out of range</exception>
+        public long this[int index]
+        {
+            get
+            {
+                ThrowIfDisposed();
+                
+                long rank = (long)get_rank();
+                if (index < 0 || index >= rank)
+                    throw new IndexOutOfRangeException($"Index {index} is out of range for shape with rank {rank}");
+                
+                return get_dim(index);
+            }
+        }
+
+        /// <summary>
+        /// 通过索引获取维度值（ulong 重载）/ Get dimension value by index (ulong overload)
+        /// </summary>
+        /// <param name="index">维度索引 / Dimension index</param>
+        /// <returns>维度值 / Dimension value</returns>
+        public long this[ulong index]
+        {
+            get => this[(int)index];
+        }
+
+        #endregion
+
         #region 维度查询 / Dimension Queries
 
         /// <summary>

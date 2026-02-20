@@ -9,29 +9,29 @@ using OpenVinoSharp.Tests.TestHelpers;
 namespace OpenVinoSharp.Tests.UnitTests
 {
     /// <summary>
-    /// Logger 类单元测试 / Logger class unit tests
+    /// OvLogger 类单元测试 / OvLogger class unit tests
     /// </summary>
     [Collection("OpenVINO Integration Tests")]
-    public class LoggerTests : IDisposable
+    public class OvLoggerTests : IDisposable
     {
-        static LoggerTests()
+        static OvLoggerTests()
         {
             TestInitialization.Initialize();
         }
 
         private LogLevel _originalLevel;
 
-        public LoggerTests()
+        public OvLoggerTests()
         {
             // 保存原始日志级别
-            _originalLevel = Logger.MinLevel;
+            _originalLevel = OvLogger.MinLevel;
         }
 
         public void Dispose()
         {
             // 恢复原始日志级别
-            Logger.MinLevel = _originalLevel;
-            Logger.ClearCallback();
+            OvLogger.MinLevel = _originalLevel;
+            OvLogger.ClearCallback();
         }
 
         [Theory]
@@ -43,10 +43,10 @@ namespace OpenVinoSharp.Tests.UnitTests
         public void IsEnabled_ReturnsCorrectValue(LogLevel minLevel, LogLevel testLevel, bool expected)
         {
             // Arrange
-            Logger.MinLevel = minLevel;
+            OvLogger.MinLevel = minLevel;
 
             // Act
-            bool actual = Logger.IsEnabled(testLevel);
+            bool actual = OvLogger.IsEnabled(testLevel);
 
             // Assert
             Assert.Equal(expected, actual);
@@ -60,15 +60,15 @@ namespace OpenVinoSharp.Tests.UnitTests
             LogLevel? receivedLevel = null;
             string? receivedMessage = null;
             
-            Logger.MinLevel = LogLevel.DEBUG;
-            Logger.SetCallback((level, msg) =>
+            OvLogger.MinLevel = LogLevel.DEBUG;
+            OvLogger.SetCallback((level, msg) =>
             {
                 receivedLevel = level;
                 receivedMessage = msg;
             });
 
             // Act
-            Logger.Info("Test message");
+            OvLogger.Info("Test message");
 
             // Assert
             Assert.Equal(LogLevel.INFO, receivedLevel);
@@ -81,11 +81,11 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             bool callbackInvoked = false;
-            Logger.SetCallback((level, msg) => callbackInvoked = true);
-            Logger.ClearCallback();
+            OvLogger.SetCallback((level, msg) => callbackInvoked = true);
+            OvLogger.ClearCallback();
 
             // Act
-            Logger.Info("Test message");
+            OvLogger.Info("Test message");
 
             // Assert
             Assert.False(callbackInvoked);
@@ -97,11 +97,11 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             bool callbackInvoked = false;
-            Logger.MinLevel = LogLevel.INFO; // 禁用 DEBUG
-            Logger.SetCallback((level, msg) => callbackInvoked = true);
+            OvLogger.MinLevel = LogLevel.INFO; // 禁用 DEBUG
+            OvLogger.SetCallback((level, msg) => callbackInvoked = true);
 
             // Act
-            Logger.Debug("Debug message");
+            OvLogger.Debug("Debug message");
 
             // Assert
             Assert.False(callbackInvoked);
@@ -118,8 +118,8 @@ namespace OpenVinoSharp.Tests.UnitTests
         {
             // Arrange
             string? receivedMessage = null;
-            Logger.MinLevel = LogLevel.DEBUG;
-            Logger.SetCallback((lvl, msg) => 
+            OvLogger.MinLevel = LogLevel.DEBUG;
+            OvLogger.SetCallback((lvl, msg) => 
             {
                 if (lvl == level) receivedMessage = msg;
             });
@@ -128,19 +128,19 @@ namespace OpenVinoSharp.Tests.UnitTests
             switch (level)
             {
                 case LogLevel.DEBUG:
-                    Logger.Debug("Value: {0}", 42);
+                    OvLogger.Debug("Value: {0}", 42);
                     break;
                 case LogLevel.INFO:
-                    Logger.Info("Value: {0}", 42);
+                    OvLogger.Info("Value: {0}", 42);
                     break;
                 case LogLevel.WARNING:
-                    Logger.Warn("Value: {0}", 42);
+                    OvLogger.Warn("Value: {0}", 42);
                     break;
                 case LogLevel.ERROR:
-                    Logger.Error("Value: {0}", 42);
+                    OvLogger.Error("Value: {0}", 42);
                     break;
                 case LogLevel.FATAL:
-                    Logger.Fatal("Value: {0}", 42);
+                    OvLogger.Fatal("Value: {0}", 42);
                     break;
             }
 
@@ -153,10 +153,10 @@ namespace OpenVinoSharp.Tests.UnitTests
         public void IsDebugEnabled_WhenMinLevelIsDebug_ReturnsTrue()
         {
             // Arrange
-            Logger.MinLevel = LogLevel.DEBUG;
+            OvLogger.MinLevel = LogLevel.DEBUG;
 
             // Act & Assert
-            Assert.True(Logger.IsDebugEnabled);
+            Assert.True(OvLogger.IsDebugEnabled);
         }
 
         [Fact]
@@ -164,10 +164,10 @@ namespace OpenVinoSharp.Tests.UnitTests
         public void IsInfoEnabled_WhenMinLevelIsWarning_ReturnsFalse()
         {
             // Arrange
-            Logger.MinLevel = LogLevel.WARNING;
+            OvLogger.MinLevel = LogLevel.WARNING;
 
             // Act & Assert
-            Assert.False(Logger.IsInfoEnabled);
+            Assert.False(OvLogger.IsInfoEnabled);
         }
     }
 }

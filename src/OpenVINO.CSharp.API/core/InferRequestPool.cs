@@ -71,8 +71,8 @@ namespace OpenVinoSharp
                 }
             }
 
-            Logger.Debug($"InferRequestPool: 创建完成，初始大小: {initialSize}, 最大大小: {maxSize}");
-            Logger.Debug($"InferRequestPool: Created, initial size: {initialSize}, max size: {maxSize}");
+            OvLogger.Debug($"InferRequestPool: 创建完成，初始大小: {initialSize}, 最大大小: {maxSize}");
+            OvLogger.Debug($"InferRequestPool: Created, initial size: {initialSize}, max size: {maxSize}");
         }
 
         /// <summary>
@@ -390,23 +390,23 @@ namespace OpenVinoSharp
             Clear();
             _semaphore?.Dispose();
 
-            Logger.Debug("InferRequestPool: 已释放");
-            Logger.Debug("InferRequestPool: Disposed");
+            OvLogger.Debug("InferRequestPool: 已释放");
+            OvLogger.Debug("InferRequestPool: Disposed");
         }
 
         private InferRequest RentCore()
         {
             if (_pool.TryTake(out var request))
             {
-                Logger.Debug("InferRequestPool: 从池中获取请求");
-                Logger.Debug("InferRequestPool: Rent from pool");
+                OvLogger.Debug("InferRequestPool: 从池中获取请求");
+                OvLogger.Debug("InferRequestPool: Rent from pool");
                 return request;
             }
 
             // 池为空但信号量已获取，创建新请求
             // Pool empty but semaphore acquired, create new request
-            Logger.Debug("InferRequestPool: 创建新请求");
-            Logger.Debug("InferRequestPool: Create new request");
+            OvLogger.Debug("InferRequestPool: 创建新请求");
+            OvLogger.Debug("InferRequestPool: Create new request");
             var newRequest = CreateRequest();
             if (newRequest != null)
             {
@@ -430,8 +430,8 @@ namespace OpenVinoSharp
             }
             catch (Exception ex)
             {
-                Logger.Error($"InferRequestPool: 创建请求失败 - {ex.Message}");
-                Logger.Error($"InferRequestPool: Failed to create request - {ex.Message}");
+                OvLogger.Error($"InferRequestPool: 创建请求失败 - {ex.Message}");
+                OvLogger.Error($"InferRequestPool: Failed to create request - {ex.Message}");
                 throw;
             }
         }

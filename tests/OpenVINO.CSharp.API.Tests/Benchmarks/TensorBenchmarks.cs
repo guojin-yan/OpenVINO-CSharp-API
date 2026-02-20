@@ -122,30 +122,30 @@ namespace OpenVinoSharp.Tests.Benchmarks
     }
 
     /// <summary>
-    /// 日志基准测试 / Logger benchmarks
+    /// 日志基准测试 / OvLogger benchmarks
     /// </summary>
     [SimpleJob(RuntimeMoniker.Net80)]
     [MemoryDiagnoser]
     [Trait("Category", TestCategories.Performance)]
-    public class LoggerBenchmarks
+    public class OvLoggerBenchmarks
     {
         [GlobalSetup]
         public void Setup()
         {
             // 设置高级别，禁用日志输出
-            Logger.MinLevel = LogLevel.NONE;
+            OvLogger.MinLevel = LogLevel.NONE;
         }
 
         [Benchmark(Description = "Log (disabled)")]
         public void LogDisabled()
         {
-            Logger.Debug("This is a debug message: {0}", 42);
+            OvLogger.Debug("This is a debug message: {0}", 42);
         }
 
         [Benchmark(Description = "IsEnabled check")]
         public bool IsEnabledCheck()
         {
-            return Logger.IsDebugEnabled;
+            return OvLogger.IsDebugEnabled;
         }
     }
 }

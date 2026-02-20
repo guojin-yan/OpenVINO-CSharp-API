@@ -17,13 +17,13 @@ namespace OpenVinoSharp.extensions.benchmark_app
 
         static T[] get_random_array<T>(int length)
         {
-            Logger.Debug($"get_random_array<T>: type={typeof(T).Name}, length={length}");
+            OvLogger.Debug($"get_random_array<T>: type={typeof(T).Name}, length={length}");
             
             T[] result = new T[length];
             string t = typeof(T).ToString();
             if (t == "System.Byte")
             {
-                Logger.Debug("Generating random byte array");
+                OvLogger.Debug("Generating random byte array");
                 byte[] tmp = new byte[length];
                 byte min = byte.MinValue;
                 byte max = byte.MaxValue;
@@ -35,7 +35,7 @@ namespace OpenVinoSharp.extensions.benchmark_app
             }
             else if (t == "System.Int32")
             {
-                Logger.Debug("Generating random int32 array");
+                OvLogger.Debug("Generating random int32 array");
                 int[] tmp = new int[length];
                 int min = int.MinValue;
                 int max = int.MaxValue;
@@ -47,7 +47,7 @@ namespace OpenVinoSharp.extensions.benchmark_app
             }
             else if (t == "System.Int64")
             {
-                Logger.Debug("Generating random int64 array");
+                OvLogger.Debug("Generating random int64 array");
                 long[] tmp = new long[length];
                 long min = long.MinValue;
                 long max = long.MaxValue;
@@ -59,7 +59,7 @@ namespace OpenVinoSharp.extensions.benchmark_app
             }
             else if (t == "System.Int16")
             {
-                Logger.Debug("Generating random int16 array");
+                OvLogger.Debug("Generating random int16 array");
                 short[] tmp = new short[length];
                 short min = short.MinValue;
                 short max = short.MaxValue;
@@ -71,7 +71,7 @@ namespace OpenVinoSharp.extensions.benchmark_app
             }
             else if (t == "System.Single")
             {
-                Logger.Debug("Generating random float array");
+                OvLogger.Debug("Generating random float array");
                 float[] tmp = new float[length];
                 float min = float.MinValue;
                 float max = float.MaxValue;
@@ -83,7 +83,7 @@ namespace OpenVinoSharp.extensions.benchmark_app
             }
             else if (t == "System.Double")
             {
-                Logger.Debug("Generating random double array");
+                OvLogger.Debug("Generating random double array");
                 double[] tmp = new double[length];
                 double min = double.MinValue;
                 double max = double.MaxValue;
@@ -95,8 +95,8 @@ namespace OpenVinoSharp.extensions.benchmark_app
             }
             else
             {
-                Logger.Error("数据格式错误，不支持。仅支持 double、float、int、long、short 和 byte 数据格式 / Data format error, not supported. Only double, float, int, long, short and byte data formats are supported");
-                Logger.Debug($"Unsupported data type: {t}");
+                OvLogger.Error("数据格式错误，不支持。仅支持 double、float、int、long、short 和 byte 数据格式 / Data format error, not supported. Only double, float, int, long, short and byte data formats are supported");
+                OvLogger.Debug($"Unsupported data type: {t}");
             }
             return result;
         }
@@ -110,44 +110,44 @@ namespace OpenVinoSharp.extensions.benchmark_app
             ElementType type = tensor.element_type;
             ulong length = tensor.size;
             
-            Logger.Debug($"fill_tensor_random: element_type={type}, size={length}");
-            Logger.Debug($"Tensor shape: [{string.Join(",", tensor.shape)}]");
+            OvLogger.Debug($"fill_tensor_random: element_type={type}, size={length}");
+            OvLogger.Debug($"Tensor shape: [{string.Join(",", tensor.shape)}]");
             
             switch (type)
             {
                 case ElementType.F64:
-                    Logger.Debug("Filling tensor with double (F64) random data");
+                    OvLogger.Debug("Filling tensor with double (F64) random data");
                     double[] tmp1 = get_random_array<double>((int)length);
                     tensor.set_data(tmp1);
-                    Logger.Debug("F64 tensor data filled successfully");
+                    OvLogger.Debug("F64 tensor data filled successfully");
                     break;
                 case ElementType.F32:
-                    Logger.Debug("Filling tensor with float (F32) random data");
+                    OvLogger.Debug("Filling tensor with float (F32) random data");
                     float[] tmp2 = get_random_array<float>((int)length);
                     tensor.set_data(tmp2);
-                    Logger.Debug("F32 tensor data filled successfully");
+                    OvLogger.Debug("F32 tensor data filled successfully");
                     break;
                 case ElementType.I64:
-                    Logger.Debug("Filling tensor with long (I64) random data");
+                    OvLogger.Debug("Filling tensor with long (I64) random data");
                     long[] tmp3 = get_random_array<long>((int)length);
                     tensor.set_data(tmp3);
-                    Logger.Debug("I64 tensor data filled successfully");
+                    OvLogger.Debug("I64 tensor data filled successfully");
                     break;
                 case ElementType.I32:
-                    Logger.Debug("Filling tensor with int (I32) random data");
+                    OvLogger.Debug("Filling tensor with int (I32) random data");
                     int[] tmp4 = get_random_array<int>((int)length);
                     tensor.set_data(tmp4);
-                    Logger.Debug("I32 tensor data filled successfully");
+                    OvLogger.Debug("I32 tensor data filled successfully");
                     break;
                 case ElementType.I16:
-                    Logger.Debug("Filling tensor with short (I16) random data");
+                    OvLogger.Debug("Filling tensor with short (I16) random data");
                     short[] tmp5 = get_random_array<short>((int)length);
                     tensor.set_data(tmp5);
-                    Logger.Debug("I16 tensor data filled successfully");
+                    OvLogger.Debug("I16 tensor data filled successfully");
                     break;
                 default:
-                    Logger.Warn($"Unsupported element type for random fill: {type}");
-                    Logger.Debug("Skipping tensor data fill for unsupported type");
+                    OvLogger.Warn($"Unsupported element type for random fill: {type}");
+                    OvLogger.Debug("Skipping tensor data fill for unsupported type");
                     break;
             }
         }
@@ -162,7 +162,7 @@ namespace OpenVinoSharp.extensions.benchmark_app
 
         public LatencyMetrics(List<double> latencies, string data_shape = "", int percentile_boundary = 50)
         {
-            Logger.Debug($"LatencyMetrics constructor: count={latencies?.Count}, percentile={percentile_boundary}");
+            OvLogger.Debug($"LatencyMetrics constructor: count={latencies?.Count}, percentile={percentile_boundary}");
             this.percentile_boundary = percentile_boundary;
             this.data_shape = data_shape;
             fill_data(latencies, percentile_boundary);
@@ -173,18 +173,18 @@ namespace OpenVinoSharp.extensions.benchmark_app
         /// </summary>
         public void write_to_slog()
         {
-            Logger.Debug("Writing latency metrics to log");
+            OvLogger.Debug("Writing latency metrics to log");
             
             string percentileStr = (percentile_boundary == 50)
                                 ? "   中位数 / Median:           "
                                 : "   " + percentile_boundary + " 百分位 / percentile:     ";
 
-            Logger.Info(percentileStr + median_or_percentile.ToString("0.00") + " ms");
-            Logger.Info("   平均值 / Average:          " + avg.ToString("0.00") + " ms");
-            Logger.Info("   最小值 / Min:              " + min.ToString("0.00") + " ms");
-            Logger.Info("   最大值 / Max:              " + max.ToString("0.00") + " ms");
+            OvLogger.Info(percentileStr + median_or_percentile.ToString("0.00") + " ms");
+            OvLogger.Info("   平均值 / Average:          " + avg.ToString("0.00") + " ms");
+            OvLogger.Info("   最小值 / Min:              " + min.ToString("0.00") + " ms");
+            OvLogger.Info("   最大值 / Max:              " + max.ToString("0.00") + " ms");
             
-            Logger.Debug($"Latency metrics - Median/P{percentile_boundary}: {median_or_percentile:F3}ms, Avg: {avg:F3}ms, Min: {min:F3}ms, Max: {max:F3}ms");
+            OvLogger.Debug($"Latency metrics - Median/P{percentile_boundary}: {median_or_percentile:F3}ms, Avg: {avg:F3}ms, Min: {min:F3}ms, Max: {max:F3}ms");
         }
 
         double median_or_percentile = 0;
@@ -195,15 +195,15 @@ namespace OpenVinoSharp.extensions.benchmark_app
 
         private void fill_data(List<double> latencies, int percentile_boundary)
         {
-            Logger.Debug($"fill_data: latencies.Count={latencies?.Count}, percentile={percentile_boundary}");
+            OvLogger.Debug($"fill_data: latencies.Count={latencies?.Count}, percentile={percentile_boundary}");
             
             if (latencies == null || latencies.Count == 0)
             {
-                Logger.Debug("ERROR: Empty latencies list provided");
+                OvLogger.Debug("ERROR: Empty latencies list provided");
                 throw new ArgumentNullException("延迟指标类期望在构造时传入非空的延迟向量 / Latency metrics class expects non-empty vector of latencies at construction.");
             }
             
-            Logger.Debug("Sorting latencies");
+            OvLogger.Debug("Sorting latencies");
             latencies.Sort();
             
             min = latencies.Min();
@@ -211,7 +211,7 @@ namespace OpenVinoSharp.extensions.benchmark_app
             median_or_percentile = latencies[(int)(latencies.Count / 100.0 * percentile_boundary)];
             max = latencies.Max();
             
-            Logger.Debug($"Calculated metrics - Min: {min:F3}, Avg: {avg:F3}, P{percentile_boundary}: {median_or_percentile:F3}, Max: {max:F3}");
+            OvLogger.Debug($"Calculated metrics - Min: {min:F3}, Avg: {avg:F3}, P{percentile_boundary}: {median_or_percentile:F3}, Max: {max:F3}");
         }
 
         private int percentile_boundary = 50;

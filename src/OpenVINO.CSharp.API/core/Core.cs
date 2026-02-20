@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
 
-// 日志使用示例 / Logger usage example:
-// Logger.Info("消息 / Message");
-// Logger.Debug("调试信息: {0}", value);
-// Logger.SetCallback((level, msg) => { /* 自定义日志处理 / Custom log handling */ });
+// 日志使用示例 / OvLogger usage example:
+// OvLogger.Info("消息 / Message");
+// OvLogger.Debug("调试信息: {0}", value);
+// OvLogger.SetCallback((level, msg) => { /* 自定义日志处理 / Custom log handling */ });
 
 namespace OpenVinoSharp
 {
@@ -57,10 +57,10 @@ namespace OpenVinoSharp
         /// </summary>
         public Core() : base()
         {
-            Logger.Debug("正在创建 OpenVINO Core 实例... / Creating OpenVINO Core instance...");
+            OvLogger.Debug("正在创建 OpenVINO Core 实例... / Creating OpenVINO Core instance...");
             
             ExceptionHandler.ThrowOnError(ov_core_create(ref _ptr));
-            Logger.Info("OpenVINO Core 实例创建成功 / OpenVINO Core instance created successfully");
+            OvLogger.Info("OpenVINO Core 实例创建成功 / OpenVINO Core instance created successfully");
         }
 
         /// <summary>
@@ -71,22 +71,22 @@ namespace OpenVinoSharp
         /// </param>
         public Core(string xml_config_file) : base()
         {
-            Logger.Debug("正在使用配置文件创建 OpenVINO Core 实例... / Creating OpenVINO Core instance with config file...");
-            Logger.Debug("配置文件路径 / Config file path: {0}", xml_config_file);
+            OvLogger.Debug("正在使用配置文件创建 OpenVINO Core 实例... / Creating OpenVINO Core instance with config file...");
+            OvLogger.Debug("配置文件路径 / Config file path: {0}", xml_config_file);
             
             // 尝试加载原生库 / Try to load native library
             try
             {
                 NativeLibraryLoader.Load();
-                Logger.Debug("原生库加载成功 / Native library loaded successfully");
+                OvLogger.Debug("原生库加载成功 / Native library loaded successfully");
             }
             catch (DllNotFoundException ex)
             {
-                Logger.Warn("原生库加载失败，可能已由系统加载 / Failed to load native library, may already be loaded by system: {0}", ex.Message);
+                OvLogger.Warn("原生库加载失败，可能已由系统加载 / Failed to load native library, may already be loaded by system: {0}", ex.Message);
             }
 
             ExceptionHandler.ThrowOnError(ov_core_create_with_config(xml_config_file, ref _ptr));
-            Logger.Info("OpenVINO Core 实例（带配置）创建成功 / OpenVINO Core instance (with config) created successfully");
+            OvLogger.Info("OpenVINO Core 实例（带配置）创建成功 / OpenVINO Core instance (with config) created successfully");
         }
 
         #endregion
@@ -218,6 +218,15 @@ namespace OpenVinoSharp
         /// 编译模型 / Compile model
         /// </summary>
         /// <param name="model">模型对象 / Model object</param>
+        /// <param name="device_name">设备名称（如"CPU"、"GPU"）/ Device name (e.g., "CPU", "GPU")</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel compile_model(Model model, string device_name)
+            => compile_model(model, device_name, null);
+
+        /// <summary>
+        /// 编译模型 / Compile model
+        /// </summary>
+        /// <param name="model">模型对象 / Model object</param>
         /// <param name="properties">编译属性 / Compilation properties</param>
         /// <returns>编译后的模型 / Compiled model</returns>
         public CompiledModel compile_model(Model model, Dictionary<string, string> properties)
@@ -264,6 +273,15 @@ namespace OpenVinoSharp
         /// 从文件编译模型 / Compile model from file
         /// </summary>
         /// <param name="model_path">模型文件路径 / Path to model file</param>
+        /// <param name="device_name">设备名称 / Device name</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel compile_model(string model_path, string device_name)
+            => compile_model(model_path, device_name, null);
+
+        /// <summary>
+        /// 从文件编译模型 / Compile model from file
+        /// </summary>
+        /// <param name="model_path">模型文件路径 / Path to model file</param>
         /// <param name="properties">编译属性 / Compilation properties</param>
         /// <returns>编译后的模型 / Compiled model</returns>
         public CompiledModel compile_model(string model_path, Dictionary<string, string> properties)
@@ -275,9 +293,8 @@ namespace OpenVinoSharp
         /// <param name="model_path">模型文件路径 / Path to model file</param>
         /// <param name="device_name">设备名称 / Device name</param>
         /// <param name="properties">编译属性（可选）/ Compilation properties (optional)</param>
-        /// <param name="use_cache">是否使用缓存 / Whether to use cache</param>
         /// <returns>编译后的模型 / Compiled model</returns>
-        public CompiledModel compile_model(string model_path, string device_name, Dictionary<string, string> properties, bool use_cache = true)
+        public CompiledModel compile_model(string model_path, string device_name, Dictionary<string, string> properties)
         {
             ThrowIfDisposed();
             if (string.IsNullOrEmpty(model_path))
@@ -285,20 +302,9 @@ namespace OpenVinoSharp
             if (string.IsNullOrEmpty(device_name))
                 throw new ArgumentException("参数不能为空", nameof(device_name));
 
-            // 尝试从缓存获取
-            if (use_cache && ModelCache.Enabled)
-            {
-                var cached = ModelCache.TryGet(model_path, device_name, properties);
-                if (cached != null)
-                {
-                    Logger.Debug($"Core: 使用缓存的编译模型 - {model_path}");
-                    return cached;
-                }
-            }
-
             IntPtr compiled_model_ptr = IntPtr.Zero;
 
-            Logger.Debug($"Core: 编译模型 - {model_path} [{device_name}]");
+            OvLogger.Debug($"Core: 编译模型 - {model_path} [{device_name}]");
             
             if (properties == null || properties.Count == 0)
             {
@@ -310,15 +316,7 @@ namespace OpenVinoSharp
                 CompileModelFromFileWithProperties(model_path, device_name, properties, ref compiled_model_ptr);
             }
             
-            var compiledModel = new CompiledModel(compiled_model_ptr);
-            
-            // 添加到缓存
-            if (use_cache && ModelCache.Enabled)
-            {
-                ModelCache.Add(model_path, device_name, properties, compiledModel);
-            }
-            
-            return compiledModel;
+            return new CompiledModel(compiled_model_ptr);
         }
 
         /// <summary>

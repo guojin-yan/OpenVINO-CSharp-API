@@ -52,7 +52,7 @@ namespace OpenVinoSharp.Internal
     public delegate void LogCallback(LogLevel level, string message);
 
     /// <summary>
-    /// OpenVINO 日志类 / OpenVINO Logger class
+    /// OpenVINO 日志类 / OpenVINO OvLogger class
     /// <para>提供高性能、线程安全的日志记录功能，支持控制台输出和用户自定义回调。/ Provides high-performance, thread-safe logging with console output and custom callbacks.</para>
     /// <para>性能优化：在禁用低级别日志时，字符串格式化不会执行。/ Performance optimized: string formatting is skipped when low-level logs are disabled.</para>
     /// </summary>
@@ -60,19 +60,19 @@ namespace OpenVinoSharp.Internal
     /// 使用示例 / Usage example:
     /// <code>
     /// // 设置日志级别 / Set log level
-    /// Logger.MinLevel = LogLevel.DEBUG;
+    /// OvLogger.MinLevel = LogLevel.DEBUG;
     /// 
     /// // 输出日志 / Output logs
-    /// Logger.Debug("调试信息 / Debug message");
-    /// Logger.Info("应用启动 / Application started");
-    /// Logger.Warn("警告信息 / Warning message");
-    /// Logger.Error("错误信息 / Error message");
+    /// OvLogger.Debug("调试信息 / Debug message");
+    /// OvLogger.Info("应用启动 / Application started");
+    /// OvLogger.Warn("警告信息 / Warning message");
+    /// OvLogger.Error("错误信息 / Error message");
     /// 
     /// // 使用格式化 / Use formatting
-    /// Logger.Info("处理完成，耗时 {0}ms / Processing completed, took {0}ms", elapsedTime);
+    /// OvLogger.Info("处理完成，耗时 {0}ms / Processing completed, took {0}ms", elapsedTime);
     /// </code>
     /// </example>
-    public static class Logger
+    public static class OvLogger
     {
         private static readonly object _lock = new object();
         private static LogLevel _minLevel = LogLevel.INFO;
@@ -94,10 +94,10 @@ namespace OpenVinoSharp.Internal
         /// 使用示例 / Usage example:
         /// <code>
         /// // 启用所有日志 / Enable all logs
-        /// Logger.MinLevel = LogLevel.DEBUG;
+        /// OvLogger.MinLevel = LogLevel.DEBUG;
         /// 
         /// // 仅显示警告和错误 / Show warnings and errors only
-        /// Logger.MinLevel = LogLevel.WARNING;
+        /// OvLogger.MinLevel = LogLevel.WARNING;
         /// </code>
         /// </example>
         public static LogLevel MinLevel
@@ -114,8 +114,8 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.EnableTimestamp = false; // 禁用时间戳 / Disable timestamps
-        /// Logger.Info("消息 / Message"); // 输出: [INFO] 消息 / Message
+        /// OvLogger.EnableTimestamp = false; // 禁用时间戳 / Disable timestamps
+        /// OvLogger.Info("消息 / Message"); // 输出: [INFO] 消息 / Message
         /// </code>
         /// </example>
         public static bool EnableTimestamp { get; set; } = true;
@@ -138,9 +138,9 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// if (Logger.IsEnabled(LogLevel.DEBUG))
+        /// if (OvLogger.IsEnabled(LogLevel.DEBUG))
         /// {
-        ///     Logger.Debug($"复杂计算结果: {ExpensiveCalculation()}");
+        ///     OvLogger.Debug($"复杂计算结果: {ExpensiveCalculation()}");
         /// }
         /// </code>
         /// </example>
@@ -190,7 +190,7 @@ namespace OpenVinoSharp.Internal
         /// 使用示例 / Usage example:
         /// <code>
         /// // 设置文件日志回调 / Set file log callback
-        /// Logger.SetCallback((level, message) =>
+        /// OvLogger.SetCallback((level, message) =>
         /// {
         ///     File.AppendAllText("app.log", $"{DateTime.Now} [{level}] {message}\n");
         /// });
@@ -211,9 +211,9 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.SetCallback(myCallback);
+        /// OvLogger.SetCallback(myCallback);
         /// // ... 使用回调 / Use callback ...
-        /// Logger.ClearCallback(); // 恢复仅控制台输出 / Restore console-only output
+        /// OvLogger.ClearCallback(); // 恢复仅控制台输出 / Restore console-only output
         /// </code>
         /// </example>
         public static void ClearCallback()
@@ -226,22 +226,22 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 启用原生日志回调（与C API集成）/ Enable native log callback (integrate with C API)
-        /// <para>将原生 OpenVINO C API 的日志重定向到 Logger。/ Redirects native OpenVINO C API logs to Logger.</para>
+        /// <para>将原生 OpenVINO C API 的日志重定向到 OvLogger。/ Redirects native OpenVINO C API logs to OvLogger.</para>
         /// </summary>
         /// <remarks>
-        /// 启用后，来自原生库的消息会通过 Logger 输出。/ After enabling, messages from native library are output through Logger.
+        /// 启用后，来自原生库的消息会通过 OvLogger 输出。/ After enabling, messages from native library are output through OvLogger.
         /// <para>注意：需要在初始化 OpenVINO 之前调用。/ Note: Should be called before initializing OpenVINO.</para>
         /// </remarks>
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
         /// // 启用原生回调 / Enable native callback
-        /// Logger.EnableNativeCallback();
+        /// OvLogger.EnableNativeCallback();
         /// 
         /// // 现在原生日志也会显示 / Now native logs will also appear
         /// using (var core = new Core())
         /// {
-        ///     // 原生消息通过 Logger 输出 / Native messages output through Logger
+        ///     // 原生消息通过 OvLogger 输出 / Native messages output through OvLogger
         /// }
         /// </code>
         /// </example>
@@ -270,7 +270,7 @@ namespace OpenVinoSharp.Internal
         /// <para>恢复原生库的默认日志处理。/ Restores default log handling for native library.</para>
         /// </summary>
         /// <remarks>
-        /// 调用后，原生日志不再通过 Logger 输出。/ After calling, native logs are no longer output through Logger.
+        /// 调用后，原生日志不再通过 OvLogger 输出。/ After calling, native logs are no longer output through OvLogger.
         /// </remarks>
         public static void ResetNativeCallback()
         {
@@ -315,8 +315,8 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Debug("进入函数 ProcessData / Entering function ProcessData");
-        /// Logger.Debug($"变量值: {value} / Variable value: {value}");
+        /// OvLogger.Debug("进入函数 ProcessData / Entering function ProcessData");
+        /// OvLogger.Debug($"变量值: {value} / Variable value: {value}");
         /// </code>
         /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -335,7 +335,7 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Debug("处理 {0} 个项目，耗时 {1}ms / Processed {0} items in {1}ms", count, elapsed);
+        /// OvLogger.Debug("处理 {0} 个项目，耗时 {1}ms / Processed {0} items in {1}ms", count, elapsed);
         /// </code>
         /// </example>
         public static void Debug(string format, params object[] args)
@@ -352,8 +352,8 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Info("模型加载成功 / Model loaded successfully");
-        /// Logger.Info("服务已启动 / Service started");
+        /// OvLogger.Info("模型加载成功 / Model loaded successfully");
+        /// OvLogger.Info("服务已启动 / Service started");
         /// </code>
         /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -372,7 +372,7 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Info("加载模型 {0} 完成，耗时 {1}s / Model {0} loaded in {1}s", modelName, seconds);
+        /// OvLogger.Info("加载模型 {0} 完成，耗时 {1}s / Model {0} loaded in {1}s", modelName, seconds);
         /// </code>
         /// </example>
         public static void Info(string format, params object[] args)
@@ -389,8 +389,8 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Warn("配置文件缺失，使用默认值 / Config file missing, using defaults");
-        /// Logger.Warn("性能可能下降 / Performance may degrade");
+        /// OvLogger.Warn("配置文件缺失，使用默认值 / Config file missing, using defaults");
+        /// OvLogger.Warn("性能可能下降 / Performance may degrade");
         /// </code>
         /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -409,7 +409,7 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Warn("参数 {0} 无效，使用默认值 {1} / Parameter {0} invalid, using default {1}", param, defaultValue);
+        /// OvLogger.Warn("参数 {0} 无效，使用默认值 {1} / Parameter {0} invalid, using default {1}", param, defaultValue);
         /// </code>
         /// </example>
         public static void Warn(string format, params object[] args)
@@ -426,8 +426,8 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Error("模型推理失败 / Model inference failed");
-        /// Logger.Error("数据库连接超时 / Database connection timeout");
+        /// OvLogger.Error("模型推理失败 / Model inference failed");
+        /// OvLogger.Error("数据库连接超时 / Database connection timeout");
         /// </code>
         /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -446,7 +446,7 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Error("加载模型 {0} 失败: {1} / Failed to load model {0}: {1}", modelName, errorMessage);
+        /// OvLogger.Error("加载模型 {0} 失败: {1} / Failed to load model {0}: {1}", modelName, errorMessage);
         /// </code>
         /// </example>
         public static void Error(string format, params object[] args)
@@ -463,8 +463,8 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Fatal("内存耗尽，程序即将终止 / Out of memory, application will terminate");
-        /// Logger.Fatal("关键资源加载失败 / Critical resource loading failed");
+        /// OvLogger.Fatal("内存耗尽，程序即将终止 / Out of memory, application will terminate");
+        /// OvLogger.Fatal("关键资源加载失败 / Critical resource loading failed");
         /// </code>
         /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -483,7 +483,7 @@ namespace OpenVinoSharp.Internal
         /// <example>
         /// 使用示例 / Usage example:
         /// <code>
-        /// Logger.Fatal("关键服务 {0} 启动失败: {1} / Critical service {0} failed to start: {1}", serviceName, error);
+        /// OvLogger.Fatal("关键服务 {0} 启动失败: {1} / Critical service {0} failed to start: {1}", serviceName, error);
         /// </code>
         /// </example>
         public static void Fatal(string format, params object[] args)
@@ -610,7 +610,7 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 内部警告（不经过普通日志系统，避免循环）/ Internal warning (bypass normal logging to avoid recursion)
-        /// <para>用于 Logger 内部错误处理，直接输出到控制台。/ Used for Logger internal error handling, outputs directly to console.</para>
+        /// <para>用于 OvLogger 内部错误处理，直接输出到控制台。/ Used for OvLogger internal error handling, outputs directly to console.</para>
         /// </summary>
         /// <param name="message">警告消息。/ Warning message.</param>
         /// <remarks>
@@ -620,7 +620,7 @@ namespace OpenVinoSharp.Internal
         {
             var originalColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"[Logger Warning] {message}");
+            Console.WriteLine($"[OvLogger Warning] {message}");
             Console.ForegroundColor = originalColor;
         }
     }
