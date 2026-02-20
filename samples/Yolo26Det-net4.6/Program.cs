@@ -1,4 +1,3 @@
-﻿
 //========================================================================
 //  
 //  【示例名称】YOLOv8/v9/v10 目标检测完整示例
@@ -10,11 +9,6 @@
 //  4. 性能分析 (Performance Profiling)
 //  5. 模型缓存 (Model Caching - OpenVINO CACHE_DIR)
 //  6. 预处理/后处理流水线 (Preprocessing/Postprocessing Pipeline)
-//  
-//  【.NET 10 特有功能 / .NET 10 Specific Features】
-//  1. Span<T> / Memory<T> 零拷贝数据传输 (Zero-copy data transfer)
-//  2. async/await 异步推理模式 (Async/await inference pattern)
-//  3. ValueTask 高性能异步操作 (High-performance async operations)
 //  
 //========================================================================
 
@@ -33,7 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Version = OpenVinoSharp.Version;
 
-namespace Yolo26Det_net10._0
+namespace Yolo26Det_net4._8
 {
     /// <summary>
     /// 检测目标结果 / Detection result
@@ -46,7 +40,7 @@ namespace Yolo26Det_net10._0
         public string Label;      // 类别名称
     }
 
-
+   
     internal class Program
     {
         // 类别名称映射 (COCO 数据集)
@@ -63,7 +57,7 @@ namespace Yolo26Det_net10._0
             "scissors", "teddy bear", "hair drier", "toothbrush"
         };
 
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             Console.WriteLine("========================================================================");
             Console.WriteLine("  OpenVINO C# API - YOLO 目标检测示例");
@@ -90,20 +84,15 @@ namespace Yolo26Det_net10._0
                 Console.WriteLine("--------------------------------------------------------");
                 DemoBasicInference(modelPath, imagePath, device);
 
-                // 演示 2: 异步推理（含 .NET 10 async/await 特性）
+                // 演示 2: 异步推理
                 Console.WriteLine("\n【演示 2】异步推理 / Asynchronous Inference");
                 Console.WriteLine("--------------------------------------------------------");
-                await DemoAsyncInference(modelPath, imagePath, device);
-                
-                // 演示 2b: .NET 10 特有的 async/await 异步推理
-                Console.WriteLine("\n【演示 2b】异步推理 - .NET 10 async/await 模式");
-                Console.WriteLine("--------------------------------------------------------");
-                await DemoAsyncInferenceNet10(modelPath, imagePath, device);
+                DemoAsyncInference(modelPath, imagePath, device);
 
                 // 演示 3: 批量推理
                 Console.WriteLine("\n【演示 3】批量推理 / Batch Inference");
                 Console.WriteLine("--------------------------------------------------------");
-                await DemoBatchInference(modelPath, imagePath, device);
+                DemoBatchInference(modelPath, imagePath, device);
 
                 // 演示 4: 推理请求池
                 Console.WriteLine("\n【演示 4】推理请求池 / Infer Request Pool");
@@ -186,14 +175,10 @@ namespace Yolo26Det_net10._0
                                 OvLogger.Info("\n   首次推理（详细阶段）/ First inference (detailed stages):");
                                 ProcessImageWithProfiler(inferRequest, imagePath, "同步推理结果 / Sync Result", profiler);
 
-                                // 演示 Span<T> 零拷贝传输
-                                OvLogger.Info("\n   演示 Span<T> 零拷贝数据传输 / Span<T> zero-copy data transfer:");
-                                ProcessImageWithSpan(inferRequest, imagePath);
-
                                 // 多次推理进行性能统计
                                 int repeatCount = 10;
                                 OvLogger.Info($"\n   连续推理 {repeatCount} 次进行统计 / Running {repeatCount} inferences for statistics:");
-
+                                
                                 for (int i = 0; i < repeatCount; i++)
                                 {
                                     ProcessImageWithProfiler(inferRequest, imagePath, null, profiler);
@@ -215,7 +200,7 @@ namespace Yolo26Det_net10._0
         /// <summary>
         /// 异步推理演示 / Asynchronous inference demo
         /// </summary>
-        static async Task DemoAsyncInference(string modelPath, string imagePath, string device)
+        static void DemoAsyncInference(string modelPath, string imagePath, string device)
         {
             using (var core = new Core())
             using (var model = core.read_model(modelPath))
@@ -233,7 +218,7 @@ namespace Yolo26Det_net10._0
                 if (!File.Exists(imagePath)) return;
 
                 // 预处理图像
-                var (inputData, scale, offsetX, offsetY) = PreprocessImage(imagePath, new Size(640, 640));
+                var inputData = PreprocessImage(imagePath, new Size(640, 640), out float scale, out int offsetX, out int offsetY);
 
                 // 设置输入数据
                 using (var inputTensor = inferRequest.get_input_tensor())
@@ -246,16 +231,13 @@ namespace Yolo26Det_net10._0
                 inferenceComplete = false;
                 inferRequest.start_async();
 
-                // 使用 Task 异步等待
-                await Task.Run(() =>
+                // 等待推理完成（带超时）
+                int waitCount = 0;
+                while (!inferenceComplete && waitCount < 100)
                 {
-                    int waitCount = 0;
-                    while (!inferenceComplete && waitCount < 100)
-                    {
-                        Thread.Sleep(10);
-                        waitCount++;
-                    }
-                });
+                    Thread.Sleep(10);
+                    waitCount++;
+                }
 
                 if (inferenceComplete)
                 {
@@ -272,63 +254,6 @@ namespace Yolo26Det_net10._0
             }
         }
 
-        /// <summary>
-        /// .NET 10 特有的 async/await 异步推理 / .NET 10 specific async/await inference
-        /// <para>使用 infer_async() 方法，支持 CancellationToken</para>
-        /// </summary>
-        static async Task DemoAsyncInferenceNet10(string modelPath, string imagePath, string device)
-        {
-            using (var core = new Core())
-            using (var model = core.read_model(modelPath))
-            using (var compiledModel = core.compile_model(model, device))
-            using (var inferRequest = compiledModel.create_infer_request())
-            {
-                if (!File.Exists(imagePath)) return;
-
-                OvLogger.Info("   使用 .NET 10 async/await 模式推理");
-
-                // 预处理图像
-                var (inputData, scale, offsetX, offsetY) = PreprocessImage(imagePath, new Size(640, 640));
-
-                // 设置输入数据 - 使用 Span<T> 零拷贝传输
-                using (var inputTensor = inferRequest.get_input_tensor())
-                {
-                    // .NET 5+ 支持：使用 Span<float> 直接设置数据
-                    // 避免额外的数组分配和内存拷贝
-                    var inputSpan = inputData.AsSpan();
-                    inputTensor.set_data(inputSpan.ToArray()); // API 内部使用 Span
-                }
-
-                // 使用 CancellationTokenSource 支持取消操作
-                using (var cts = new CancellationTokenSource())
-                {
-                    // 5秒后自动取消
-                    cts.CancelAfter(TimeSpan.FromSeconds(5));
-
-                    try
-                    {
-                        OvLogger.Info("   启动异步推理（支持取消令牌）...");
-                        
-                        // .NET 5+ 特有：infer_async() 方法
-                        await inferRequest.infer_async(cts.Token);
-
-                        OvLogger.Info("   异步推理完成");
-
-                        // 获取结果
-                        using (var outputTensor = inferRequest.get_output_tensor())
-                        {
-                            var results = Postprocess(outputTensor, scale, offsetX, offsetY);
-                            OvLogger.Info($"   检测到 {results.Count} 个目标");
-                        }
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        OvLogger.Info("   推理被取消 / Inference was cancelled");
-                    }
-                }
-            }
-        }
-
         #endregion
 
         #region 演示 3: 批量推理
@@ -336,7 +261,7 @@ namespace Yolo26Det_net10._0
         /// <summary>
         /// 批量推理演示 / Batch inference demo
         /// </summary>
-        static async Task DemoBatchInference(string modelPath, string imagePath, string device)
+        static void DemoBatchInference(string modelPath, string imagePath, string device)
         {
             using (var core = new Core())
             using (var model = core.read_model(modelPath))
@@ -356,14 +281,15 @@ namespace Yolo26Det_net10._0
 
                 OvLogger.Info($"   处理 {imageFiles.Length} 张图片 / Processing {imageFiles.Length} images");
 
-                // 串行处理
                 var stopwatch = Stopwatch.StartNew();
+
+                // 串行处理
                 foreach (var imageFile in imageFiles)
                 {
                     using (var inferRequest = compiledModel.create_infer_request())
                     {
-                        var (inputData, scale, offsetX, offsetY) = PreprocessImage(imageFile, new Size(640, 640));
-
+                        var inputData = PreprocessImage(imageFile, new Size(640, 640), out float scale, out int offsetX, out int offsetY);
+                        
                         using (var inputTensor = inferRequest.get_input_tensor())
                             inputTensor.set_data(inputData);
 
@@ -376,35 +302,9 @@ namespace Yolo26Det_net10._0
                         }
                     }
                 }
-                stopwatch.Stop();
-                OvLogger.Info($"   串行处理完成 / Sequential processing: {stopwatch.ElapsedMilliseconds}ms");
-
-                // .NET 5+ 特有：使用 Parallel.ForEachAsync 进行异步并行处理
-                OvLogger.Info("\n   使用 .NET 5+ Parallel.ForEachAsync 并行处理:");
-                stopwatch.Restart();
-
-                await Parallel.ForEachAsync(imageFiles, new ParallelOptions { MaxDegreeOfParallelism = 4 }, async (imageFile, ct) =>
-                {
-                    using (var inferRequest = compiledModel.create_infer_request())
-                    {
-                        var (inputData, scale, offsetX, offsetY) = PreprocessImage(imageFile, new Size(640, 640));
-
-                        using (var inputTensor = inferRequest.get_input_tensor())
-                            inputTensor.set_data(inputData);
-
-                        // 使用异步推理
-                        await inferRequest.infer_async(ct);
-
-                        using (var outputTensor = inferRequest.get_output_tensor())
-                        {
-                            var results = Postprocess(outputTensor, scale, offsetX, offsetY);
-                            OvLogger.Info($"   {Path.GetFileName(imageFile)}: {results.Count} 个目标");
-                        }
-                    }
-                });
 
                 stopwatch.Stop();
-                OvLogger.Info($"   并行处理完成 / Parallel processing: {stopwatch.ElapsedMilliseconds}ms");
+                OvLogger.Info($"   批量处理完成 / Batch processing completed: {stopwatch.ElapsedMilliseconds}ms");
                 OvLogger.Info($"   平均每张 / Average per image: {stopwatch.ElapsedMilliseconds / imageFiles.Length}ms");
             }
         }
@@ -441,7 +341,7 @@ namespace Yolo26Det_net10._0
                         var request = pool.Rent();
                         try
                         {
-                            var (inputData, scale, offsetX, offsetY) = PreprocessImage(imageFile, new Size(640, 640));
+                            var inputData = PreprocessImage(imageFile, new Size(640, 640), out float scale, out int offsetX, out int offsetY);
 
                             using (var inputTensor = request.get_input_tensor())
                                 inputTensor.set_data(inputData);
@@ -491,7 +391,7 @@ namespace Yolo26Det_net10._0
                     // 预热
                     for (int i = 0; i < 3; i++)
                     {
-                        var (inputData, scale, offsetX, offsetY) = PreprocessImage(imagePath, new Size(640, 640));
+                        var inputData = PreprocessImage(imagePath, new Size(640, 640), out float scale, out int offsetX, out int offsetY);
                         using (var inputTensor = inferRequest.get_input_tensor())
                             inputTensor.set_data(inputData);
                         inferRequest.infer();
@@ -499,7 +399,7 @@ namespace Yolo26Det_net10._0
 
                     // 正式推理并获取性能数据
                     {
-                        var (inputData, scale, offsetX, offsetY) = PreprocessImage(imagePath, new Size(640, 640));
+                        var inputData = PreprocessImage(imagePath, new Size(640, 640), out float scale, out int offsetX, out int offsetY);
                         using (var inputTensor = inferRequest.get_input_tensor())
                             inputTensor.set_data(inputData);
 
@@ -516,7 +416,7 @@ namespace Yolo26Det_net10._0
                             if (profilingInfo != null && profilingInfo.Length > 0)
                             {
                                 OvLogger.Info($"   层数 / Layer count: {profilingInfo.Length}");
-
+                                
                                 // 显示前5个最耗时的层
                                 var topLayers = profilingInfo
                                     .OrderByDescending(p => p.real_time)
@@ -610,69 +510,6 @@ namespace Yolo26Det_net10._0
         }
 
         /// <summary>
-        /// 使用 Span<T> 零拷贝传输处理图片 / Process image using Span<T> zero-copy transfer
-        /// <para>.NET 5+ 特有：使用 Span<float> 避免额外的内存分配和拷贝</para>
-        /// </summary>
-        static void ProcessImageWithSpan(InferRequest inferRequest, string imagePath)
-        {
-            var sw = Stopwatch.StartNew();
-
-            // 加载图像
-            using (var image = Cv2.ImRead(imagePath))
-            {
-                // 预处理
-                var (inputData, scale, offsetX, offsetY) = PreprocessImage(imagePath, new Size(640, 640));
-
-                // .NET 5+ 特有：使用 Span<float> 直接设置 Tensor 数据
-                // 这样可以避免额外的数组分配，实现零拷贝数据传输
-                ReadOnlySpan<float> inputSpan = inputData.AsSpan();
-
-                using (var inputTensor = inferRequest.get_input_tensor())
-                {
-                    // 使用 Span 重载设置数据 - .NET 5+ 特有优化
-                    sw.Restart();
-                    inputTensor.set_data(inputSpan); // 直接传递 Span，零拷贝
-                    sw.Stop();
-                    OvLogger.Info($"   Span<T> 零拷贝数据传输时间: {sw.Elapsed.TotalMilliseconds:F3}ms");
-                }
-
-                // 推理
-                sw.Restart();
-                inferRequest.infer();
-                sw.Stop();
-                OvLogger.Info($"   推理时间: {sw.Elapsed.TotalMilliseconds:F3}ms");
-
-                // 获取输出
-                using (var outputTensor = inferRequest.get_output_tensor())
-                {
-                    // .NET 5+ 特有：使用 Span<T> 读取输出数据
-                    int outputLength = (int)outputTensor.size;
-
-                    // 获取数据数组
-                    var outputData = outputTensor.get_data<float>(outputLength);
-
-                    // 转换为 Span（零拷贝视图）
-                    var outputSpan = outputData.AsSpan();
-
-                    // 处理后 50% 的数据，展示 Span 的切片功能
-                    int halfLength = outputSpan.Length / 2;
-                    var firstHalf = outputSpan.Slice(0, halfLength);
-
-                    // 计算前一半数据的平均值（仅作演示）
-                    float sum = 0;
-                    for (int i = 0; i < firstHalf.Length && i < 1000; i++)
-                    {
-                        sum += firstHalf[i];
-                    }
-                    float avg = firstHalf.Length > 0 ? sum / Math.Min(firstHalf.Length, 1000) : 0;
-
-                    OvLogger.Info($"   使用 Span<T> 处理输出数据: {firstHalf.Length} 元素, 前1000个平均值: {avg:F4}");
-                    OvLogger.Info($"   Span<T> 零拷贝演示完成");
-                }
-            }
-        }
-
-        /// <summary>
         /// 处理单张图片（带性能分析）/ Process single image with profiling
         /// </summary>
         static void ProcessImageWithProfiler(InferRequest inferRequest, string imagePath, string windowName, InferenceProfiler profiler)
@@ -687,18 +524,18 @@ namespace Yolo26Det_net10._0
             {
                 stageStopwatch.Stop();
                 double loadTime = stageStopwatch.Elapsed.TotalMilliseconds;
-
+               
                 profiler?.Stop();
                 OvLogger.Info($"   [1] 图像加载 / Image Load: {loadTime:F3}ms");
                 profiler?.Start("预处理 / Preprocess");
-
+                
 
                 // 阶段 2: 预处理 / Stage 2: Preprocessing
                 stageStopwatch.Restart();
-                var (inputData, scale, offsetX, offsetY) = PreprocessImageWithDetail(image, new Size(640, 640), out double resizeTime, out double convertTime, out double normalizeTime);
+                var inputData = PreprocessImageWithDetail(image, new Size(640, 640), out double resizeTime, out double convertTime, out double normalizeTime, out float scale, out int offsetX, out int offsetY);
                 stageStopwatch.Stop();
                 double preprocessTime = stageStopwatch.Elapsed.TotalMilliseconds;
-
+               
                 profiler?.Stop();
                 OvLogger.Info($"   [2] 预处理 / Preprocess: {preprocessTime:F3}ms (缩放/Resize: {resizeTime:F3}ms, 转换/Convert: {convertTime:F3}ms, 归一化/Norm: {normalizeTime:F3}ms)");
                 profiler?.Start("设置输入 / Set Input");
@@ -711,7 +548,7 @@ namespace Yolo26Det_net10._0
                 }
                 stageStopwatch.Stop();
                 double setInputTime = stageStopwatch.Elapsed.TotalMilliseconds;
-
+                
                 profiler?.Stop();
                 OvLogger.Info($"   [3] 设置输入 / Set Input: {setInputTime:F3}ms");
                 profiler?.Start("推理 / Inference");
@@ -722,7 +559,7 @@ namespace Yolo26Det_net10._0
                 inferRequest.infer();
                 stageStopwatch.Stop();
                 double inferenceTime = stageStopwatch.Elapsed.TotalMilliseconds;
-
+                
                 profiler?.Stop();
                 OvLogger.Info($"   [4] 推理 / Inference: {inferenceTime:F3}ms");
                 profiler?.Start("获取输出 / Get Output");
@@ -734,7 +571,7 @@ namespace Yolo26Det_net10._0
                 {
                     stageStopwatch.Stop();
                     double getOutputTime = stageStopwatch.Elapsed.TotalMilliseconds;
-
+                    
                     profiler?.Stop();
                     OvLogger.Info($"   [5] 获取输出 / Get Output: {getOutputTime:F3}ms");
                     profiler?.Start("后处理 / Postprocess");
@@ -745,7 +582,7 @@ namespace Yolo26Det_net10._0
                     var results = Postprocess(outputTensor, scale, offsetX, offsetY);
                     stageStopwatch.Stop();
                     double postprocessTime = stageStopwatch.Elapsed.TotalMilliseconds;
-
+                   
                     profiler?.Stop();
                     OvLogger.Info($"   [6] 后处理 / Postprocess: {postprocessTime:F3}ms");
                     profiler?.Start("绘制结果 / Draw Results");
@@ -756,7 +593,7 @@ namespace Yolo26Det_net10._0
                     DrawResults(image, results);
                     stageStopwatch.Stop();
                     double drawTime = stageStopwatch.Elapsed.TotalMilliseconds;
-
+                    
                     profiler?.Stop();
                     OvLogger.Info($"   [7] 绘制结果 / Draw Results: {drawTime:F3}ms");
 
@@ -768,9 +605,9 @@ namespace Yolo26Det_net10._0
 
                     // 计算各阶段占比
                     OvLogger.Info($"   阶段占比 / Stage breakdown:");
-                    OvLogger.Info($"     - 预处理 / Preprocess: {(preprocessTime / totalTime) * 100:F1}%");
-                    OvLogger.Info($"     - 推理 / Inference: {(inferenceTime / totalTime) * 100:F1}%");
-                    OvLogger.Info($"     - 后处理 / Postprocess: {(postprocessTime / totalTime) * 100:F1}%");
+                    OvLogger.Info($"     - 预处理 / Preprocess: {(preprocessTime/totalTime)*100:F1}%");
+                    OvLogger.Info($"     - 推理 / Inference: {(inferenceTime/totalTime)*100:F1}%");
+                    OvLogger.Info($"     - 后处理 / Postprocess: {(postprocessTime/totalTime)*100:F1}%");
 
                     // 显示结果（仅在指定窗口名称时）
                     if (!string.IsNullOrEmpty(windowName))
@@ -785,7 +622,7 @@ namespace Yolo26Det_net10._0
         /// <summary>
         /// 图片预处理 / Image preprocessing
         /// </summary>
-        static (float[] data, float scale, int offsetX, int offsetY) PreprocessImage(string imagePath, Size targetSize)
+        static float[] PreprocessImage(string imagePath, Size targetSize, out float scale, out int offsetX, out int offsetY)
         {
             using (var image = Cv2.ImRead(imagePath))
             {
@@ -793,7 +630,7 @@ namespace Yolo26Det_net10._0
                     throw new FileNotFoundException($"图片不存在 / Image not found: {imagePath}");
 
                 // 计算缩放比例
-                float scale = Math.Min(
+                scale = Math.Min(
                     (float)targetSize.Width / image.Width,
                     (float)targetSize.Height / image.Height);
 
@@ -810,8 +647,8 @@ namespace Yolo26Det_net10._0
                     using (var output = new Mat(targetSize.Height, targetSize.Width, MatType.CV_8UC3, Scalar.Black))
                     {
                         // 计算居中偏移
-                        int offsetX = (targetSize.Width - scaledSize.Width) / 2;
-                        int offsetY = (targetSize.Height - scaledSize.Height) / 2;
+                        offsetX = (targetSize.Width - scaledSize.Width) / 2;
+                        offsetY = (targetSize.Height - scaledSize.Height) / 2;
 
                         // 复制到目标图像
                         using (var roi = new Mat(output, new Rect(offsetX, offsetY, scaledSize.Width, scaledSize.Height)))
@@ -834,7 +671,7 @@ namespace Yolo26Det_net10._0
                             IntPtr ptr = handle.AddrOfPinnedObject();
                             for (int c = 0; c < channels; c++)
                             {
-                                using (var channel = Mat.FromPixelData(height, width, MatType.CV_32FC1, ptr + c * height * width * sizeof(float)))
+                                using (var channel = new Mat(height, width, MatType.CV_32FC1, ptr + c * height * width * sizeof(float)))
                                 {
                                     Cv2.ExtractChannel(output, channel, c);
                                 }
@@ -845,7 +682,7 @@ namespace Yolo26Det_net10._0
                             handle.Free();
                         }
 
-                        return (result, scale, offsetX, offsetY);
+                        return result;
                     }
                 }
             }
@@ -854,13 +691,13 @@ namespace Yolo26Det_net10._0
         /// <summary>
         /// 图片预处理（详细时间统计）/ Image preprocessing with detailed timing
         /// </summary>
-        static (float[] data, float scale, int offsetX, int offsetY) PreprocessImageWithDetail(Mat image, Size targetSize, out double resizeTime, out double convertTime, out double normalizeTime)
+        static float[] PreprocessImageWithDetail(Mat image, Size targetSize, out double resizeTime, out double convertTime, out double normalizeTime, out float scale, out int offsetX, out int offsetY)
         {
             var stopwatch = new Stopwatch();
             resizeTime = convertTime = normalizeTime = 0;
 
             // 计算缩放比例
-            float scale = Math.Min(
+            scale = Math.Min(
                 (float)targetSize.Width / image.Width,
                 (float)targetSize.Height / image.Height);
 
@@ -880,8 +717,8 @@ namespace Yolo26Det_net10._0
                 using (var output = new Mat(targetSize.Height, targetSize.Width, MatType.CV_8UC3, Scalar.Black))
                 {
                     // 计算居中偏移
-                    int offsetX = (targetSize.Width - scaledSize.Width) / 2;
-                    int offsetY = (targetSize.Height - scaledSize.Height) / 2;
+                    offsetX = (targetSize.Width - scaledSize.Width) / 2;
+                    offsetY = (targetSize.Height - scaledSize.Height) / 2;
 
                     // 复制到目标图像
                     using (var roi = new Mat(output, new Rect(offsetX, offsetY, scaledSize.Width, scaledSize.Height)))
@@ -908,7 +745,7 @@ namespace Yolo26Det_net10._0
                         IntPtr ptr = handle.AddrOfPinnedObject();
                         for (int c = 0; c < channels; c++)
                         {
-                            using (var channel = Mat.FromPixelData(height, width, MatType.CV_32FC1, ptr + c * height * width * sizeof(float)))
+                            using (var channel = new Mat(height, width, MatType.CV_32FC1, ptr + c * height * width * sizeof(float)))
                             {
                                 Cv2.ExtractChannel(output, channel, c);
                             }
@@ -921,7 +758,7 @@ namespace Yolo26Det_net10._0
                     stopwatch.Stop();
                     normalizeTime = stopwatch.Elapsed.TotalMilliseconds;
 
-                    return (result, scale, offsetX, offsetY);
+                    return result;
                 }
             }
         }

@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net461</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <AssemblyName>Yolo26Det-net4.6</AssemblyName>
+    <RootNamespace>Yolo26Det_net4</RootNamespace>
+    <PlatformTarget>x64</PlatformTarget>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!-- 引用本地 API 项目 / Reference local API project -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\OpenVINO.CSharp.API\OpenVINO.CSharp.API.csproj" />
+  </ItemGroup>
+
+  <!-- NuGet 包引用 / NuGet package references -->
+  <ItemGroup>
+    <!-- 使用 4.5.3 版本的 OpenCvSharp，支持 net461 / Using OpenCvSharp 4.5.3 which supports net461 -->
+    <PackageReference Include="OpenCvSharp4" Version="4.5.3.20211228" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.3.20211228" />
+    <PackageReference Include="OpenVINO.runtime.win" Version="2025.4.0" />
+  </ItemGroup>
+
+  <!-- 模型文件（可选）/ Model files (optional) -->
+  <ItemGroup>
+    <None Include="..\..\model\yolo26n.xml" Condition="Exists('..\..\model\yolo26n.xml')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>model\yolo26n.xml</Link>
+    </None>
+    <None Include="..\..\model\yolo26n.bin" Condition="Exists('..\..\model\yolo26n.bin')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>model\yolo26n.bin</Link>
+    </None>
+    <None Include="..\..\images\bus.jpg" Condition="Exists('..\..\images\bus.jpg')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>images\bus.jpg</Link>
+    </None>
+    <None Include="..\..\images\boy.jpg" Condition="Exists('..\..\images\boy.jpg')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>images\boy.jpg</Link>
+    </None>
+  </ItemGroup>
+
+</Project>
