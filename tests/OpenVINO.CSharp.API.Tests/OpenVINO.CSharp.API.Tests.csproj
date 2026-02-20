@@ -40,11 +40,12 @@
     <None Update="TestModels\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\model\yolo26n.xml">
+    <!-- 模型文件是可选的，CI/CD 环境中可能不存在 / Model files are optional, may not exist in CI/CD -->
+    <None Include="..\..\model\yolo26n.xml" Condition="Exists('..\..\model\yolo26n.xml')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>model\yolo26n.xml</Link>
     </None>
-    <None Include="..\..\model\yolo26n.bin">
+    <None Include="..\..\model\yolo26n.bin" Condition="Exists('..\..\model\yolo26n.bin')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>model\yolo26n.bin</Link>
     </None>
