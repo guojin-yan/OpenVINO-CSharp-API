@@ -1,0 +1,407 @@
+/* ============================================
+   OpenVINO C# API 文档自定义样式
+   ============================================ */
+
+/* 主题色定义 */
+:root {
+  --primary-color: #0066cc;
+  --primary-dark: #004c99;
+  --secondary-color: #00a3e0;
+  --accent-color: #7b68ee;
+  --text-color: #333;
+  --text-light: #666;
+  --bg-color: #fff;
+  --bg-light: #f5f5f5;
+  --border-color: #e0e0e0;
+  --code-bg: #f8f8f8;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+}
+
+/* ============================================
+   导航栏样式
+   ============================================ */
+.navbar {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 102, 204, 0.3);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: #fff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.navbar-brand:hover {
+  color: #fff !important;
+  opacity: 0.9;
+}
+
+.navbar-nav > li > a {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.navbar-nav > li > a:hover {
+  color: #fff !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 4px;
+}
+
+.navbar-nav > .active > a {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 4px;
+}
+
+/* ============================================
+   侧边目录样式
+   ============================================ */
+.sidenav {
+  background-color: var(--bg-light);
+  border-right: 1px solid var(--border-color);
+}
+
+.toc .nav > li > a {
+  color: var(--text-color);
+  font-size: 14px;
+  padding: 8px 16px;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.toc .nav > li > a:hover {
+  color: var(--primary-color);
+  background-color: rgba(0, 102, 204, 0.05);
+  border-left-color: var(--primary-color);
+}
+
+.toc .nav > li.active > a {
+  color: var(--primary-color);
+  background-color: rgba(0, 102, 204, 0.1);
+  border-left-color: var(--primary-color);
+  font-weight: 600;
+}
+
+.toc .nav > li > .expand-stub {
+  color: var(--primary-color);
+}
+
+/* 二级目录 */
+.toc .nav .nav > li > a {
+  padding-left: 32px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.toc .nav .nav > li > a:hover {
+  color: var(--primary-color);
+}
+
+/* ============================================
+   文章主体样式
+   ============================================ */
+.article {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 40px;
+  background-color: var(--bg-color);
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  min-height: calc(100vh - 120px);
+}
+
+/* 标题样式 */
+.article h1 {
+  color: var(--primary-color);
+  font-size: 2.2rem;
+  font-weight: 700;
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+  margin-top: 0;
+}
+
+.article h2 {
+  color: var(--text-color);
+  font-size: 1.6rem;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.article h3 {
+  color: var(--text-color);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.article h4 {
+  color: var(--text-light);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 25px;
+}
+
+/* 段落和文本 */
+.article p {
+  line-height: 1.8;
+  color: var(--text-color);
+  margin-bottom: 16px;
+}
+
+.article a {
+  color: var(--primary-color);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.article a:hover {
+  color: var(--primary-dark);
+  border-bottom-color: var(--primary-dark);
+  text-decoration: none;
+}
+
+/* ============================================
+   代码样式
+   ============================================ */
+pre {
+  background-color: var(--code-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+code {
+  background-color: rgba(0, 102, 204, 0.08);
+  color: var(--primary-dark);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+pre code {
+  background-color: transparent;
+  color: var(--text-color);
+  padding: 0;
+}
+
+/* 代码高亮 */
+.hljs-keyword {
+  color: #0000ff;
+}
+
+.hljs-string {
+  color: #a31515;
+}
+
+.hljs-comment {
+  color: #008000;
+}
+
+.hljs-number {
+  color: #098658;
+}
+
+/* ============================================
+   表格样式
+   ============================================ */
+.table {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.table thead th {
+  background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  padding: 12px 16px;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: var(--bg-light);
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 102, 204, 0.05);
+}
+
+.table td {
+  padding: 12px 16px;
+  border-color: var(--border-color);
+  vertical-align: middle;
+}
+
+/* ============================================
+   提示框样式
+   ============================================ */
+.alert {
+  border-radius: 6px;
+  border: none;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+
+.alert-info {
+  background-color: #e3f2fd;
+  border-left: 4px solid var(--primary-color);
+  color: var(--primary-dark);
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  border-left: 4px solid var(--warning-color);
+  color: #856404;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-left: 4px solid var(--danger-color);
+  color: #721c24;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  border-left: 4px solid var(--success-color);
+  color: #155724;
+}
+
+/* ============================================
+   按钮样式
+   ============================================ */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   页脚样式
+   ============================================ */
+footer {
+  background-color: var(--bg-light);
+  border-top: 1px solid var(--border-color);
+  padding: 20px 0;
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: var(--primary-color);
+}
+
+/* ============================================
+   搜索框样式
+   ============================================ */
+.search-box {
+  position: relative;
+}
+
+.search-box input {
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  background-color: rgba(255,255,255,0.1);
+  color: #fff;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+  border-color: #fff;
+  background-color: rgba(255,255,255,0.2);
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+/* ============================================
+   响应式调整
+   ============================================ */
+@media (max-width: 768px) {
+  .article {
+    padding: 20px;
+  }
+  
+  .article h1 {
+    font-size: 1.8rem;
+  }
+  
+  .article h2 {
+    font-size: 1.4rem;
+  }
+}
+
+/* ============================================
+   滚动条美化
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* ============================================
+   返回顶部按钮
+   ============================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 102, 204, 0.3);
+  z-index: 1000;
+}
+
+#back-to-top.visible {
+  opacity: 1;
+}
+
+#back-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.4);
+}
