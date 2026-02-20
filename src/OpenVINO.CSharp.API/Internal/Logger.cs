@@ -56,6 +56,22 @@ namespace OpenVinoSharp.Internal
     /// <para>提供高性能、线程安全的日志记录功能，支持控制台输出和用户自定义回调。/ Provides high-performance, thread-safe logging with console output and custom callbacks.</para>
     /// <para>性能优化：在禁用低级别日志时，字符串格式化不会执行。/ Performance optimized: string formatting is skipped when low-level logs are disabled.</para>
     /// </summary>
+    /// <example>
+    /// 使用示例 / Usage example:
+    /// <code>
+    /// // 设置日志级别 / Set log level
+    /// Logger.MinLevel = LogLevel.DEBUG;
+    /// 
+    /// // 输出日志 / Output logs
+    /// Logger.Debug("调试信息 / Debug message");
+    /// Logger.Info("应用启动 / Application started");
+    /// Logger.Warn("警告信息 / Warning message");
+    /// Logger.Error("错误信息 / Error message");
+    /// 
+    /// // 使用格式化 / Use formatting
+    /// Logger.Info("处理完成，耗时 {0}ms / Processing completed, took {0}ms", elapsedTime);
+    /// </code>
+    /// </example>
     public static class Logger
     {
         private static readonly object _lock = new object();
@@ -68,7 +84,22 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 获取或设置最小日志级别 / Get or set the minimum log level
+        /// <para>低于此级别的日志将被忽略。/ Logs below this level will be ignored.</para>
         /// </summary>
+        /// <value>当前设置的最小日志级别。/ The current minimum log level setting.</value>
+        /// <remarks>
+        /// 在生产环境中建议设置为 INFO 或更高以提高性能。/ Set to INFO or higher in production for better performance.
+        /// </remarks>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// // 启用所有日志 / Enable all logs
+        /// Logger.MinLevel = LogLevel.DEBUG;
+        /// 
+        /// // 仅显示警告和错误 / Show warnings and errors only
+        /// Logger.MinLevel = LogLevel.WARNING;
+        /// </code>
+        /// </example>
         public static LogLevel MinLevel
         {
             get { return _minLevel; }
@@ -77,19 +108,42 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 是否启用时间戳 / Whether to enable timestamps
+        /// <para>默认值为 true。/ Default value is true.</para>
         /// </summary>
+        /// <value>如果启用时间戳则为 true，否则为 false。/ true if timestamp is enabled; otherwise, false.</value>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.EnableTimestamp = false; // 禁用时间戳 / Disable timestamps
+        /// Logger.Info("消息 / Message"); // 输出: [INFO] 消息 / Message
+        /// </code>
+        /// </example>
         public static bool EnableTimestamp { get; set; } = true;
 
         /// <summary>
         /// 是否启用日志级别前缀 / Whether to enable log level prefix
+        /// <para>默认值为 true。/ Default value is true.</para>
         /// </summary>
+        /// <value>如果启用级别前缀则为 true，否则为 false。/ true if level prefix is enabled; otherwise, false.</value>
         public static bool EnableLevelPrefix { get; set; } = true;
 
         /// <summary>
         /// 检查指定日志级别是否已启用 / Check if the specified log level is enabled
         /// </summary>
-        /// <param name="level">要检查的日志级别 / The log level to check</param>
-        /// <returns>如果级别已启用返回 true / Returns true if the level is enabled</returns>
+        /// <param name="level">要检查的日志级别。/ The log level to check.</param>
+        /// <returns>如果级别已启用返回 true，否则返回 false。/ Returns true if the level is enabled.</returns>
+        /// <remarks>
+        /// 此方法用于条件日志记录，避免不必要的字符串格式化。/ Use this method for conditional logging to avoid unnecessary string formatting.
+        /// </remarks>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// if (Logger.IsEnabled(LogLevel.DEBUG))
+        /// {
+        ///     Logger.Debug($"复杂计算结果: {ExpensiveCalculation()}");
+        /// }
+        /// </code>
+        /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEnabled(LogLevel level)
         {
@@ -99,18 +153,49 @@ namespace OpenVinoSharp.Internal
         /// <summary>
         /// 检查 DEBUG 级别是否启用 / Check if DEBUG level is enabled
         /// </summary>
+        /// <value>如果 DEBUG 级别已启用则为 true。/ true if DEBUG level is enabled.</value>
+        /// <remarks>
+        /// 可用于条件编译或条件日志记录。/ Can be used for conditional compilation or conditional logging.
+        /// </remarks>
         public static bool IsDebugEnabled => IsEnabled(LogLevel.DEBUG);
 
         /// <summary>
         /// 检查 INFO 级别是否启用 / Check if INFO level is enabled
         /// </summary>
+        /// <value>如果 INFO 级别已启用则为 true。/ true if INFO level is enabled.</value>
         public static bool IsInfoEnabled => IsEnabled(LogLevel.INFO);
+
+        /// <summary>
+        /// 检查 WARNING 级别是否启用 / Check if WARNING level is enabled
+        /// </summary>
+        /// <value>如果 WARNING 级别已启用则为 true。/ true if WARNING level is enabled.</value>
+        public static bool IsWarningEnabled => IsEnabled(LogLevel.WARNING);
+
+        /// <summary>
+        /// 检查 ERROR 级别是否启用 / Check if ERROR level is enabled
+        /// </summary>
+        /// <value>如果 ERROR 级别已启用则为 true。/ true if ERROR level is enabled.</value>
+        public static bool IsErrorEnabled => IsEnabled(LogLevel.ERROR);
 
         /// <summary>
         /// 设置自定义日志回调 / Set custom log callback
         /// <para>设置后，日志将同时输出到控制台和回调函数。/ After setting, logs will be output to both console and callback.</para>
         /// </summary>
-        /// <param name="callback">回调函数 / Callback function</param>
+        /// <param name="callback">回调函数，接收日志级别和消息。/ Callback function receiving log level and message.</param>
+        /// <remarks>
+        /// 可用于将日志输出到文件、UI 控件或远程服务器。/ Can be used to output logs to file, UI controls, or remote server.
+        /// <para>设置为 null 可清除回调（等效于调用 ClearCallback）。/ Set to null to clear callback (equivalent to calling ClearCallback).</para>
+        /// </remarks>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// // 设置文件日志回调 / Set file log callback
+        /// Logger.SetCallback((level, message) =>
+        /// {
+        ///     File.AppendAllText("app.log", $"{DateTime.Now} [{level}] {message}\n");
+        /// });
+        /// </code>
+        /// </example>
         public static void SetCallback(LogCallback callback)
         {
             lock (_lock)
@@ -121,7 +206,16 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 清除自定义日志回调 / Clear custom log callback
+        /// <para>清除后，日志仅输出到控制台。/ After clearing, logs are output to console only.</para>
         /// </summary>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.SetCallback(myCallback);
+        /// // ... 使用回调 / Use callback ...
+        /// Logger.ClearCallback(); // 恢复仅控制台输出 / Restore console-only output
+        /// </code>
+        /// </example>
         public static void ClearCallback()
         {
             lock (_lock)
@@ -132,7 +226,25 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 启用原生日志回调（与C API集成）/ Enable native log callback (integrate with C API)
+        /// <para>将原生 OpenVINO C API 的日志重定向到 Logger。/ Redirects native OpenVINO C API logs to Logger.</para>
         /// </summary>
+        /// <remarks>
+        /// 启用后，来自原生库的消息会通过 Logger 输出。/ After enabling, messages from native library are output through Logger.
+        /// <para>注意：需要在初始化 OpenVINO 之前调用。/ Note: Should be called before initializing OpenVINO.</para>
+        /// </remarks>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// // 启用原生回调 / Enable native callback
+        /// Logger.EnableNativeCallback();
+        /// 
+        /// // 现在原生日志也会显示 / Now native logs will also appear
+        /// using (var core = new Core())
+        /// {
+        ///     // 原生消息通过 Logger 输出 / Native messages output through Logger
+        /// }
+        /// </code>
+        /// </example>
         public static void EnableNativeCallback()
         {
             lock (_lock)
@@ -155,7 +267,11 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 重置原生日志回调 / Reset native log callback
+        /// <para>恢复原生库的默认日志处理。/ Restores default log handling for native library.</para>
         /// </summary>
+        /// <remarks>
+        /// 调用后，原生日志不再通过 Logger 输出。/ After calling, native logs are no longer output through Logger.
+        /// </remarks>
         public static void ResetNativeCallback()
         {
             lock (_lock)
@@ -175,7 +291,12 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 原生日志处理函数 / Native log handler
+        /// <para>处理来自原生 OpenVINO C API 的日志消息。/ Handles log messages from native OpenVINO C API.</para>
         /// </summary>
+        /// <param name="message">原生日志消息。/ Native log message.</param>
+        /// <remarks>
+        /// 原生日志默认使用 INFO 级别，并添加 [Native] 前缀。/ Native logs use INFO level by default with [Native] prefix.
+        /// </remarks>
         private static void NativeLogHandler(string message)
         {
             if (string.IsNullOrEmpty(message)) return;
@@ -185,7 +306,19 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 输出调试日志 / Output debug log
+        /// <para>用于输出详细的调试信息，仅在 DEBUG 级别启用时记录。/ Used for detailed debug information, only logged when DEBUG level is enabled.</para>
         /// </summary>
+        /// <param name="message">日志消息。/ Log message.</param>
+        /// <remarks>
+        /// 性能提示：如果 DEBUG 级别被禁用，此方法立即返回。/ Performance note: returns immediately if DEBUG level is disabled.
+        /// </remarks>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Debug("进入函数 ProcessData / Entering function ProcessData");
+        /// Logger.Debug($"变量值: {value} / Variable value: {value}");
+        /// </code>
+        /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Debug(string message)
         {
@@ -197,6 +330,14 @@ namespace OpenVinoSharp.Internal
         /// 输出调试日志（格式化）/ Output debug log (formatted)
         /// <para>性能提示：如果 DEBUG 级别被禁用，格式化不会执行。/ Performance note: formatting is skipped if DEBUG level is disabled.</para>
         /// </summary>
+        /// <param name="format">格式字符串。/ Format string.</param>
+        /// <param name="args">格式参数。/ Format arguments.</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Debug("处理 {0} 个项目，耗时 {1}ms / Processed {0} items in {1}ms", count, elapsed);
+        /// </code>
+        /// </example>
         public static void Debug(string format, params object[] args)
         {
             if (!IsEnabled(LogLevel.DEBUG)) return;
@@ -205,7 +346,16 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 输出信息日志 / Output info log
+        /// <para>用于输出一般性信息，如应用状态、操作完成等。/ Used for general information like app status, operation completion, etc.</para>
         /// </summary>
+        /// <param name="message">日志消息。/ Log message.</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Info("模型加载成功 / Model loaded successfully");
+        /// Logger.Info("服务已启动 / Service started");
+        /// </code>
+        /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Info(string message)
         {
@@ -217,6 +367,14 @@ namespace OpenVinoSharp.Internal
         /// 输出信息日志（格式化）/ Output info log (formatted)
         /// <para>性能提示：如果 INFO 级别被禁用，格式化不会执行。/ Performance note: formatting is skipped if INFO level is disabled.</para>
         /// </summary>
+        /// <param name="format">格式字符串。/ Format string.</param>
+        /// <param name="args">格式参数。/ Format arguments.</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Info("加载模型 {0} 完成，耗时 {1}s / Model {0} loaded in {1}s", modelName, seconds);
+        /// </code>
+        /// </example>
         public static void Info(string format, params object[] args)
         {
             if (!IsEnabled(LogLevel.INFO)) return;
@@ -225,7 +383,16 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 输出警告日志 / Output warning log
+        /// <para>用于输出可能的问题或异常情况，不会导致程序失败。/ Used for potential issues or abnormal conditions that don't cause failure.</para>
         /// </summary>
+        /// <param name="message">日志消息。/ Log message.</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Warn("配置文件缺失，使用默认值 / Config file missing, using defaults");
+        /// Logger.Warn("性能可能下降 / Performance may degrade");
+        /// </code>
+        /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Warn(string message)
         {
@@ -237,6 +404,14 @@ namespace OpenVinoSharp.Internal
         /// 输出警告日志（格式化）/ Output warning log (formatted)
         /// <para>性能提示：如果 WARNING 级别被禁用，格式化不会执行。/ Performance note: formatting is skipped if WARNING level is disabled.</para>
         /// </summary>
+        /// <param name="format">格式字符串。/ Format string.</param>
+        /// <param name="args">格式参数。/ Format arguments.</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Warn("参数 {0} 无效，使用默认值 {1} / Parameter {0} invalid, using default {1}", param, defaultValue);
+        /// </code>
+        /// </example>
         public static void Warn(string format, params object[] args)
         {
             if (!IsEnabled(LogLevel.WARNING)) return;
@@ -245,7 +420,16 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 输出错误日志 / Output error log
+        /// <para>用于输出错误信息，表示操作失败但程序可以继续运行。/ Used for error information indicating operation failure but program can continue.</para>
         /// </summary>
+        /// <param name="message">日志消息。/ Log message.</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Error("模型推理失败 / Model inference failed");
+        /// Logger.Error("数据库连接超时 / Database connection timeout");
+        /// </code>
+        /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Error(string message)
         {
@@ -253,9 +437,18 @@ namespace OpenVinoSharp.Internal
             Log(LogLevel.ERROR, message);
         }
 
-        /// <输出错误日志（格式化）/ Output error log (formatted)
+        /// <summary>
+        /// 输出错误日志（格式化）/ Output error log (formatted)
         /// <para>性能提示：如果 ERROR 级别被禁用，格式化不会执行。/ Performance note: formatting is skipped if ERROR level is disabled.</para>
         /// </summary>
+        /// <param name="format">格式字符串。/ Format string.</param>
+        /// <param name="args">格式参数。/ Format arguments.</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Error("加载模型 {0} 失败: {1} / Failed to load model {0}: {1}", modelName, errorMessage);
+        /// </code>
+        /// </example>
         public static void Error(string format, params object[] args)
         {
             if (!IsEnabled(LogLevel.ERROR)) return;
@@ -264,7 +457,16 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 输出严重错误日志 / Output fatal log
+        /// <para>用于输出严重错误，表示程序无法继续运行。/ Used for fatal errors indicating program cannot continue.</para>
         /// </summary>
+        /// <param name="message">日志消息。/ Log message.</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Fatal("内存耗尽，程序即将终止 / Out of memory, application will terminate");
+        /// Logger.Fatal("关键资源加载失败 / Critical resource loading failed");
+        /// </code>
+        /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Fatal(string message)
         {
@@ -276,6 +478,14 @@ namespace OpenVinoSharp.Internal
         /// 输出严重错误日志（格式化）/ Output fatal log (formatted)
         /// <para>性能提示：如果 FATAL 级别被禁用，格式化不会执行。/ Performance note: formatting is skipped if FATAL level is disabled.</para>
         /// </summary>
+        /// <param name="format">格式字符串。/ Format string.</param>
+        /// <param name="args">格式参数。/ Format arguments.</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Logger.Fatal("关键服务 {0} 启动失败: {1} / Critical service {0} failed to start: {1}", serviceName, error);
+        /// </code>
+        /// </example>
         public static void Fatal(string format, params object[] args)
         {
             if (!IsEnabled(LogLevel.FATAL)) return;
@@ -284,7 +494,13 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 核心日志方法 / Core logging method
+        /// <para>所有日志级别的方法最终都调用此方法。/ All log level methods eventually call this method.</para>
         /// </summary>
+        /// <param name="level">日志级别。/ Log level.</param>
+        /// <param name="message">日志消息。/ Log message.</param>
+        /// <remarks>
+        /// 此方法线程安全，会自动格式化消息并输出到控制台和回调。/ This method is thread-safe, automatically formats messages and outputs to console and callbacks.
+        /// </remarks>
         public static void Log(LogLevel level, string message)
         {
             if (level < _minLevel || level == LogLevel.NONE)
@@ -304,7 +520,11 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 格式化日志消息 / Format log message
+        /// <para>根据设置添加时间戳和级别前缀。/ Adds timestamp and level prefix based on settings.</para>
         /// </summary>
+        /// <param name="level">日志级别。/ Log level.</param>
+        /// <param name="message">原始日志消息。/ Raw log message.</param>
+        /// <returns>格式化后的日志消息。/ Formatted log message.</returns>
         private static string FormatMessage(LogLevel level, string message)
         {
             var sb = new System.Text.StringBuilder();
@@ -325,7 +545,10 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 获取日志级别字符串 / Get log level string
+        /// <para>将 LogLevel 枚举转换为字符串表示。/ Converts LogLevel enum to string representation.</para>
         /// </summary>
+        /// <param name="level">日志级别。/ Log level.</param>
+        /// <returns>级别字符串（如 DEBUG、INFO）。/ Level string (e.g., DEBUG, INFO).</returns>
         private static string GetLevelString(LogLevel level)
         {
             switch (level)
@@ -341,7 +564,17 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 控制台输出（带颜色）/ Console output (with color)
+        /// <para>根据日志级别设置不同的控制台颜色。/ Sets different console colors based on log level.</para>
         /// </summary>
+        /// <param name="level">日志级别。/ Log level.</param>
+        /// <param name="message">要输出的消息。/ Message to output.</param>
+        /// <remarks>
+        /// DEBUG - 灰色 / Gray
+        /// <para>INFO - 白色 / White</para>
+        /// <para>WARNING - 黄色 / Yellow</para>
+        /// <para>ERROR - 红色 / Red</para>
+        /// <para>FATAL - 深红色 / Dark Red</para>
+        /// </remarks>
         private static void ConsoleWrite(LogLevel level, string message)
         {
             var originalColor = Console.ForegroundColor;
@@ -377,7 +610,12 @@ namespace OpenVinoSharp.Internal
 
         /// <summary>
         /// 内部警告（不经过普通日志系统，避免循环）/ Internal warning (bypass normal logging to avoid recursion)
+        /// <para>用于 Logger 内部错误处理，直接输出到控制台。/ Used for Logger internal error handling, outputs directly to console.</para>
         /// </summary>
+        /// <param name="message">警告消息。/ Warning message.</param>
+        /// <remarks>
+        /// 此方法不使用日志锁，避免在日志系统故障时产生死锁。/ This method doesn't use logging lock to avoid deadlock when logging system fails.
+        /// </remarks>
         private static void InternalWarn(string message)
         {
             var originalColor = Console.ForegroundColor;

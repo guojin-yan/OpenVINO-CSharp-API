@@ -4,9 +4,8 @@
 namespace OpenVinoSharp
 {
     /// <summary>
-    /// OpenVINO wrapper for .NET. 
-    /// This is the basic namespace of OpenVINO in C#, 
-    /// and all classes and methods are within this namespace.
+    /// OpenVINO C# 包装器命名空间 / OpenVINO wrapper for .NET
+    /// <para>这是 C# 中 OpenVINO 的基本命名空间，所有类和方法都在此命名空间内。/ This is the basic namespace of OpenVINO in C#, all classes and methods are within this namespace.</para>
     /// <c>OpenVinoSharp</c>.
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -17,8 +16,8 @@ namespace OpenVinoSharp
     namespace element
     {
         /// <summary>
-        /// OpenVINO wrapper for .NET. 
-        /// Define elements in OpenVINO.
+        /// 元素命名空间 / Elements namespace
+        /// <para>定义 OpenVINO 中的各种元素。/ Define elements in OpenVINO.</para>
         /// <c>OpenVinoSharp.element</c>.
         /// </summary>
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -30,7 +29,8 @@ namespace OpenVinoSharp
     namespace preprocess
     {
         /// <summary>
-        /// Mainly defined the data processing methods in OpenVINO.
+        /// 预处理命名空间 / Preprocessing namespace
+        /// <para>主要定义 OpenVINO 中的数据处理方法。/ Mainly defined the data processing methods in OpenVINO.</para>
         /// <c>OpenVinoSharp.preprocess</c>.
         /// </summary>
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -42,7 +42,8 @@ namespace OpenVinoSharp
     namespace core
     {
         /// <summary>
-        /// Core inference API classes.
+        /// 核心命名空间 / Core namespace
+        /// <para>核心推理 API 类。/ Core inference API classes.</para>
         /// <c>OpenVinoSharp.core</c>.
         /// </summary>
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -54,7 +55,8 @@ namespace OpenVinoSharp
     namespace native
     {
         /// <summary>
-        /// Native P/Invoke methods.
+        /// 本地方法命名空间 / Native methods namespace
+        /// <para>本地 P/Invoke 方法。/ Native P/Invoke methods.</para>
         /// <c>OpenVinoSharp.native</c>.
         /// </summary>
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -66,7 +68,8 @@ namespace OpenVinoSharp
     namespace exception
     {
         /// <summary>
-        /// Exception types and handling.
+        /// 异常命名空间 / Exception namespace
+        /// <para>异常类型和处理。/ Exception types and handling.</para>
         /// <c>OpenVinoSharp.exception</c>.
         /// </summary>
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -78,7 +81,8 @@ namespace OpenVinoSharp
     namespace Internal
     {
         /// <summary>
-        /// Internal classes and utilities.
+        /// 内部工具命名空间 / Internal utilities namespace
+        /// <para>内部类和工具。/ Internal classes and utilities.</para>
         /// <c>OpenVinoSharp.Internal</c>.
         /// </summary>
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

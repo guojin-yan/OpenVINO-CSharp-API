@@ -7,25 +7,25 @@ using System.Runtime.InteropServices;
 namespace OpenVinoSharp
 {
     /// <summary>
-    /// [struct] Represents version information that describes plugins and the OpenVINO library
+    /// [结构体] 版本信息，描述插件和 OpenVINO 库 / [struct] Represents version information that describes plugins and the OpenVINO library
     /// </summary>
     /// <ingroup>ov_runtime_c#_api</ingroup>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct Version
     {
         /// <summary>
-        /// A null terminated string with build number
+        /// 构建号，以 null 结尾的字符串 / A null terminated string with build number
         /// </summary>
         public string buildNumber;
         /// <summary>
-        /// A null terminated description string
+        /// 描述信息，以 null 结尾的字符串 / A null terminated description string
         /// </summary>
         public string description;
         /// <summary>
-        /// Constructs a Version.
+        /// 构造 Version 结构体 / Constructs a Version
         /// </summary>
-        /// <param name="buildNumber"></param>
-        /// <param name="description"></param>
+        /// <param name="buildNumber">构建号 / Build number</param>
+        /// <param name="description">描述信息 / Description</param>
         public Version(string buildNumber, string description)
         {
             this.buildNumber = buildNumber;
@@ -33,9 +33,9 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// Convert Version to output string
+        /// 将 Version 转换为输出字符串 / Convert Version to output string
         /// </summary>
-        /// <returns>Output string</returns>
+        /// <returns>输出字符串 / Output string</returns>
         public string to_string()
         {
             string str = "";
@@ -49,33 +49,33 @@ namespace OpenVinoSharp
     }
 
     /// <summary>
-    /// [struct] Represents version information that describes device and ov runtime library
+    /// [结构体] 版本信息，描述设备和 OV 运行时库 / [struct] Represents version information that describes device and ov runtime library
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct CoreVersion
     {
         /// <summary>
-        /// A device name
+        /// 设备名称 / A device name
         /// </summary>
         public string device_name;
         /// <summary>
-        /// The OpenVINO version.
+        /// OpenVINO 版本 / The OpenVINO version
         /// </summary>
         public Version version;
     }
 
     /// <summary>
-    /// [struct] Represents version information that describes all devices and ov runtime library
+    /// [结构体] 版本信息列表，描述所有设备和 OV 运行时库 / [struct] Represents version information that describes all devices and ov runtime library
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct CoreVersionList
     {
         /// <summary>
-        /// An array of device versions
+        /// 设备版本数组指针 / An array of device versions
         /// </summary>
         public IntPtr core_version;
         /// <summary>
-        /// A number of versions in the array
+        /// 数组中的版本数量 / A number of versions in the array
         /// </summary>
         public ulong size;
     }

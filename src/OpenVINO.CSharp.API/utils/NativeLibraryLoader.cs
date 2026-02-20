@@ -9,17 +9,17 @@ using System.Runtime.InteropServices;
 namespace OpenVinoSharp
 {
     /// <summary>
-    /// 跨平台原生库加载器
-    /// 支持 Windows、Linux 和 macOS 系统
+    /// 跨平台原生库加载器 / Cross-platform native library loader
+    /// <para>支持 Windows、Linux 和 macOS 系统 / Supports Windows, Linux and macOS systems</para>
     /// </summary>
     internal static class NativeLibraryLoader
     {
-        // 库文件名常量
+        // 库文件名常量 / Library file name constants
         private const string WindowsLibraryName = "openvino_c.dll";
         private const string LinuxLibraryName = "libopenvino_c.so";
         private const string MacOSLibraryName = "libopenvino_c.dylib";
 
-        // NuGet 包名称常量
+        // NuGet 包名称常量 / NuGet package name constants
         private static readonly string[] OpenVINOPackageNames = new[]
         {
             "openvino.runtime",
@@ -32,13 +32,13 @@ namespace OpenVinoSharp
             "openvino-csharp-api"
         };
 
-        // 已加载的库句柄
+        // 已加载的库句柄 / Loaded library handle
         private static IntPtr _libraryHandle = IntPtr.Zero;
         private static readonly object _lock = new object();
         private static bool _isLoaded = false;
 
         /// <summary>
-        /// 获取当前平台的库文件名
+        /// 获取当前平台的库文件名 / Get the library file name for the current platform
         /// </summary>
         public static string GetLibraryName()
         {
@@ -53,7 +53,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 获取当前平台标识
+        /// 获取当前平台标识 / Get the current platform identifier
         /// </summary>
         public static string GetPlatformIdentifier()
         {
@@ -68,7 +68,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 获取处理器架构标识
+        /// 获取处理器架构标识 / Get the processor architecture identifier
         /// </summary>
         public static string GetArchitectureIdentifier()
         {
@@ -76,10 +76,10 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 加载原生库
+        /// 加载原生库 / Load native library
         /// </summary>
-        /// <param name="libraryPath">库文件路径（可选，默认为 null，使用平台默认搜索路径）</param>
-        /// <returns>库句柄</returns>
+        /// <param name="libraryPath">库文件路径（可选，默认为 null，使用平台默认搜索路径）/ Library file path (optional, defaults to null, uses platform default search path)</param>
+        /// <returns>库句柄 / Library handle</returns>
         public static IntPtr Load(string libraryPath = null)
         {
             if (_isLoaded && _libraryHandle != IntPtr.Zero)
@@ -91,20 +91,20 @@ namespace OpenVinoSharp
                     return _libraryHandle;
 
                 string libName = libraryPath ?? GetLibraryName();
-                // 尝试加载库
+                // 尝试加载库 / Try to load library
                 if (File.Exists(libraryPath))
                 {
                     _libraryHandle = LoadLibraryInternal(libraryPath);
                 }
                 if (_libraryHandle == IntPtr.Zero)
                 {
-                    // 尝试从常见路径加载
+                    // 尝试从常见路径加载 / Try to load from common paths
                     _libraryHandle = TryLoadFromCommonPaths(libName);
                 }
 
                 if (_libraryHandle == IntPtr.Zero)
                 {
-                    // 尝试从 NuGet 包缓存加载
+                    // 尝试从 NuGet 包缓存加载 / Try to load from NuGet package cache
                     _libraryHandle = TryLoadFromNuGetCache(libName);
                 }
 
@@ -122,11 +122,11 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 尝试从常见路径加载库
+        /// 尝试从常见路径加载库 / Try to load library from common paths
         /// </summary>
         private static IntPtr TryLoadFromCommonPaths(string libName)
         {
-            // 获取可能的库路径列表
+            // 获取可能的库路径列表 / Get list of possible library paths
             string[] possiblePaths = GetPossibleLibraryPaths(libName);
             
             foreach (string path in possiblePaths)
@@ -143,7 +143,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 尝试从 NuGet 包缓存加载库
+        /// 尝试从 NuGet 包缓存加载库 / Try to load library from NuGet package cache
         /// </summary>
         private static IntPtr TryLoadFromNuGetCache(string libName)
         {
@@ -156,19 +156,19 @@ namespace OpenVinoSharp
                 if (!Directory.Exists(cachePath))
                     continue;
 
-                // 搜索 OpenVINO 相关的包
+                // 搜索 OpenVINO 相关的包 / Search for OpenVINO related packages
                 foreach (string packageName in OpenVINOPackageNames)
                 {
                     string packagePath = Path.Combine(cachePath, packageName.ToLower());
                     if (!Directory.Exists(packagePath))
                         continue;
 
-                    // 获取最新版本
+                    // 获取最新版本 / Get the latest version
                     string versionPath = GetLatestVersionPath(packagePath);
                     if (string.IsNullOrEmpty(versionPath))
                         continue;
 
-                    // 构建可能的库路径
+                    // 构建可能的库路径 / Build possible library paths
                     string[] possiblePaths = new[]
                     {
                         // runtimes/{platform}-{arch}/native/{libName}
@@ -207,27 +207,27 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 获取 NuGet 包缓存路径列表
+        /// 获取 NuGet 包缓存路径列表 / Get NuGet package cache path list
         /// </summary>
         private static string[] GetNuGetCachePaths()
         {
             var paths = new System.Collections.Generic.List<string>();
             
-            // 1. 从 NUGET_PACKAGES 环境变量获取
+            // 1. 从 NUGET_PACKAGES 环境变量获取 / 1. Get from NUGET_PACKAGES environment variable
             string nugetPackages = Environment.GetEnvironmentVariable("NUGET_PACKAGES");
             if (!string.IsNullOrEmpty(nugetPackages))
             {
                 paths.Add(nugetPackages);
             }
 
-            // 2. 用户级缓存
+            // 2. 用户级缓存 / 2. User-level cache
             string userCache = GetUserNuGetCachePath();
             if (!string.IsNullOrEmpty(userCache))
             {
                 paths.Add(userCache);
             }
 
-            // 3. 全局缓存（适用于 .NET Core 2.1+ / .NET 5+）
+            // 3. 全局缓存（适用于 .NET Core 2.1+ / .NET 5+） / 3. Global cache (for .NET Core 2.1+ / .NET 5+)
             string globalCache = GetGlobalNuGetCachePath();
             if (!string.IsNullOrEmpty(globalCache))
             {
@@ -238,14 +238,14 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 获取用户级 NuGet 缓存路径
+        /// 获取用户级 NuGet 缓存路径 / Get user-level NuGet cache path
         /// </summary>
         private static string GetUserNuGetCachePath()
         {
             try
             {
-                // Windows: %USERPROFILE%\.nuget\packages
-                // Linux/macOS: ~/.nuget/packages
+                // Windows / Windows platform: %USERPROFILE%\.nuget\packages
+                // Linux/macOS / Linux or macOS platform: ~/.nuget/packages
                 string homePath = GetHomePath();
                 if (!string.IsNullOrEmpty(homePath))
                 {
@@ -257,15 +257,15 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 获取全局 NuGet 缓存路径
+        /// 获取全局 NuGet 缓存路径 / Get global NuGet cache path
         /// </summary>
         private static string GetGlobalNuGetCachePath()
         {
             try
             {
-                // 尝试从 dotnet nuget locals 获取，但这里简化处理
+                // 尝试从 dotnet nuget locals 获取，但这里简化处理 / Try to get from dotnet nuget locals, simplified here
                 // Windows: %LOCALAPPDATA%\NuGet\v3-cache 或 %USERPROFILE%\.nuget\packages
-                // 直接使用用户目录作为备选
+                // 直接使用用户目录作为备选 / Use user directory as fallback
                 return GetUserNuGetCachePath();
             }
             catch { }
@@ -273,7 +273,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 获取用户主目录
+        /// 获取用户主目录 / Get user home directory
         /// </summary>
         private static string GetHomePath()
         {
@@ -291,7 +291,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 获取包的最新版本路径
+        /// 获取包的最新版本路径 / Get the latest version path of the package
         /// </summary>
         private static string GetLatestVersionPath(string packagePath)
         {
@@ -300,9 +300,9 @@ namespace OpenVinoSharp
 
             try
             {
-                // 获取所有版本目录
+                // 获取所有版本目录 / Get all version directories
                 var versionDirs = Directory.GetDirectories(packagePath)
-                    .Where(d => !Path.GetFileName(d).ToLower().StartsWith(".")) // 排除隐藏目录
+                    .Where(d => !Path.GetFileName(d).ToLower().StartsWith(".")) // 排除隐藏目录 / Exclude hidden directories
                     .Select(d => new { Path = d, Name = Path.GetFileName(d) })
                     .Where(d => IsValidVersion(d.Name))
                     .ToList();
@@ -310,7 +310,7 @@ namespace OpenVinoSharp
                 if (versionDirs.Count == 0)
                     return null;
 
-                // 按版本号排序，返回最新的
+                // 按版本号排序，返回最新的 / Sort by version number, return the latest
                 var latest = versionDirs
                     .OrderByDescending(d => ParseVersion(d.Name), new VersionComparer())
                     .FirstOrDefault();
@@ -324,25 +324,25 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 检查是否为有效的版本号
+        /// 检查是否为有效的版本号 / Check if it is a valid version number
         /// </summary>
         private static bool IsValidVersion(string version)
         {
             if (string.IsNullOrEmpty(version))
                 return false;
 
-            // 简单的版本号检查（例如：2025.4.0, 1.0.0, 1.0.0-beta 等）
+            // 简单的版本号检查（例如：2025.4.0, 1.0.0, 1.0.0-beta 等） / Simple version number check (e.g., 2025.4.0, 1.0.0, 1.0.0-beta, etc.)
             return System.Text.RegularExpressions.Regex.IsMatch(version, @"^\d+(\.\d+)+");
         }
 
         /// <summary>
-        /// 解析版本号用于排序
+        /// 解析版本号用于排序 / Parse version number for sorting
         /// </summary>
         private static System.Version ParseVersion(string version)
         {
             try
             {
-                // 移除预发布标签（如 -beta, -rc1）
+                // 移除预发布标签（如 -beta, -rc1） / Remove pre-release tags (e.g., -beta, -rc1)
                 string cleanVersion = version.Split('-')[0];
                 return System.Version.Parse(cleanVersion);
             }
@@ -353,7 +353,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 版本号比较器
+        /// 版本号比较器 / Version number comparer
         /// </summary>
         private class VersionComparer : System.Collections.Generic.IComparer<System.Version>
         {
@@ -364,7 +364,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 获取可能的库文件路径列表
+        /// 获取可能的库文件路径列表 / Get list of possible library file paths
         /// </summary>
         private static string[] GetPossibleLibraryPaths(string libName)
         {
@@ -372,21 +372,21 @@ namespace OpenVinoSharp
             string baseFileName = Path.GetFileNameWithoutExtension(libName);
             string extension = Path.GetExtension(libName);
             
-            // 当前目录
+            // 当前目录 / Current directory
             paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, libName));
             
-            // 平台特定子目录
+            // 平台特定子目录 / Platform-specific subdirectory
             string platform = GetPlatformIdentifier();
             string arch = GetArchitectureIdentifier();
-            // Windows 特定路径
+            // Windows 特定路径 / Windows-specific paths
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                // 环境变量 PATH 中的路径会在 LoadLibrary 中自动搜索
-                // 检查程序集所在目录
+                // 环境变量 PATH 中的路径会在 LoadLibrary 中自动搜索 / Paths in PATH environment variable are searched automatically by LoadLibrary
+                // 检查程序集所在目录 / Check assembly directory
                 string assemblyLocation = typeof(NativeLibraryLoader).Assembly.Location;
                 if (!string.IsNullOrEmpty(assemblyLocation))
                 {
-                    // 测试项目路径存在问题
+                    // 测试项目路径存在问题 / Test project path issue exists
                     string assemblyDir = Path.GetDirectoryName(assemblyLocation);
                     paths.Add(Path.Combine(assemblyDir, libName));
                     paths.Add(Path.Combine(assemblyDir, "dll", "win-x64", libName));
@@ -395,7 +395,7 @@ namespace OpenVinoSharp
                     paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtimes", "win-x64", "native", libName));
                 }
                 
-                // 检查 OPENVINO_DIR 环境变量
+                // 检查 OPENVINO_DIR 环境变量 / Check OPENVINO_DIR environment variable
                 string openvinoDir = Environment.GetEnvironmentVariable("INTEL_OPENVINO_DIR");
                 if (!string.IsNullOrEmpty(openvinoDir))
                 {
@@ -403,15 +403,15 @@ namespace OpenVinoSharp
                     paths.Add(Path.Combine(openvinoDir, libName));
                 }
             }
-            // Linux/macOS 特定路径
+            // Linux/macOS 特定路径 / Linux/macOS-specific paths
             else
             {
-                // 标准库路径
+                // 标准库路径 / Standard library paths
                 paths.Add($"/usr/lib/{libName}");
                 paths.Add($"/usr/local/lib/{libName}");
                 paths.Add($"/opt/intel/openvino/runtime/lib/{arch}/{libName}");
                 
-                // LD_LIBRARY_PATH 环境变量中的路径会在 dlopen 中自动搜索
+                // LD_LIBRARY_PATH 环境变量中的路径会在 dlopen 中自动搜索 / Paths in LD_LIBRARY_PATH environment variable are searched automatically by dlopen
                 
                 string assemblyLocation = typeof(NativeLibraryLoader).Assembly.Location;
                 if (!string.IsNullOrEmpty(assemblyLocation))
@@ -425,10 +425,10 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 获取已加载库的函数指针
+        /// 获取已加载库的函数指针 / Get function pointer from loaded library
         /// </summary>
-        /// <param name="functionName">函数名</param>
-        /// <returns>函数指针</returns>
+        /// <param name="functionName">函数名 / Function name</param>
+        /// <returns>函数指针 / Function pointer</returns>
         public static IntPtr GetFunctionPointer(string functionName)
         {
             EnsureLoaded();
@@ -436,7 +436,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 确保库已加载（如果尚未加载则自动加载）
+        /// 确保库已加载（如果尚未加载则自动加载） / Ensure library is loaded (auto-load if not already loaded)
         /// </summary>
         public static void EnsureLoaded()
         {
@@ -447,7 +447,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 释放已加载的库
+        /// 释放已加载的库 / Free the loaded library
         /// </summary>
         public static void Free()
         {
@@ -462,10 +462,10 @@ namespace OpenVinoSharp
             }
         }
 
-        #region 平台特定的实现
+        #region 平台特定的实现 / Platform-specific implementations
 
 #if HAS_NATIVELIBRARY
-        // .NET Core 3.0+ / .NET 5+ 使用 NativeLibrary API
+        // .NET Core 3.0+ / .NET 5+ 使用 NativeLibrary API / .NET Core 3.0+ / .NET 5+ uses NativeLibrary API
         
         private static IntPtr LoadLibraryInternal(string libraryPath)
         {
@@ -490,7 +490,7 @@ namespace OpenVinoSharp
         }
 
 #else
-        // .NET Framework 使用 P/Invoke
+        // .NET Framework 使用 P/Invoke / .NET Framework uses P/Invoke
 
         private static IntPtr LoadLibraryInternal(string libraryPath)
         {
@@ -502,7 +502,7 @@ namespace OpenVinoSharp
         
                 if (handle == IntPtr.Zero)
                 {
-                    // 获取系统错误码
+                    // 获取系统错误码 / Get system error code
                     int errorCode = Marshal.GetLastWin32Error();
                     //throw new Exception($"无法加载 DLL: {libraryPath}。系统错误码: {errorCode}");
                 }
@@ -556,13 +556,13 @@ namespace OpenVinoSharp
         [DllImport("kernel32", EntryPoint = "FreeLibrary", SetLastError = true)]
         private static extern bool FreeLibrary_Windows(IntPtr hModule);
 
-        // 导入 API
+        // 导入 API / Import API
         [DllImport("kernel32.dll", EntryPoint = "SetDllDirectory", CharSet = CharSet.Auto, SetLastError = true)]
         static extern bool SetDllDirectory_Windows(string lpPathName);
 
 
 
-        // Linux API
+        // Linux API / Linux API
         private const int RTLD_LAZY = 0x00001;
         private const int RTLD_NOW = 0x00002;
         private const int RTLD_LOCAL = 0x00000;
@@ -583,7 +583,7 @@ namespace OpenVinoSharp
         [DllImport("libdl", EntryPoint = "dlerror", SetLastError = true, CharSet = CharSet.Ansi)]
         private static extern IntPtr dlerror();
 
-        // macOS API (使用相同的 libdl)
+        // macOS API (使用相同的 libdl) / macOS API (uses libSystem.dylib)
         [DllImport("libSystem.dylib", EntryPoint = "dlopen", SetLastError = true, CharSet = CharSet.Ansi)]
         private static extern IntPtr LoadLibrary_MacOS(string filename, int flags);
 

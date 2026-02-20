@@ -39,8 +39,8 @@ namespace OpenVinoSharp
         };
 
         /// <summary>
-        /// 检查返回值是否有异常，如果有则根据异常值返回相应的异常
-        /// <para>性能优化：使用 AggressiveInlining 减少调用开销。</para>
+        /// 检查返回值是否有异常，如果有则根据异常值返回相应的异常 / Check if return value has exception and throw corresponding exception
+        /// <para>性能优化：使用 AggressiveInlining 减少调用开销。/ Performance optimization: uses AggressiveInlining to reduce call overhead.</para>
         /// </summary>
         /// <param name="status">异常状态码 / Exception status code</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -55,7 +55,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 核心异常抛出逻辑（分离以优化内联）
+        /// 核心异常抛出逻辑（分离以优化内联）/ Core exception throwing logic (separated for inlining optimization)
         /// </summary>
         private static void ThrowExceptionCore(ExceptionStatus status)
         {
@@ -98,7 +98,7 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 快速获取状态码描述（使用缓存数组）
+        /// 快速获取状态码描述（使用缓存数组）/ Get status code description quickly (using cached array)
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string GetStatusDescriptionFast(ExceptionStatus status)

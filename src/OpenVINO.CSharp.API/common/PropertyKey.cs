@@ -4,64 +4,64 @@
 namespace OpenVinoSharp
 {
     /// <summary>
-    /// Property keys for device configuration
+    /// 设备配置属性键 / Property keys for device configuration
     /// </summary>
     public enum PropertyKey
     {
         /// <summary>
-        /// Read-write property to set/get the number of threads used by CPU plugin
+        /// 读写属性，用于设置/获取CPU插件使用的线程数 / Read-write property to set/get the number of threads used by CPU plugin
         /// </summary>
         CPU_THREADS_NUM,
         /// <summary>
-        /// Read-write property to set/get the bind thread mode
+        /// 读写属性，用于设置/获取线程绑定模式 / Read-write property to set/get the bind thread mode
         /// </summary>
         CPU_BIND_THREAD,
         /// <summary>
-        /// Read-write property to set/get the number of inference requests
+        /// 读写属性，用于设置/获取推理请求流数量 / Read-write property to set/get the number of inference requests
         /// </summary>
         CPU_THROUGHPUT_STREAMS,
         /// <summary>
-        /// Read-only property to get the device name
+        /// 只读属性，用于获取设备名称 / Read-only property to get the device name
         /// </summary>
         DEVICE_ID,
         /// <summary>
-        /// Read-only property to get the supported properties
+        /// 只读属性，用于获取支持的属性列表 / Read-only property to get the supported properties
         /// </summary>
         SUPPORTED_PROPERTIES,
         /// <summary>
-        /// Read-only property to get the available devices
+        /// 只读属性，用于获取可用设备列表 / Read-only property to get the available devices
         /// </summary>
         AVAILABLE_DEVICES,
         /// <summary>
-        /// Read-only property to get the device full name
+        /// 只读属性，用于获取设备全名 / Read-only property to get the device full name
         /// </summary>
         DEVICE_FULL_NAME,
         /// <summary>
-        /// Read-write property to set/get the cache directory
+        /// 读写属性，用于设置/获取缓存目录 / Read-write property to set/get the cache directory
         /// </summary>
         CACHE_DIR,
         /// <summary>
-        /// Read-write property to enable/disable model caching
+        /// 读写属性，用于启用/禁用模型缓存 / Read-write property to enable/disable model caching
         /// </summary>
         CACHE_ENABLE,
         /// <summary>
-        /// Read-only property to get the optimal number of inference requests
+        /// 只读属性，用于获取最优推理请求数量 / Read-only property to get the optimal number of inference requests
         /// </summary>
         OPTIMAL_NUMBER_OF_INFER_REQUESTS,
         /// <summary>
-        /// Read-only property to get the maximum number of batches
+        /// 只读属性，用于获取最大批处理大小 / Read-only property to get the maximum number of batches
         /// </summary>
         MAX_BATCH_SIZE,
         /// <summary>
-        /// Read-only property to get the range of batches
+        /// 只读属性，用于获取批处理范围 / Read-only property to get the range of batches
         /// </summary>
         BATCH_PROPERTY,
         /// <summary>
-        /// Read-only property to get the metric keys
+        /// 只读属性，用于获取指标键列表 / Read-only property to get the metric keys
         /// </summary>
         METRIC_KEYS,
         /// <summary>
-        /// Read-only property to get the configuration keys
+        /// 只读属性，用于获取配置键列表 / Read-only property to get the configuration keys
         /// </summary>
         CONFIGURATION_KEYS,
     }

@@ -23,11 +23,32 @@ namespace OpenVinoSharp
         private bool _disposed;
 
         /// <summary>
-        /// 创建推理请求池
+        /// 创建推理请求池 / Create inference request pool
         /// </summary>
-        /// <param name="compiledModel">编译后的模型</param>
-        /// <param name="initialSize">初始池大小</param>
-        /// <param name="maxSize">最大池大小</param>
+        /// <param name="compiledModel">编译后的模型 / Compiled model</param>
+        /// <param name="initialSize">初始池大小 / Initial pool size</param>
+        /// <param name="maxSize">最大池大小 / Maximum pool size</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// using var core = new Core();
+        /// using var model = core.read_model("model.xml");
+        /// using var compiled = core.compile_model(model, "CPU");
+        /// 
+        /// // 创建池 / Create pool
+        /// using var pool = new InferRequestPool(compiled, initialSize: 2, maxSize: 10);
+        /// 
+        /// // 获取请求执行推理 / Rent request and run inference
+        /// var request = pool.Rent();
+        /// try {
+        ///     request.set_input_tensor(input);
+        ///     request.infer();
+        ///     var output = request.get_output_tensor();
+        /// } finally {
+        ///     pool.Return(request);
+        /// }
+        /// </code>
+        /// </example>
         public InferRequestPool(CompiledModel compiledModel, int initialSize = 2, int maxSize = 10)
         {
             _compiledModel = compiledModel ?? throw new ArgumentNullException(nameof(compiledModel));
@@ -39,6 +60,7 @@ namespace OpenVinoSharp
             _currentSize = 0;
 
             // 预热：预先创建初始数量的请求
+            // Pre-warm: create initial number of requests
             for (int i = 0; i < initialSize; i++)
             {
                 var request = CreateRequest();
@@ -50,22 +72,46 @@ namespace OpenVinoSharp
             }
 
             Logger.Debug($"InferRequestPool: 创建完成，初始大小: {initialSize}, 最大大小: {maxSize}");
+            Logger.Debug($"InferRequestPool: Created, initial size: {initialSize}, max size: {maxSize}");
         }
 
         /// <summary>
-        /// 当前池大小
+        /// 当前池大小 / Current pool size
         /// </summary>
         public int Count => _currentSize;
 
         /// <summary>
-        /// 可用请求数量
+        /// 可用请求数量 / Available request count
         /// </summary>
         public int AvailableCount => _pool.Count;
 
         /// <summary>
-        /// 从池中获取推理请求（阻塞直到可用）
+        /// 从池中获取推理请求（阻塞直到可用）/ Rent inference request from pool (blocks until available)
         /// </summary>
-        /// <returns>推理请求对象</returns>
+        /// <returns>推理请求对象 / Inference request object</returns>
+        /// <exception cref="ObjectDisposedException">当对象池已被释放时抛出 / Thrown when the pool has been disposed</exception>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// var pool = new InferRequestPool(compiledModel, initialSize: 2, maxSize: 10);
+        /// 
+        /// // 获取请求（阻塞直到可用）/ Rent request (blocks until available)
+        /// var request = pool.Rent();
+        /// try {
+        ///     // 设置输入 / Set input
+        ///     request.set_input_tensor(input);
+        ///     
+        ///     // 执行推理 / Run inference
+        ///     request.infer();
+        ///     
+        ///     // 获取输出 / Get output
+        ///     var output = request.get_output_tensor();
+        /// } finally {
+        ///     // 必须归还请求 / Must return request
+        ///     pool.Return(request);
+        /// }
+        /// </code>
+        /// </example>
         public InferRequest Rent()
         {
             ThrowIfDisposed();
@@ -74,10 +120,28 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 异步获取推理请求
+        /// 异步获取推理请求 / Rent inference request asynchronously
         /// </summary>
-        /// <param name="cancellationToken">取消令牌</param>
-        /// <returns>推理请求对象</returns>
+        /// <param name="cancellationToken">取消令牌 / Cancellation token</param>
+        /// <returns>推理请求对象 / Inference request object</returns>
+        /// <exception cref="ObjectDisposedException">当对象池已被释放时抛出 / Thrown when the pool has been disposed</exception>
+        /// <exception cref="OperationCanceledException">当操作被取消时抛出 / Thrown when operation is cancelled</exception>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// var pool = new InferRequestPool(compiledModel, initialSize: 2, maxSize: 10);
+        /// 
+        /// // 异步获取请求 / Rent request asynchronously
+        /// var request = await pool.RentAsync(cancellationToken);
+        /// try {
+        ///     request.set_input_tensor(input);
+        ///     request.infer();
+        ///     var output = request.get_output_tensor();
+        /// } finally {
+        ///     pool.Return(request);
+        /// }
+        /// </code>
+        /// </example>
         public System.Threading.Tasks.Task<InferRequest> RentAsync(
             System.Threading.CancellationToken cancellationToken = default)
         {
@@ -86,10 +150,31 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 尝试获取推理请求（非阻塞）
+        /// 尝试获取推理请求（非阻塞）/ Try to rent inference request (non-blocking)
         /// </summary>
-        /// <param name="request">获取到的请求</param>
-        /// <returns>是否成功获取</returns>
+        /// <param name="request">获取到的请求 / The rented request, or null if not available</param>
+        /// <returns>是否成功获取 / True if request was available, false otherwise</returns>
+        /// <exception cref="ObjectDisposedException">当对象池已被释放时抛出 / Thrown when the pool has been disposed</exception>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// var pool = new InferRequestPool(compiledModel, initialSize: 2, maxSize: 10);
+        /// 
+        /// // 尝试获取请求（非阻塞）/ Try to rent request (non-blocking)
+        /// if (pool.TryRent(out var request)) {
+        ///     try {
+        ///         request.set_input_tensor(input);
+        ///         request.infer();
+        ///         var output = request.get_output_tensor();
+        ///     } finally {
+        ///         pool.Return(request);
+        ///     }
+        /// } else {
+        ///     // 池已满，处理等待或放弃 / Pool full, handle wait or fallback
+        ///     Console.WriteLine("Pool is full, please try again later");
+        /// }
+        /// </code>
+        /// </example>
         public bool TryRent(out InferRequest request)
         {
             ThrowIfDisposed();
@@ -103,24 +188,46 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 归还推理请求到池中
+        /// 归还推理请求到池中 / Return inference request to pool
         /// </summary>
-        /// <param name="request">推理请求对象</param>
+        /// <param name="request">推理请求对象 / Inference request object to return</param>
+        /// <remarks>
+        /// 如果请求已被释放，则不会返回池中，而是减少池的计数。/ If the request has been disposed, it will not be returned to the pool; instead, the pool count is decreased.
+        /// </remarks>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// var pool = new InferRequestPool(compiledModel, initialSize: 2, maxSize: 10);
+        /// var request = pool.Rent();
+        /// 
+        /// try {
+        ///     // 执行推理 / Run inference
+        ///     request.set_input_tensor(input);
+        ///     request.infer();
+        /// } finally {
+        ///     // 确保请求被归还，即使在异常情况下 / Ensure request is returned even on exception
+        ///     pool.Return(request);
+        /// }
+        /// </code>
+        /// </example>
         public void Return(InferRequest request)
         {
             if (request == null || _disposed)
                 return;
 
             // 检查请求是否有效
+            // Check if request is valid
             if (request.IsDisposed)
             {
                 // 如果请求已被释放，减少计数并创建新的
+                // If request is disposed, decrease count
                 Interlocked.Decrement(ref _currentSize);
                 _semaphore.Release();
                 return;
             }
 
             // 重置请求状态（取消任何待处理的推理）
+            // Reset request state (cancel any pending inference)
             try
             {
                 request.cancel();
@@ -132,10 +239,30 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 执行推理并自动归还请求（便捷方法）
+        /// 执行推理并自动归还请求（便捷方法）/ Run inference and auto-return request (convenience method)
         /// </summary>
-        /// <param name="inputSetter">设置输入的委托</param>
-        /// <param name="outputGetter">获取输出的委托</param>
+        /// <param name="inputSetter">设置输入的委托 / Delegate to set input tensors</param>
+        /// <param name="outputGetter">获取输出的委托 / Delegate to get output tensors</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// var pool = new InferRequestPool(compiledModel, initialSize: 2, maxSize: 10);
+        /// 
+        /// // 使用便捷方法执行推理 / Use convenience method to run inference
+        /// pool.RunInference(
+        ///     request => {
+        ///         // 设置输入 / Set input
+        ///         request.set_input_tensor(input);
+        ///     },
+        ///     request => {
+        ///         // 获取输出 / Get output
+        ///         var output = request.get_output_tensor();
+        ///         // 处理输出... / Process output...
+        ///     }
+        /// );
+        /// // 请求自动归还 / Request is automatically returned
+        /// </code>
+        /// </example>
         public void RunInference(Action<InferRequest> inputSetter, Action<InferRequest> outputGetter)
         {
             var request = Rent();
@@ -152,11 +279,31 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 执行异步推理并自动归还请求
+        /// 执行异步推理并自动归还请求 / Run inference asynchronously and auto-return request
         /// </summary>
-        /// <param name="inputSetter">设置输入的委托</param>
-        /// <param name="outputGetter">获取输出的委托</param>
-        /// <returns>异步任务</returns>
+        /// <param name="inputSetter">设置输入的委托 / Delegate to set input tensors</param>
+        /// <param name="outputGetter">获取输出的委托 / Delegate to get output tensors</param>
+        /// <returns>异步任务 / Asynchronous task</returns>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// var pool = new InferRequestPool(compiledModel, initialSize: 2, maxSize: 10);
+        /// 
+        /// // 使用异步便捷方法执行推理 / Use async convenience method to run inference
+        /// await pool.RunInferenceAsync(
+        ///     request => {
+        ///         // 设置输入 / Set input
+        ///         request.set_input_tensor(input);
+        ///     },
+        ///     request => {
+        ///         // 获取输出 / Get output
+        ///         var output = request.get_output_tensor();
+        ///         // 处理输出... / Process output...
+        ///     }
+        /// );
+        /// // 请求自动归还 / Request is automatically returned
+        /// </code>
+        /// </example>
         public async System.Threading.Tasks.Task RunInferenceAsync(
             Action<InferRequest> inputSetter,
             Action<InferRequest> outputGetter)
@@ -176,8 +323,24 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 清空池并释放所有请求
+        /// 清空池并释放所有请求 / Clear pool and dispose all requests
         /// </summary>
+        /// <remarks>
+        /// 此方法会释放池中所有请求，但不会释放池本身。/ This method disposes all requests in the pool but does not dispose the pool itself.
+        /// 调用后当前大小会归零，后续 Rent 调用会创建新的请求。/ After calling, current size becomes zero, subsequent Rent calls will create new requests.
+        /// </remarks>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// var pool = new InferRequestPool(compiledModel, initialSize: 2, maxSize: 10);
+        /// 
+        /// // 使用一段时间后清空池 / Clear pool after some usage
+        /// pool.Clear();
+        /// 
+        /// // 池已清空，计数归零 / Pool cleared, count reset
+        /// Console.WriteLine($"Pool count: {pool.Count}"); // 输出 0 / Output: 0
+        /// </code>
+        /// </example>
         public void Clear()
         {
             while (_pool.TryTake(out var request))
@@ -192,8 +355,32 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
-        /// 释放资源
+        /// 释放资源 / Dispose resources
         /// </summary>
+        /// <remarks>
+        /// 释放池中所有请求和信号量资源。/ Disposes all requests in the pool and the semaphore resource.
+        /// 调用后对象池不可再使用。/ After calling, the pool cannot be used anymore.
+        /// </remarks>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// // 使用 using 语句自动释放 / Use using statement for automatic disposal
+        /// using (var pool = new InferRequestPool(compiledModel, initialSize: 2, maxSize: 10)) {
+        ///     // 使用池 / Use pool
+        ///     var request = pool.Rent();
+        ///     // ... 执行推理 / Run inference ...
+        ///     pool.Return(request);
+        /// } // 自动调用 Dispose / Dispose called automatically
+        /// 
+        /// // 或者手动释放 / Or manual disposal
+        /// var pool2 = new InferRequestPool(compiledModel);
+        /// try {
+        ///     // 使用池 / Use pool
+        /// } finally {
+        ///     pool2.Dispose(); // 手动释放 / Manual disposal
+        /// }
+        /// </code>
+        /// </example>
         public void Dispose()
         {
             if (_disposed)
@@ -204,6 +391,7 @@ namespace OpenVinoSharp
             _semaphore?.Dispose();
 
             Logger.Debug("InferRequestPool: 已释放");
+            Logger.Debug("InferRequestPool: Disposed");
         }
 
         private InferRequest RentCore()
@@ -211,11 +399,14 @@ namespace OpenVinoSharp
             if (_pool.TryTake(out var request))
             {
                 Logger.Debug("InferRequestPool: 从池中获取请求");
+                Logger.Debug("InferRequestPool: Rent from pool");
                 return request;
             }
 
             // 池为空但信号量已获取，创建新请求
+            // Pool empty but semaphore acquired, create new request
             Logger.Debug("InferRequestPool: 创建新请求");
+            Logger.Debug("InferRequestPool: Create new request");
             var newRequest = CreateRequest();
             if (newRequest != null)
             {
@@ -240,6 +431,7 @@ namespace OpenVinoSharp
             catch (Exception ex)
             {
                 Logger.Error($"InferRequestPool: 创建请求失败 - {ex.Message}");
+                Logger.Error($"InferRequestPool: Failed to create request - {ex.Message}");
                 throw;
             }
         }

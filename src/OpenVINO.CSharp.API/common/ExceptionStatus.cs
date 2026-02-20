@@ -5,12 +5,12 @@ namespace OpenVinoSharp
 {
     /// <summary>
     /// OpenVINO 异常状态码枚举 / OpenVINO exception status code enumeration
-    /// <para>包含所有接口函数可能的返回值代码。/ Contains all possible return value codes for interface functions.</para>
+    /// <para>包含所有接口函数可能的返回值代码 / Contains all possible return value codes for interface functions</para>
     /// </summary>
     public enum ExceptionStatus : int
     {
         /// <summary>
-        /// 成功 / Success
+        /// 操作成功完成 / Operation completed successfully
         /// </summary>
         OK = 0,
 

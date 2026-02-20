@@ -10,6 +10,20 @@ namespace OpenVinoSharp
     /// 秩结构 / Rank structure
     /// <para>表示形状的维度数量。/ Represents the number of dimensions in a shape.</para>
     /// </summary>
+    /// <example>
+    /// 使用示例 / Usage example:
+    /// <code>
+    /// // 创建静态秩4（用于4D张量）/ Create static rank 4 (for 4D tensor)
+    /// Rank rank4 = new Rank(4);
+    /// 
+    /// // 创建动态秩 / Create dynamic rank
+    /// Rank dynamicRank = Rank.dynamic();
+    /// 
+    /// // 检查秩类型 / Check rank type
+    /// bool isStatic = rank4.is_static(); // true
+    /// bool isDynamic = dynamicRank.is_dynamic(); // true
+    /// </code>
+    /// </example>
     [StructLayout(LayoutKind.Sequential)]
     public struct Rank : IEquatable<Rank>
     {
@@ -33,6 +47,13 @@ namespace OpenVinoSharp
         /// 构造静态秩 / Construct a static rank
         /// </summary>
         /// <param name="value">秩值 / Rank value</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Rank rank4 = new Rank(4); // 4D张量的秩 / Rank for 4D tensor
+        /// Console.WriteLine(rank4); // 输出 / Output: 4
+        /// </code>
+        /// </example>
         public Rank(long value)
         {
             min = value;
@@ -44,6 +65,13 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="minVal">最小值 / Minimum value</param>
         /// <param name="maxVal">最大值 / Maximum value</param>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// // 创建秩范围为2到4的动态秩 / Create dynamic rank with range 2-4
+        /// Rank dynamicRank = new Rank(2, 4);
+        /// </code>
+        /// </example>
         public Rank(long minVal, long maxVal)
         {
             min = minVal;
@@ -58,6 +86,15 @@ namespace OpenVinoSharp
         /// 检查此秩是否为动态 / Check if this rank is dynamic
         /// </summary>
         /// <returns>是否为动态 / Whether dynamic</returns>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Rank staticRank = new Rank(4);
+        /// Rank dynamicRank = Rank.dynamic();
+        /// bool isStaticDynamic = staticRank.is_dynamic(); // false
+        /// bool isDynamicDynamic = dynamicRank.is_dynamic(); // true
+        /// </code>
+        /// </example>
         public bool is_dynamic()
         {
             return min != max  || (min == max && min < 0 && max < 0);
@@ -67,6 +104,15 @@ namespace OpenVinoSharp
         /// 检查此秩是否为静态 / Check if this rank is static
         /// </summary>
         /// <returns>是否为静态 / Whether static</returns>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Rank staticRank = new Rank(4);
+        /// Rank dynamicRank = Rank.dynamic();
+        /// bool isStatic = staticRank.is_static(); // true
+        /// bool isDynamicStatic = dynamicRank.is_static(); // false
+        /// </code>
+        /// </example>
         public bool is_static()
         {
             return min == max && max > 0 && min > 0;
@@ -76,6 +122,14 @@ namespace OpenVinoSharp
         /// 获取静态秩值（如果是静态的）/ Get static rank value (if static)
         /// </summary>
         /// <returns>秩值 / Rank value</returns>
+        /// <exception cref="InvalidOperationException">当秩为动态时抛出 / Thrown when rank is dynamic</exception>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Rank rank4 = new Rank(4);
+        /// long length = rank4.get_length(); // 4
+        /// </code>
+        /// </example>
         public long get_length()
         {
             if (is_dynamic())
@@ -91,6 +145,13 @@ namespace OpenVinoSharp
         /// 创建动态秩（任意）/ Create a dynamic rank (any)
         /// </summary>
         /// <returns>动态秩 / Dynamic rank</returns>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Rank dynamicRank = Rank.dynamic();
+        /// Console.WriteLine(dynamicRank); // 输出 / Output: ?
+        /// </code>
+        /// </example>
         public static Rank dynamic()
         {
             return new Rank(-1, -1);
@@ -127,6 +188,9 @@ namespace OpenVinoSharp
         /// <summary>
         /// 相等运算符 / Equality operator
         /// </summary>
+        /// <param name="left">左操作数 / Left operand</param>
+        /// <param name="right">右操作数 / Right operand</param>
+        /// <returns>是否相等 / Whether equal</returns>
         public static bool operator ==(Rank left, Rank right)
         {
             return left.Equals(right);
@@ -135,6 +199,9 @@ namespace OpenVinoSharp
         /// <summary>
         /// 不等运算符 / Inequality operator
         /// </summary>
+        /// <param name="left">左操作数 / Left operand</param>
+        /// <param name="right">右操作数 / Right operand</param>
+        /// <returns>是否不等 / Whether not equal</returns>
         public static bool operator !=(Rank left, Rank right)
         {
             return !left.Equals(right);
@@ -145,6 +212,14 @@ namespace OpenVinoSharp
         #region 对象方法 / Object Methods
 
         /// <inheritdoc/>
+        /// <returns>字符串表示 / String representation</returns>
+        /// <example>
+        /// 使用示例 / Usage example:
+        /// <code>
+        /// Console.WriteLine(new Rank(4));   // "4"
+        /// Console.WriteLine(Rank.dynamic()); // "?"
+        /// </code>
+        /// </example>
         public override string ToString()
         {
             if (is_static())

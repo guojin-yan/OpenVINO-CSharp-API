@@ -11,15 +11,18 @@ namespace OpenVinoSharp.native
         #region Version
 
         /// <summary>
-        /// Get version of OpenVINO.
+        /// 获取 OpenVINO 版本信息 / Get version of OpenVINO
         /// </summary>
+        /// <param name="version">返回的版本信息指针 / Returned version info pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_get_openvino_version",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_get_openvino_version(IntPtr version);
 
         /// <summary>
-        /// Release the memory allocated by ov_version_t.
+        /// 释放 ov_version_t 分配的内存 / Release the memory allocated by ov_version_t
         /// </summary>
+        /// <param name="version">版本信息指针 / Version info pointer</param>
         [DllImport("openvino_c", EntryPoint = "ov_version_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_version_free(IntPtr version);
@@ -29,26 +32,30 @@ namespace OpenVinoSharp.native
         #region Log Callback
 
         /// <summary>
-        /// Callback function type for logging messages (original C API name).
+        /// 日志消息回调函数类型（原始 C API 名称）/ Callback function type for logging messages (original C API name)
         /// </summary>
+        /// <param name="message">日志消息指针 / Log message pointer</param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void ov_util_log_callback_func(IntPtr message);
 
         /// <summary>
-        /// Callback function type for logging messages (C# friendly alias).
+        /// 日志消息回调函数类型（C# 友好别名）/ Callback function type for logging messages (C# friendly alias)
         /// </summary>
+        /// <param name="message">日志消息字符串 / Log message string</param>
         public delegate void LogCallbackDelegate(string message);
 
         /// <summary>
-        /// Sets user log message handling callback.
+        /// 设置用户日志消息处理回调 / Sets user log message handling callback
         /// </summary>
+        /// <param name="func">回调函数 / Callback function</param>
         [DllImport("openvino_c", EntryPoint = "ov_util_set_log_callback",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern void ov_util_set_log_callback(ov_util_log_callback_func func);
 
         /// <summary>
-        /// Sets user log message handling callback (C# friendly overload).
+        /// 设置用户日志消息处理回调（C# 友好重载）/ Sets user log message handling callback (C# friendly overload)
         /// </summary>
+        /// <param name="func">回调委托 / Callback delegate</param>
         public static void ov_util_set_log_callback(LogCallbackDelegate func)
         {
             // Create a wrapper that marshals string from IntPtr
@@ -60,7 +67,7 @@ namespace OpenVinoSharp.native
         }
 
         /// <summary>
-        /// Resets log message handling callback to its default (standard output).
+        /// 重置日志消息处理回调为默认值（标准输出）/ Resets log message handling callback to its default (standard output)
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_util_reset_log_callback",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
@@ -71,15 +78,24 @@ namespace OpenVinoSharp.native
         #region Core Creation and Destruction
 
         /// <summary>
-        /// Constructs OpenVINO Core instance by default.
+        /// 默认方式构造 OpenVINO Core 实例 / Constructs OpenVINO Core instance by default
         /// </summary>
+        /// <param name="core">返回的 Core 指针 / Returned Core pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
+        /// <remarks>
+        /// 创建一个新的 OpenVINO Core 实例，用于设备管理和模型编译。
+        /// Creates a new OpenVINO Core instance for device management and model compilation.
+        /// </remarks>
         [DllImport("openvino_c", EntryPoint = "ov_core_create",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_create(ref IntPtr core);
 
         /// <summary>
-        /// Constructs OpenVINO Core instance using XML configuration file.
+        /// 使用 XML 配置文件构造 OpenVINO Core 实例 / Constructs OpenVINO Core instance using XML configuration file
         /// </summary>
+        /// <param name="xml_config_file">XML 配置文件路径 / XML configuration file path</param>
+        /// <param name="core">返回的 Core 指针 / Returned Core pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_create_with_config",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_create_with_config(
@@ -87,15 +103,20 @@ namespace OpenVinoSharp.native
             ref IntPtr core);
 
         /// <summary>
-        /// Release the memory allocated by ov_core_t.
+        /// 释放 ov_core_t 分配的内存 / Release the memory allocated by ov_core_t
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
         [DllImport("openvino_c", EntryPoint = "ov_core_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_core_free(IntPtr core);
 
         /// <summary>
-        /// Shut down the OpenVINO.
+        /// 关闭 OpenVINO / Shut down the OpenVINO
         /// </summary>
+        /// <remarks>
+        /// 释放 OpenVINO 使用的所有资源。
+        /// Releases all resources used by OpenVINO.
+        /// </remarks>
         [DllImport("openvino_c", EntryPoint = "ov_shutdown",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_shutdown();
@@ -105,8 +126,13 @@ namespace OpenVinoSharp.native
         #region Read Model
 
         /// <summary>
-        /// Reads models from IR / ONNX / PDPD / TF / TFLite formats.
+        /// 从 IR / ONNX / PDPD / TF / TFLite 格式读取模型 / Reads models from IR / ONNX / PDPD / TF / TFLite formats
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model_path">模型文件路径 / Model file path</param>
+        /// <param name="bin_path">权重文件路径（可为 null）/ Weights file path (can be null)</param>
+        /// <param name="model">返回的模型指针 / Returned model pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_read_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_read_model(
@@ -116,8 +142,14 @@ namespace OpenVinoSharp.native
             ref IntPtr model);
 
         /// <summary>
-        /// Reads models from memory buffer.
+        /// 从内存缓冲区读取模型 / Reads models from memory buffer
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model_str">模型数据缓冲区 / Model data buffer</param>
+        /// <param name="str_len">模型数据长度 / Model data length</param>
+        /// <param name="weights">权重数据指针（可为 IntPtr.Zero）/ Weights data pointer (can be IntPtr.Zero)</param>
+        /// <param name="model">返回的模型指针 / Returned model pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_read_model_from_memory_buffer",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_read_model_from_memory_buffer(
@@ -132,8 +164,14 @@ namespace OpenVinoSharp.native
         #region Compile Model
 
         /// <summary>
-        /// Creates a compiled model from a source model object.
+        /// 从源模型对象创建编译模型 / Creates a compiled model from a source model object
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model">模型指针 / Model pointer</param>
+        /// <param name="device_name">目标设备名称（如 "CPU", "GPU"）/ Target device name (e.g., "CPU", "GPU")</param>
+        /// <param name="property_args_size">属性参数数量 / Property arguments size</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model(
@@ -144,8 +182,16 @@ namespace OpenVinoSharp.native
             ref IntPtr compiled_model);
 
         /// <summary>
-        /// Creates a compiled model from a source model object with properties.
+        /// 从源模型对象创建编译模型（带 1 个属性对）/ Creates a compiled model from a source model object with 1 property pair
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model">模型指针 / Model pointer</param>
+        /// <param name="device_name">目标设备名称 / Target device name</param>
+        /// <param name="property_args_size">属性参数数量 / Property arguments size</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <param name="key1">属性键 1 / Property key 1</param>
+        /// <param name="value1">属性值 1 / Property value 1</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model(
@@ -158,8 +204,18 @@ namespace OpenVinoSharp.native
             IntPtr value1);
 
         /// <summary>
-        /// Creates a compiled model from a source model object with 2 property pairs.
+        /// 从源模型对象创建编译模型（带 2 个属性对）/ Creates a compiled model from a source model object with 2 property pairs
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model">模型指针 / Model pointer</param>
+        /// <param name="device_name">目标设备名称 / Target device name</param>
+        /// <param name="property_args_size">属性参数数量 / Property arguments size</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <param name="key1">属性键 1 / Property key 1</param>
+        /// <param name="value1">属性值 1 / Property value 1</param>
+        /// <param name="key2">属性键 2 / Property key 2</param>
+        /// <param name="value2">属性值 2 / Property value 2</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model(
@@ -174,8 +230,20 @@ namespace OpenVinoSharp.native
             IntPtr value2);
 
         /// <summary>
-        /// Creates a compiled model from a source model object with 3 property pairs.
+        /// 从源模型对象创建编译模型（带 3 个属性对）/ Creates a compiled model from a source model object with 3 property pairs
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model">模型指针 / Model pointer</param>
+        /// <param name="device_name">目标设备名称 / Target device name</param>
+        /// <param name="property_args_size">属性参数数量 / Property arguments size</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <param name="key1">属性键 1 / Property key 1</param>
+        /// <param name="value1">属性值 1 / Property value 1</param>
+        /// <param name="key2">属性键 2 / Property key 2</param>
+        /// <param name="value2">属性值 2 / Property value 2</param>
+        /// <param name="key3">属性键 3 / Property key 3</param>
+        /// <param name="value3">属性值 3 / Property value 3</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model(
@@ -192,8 +260,14 @@ namespace OpenVinoSharp.native
             IntPtr value3);
 
         /// <summary>
-        /// Reads a model and creates a compiled model from the IR/ONNX/PDPD file.
+        /// 从 IR/ONNX/PDPD 文件读取并创建编译模型 / Reads a model and creates a compiled model from the IR/ONNX/PDPD file
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model_path">模型文件路径 / Model file path</param>
+        /// <param name="device_name">目标设备名称 / Target device name</param>
+        /// <param name="property_args_size">属性参数数量 / Property arguments size</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model_from_file(
@@ -204,8 +278,16 @@ namespace OpenVinoSharp.native
             ref IntPtr compiled_model);
 
         /// <summary>
-        /// Reads a model and creates a compiled model from file with 1 property pair.
+        /// 从文件读取并创建编译模型（带 1 个属性对）/ Reads a model and creates a compiled model from file with 1 property pair
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model_path">模型文件路径 / Model file path</param>
+        /// <param name="device_name">目标设备名称 / Target device name</param>
+        /// <param name="property_args_size">属性参数数量 / Property arguments size</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <param name="key1">属性键 1 / Property key 1</param>
+        /// <param name="value1">属性值 1 / Property value 1</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model_from_file(
@@ -218,8 +300,18 @@ namespace OpenVinoSharp.native
             IntPtr value1);
 
         /// <summary>
-        /// Reads a model and creates a compiled model from file with 2 property pairs.
+        /// 从文件读取并创建编译模型（带 2 个属性对）/ Reads a model and creates a compiled model from file with 2 property pairs
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model_path">模型文件路径 / Model file path</param>
+        /// <param name="device_name">目标设备名称 / Target device name</param>
+        /// <param name="property_args_size">属性参数数量 / Property arguments size</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <param name="key1">属性键 1 / Property key 1</param>
+        /// <param name="value1">属性值 1 / Property value 1</param>
+        /// <param name="key2">属性键 2 / Property key 2</param>
+        /// <param name="value2">属性值 2 / Property value 2</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model_from_file(
@@ -234,8 +326,20 @@ namespace OpenVinoSharp.native
             IntPtr value2);
 
         /// <summary>
-        /// Reads a model and creates a compiled model from file with 3 property pairs.
+        /// 从文件读取并创建编译模型（带 3 个属性对）/ Reads a model and creates a compiled model from file with 3 property pairs
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model_path">模型文件路径 / Model file path</param>
+        /// <param name="device_name">目标设备名称 / Target device name</param>
+        /// <param name="property_args_size">属性参数数量 / Property arguments size</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <param name="key1">属性键 1 / Property key 1</param>
+        /// <param name="value1">属性值 1 / Property value 1</param>
+        /// <param name="key2">属性键 2 / Property key 2</param>
+        /// <param name="value2">属性值 2 / Property value 2</param>
+        /// <param name="key3">属性键 3 / Property key 3</param>
+        /// <param name="value3">属性值 3 / Property value 3</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model_from_file(
@@ -256,8 +360,13 @@ namespace OpenVinoSharp.native
         #region Properties
 
         /// <summary>
-        /// Sets properties for a device.
+        /// 为设备设置属性 / Sets properties for a device
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="device_name">设备名称 / Device name</param>
+        /// <param name="key">属性键 / Property key</param>
+        /// <param name="value">属性值 / Property value</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_set_property",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern ExceptionStatus ov_core_set_property(
@@ -267,8 +376,15 @@ namespace OpenVinoSharp.native
             IntPtr value);
 
         /// <summary>
-        /// Sets properties for a device with 2 property pairs.
+        /// 为设备设置属性（带 2 个属性对）/ Sets properties for a device with 2 property pairs
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="device_name">设备名称 / Device name</param>
+        /// <param name="key1">属性键 1 / Property key 1</param>
+        /// <param name="value1">属性值 1 / Property value 1</param>
+        /// <param name="key2">属性键 2 / Property key 2</param>
+        /// <param name="value2">属性值 2 / Property value 2</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_set_property",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern ExceptionStatus ov_core_set_property(
@@ -280,8 +396,17 @@ namespace OpenVinoSharp.native
             IntPtr value2);
 
         /// <summary>
-        /// Sets properties for a device with 3 property pairs.
+        /// 为设备设置属性（带 3 个属性对）/ Sets properties for a device with 3 property pairs
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="device_name">设备名称 / Device name</param>
+        /// <param name="key1">属性键 1 / Property key 1</param>
+        /// <param name="value1">属性值 1 / Property value 1</param>
+        /// <param name="key2">属性键 2 / Property key 2</param>
+        /// <param name="value2">属性值 2 / Property value 2</param>
+        /// <param name="key3">属性键 3 / Property key 3</param>
+        /// <param name="value3">属性值 3 / Property value 3</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_set_property",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern ExceptionStatus ov_core_set_property(
@@ -295,8 +420,13 @@ namespace OpenVinoSharp.native
             IntPtr value3);
 
         /// <summary>
-        /// Gets properties related to device behaviour.
+        /// 获取与设备行为相关的属性 / Gets properties related to device behaviour
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="device_name">设备名称 / Device name</param>
+        /// <param name="property_key">属性键 / Property key</param>
+        /// <param name="property_value">返回的属性值指针 / Returned property value pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_get_property",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_get_property(
@@ -310,8 +440,11 @@ namespace OpenVinoSharp.native
         #region Available Devices
 
         /// <summary>
-        /// Returns devices available for inference.
+        /// 返回可用于推理的设备 / Returns devices available for inference
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="devices">返回的可用设备列表指针 / Returned available devices list pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_get_available_devices",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_get_available_devices(
@@ -319,8 +452,9 @@ namespace OpenVinoSharp.native
             IntPtr devices);
 
         /// <summary>
-        /// Releases memory occupied by ov_available_devices_t
+        /// 释放 ov_available_devices_t 占用的内存 / Releases memory occupied by ov_available_devices_t
         /// </summary>
+        /// <param name="devices">设备列表指针 / Devices list pointer</param>
         [DllImport("openvino_c", EntryPoint = "ov_available_devices_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_available_devices_free(IntPtr devices);
@@ -330,8 +464,14 @@ namespace OpenVinoSharp.native
         #region Import/Export
 
         /// <summary>
-        /// Imports a compiled model from the previously exported one.
+        /// 从先前导出的编译模型导入 / Imports a compiled model from the previously exported one
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="content">模型内容缓冲区 / Model content buffer</param>
+        /// <param name="content_size">内容大小 / Content size</param>
+        /// <param name="device_name">目标设备名称 / Target device name</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_import_model",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_import_model(
@@ -346,8 +486,12 @@ namespace OpenVinoSharp.native
         #region Device Versions
 
         /// <summary>
-        /// Returns device plugins version information.
+        /// 返回设备插件版本信息 / Returns device plugins version information
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="device_name">设备名称 / Device name</param>
+        /// <param name="versions">返回的版本列表指针 / Returned versions list pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_get_versions_by_device_name",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_get_versions_by_device_name(
@@ -356,8 +500,9 @@ namespace OpenVinoSharp.native
             IntPtr versions);
 
         /// <summary>
-        /// Releases memory occupied by ov_core_version_list_t.
+        /// 释放 ov_core_version_list_t 占用的内存 / Releases memory occupied by ov_core_version_list_t
         /// </summary>
+        /// <param name="versions">版本列表指针 / Versions list pointer</param>
         [DllImport("openvino_c", EntryPoint = "ov_core_versions_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_core_versions_free(IntPtr versions);
@@ -367,8 +512,13 @@ namespace OpenVinoSharp.native
         #region Remote Context
 
         /// <summary>
-        /// Creates a new remote shared context object on the specified accelerator device.
+        /// 在指定的加速器设备上创建新的远程共享上下文对象 / Creates a new remote shared context object on the specified accelerator device
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="device_name">设备名称 / Device name</param>
+        /// <param name="context_args_size">上下文参数数量 / Context arguments size</param>
+        /// <param name="context">返回的上下文指针 / Returned context pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_create_context",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_create_context(
@@ -378,8 +528,14 @@ namespace OpenVinoSharp.native
             ref IntPtr context);
 
         /// <summary>
-        /// Creates a compiled model from a source model within a specified remote context.
+        /// 在指定的远程上下文中从源模型创建编译模型 / Creates a compiled model from a source model within a specified remote context
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model">模型指针 / Model pointer</param>
+        /// <param name="context">远程上下文指针 / Remote context pointer</param>
+        /// <param name="property_args_size">属性参数数量 / Property arguments size</param>
+        /// <param name="compiled_model">返回的编译模型指针 / Returned compiled model pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_with_context",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_compile_model_with_context(
@@ -390,8 +546,12 @@ namespace OpenVinoSharp.native
             ref IntPtr compiled_model);
 
         /// <summary>
-        /// Gets a pointer to default shared context object for the specified accelerator device.
+        /// 获取指定加速器设备的默认共享上下文对象指针 / Gets a pointer to default shared context object for the specified accelerator device
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="device_name">设备名称 / Device name</param>
+        /// <param name="context">返回的上下文指针 / Returned context pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_get_default_context",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_get_default_context(
@@ -404,8 +564,11 @@ namespace OpenVinoSharp.native
         #region Extensions
 
         /// <summary>
-        /// Adds an extension to the core.
+        /// 向 Core 添加扩展 / Adds an extension to the core
         /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="path">扩展库路径 / Extension library path</param>
+        /// <returns>操作状态 / Operation status</returns>
         [DllImport("openvino_c", EntryPoint = "ov_core_add_extension",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_core_add_extension(
@@ -418,42 +581,66 @@ namespace OpenVinoSharp.native
     #region Supporting Structures
 
     /// <summary>
-    /// Structure representing available devices
+    /// 表示可用设备的结构体 / Structure representing available devices
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct ov_available_devices_t
     {
+        /// <summary>
+        /// 设备名称数组指针 / Device names array pointer
+        /// </summary>
         public IntPtr devices;
+        /// <summary>
+        /// 设备数量 / Number of devices
+        /// </summary>
         public ulong size;
     }
 
     /// <summary>
-    /// Structure representing OpenVINO version
+    /// 表示 OpenVINO 版本的结构体 / Structure representing OpenVINO version
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct ov_version_t
     {
+        /// <summary>
+        /// 构建版本号 / Build number
+        /// </summary>
         public IntPtr buildNumber;
+        /// <summary>
+        /// 版本描述 / Version description
+        /// </summary>
         public IntPtr description;
     }
 
     /// <summary>
-    /// Structure representing core version
+    /// 表示 Core 版本的结构体 / Structure representing core version
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct ov_core_version_t
     {
+        /// <summary>
+        /// 设备名称 / Device name
+        /// </summary>
         public IntPtr device_name;
+        /// <summary>
+        /// 版本信息 / Version information
+        /// </summary>
         public ov_version_t version;
     }
 
     /// <summary>
-    /// Structure representing core version list
+    /// 表示 Core 版本列表的结构体 / Structure representing core version list
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct ov_core_version_list_t
     {
+        /// <summary>
+        /// 版本数组指针 / Versions array pointer
+        /// </summary>
         public IntPtr versions;
+        /// <summary>
+        /// 版本数量 / Number of versions
+        /// </summary>
         public ulong size;
     }
 
