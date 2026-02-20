@@ -1,0 +1,61 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  # Linux 构建 - 只构建 .NET Core/.NET 5+ 项目
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          6.0.x
+          8.0.x
+    
+    # 构建解决方案（自动跳过 .NET Framework 项目）
+    - name: Restore Solution
+      run: dotnet restore OpenVINO.sln
+    
+    - name: Build Solution
+      run: dotnet build OpenVINO.sln --configuration Release --no-restore
+    
+    - name: Build Tests (Linux compatible frameworks only)
+      run: dotnet build tests/OpenVINO.CSharp.API.Tests/OpenVINO.CSharp.API.Tests.csproj --configuration Release --framework net8.0 --no-restore
+
+  # Windows 构建 - 构建所有项目包括 .NET Framework
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          6.0.x
+          8.0.x
+    
+    - name: Restore dependencies (API)
+      run: dotnet restore src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj
+    
+    - name: Build API
+      run: dotnet build src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj --configuration Release --no-restore
+    
+    - name: Restore dependencies (Tests)
+      run: dotnet restore tests/OpenVINO.CSharp.API.Tests/OpenVINO.CSharp.API.Tests.csproj
+    
+    - name: Build Tests
+      run: dotnet build tests/OpenVINO.CSharp.API.Tests/OpenVINO.CSharp.API.Tests.csproj --configuration Release --no-restore
+    
+    - name: Build .NET Framework Samples (Windows only)
+      run: |
+        msbuild samples/Yolo26Det-net4.8/Yolo26Det-net4.8.csproj /p:Configuration=Release /p:Platform=AnyCPU
+      continue-on-error: true
