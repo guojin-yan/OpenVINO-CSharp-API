@@ -1,0 +1,10 @@
+# 安装方式目录 / Installation table of contents
+
+- name: 安装概览 / Overview
+  href: index.md
+- name: Windows 安装
+  href: windows.md
+- name: Linux 安装
+  href: linux.md
+- name: macOS 安装
+  href: macos.md

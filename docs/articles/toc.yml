@@ -1,5 +1,13 @@
 # 文章目录 / Articles table of contents
 
+- name: 安装方式 / Installation
+  href: installation/
+  homepage: installation/index.md
+
 - name: 案例应用 / Samples
   href: samples/
   homepage: samples/index.md
+
+- name: 问题排查 / Troubleshooting
+  href: troubleshooting/
+  homepage: troubleshooting/index.md
