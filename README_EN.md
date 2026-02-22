@@ -10,7 +10,13 @@
 
 English | [简体中文](README.md)
 
+  Intel Distribution [OpenVINO™](www.openvino. ai) tool suite is developed based on the oneAPI and can accelerate the development speed of high-performance computer vision and deep learning visual applications. It is suitable for various Intel platforms from the edge to the cloud, helping users deploy more accurate real-world results to production systems faster. By simplifying the development workflow, OpenVINO™ Empowering developers to deploy high-performance applications and algorithms in the real world.
+
 **OpenVINO C# API is a .NET wrapper library for Intel OpenVINO, enabling C# developers to run deep learning model inference with high performance on Windows, Linux, and macOS. Supports mainstream models like YOLO, ResNet, BERT, etc.**
+
+The latest version currently released is **OpenVINO™ C# API 3.2 ** pre release version, which has been further updated on version 3.1, improving all test codes and addressing some errors. Relevant case projects and applications will be released based on the latest version in the future.
+
+Finally, if you have any questions during use, you can communicate and contact me. We also welcome C # developers to join us in OpenVINO™ C# API development.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
