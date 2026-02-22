@@ -10,3 +10,4 @@ items:
 
 - name: 文章 / Articles
   href: articles/
+  homepage: articles/index.md
