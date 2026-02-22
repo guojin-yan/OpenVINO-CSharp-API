@@ -14,6 +14,7 @@ on:
       - '**.cs'
       - '**.csproj'
       - 'docs/**'
+      - 'README.md'
       - '.github/workflows/docs.yml'
   
   # 允许手动触发 / Allow manual trigger
@@ -47,6 +48,11 @@ jobs:
     - name: Setup DocFX / 设置 DocFX
       run: |
         dotnet tool install -g docfx
+        
+    - name: Sync README.md to docs/index.md / 同步 README.md 到 docs/index.md
+      run: |
+        cp README.md docs/index.md
+        echo "✅ README.md synced to docs/index.md"
         
     - name: Restore API packages / 还原 API 包
       run: dotnet restore src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj
