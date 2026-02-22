@@ -9,15 +9,12 @@ items:
   homepage: api/OpenVinoSharp.yml
 
 - name: 文章 / Articles
-  href: articles/
-  homepage: articles/index.md
+  href: articles/index.md
+  expanded: false
   items:
   - name: 安装方式 / Installation
-    href: articles/installation/
-    homepage: articles/installation/index.md
+    href: articles/installation/index.md
   - name: 案例应用 / Samples
-    href: articles/samples/
-    homepage: articles/samples/index.md
+    href: articles/samples/index.md
   - name: 问题排查 / Troubleshooting
-    href: articles/troubleshooting/
-    homepage: articles/troubleshooting/index.md
+    href: articles/troubleshooting/index.md
