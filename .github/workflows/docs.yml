@@ -54,6 +54,14 @@ jobs:
         cp README.md docs/index.md
         echo "✅ README.md synced to docs/index.md"
         
+    - name: Verify docs structure / 验证文档结构
+      run: |
+        echo "📁 docs/ 目录结构:"
+        ls -la docs/
+        echo ""
+        echo "📁 docs/articles/ 目录结构:"
+        ls -la docs/articles/
+        
     - name: Restore API packages / 还原 API 包
       run: dotnet restore src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj
         
