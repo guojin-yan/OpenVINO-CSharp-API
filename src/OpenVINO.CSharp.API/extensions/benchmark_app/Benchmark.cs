@@ -104,7 +104,7 @@ namespace OpenVinoSharp.extensions.benchmark_app
                 
                 for (ulong i = 0; i < input_size; i++)
                 {
-                    using (NodeInput input = compiled_model.get_input(i))
+                    using (Input input = compiled_model.get_input(i))
                     {
                         string input_name = input.get_any_name();
                         OvLogger.Debug($"Processing input[{i}]: name={input_name}");

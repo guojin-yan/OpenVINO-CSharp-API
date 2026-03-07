@@ -103,16 +103,28 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
+        /// 获取输入 / Get input
+        /// </summary>
+        /// <returns>节点输入端口 / Node input port</returns>
+        public Input input()
+        {
+            ThrowIfDisposed();
+            IntPtr node_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_model_input(_ptr, ref node_ptr));
+            return new Input(node_ptr);
+        }
+
+        /// <summary>
         /// 获取指定索引的输入 / Get input at specified index
         /// </summary>
         /// <param name="idx">输入索引 / Input index</param>
         /// <returns>节点输入端口 / Node input port</returns>
-        public NodeInput get_input(ulong idx)
+        public Input input(ulong idx)
         {
             ThrowIfDisposed();
             IntPtr node_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_model_input_by_index(_ptr, idx, ref node_ptr));
-            return new NodeInput(node_ptr);
+            return new Input(node_ptr);
         }
 
         /// <summary>
@@ -120,7 +132,36 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="name">输入名称 / Input name</param>
         /// <returns>节点输入端口 / Node input port</returns>
-        public NodeInput get_input_by_name(string name)
+        public Input input(string name)
+        {
+            ThrowIfDisposed();
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
+
+            IntPtr node_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_model_input_by_name(_ptr, name, ref node_ptr));
+            return new Input(node_ptr);
+        }
+
+        /// <summary>
+        /// 获取指定索引的输入 / Get input at specified index
+        /// </summary>
+        /// <param name="idx">输入索引 / Input index</param>
+        /// <returns>节点输入端口 / Node input port</returns>
+        public Input get_input(ulong idx)
+        {
+            ThrowIfDisposed();
+            IntPtr node_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_model_input_by_index(_ptr, idx, ref node_ptr));
+            return new Input(node_ptr);
+        }
+
+        /// <summary>
+        /// 获取指定名称的输入 / Get input by name
+        /// </summary>
+        /// <param name="name">输入名称 / Input name</param>
+        /// <returns>节点输入端口 / Node input port</returns>
+        public Input get_input_by_name(string name)
         {
             ThrowIfDisposed();
             if (string.IsNullOrEmpty(name))
@@ -128,25 +169,22 @@ namespace OpenVinoSharp
             
             IntPtr node_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_model_input_by_name(_ptr, name, ref node_ptr));
-            return new NodeInput(node_ptr);
+            return new Input(node_ptr);
         }
-
         /// <summary>
-        /// 获取指定节点输出的输入 / Get input by node output
+        /// Get all input of model.
         /// </summary>
-        /// <param name="input_port">输入端口 / Input port</param>
-        /// <returns>节点输入端口 / Node input port</returns>
-        public NodeInput get_input_by_port(NodeInput input_port)
+        /// <returns>All input of model.</returns>
+        public List<Input> inputs()
         {
-            ThrowIfDisposed();
-            if (input_port == null)
-                throw new ArgumentNullException(nameof(input_port));
-            
-            // ov_model_input_by_port is not available in the C API
-            // Using get_input_by_name as fallback
-            return get_input_by_name(input_port.get_any_name());
+            ulong input_size = get_inputs_size();
+            List<Input> inputs = new List<Input>();
+            for (ulong index = 0; index < input_size; ++index)
+            {
+                inputs.Add(get_input(index));
+            }
+            return inputs;
         }
-
         #endregion
 
         #region 输出信息 / Output Information
@@ -162,18 +200,28 @@ namespace OpenVinoSharp
             ExceptionHandler.ThrowOnError(ov_model_outputs_size(_ptr, ref size));
             return size;
         }
-
+        /// <summary>
+        /// 获取输入 / Get input
+        /// </summary>
+        /// <returns>节点输入端口 / Node input port</returns>
+        public Output output()
+        {
+            ThrowIfDisposed();
+            IntPtr node_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_model_output(_ptr, ref node_ptr));
+            return new Output(node_ptr);
+        }
         /// <summary>
         /// 获取指定索引的输出 / Get output at specified index
         /// </summary>
         /// <param name="idx">输出索引 / Output index</param>
         /// <returns>输出节点描述 / Output node description</returns>
-        public NodeOutput get_output(ulong idx)
+        public Output output(ulong idx)
         {
             ThrowIfDisposed();
             IntPtr node_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_model_output_by_index(_ptr, idx, ref node_ptr));
-            return new NodeOutput(node_ptr);
+            return new Output(node_ptr);
         }
 
         /// <summary>
@@ -181,7 +229,35 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="name">输出名称 / Output name</param>
         /// <returns>输出节点描述 / Output node description</returns>
-        public NodeOutput get_output_by_name(string name)
+        public Output output(string name)
+        {
+            ThrowIfDisposed();
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
+
+            IntPtr node_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_model_output_by_name(_ptr, name, ref node_ptr));
+            return new Output(node_ptr);
+        }
+        /// <summary>
+        /// 获取指定索引的输出 / Get output at specified index
+        /// </summary>
+        /// <param name="idx">输出索引 / Output index</param>
+        /// <returns>输出节点描述 / Output node description</returns>
+        public Output get_output(ulong idx)
+        {
+            ThrowIfDisposed();
+            IntPtr node_ptr = IntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_model_output_by_index(_ptr, idx, ref node_ptr));
+            return new Output(node_ptr);
+        }
+
+        /// <summary>
+        /// 获取指定名称的输出 / Get output by name
+        /// </summary>
+        /// <param name="name">输出名称 / Output name</param>
+        /// <returns>输出节点描述 / Output node description</returns>
+        public Output get_output_by_name(string name)
         {
             ThrowIfDisposed();
             if (string.IsNullOrEmpty(name))
@@ -189,25 +265,23 @@ namespace OpenVinoSharp
             
             IntPtr node_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_model_output_by_name(_ptr, name, ref node_ptr));
-            return new NodeOutput(node_ptr);
+            return new Output(node_ptr);
         }
 
         /// <summary>
-        /// 获取指定节点输出的输出 / Get output by node output
+        /// Get all output of model
         /// </summary>
-        /// <param name="output_port">输出端口 / Output port</param>
-        /// <returns>输出节点描述 / Output node description</returns>
-        public NodeOutput get_output_by_port(NodeOutput output_port)
+        /// <returns>All output of model</returns>
+        public List<Output> outputs()
         {
-            ThrowIfDisposed();
-            if (output_port == null)
-                throw new ArgumentNullException(nameof(output_port));
-            
-            // ov_model_output_by_port is not available in the C API
-            // Using get_output_by_name as fallback
-            return get_output_by_name(output_port.get_any_name());
+            ulong output_size = get_outputs_size();
+            List<Output> outputs = new List<Output>();
+            for (ulong index = 0; index < output_size; ++index)
+            {
+                outputs.Add(get_output(index));
+            }
+            return outputs;
         }
-
         #endregion
 
         #region 模型属性 / Model Properties
@@ -237,7 +311,7 @@ namespace OpenVinoSharp
             ulong inputCount = get_inputs_size();
             for (ulong i = 0; i < inputCount; i++)
             {
-                NodeInput input = get_input(i);
+                Input input = get_input(i);
                 try
                 {
                     PartialShape partialShape = input.get_partial_shape();
@@ -292,10 +366,10 @@ namespace OpenVinoSharp
             ulong inputCount = get_inputs_size();
             for (ulong i = 0; i < inputCount; i++)
             {
-                NodeInput input = get_input(i);
+                Input input = get_input(i);
                 try
                 {
-                    ov_partial_shape_t partialShape = shape.ToPartialShapeStruct();
+                    ov_partial_shape_t partialShape = shape.to_partial_shape_struct();
                     try
                     {
                         ExceptionHandler.ThrowOnError(
@@ -328,7 +402,7 @@ namespace OpenVinoSharp
             if (shape == null)
                 throw new ArgumentNullException(nameof(shape));
             
-            ov_partial_shape_t partialShape = shape.ToPartialShapeStruct();
+            ov_partial_shape_t partialShape = shape.to_partial_shape_struct();
             try
             {
                 ExceptionHandler.ThrowOnError(

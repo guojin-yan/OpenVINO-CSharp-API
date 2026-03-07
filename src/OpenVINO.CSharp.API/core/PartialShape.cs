@@ -49,11 +49,12 @@
 //  ========================================================================
 //
 
-using System;
-using System.Runtime.InteropServices;
-using System.Text;
 using OpenVinoSharp.Internal;
 using OpenVinoSharp.native;
+using System;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace OpenVinoSharp
 {
@@ -91,7 +92,43 @@ namespace OpenVinoSharp
         /// 从原生指针构造 / Construct from native pointer
         /// </summary>
         /// <param name="ptr">原生部分形状指针 / Native partial shape pointer</param>
-        public PartialShape(IntPtr ptr) : base(ptr) { }
+        /// <summary>
+        /// 从原生指针构造 / Construct from native pointer
+        /// <para>注意：此构造函数会读取指针指向的原生数据，并初始化 C# 侧的 Rank 和 Dimension 数组。</para>
+        /// </summary>
+        /// <param name="ptr">原生部分形状指针 / Native partial shape pointer</param>
+        public PartialShape(IntPtr ptr) : base(ptr)
+        {
+            if (ptr == IntPtr.Zero)
+            {
+                _rank = Rank.dynamic();
+                _dims = new Dimension[0];
+                return;
+            }
+
+            try
+            {
+                // 将原生指针转换为结构体以便读取
+                ov_partial_shape_t shape = Marshal.PtrToStructure<ov_partial_shape_t>(ptr);
+
+                _rank = new Rank(shape.rank.min, shape.rank.max);
+                long[] data = new long[rank.max * 2];
+                _dims = new Dimension[rank.max];
+                Marshal.Copy(shape.dims, data, 0, (int)rank.max * 2);
+                for (int i = 0; i < rank.max; ++i)
+                {
+                    _dims[i] = new Dimension(data[2 * i], data[2 * i + 1]);
+                }
+            }
+            catch (Exception ex)
+            {
+                // 如果解析失败，回退到动态形状，防止崩溃
+                _rank = Rank.dynamic();
+                _dims = new Dimension[0];
+                // 记录日志（如果项目中有 Logger）
+                // MyLogger.Log.Error($"Failed to initialize PartialShape from native pointer: {ex.Message}");
+            }
+        }
 
         /// <summary>
         /// 从秩和维度构造 / Construct from rank and dimensions

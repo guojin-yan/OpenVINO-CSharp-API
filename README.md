@@ -104,7 +104,7 @@ dotnet run
 
 | Package                 | Description                    | Link                                                         |
 | ----------------------- | ------------------------------ | ------------------------------------------------------------ |
-| **OpenVINO.CSharp.API** | OpenVINO C# API core libraries | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API/) |
+| **OpenVINO.CSharp.API** | OpenVINO C# API core libraries | [![NuGet Gallery ](https://badge.fury.io/nu/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/) |
 
 ### Native Runtime Libraries
 

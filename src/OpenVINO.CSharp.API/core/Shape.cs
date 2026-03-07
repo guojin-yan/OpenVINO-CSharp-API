@@ -65,17 +65,6 @@ namespace OpenVinoSharp
     {
         #region 结构体定义 / Structure Definitions
 
-        /// <summary>
-        /// 原生形状结构体 / Native shape structure
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct ov_shape_t
-        {
-            /// <summary>维度数量 / Number of dimensions</summary>
-            public ulong rank;
-            /// <summary>维度指针 / Dimensions pointer</summary>
-            public IntPtr dims;
-        }
 
         #endregion
 
@@ -243,12 +232,12 @@ namespace OpenVinoSharp
         /// 获取维度数量 / Get number of dimensions (rank)
         /// </summary>
         /// <returns>维度数量 / Number of dimensions</returns>
-        public ulong get_rank()
+        public long get_rank()
         {
             ThrowIfDisposed();
             return _dims_array != null
-                ? (ulong)_dims_array.Length
-                : Marshal.PtrToStructure<ov_shape_t>(_ptr).rank;
+                ? (long)_dims_array.Length
+                : Marshal.PtrToStructure<Ov.ov_shape>(_ptr).rank;
         }
 
         /// <summary>
@@ -307,13 +296,27 @@ namespace OpenVinoSharp
         /// 转换为 ov_partial_shape_t 结构体 / Convert to ov_partial_shape_t structure
         /// </summary>
         /// <returns>ov_partial_shape_t 结构体 / ov_partial_shape_t structure</returns>
-        internal ov_partial_shape_t ToPartialShapeStruct()
+        internal ov_partial_shape_t to_partial_shape_struct()
         {
             // 使用原生 API 将 shape 转换为 partial_shape / Use native API to convert shape to partial_shape
             OpenVinoSharp.native.ov_shape_t shape = Marshal.PtrToStructure<OpenVinoSharp.native.ov_shape_t>(_ptr);
             ov_partial_shape_t partialShape = new ov_partial_shape_t();
             ExceptionHandler.ThrowOnError(ov_shape_to_partial_shape(shape, ref partialShape));
             return partialShape;
+        }
+
+        /// <summary>
+        /// 获取原生形状结构体的引用（不安全）/ Get reference to native shape structure (Unsafe).
+        /// <para>
+        /// 直接读取当前指针指向的结构体。注意：返回的结构体中的 dims 指针指向 OpenVINO 托管对象的内部内存。
+        /// 直接读取当前指针指向的结构体。注意：返回的结构体中的 dims 指针指向 OpenVINO 托管对象的内部内存。
+        /// </para>
+        /// </summary>
+        /// <returns>ov_shape_t 结构体引用 / The ov_shape_t structure reference.</returns>
+        public ov_shape_t get_native_shape()
+        {
+            ThrowIfDisposed();
+            return Marshal.PtrToStructure<ov_shape_t>(_ptr);
         }
 
         #endregion

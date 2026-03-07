@@ -11,7 +11,7 @@
     <AssemblyName>OpenVINO.CSharp.API</AssemblyName>
     <RootNamespace>OpenVinoSharp</RootNamespace>
 	
-    <Version>3.2.0-beta</Version>
+    <Version>3.2.2</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVINO C# API</Product>

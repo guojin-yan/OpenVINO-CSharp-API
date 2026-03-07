@@ -49,10 +49,11 @@
 //  ========================================================================
 //
 
+using OpenVinoSharp.Internal;
+using OpenVinoSharp.native;
 using System;
 using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
-using OpenVinoSharp.Internal;
 
 namespace OpenVinoSharp
 {
@@ -60,7 +61,7 @@ namespace OpenVinoSharp
     /// 节点输出端口类 / Node output port class
     /// <para>表示模型/节点的输出端口。/ Represents an output port of a model/node.</para>
     /// </summary>
-    public class NodeOutput : DisposableOvObject
+    public class Output : DisposableOvObject
     {
         #region 构造函数 / Constructors
 
@@ -68,7 +69,7 @@ namespace OpenVinoSharp
         /// 从原生指针构造 / Construct from native pointer
         /// </summary>
         /// <param name="ptr">原生节点输出指针 / Native node output pointer</param>
-        public NodeOutput(IntPtr ptr) : base(ptr) { }
+        public Output(IntPtr ptr) : base(ptr) { }
 
         #endregion
 
@@ -126,8 +127,18 @@ namespace OpenVinoSharp
         public PartialShape get_partial_shape()
         {
             ThrowIfDisposed();
-            Shape shape = get_shape();
-            return new PartialShape(shape.get_dims());
+            int size = Marshal.SizeOf(typeof(ov_partial_shape_t));
+            IntPtr shape_ptr = Marshal.AllocHGlobal(size);
+            try
+            {
+                ExceptionHandler.ThrowOnError(ov_port_get_partial_shape(_ptr, shape_ptr));
+                return new PartialShape(shape_ptr);
+            }
+            catch
+            {
+                Marshal.FreeHGlobal(shape_ptr);
+                throw;
+            }
         }
 
         /// <summary>

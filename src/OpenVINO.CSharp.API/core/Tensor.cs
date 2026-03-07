@@ -209,6 +209,10 @@ namespace OpenVinoSharp
                 ExceptionHandler.ThrowOnError(ov_tensor_get_shape(_ptr, ptr));
                 return new Shape(ptr);
             }
+            set 
+            {
+                ExceptionHandler.ThrowOnError(ov_tensor_set_shape(_ptr, value.get_native_shape()));
+            }
         }
 
         /// <summary>

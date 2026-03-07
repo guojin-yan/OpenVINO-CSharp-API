@@ -249,7 +249,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="port">节点端口 / Node port</param>
         /// <param name="tensor">张量 / Tensor</param>
-        public void set_tensor_by_port(NodeOutput port, Tensor tensor)
+        public void set_tensor_by_port(Output port, Tensor tensor)
         {
             ThrowIfDisposed();
             if (port == null)
@@ -266,7 +266,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="port">常量节点端口 / Const node port</param>
         /// <param name="tensor">张量 / Tensor</param>
-        public void set_tensor_by_const_port(NodeInput port, Tensor tensor)
+        public void set_tensor_by_const_port(Input port, Tensor tensor)
         {
             ThrowIfDisposed();
             if (port == null)
@@ -368,7 +368,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="port">节点端口 / Node port</param>
         /// <returns>张量 / Tensor</returns>
-        public Tensor get_tensor_by_port(NodeOutput port)
+        public Tensor get_tensor_by_port(Output port)
         {
             ThrowIfDisposed();
             if (port == null)
@@ -385,7 +385,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="port">常量节点端口 / Const node port</param>
         /// <returns>张量 / Tensor</returns>
-        public Tensor get_tensor_by_const_port(NodeInput port)
+        public Tensor get_tensor_by_const_port(Input port)
         {
             ThrowIfDisposed();
             if (port == null)

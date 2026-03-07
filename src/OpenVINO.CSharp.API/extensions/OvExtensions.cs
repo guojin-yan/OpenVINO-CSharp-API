@@ -72,7 +72,7 @@ namespace OpenVinoSharp.extensions
             ulong input_size = model.get_inputs_size();
             for (ulong i = 0; i < input_size; i++)
             {
-                using (NodeInput input = model.get_input(i))
+                using (Input input = model.get_input(i))
                 {
                     OvLogger.Info("     名称 / name: " + input.get_any_name());
                     OvLogger.Info("     类型 / type: " + input.get_element_type().get_type().ToString());
@@ -83,7 +83,7 @@ namespace OpenVinoSharp.extensions
             ulong output_size = model.get_outputs_size();
             for (ulong i = 0; i < output_size; i++)
             {
-                using (NodeOutput output = model.get_output(i))
+                using (Output output = model.get_output(i))
                 {
                     OvLogger.Info("     名称 / name: " + output.get_any_name());
                     OvLogger.Info("     类型 / type: " + output.get_element_type().get_type().ToString());

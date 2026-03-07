@@ -106,12 +106,12 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="idx">输入索引 / Input index</param>
         /// <returns>节点输入端口 / Node input port</returns>
-        public NodeInput get_input(ulong idx)
+        public Input get_input(ulong idx)
         {
             ThrowIfDisposed();
             IntPtr node_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_compiled_model_input_by_index(_ptr, idx, ref node_ptr));
-            return new NodeInput(node_ptr);
+            return new Input(node_ptr);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="tensor_name">张量名称 / Tensor name</param>
         /// <returns>节点输入端口 / Node input port</returns>
-        public NodeInput get_input_by_name(string tensor_name)
+        public Input get_input_by_name(string tensor_name)
         {
             ThrowIfDisposed();
             if (string.IsNullOrEmpty(tensor_name))
@@ -128,7 +128,7 @@ namespace OpenVinoSharp
             IntPtr node_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(
                 ov_compiled_model_input_by_name(_ptr, tensor_name, ref node_ptr));
-            return new NodeInput(node_ptr);
+            return new Input(node_ptr);
         }
 
         #endregion
@@ -152,12 +152,12 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="idx">输出索引 / Output index</param>
         /// <returns>常量输出节点描述 / Const output node description</returns>
-        public NodeOutput get_output(ulong idx)
+        public Output get_output(ulong idx)
         {
             ThrowIfDisposed();
             IntPtr node_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_compiled_model_output_by_index(_ptr, idx, ref node_ptr));
-            return new NodeOutput(node_ptr);
+            return new Output(node_ptr);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace OpenVinoSharp
         /// </summary>
         /// <param name="tensor_name">张量名称 / Tensor name</param>
         /// <returns>常量输出节点描述 / Const output node description</returns>
-        public NodeOutput get_output_by_name(string tensor_name)
+        public Output get_output_by_name(string tensor_name)
         {
             ThrowIfDisposed();
             if (string.IsNullOrEmpty(tensor_name))
@@ -174,7 +174,7 @@ namespace OpenVinoSharp
             IntPtr node_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(
                 ov_compiled_model_output_by_name(_ptr, tensor_name, ref node_ptr));
-            return new NodeOutput(node_ptr);
+            return new Output(node_ptr);
         }
 
         #endregion
