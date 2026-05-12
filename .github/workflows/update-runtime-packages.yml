@@ -53,8 +53,8 @@ jobs:
       skip: ${{ steps.find.outputs.skip }}
       reason: ${{ steps.find.outputs.reason }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.x"
       - id: find
@@ -73,8 +73,8 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - name: Build NuGet package
@@ -89,7 +89,7 @@ jobs:
           REPO_ROOT: ${{ github.workspace }}
         run: python3 .github/scripts/build_runtime_nupkg.py
       - name: Upload nupkg artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nupkg-${{ matrix.id }}
           path: out/*.nupkg
@@ -102,12 +102,12 @@ jobs:
     if: ${{ needs.discover.outputs.skip != 'true' && !inputs.dry_run }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - name: Download all nupkg artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
           pattern: nupkg-*
@@ -128,13 +128,13 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: artifacts
           pattern: nupkg-*
           merge-multiple: true
       - name: Create or update release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: openvino-runtime-v${{ needs.discover.outputs.version }}
           name: OpenVINO Runtime ${{ needs.discover.outputs.version }}
