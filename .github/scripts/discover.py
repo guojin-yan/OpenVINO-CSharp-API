@@ -33,6 +33,7 @@ import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.request
 from typing import Any
 
@@ -42,6 +43,9 @@ PACKAGES_PATH = ("repositories", "openvino", "packages")
 GH_RELEASES_API = (
     "https://api.github.com/repos/openvinotoolkit/openvino/releases?per_page=100"
 )
+# Tag the release job creates after a successful publish. Used as the
+# "have we already shipped this version?" marker.
+LOCAL_TAG_PREFIX = "openvino-runtime-v"
 
 # Each entry produces one NuGet package: OpenVINO.runtime.<id>
 # `archive` is a regex against the filename in the CDN's per-version dir;
@@ -79,6 +83,28 @@ def http_get(url: str) -> bytes:
         req.add_header("Accept", "application/vnd.github+json")
     with urllib.request.urlopen(req, timeout=60) as resp:
         return resp.read()
+
+
+def local_tag_exists(repo: str, tag: str) -> bool:
+    """Return True if `tag` exists in the GitHub repo `<owner>/<name>`.
+
+    Used to short-circuit the workflow when we've already published the
+    target OpenVINO version -- the release job creates this tag on every
+    successful run, so its presence means "nothing new to do here".
+    """
+    url = f"https://api.github.com/repos/{repo}/git/refs/tags/{tag}"
+    req = urllib.request.Request(url, headers={"User-Agent": "openvino-csharp-runtime-bot"})
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        req.add_header("Authorization", f"Bearer {token}")
+        req.add_header("Accept", "application/vnd.github+json")
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.status == 200
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return False
+        raise
 
 
 def parse_version(name: str) -> tuple[int, int, int] | None:
@@ -267,6 +293,23 @@ def main() -> int:
     if chosen_version is None or chosen_dir_name is None or chosen_node is None:
         emit_skip("no version directory satisfies both 'official release tag' and 'all core OSes present'")
         return 0
+
+    # Short-circuit if this version was already shipped in the current
+    # repo. The release job tags every successful run as
+    # `openvino-runtime-v<version>` -- its presence means nothing has
+    # changed since last time and we'd just be re-packing identical
+    # archives. Use FORCE_REPUBLISH=true to override.
+    repo = os.environ.get("GITHUB_REPOSITORY", "").strip()
+    force = (os.environ.get("FORCE_REPUBLISH") or "").strip().lower() == "true"
+    if repo and not force:
+        tag = f"{LOCAL_TAG_PREFIX}{chosen_version}"
+        if local_tag_exists(repo, tag):
+            emit_skip(
+                f"tag {tag} already exists in {repo}; nothing new to publish "
+                f"(set force_republish=true to rebuild and re-push)"
+            )
+            return 0
+        print(f"  tag {tag} not yet present in {repo}; proceeding", file=sys.stderr)
 
     items = collect_archives(chosen_node, chosen_version, chosen_dir_name)
     if not items:

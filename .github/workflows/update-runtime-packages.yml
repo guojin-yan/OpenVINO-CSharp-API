@@ -30,6 +30,11 @@ on:
         required: false
         type: boolean
         default: false
+      force_republish:
+        description: "Re-run even if the openvino-runtime-v<version> tag already exists in this repo."
+        required: false
+        type: boolean
+        default: false
   schedule:
     # Weekly: Mondays 06:00 UTC. The discover job no-ops when nothing new
     # has been published (skip-duplicate covers re-publishes too).
@@ -61,6 +66,8 @@ jobs:
         name: Resolve target version and platform matrix
         env:
           REQUESTED_VERSION: ${{ inputs.version }}
+          FORCE_REPUBLISH: ${{ inputs.force_republish }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 .github/scripts/discover.py
 
