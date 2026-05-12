@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Local output from .github/scripts/build_runtime_nupkg.py dry-runs
+/out/

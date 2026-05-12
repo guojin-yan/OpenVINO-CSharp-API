@@ -1,0 +1,150 @@
+name: Update OpenVINO Runtime Packages
+
+# Builds the OpenVINO.runtime.<platform> NuGet packages from Intel's
+# official binary CDN (storage.openvinotoolkit.org) and publishes them.
+#
+# Publishing target:
+#   - If the repo has a NUGET_API_KEY secret -> pushes to NuGet.org
+#     (the upstream maintainer's path; one-time secret configuration).
+#   - Otherwise -> pushes to GitHub Packages on the current repo owner's
+#     namespace, authenticated by the built-in GITHUB_TOKEN
+#     (the fork-testing path; no setup required).
+#
+# Source-of-truth checks:
+#   1. Binary archives come from storage.openvinotoolkit.org/repositories/openvino/packages/
+#   2. The selected release must also have a non-prerelease tag at
+#      github.com/openvinotoolkit/openvino (treats the upstream git tag as
+#      the authoritative "this is a real release" signal).
+#   3. Each archive is downloaded together with its .sha256 sibling and
+#      verified before packing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "OpenVINO release version (e.g. 2026.1.0). Leave blank to auto-detect latest."
+        required: false
+        type: string
+      dry_run:
+        description: "Build packages but skip publish step."
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Weekly: Mondays 06:00 UTC. The discover job no-ops when nothing new
+    # has been published (skip-duplicate covers re-publishes too).
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: update-runtime-packages
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    name: Discover latest OpenVINO release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.find.outputs.version }}
+      matrix: ${{ steps.find.outputs.matrix }}
+      skip: ${{ steps.find.outputs.skip }}
+      reason: ${{ steps.find.outputs.reason }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - id: find
+        name: Resolve target version and platform matrix
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/discover.py
+
+  build:
+    name: Build ${{ matrix.id }}
+    needs: discover
+    if: needs.discover.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Build NuGet package
+        env:
+          PKG_ID: ${{ matrix.id }}
+          PKG_VERSION: ${{ needs.discover.outputs.version }}
+          ARCHIVE_URL: ${{ matrix.archive_url }}
+          SHA256_URL: ${{ matrix.sha256_url }}
+          RID: ${{ matrix.rid }}
+          KIND: ${{ matrix.kind }}
+          OUT_DIR: ${{ github.workspace }}/out
+          REPO_ROOT: ${{ github.workspace }}
+        run: python3 .github/scripts/build_runtime_nupkg.py
+      - name: Upload nupkg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg-${{ matrix.id }}
+          path: out/*.nupkg
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Publish to NuGet feed
+    needs: [discover, build]
+    if: ${{ needs.discover.outputs.skip != 'true' && !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Download all nupkg artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: nupkg-*
+          merge-multiple: true
+      - name: Publish
+        env:
+          NUPKG_DIR: ${{ github.workspace }}/artifacts
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+        run: bash .github/scripts/publish.sh
+
+  release:
+    name: Attach to GitHub Release
+    needs: [discover, build, publish]
+    if: ${{ needs.discover.outputs.skip != 'true' && !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: nupkg-*
+          merge-multiple: true
+      - name: Create or update release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: openvino-runtime-v${{ needs.discover.outputs.version }}
+          name: OpenVINO Runtime ${{ needs.discover.outputs.version }}
+          body: |
+            Native OpenVINO runtime NuGet packages built from
+            [openvino_toolkit ${{ needs.discover.outputs.version }}](https://github.com/openvinotoolkit/openvino/releases/tag/${{ needs.discover.outputs.version }})
+            on Intel's official CDN at storage.openvinotoolkit.org.
+
+            Each archive's SHA-256 was verified against its `.sha256` sidecar
+            before packaging.
+          files: artifacts/*.nupkg
+          fail_on_unmatched_files: true
+          make_latest: false
