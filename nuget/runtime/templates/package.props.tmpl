@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OpenVINORuntime>$(MSBuildThisFileDirectory)..\..\runtimes</OpenVINORuntime>
+  </PropertyGroup>
+  <!--
+    For .NET Framework consumers we explicitly copy native libraries into the
+    output directory. Modern .NET (Core / 5+) auto-resolves runtimes/<rid>/native
+    so this ItemGroup intentionally no-ops there.
+  -->
+  <ItemGroup Condition="$(TargetFrameworkVersion.StartsWith('v4')) Or $(TargetFramework.StartsWith('net4'))">
+{CONTENT_ITEMS}
+  </ItemGroup>
+</Project>
