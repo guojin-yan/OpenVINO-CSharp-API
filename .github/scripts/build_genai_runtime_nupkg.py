@@ -349,7 +349,9 @@ def build_package(
             templates / "genai.package.props.tmpl",
             {**mapping, "CONTENT_ITEMS": render_content_items(runtime_names, rid, "win-x64")},
         )
-        props_dir = stage / "build"
+        # Keep the same build asset layout as the core runtime package.
+        # 与基础 runtime 包保持一致，使用 build/net 放置 props。
+        props_dir = stage / "build" / "net"
         props_dir.mkdir(parents=True, exist_ok=True)
         (props_dir / f"{nuget_id}.props").write_text(props_text, encoding="utf-8")
 

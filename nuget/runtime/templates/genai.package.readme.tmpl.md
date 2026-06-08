@@ -17,8 +17,15 @@ dotnet add package JYPPX.OpenVINO.CSharp.API
 dotnet add package {NUGET_ID}
 ```
 
+Install this runtime package only when you use `OpenVinoSharp.GenAI`. Core
+OpenVINO APIs work with the normal `OpenVINO.runtime.*` packages and do not
+load `openvino_genai_c`.
+
+仅在使用 `OpenVinoSharp.GenAI` 时安装此 runtime 包。基础 OpenVINO API 只需要普通
+`OpenVINO.runtime.*` 包，不会加载 `openvino_genai_c`。
+
 For .NET 5+ consumers the binaries are auto-resolved. For .NET Framework 4.x
-consumers the included `build/{NUGET_ID}.props` copies runtime files to the
+consumers the included `build/net/{NUGET_ID}.props` copies runtime files to the
 output directory.
 
 ## Provenance / 来源

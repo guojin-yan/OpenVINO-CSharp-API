@@ -21,7 +21,7 @@ namespace OpenVinoSharp.Tests
         {
             try
             {
-                ConfigureLocalGenAIRuntimeHint();
+                ConfigureLocalOpenVINORuntimeHint();
                 // 尝试获取版本信息来检测 OpenVINO 是否可用
                 var version = Ov.get_openvino_version();
                 _isAvailable = !string.IsNullOrEmpty(version.description);
@@ -50,16 +50,16 @@ namespace OpenVinoSharp.Tests
         /// </summary>
         public static bool IsAvailable => _isAvailable;
 
-        private static void ConfigureLocalGenAIRuntimeHint()
+        private static void ConfigureLocalOpenVINORuntimeHint()
         {
+            // 只为基础 OpenVINO runtime 设置搜索提示，不设置 GenAI 环境变量。
+            // Only configure the core OpenVINO runtime hint here; GenAI tests use OpenVINOGenAIFactAttribute.
             const string localRuntimeRoot = @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64";
             if (!Directory.Exists(localRuntimeRoot))
                 return;
 
             if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OPENVINO_RUNTIME_DIR")))
                 Environment.SetEnvironmentVariable("OPENVINO_RUNTIME_DIR", localRuntimeRoot);
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OPENVINO_GENAI_RUNTIME_DIR")))
-                Environment.SetEnvironmentVariable("OPENVINO_GENAI_RUNTIME_DIR", localRuntimeRoot);
         }
     }
 }

@@ -24,6 +24,10 @@ The GenAI runtime package contains OpenVINO Core, OpenVINO GenAI C API, tokenize
 
 GenAI runtime 包包含 OpenVINO Core、OpenVINO GenAI C API、tokenizers、frontends、设备插件和 TBB 运行时依赖。
 
+If your application only uses the core OpenVINO APIs such as `Core`, `Model`, `Tensor`, `CompiledModel`, and `InferRequest`, install only the normal `OpenVINO.runtime.*` package. The managed assembly contains GenAI wrappers, but `openvino_genai_c` is loaded only when `OpenVinoSharp.GenAI` APIs are called.
+
+如果应用只使用 `Core`、`Model`、`Tensor`、`CompiledModel`、`InferRequest` 等基础 OpenVINO API，只安装普通 `OpenVINO.runtime.*` 包即可。托管程序集虽然包含 GenAI 封装，但只有调用 `OpenVinoSharp.GenAI` API 时才会加载 `openvino_genai_c`。
+
 ## GitHub Packaging / GitHub 自动打包
 
 The package is built in GitHub Actions, mirroring the existing pure OpenVINO runtime workflow:
@@ -105,7 +109,7 @@ licenses\
 
 For .NET 5+, NuGet restores runtime assets under `runtimes/win-x64/native`; `GenAINativeLibraryLoader` searches that layout automatically.
 
-For .NET Framework 4.x, the package includes `build/JYPPX.OpenVINO.GenAI.runtime.win.props`, which copies native files to `dll/win-x64`.
+For .NET Framework 4.x, the package includes `build/net/JYPPX.OpenVINO.GenAI.runtime.win.props`, which copies native files to `dll/win-x64`.
 
 Manual fallback for local development:
 

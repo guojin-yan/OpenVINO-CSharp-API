@@ -5,11 +5,19 @@ namespace OpenVinoSharp.GenAI
 {
     /// <summary>
     /// OpenVINO GenAI 全局入口 / Global entry point for OpenVINO GenAI.
+    /// <para>
+    /// GenAI 是可选扩展；基础 OpenVINO API 不会自动加载 <c>openvino_genai_c</c>。
+    /// GenAI is optional; core OpenVINO APIs do not automatically load <c>openvino_genai_c</c>.
+    /// </para>
     /// </summary>
     public static class GenAI
     {
         /// <summary>
         /// 初始化 GenAI 原生运行时 / Initializes the GenAI native runtime.
+        /// <para>
+        /// 仅在使用 <c>OpenVinoSharp.GenAI</c> 功能时调用；如果只使用基础推理接口，只需安装基础 runtime 包。
+        /// Call this only when using <c>OpenVinoSharp.GenAI</c>; core inference APIs only require the core runtime package.
+        /// </para>
         /// </summary>
         /// <param name="libraryPath">
         /// 可选的 <c>openvino_genai_c</c> 完整路径；为空时自动搜索。
@@ -43,4 +51,3 @@ namespace OpenVinoSharp.GenAI
         }
     }
 }
-
