@@ -2,6 +2,7 @@
 // Licensed under the Apache-2.0 License.
 
 using System;
+using System.IO;
 using OpenVinoSharp;
 using Xunit;
 
@@ -14,12 +15,13 @@ namespace OpenVinoSharp.Tests
     public class OpenVINOFactAttribute : FactAttribute
     {
         private static readonly bool _isAvailable;
-        private static readonly string _skipReason;
+        private static readonly string? _skipReason;
 
         static OpenVINOFactAttribute()
         {
             try
             {
+                ConfigureLocalGenAIRuntimeHint();
                 // 尝试获取版本信息来检测 OpenVINO 是否可用
                 var version = Ov.get_openvino_version();
                 _isAvailable = !string.IsNullOrEmpty(version.description);
@@ -47,5 +49,17 @@ namespace OpenVinoSharp.Tests
         /// Check if OpenVINO is available
         /// </summary>
         public static bool IsAvailable => _isAvailable;
+
+        private static void ConfigureLocalGenAIRuntimeHint()
+        {
+            const string localRuntimeRoot = @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64";
+            if (!Directory.Exists(localRuntimeRoot))
+                return;
+
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OPENVINO_RUNTIME_DIR")))
+                Environment.SetEnvironmentVariable("OPENVINO_RUNTIME_DIR", localRuntimeRoot);
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OPENVINO_GENAI_RUNTIME_DIR")))
+                Environment.SetEnvironmentVariable("OPENVINO_GENAI_RUNTIME_DIR", localRuntimeRoot);
+        }
     }
 }
