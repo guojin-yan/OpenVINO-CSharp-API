@@ -111,6 +111,7 @@ dotnet run
 | Package | Description | Link |
 | ------- | ----------- | ---- |
 | **OpenVINO.runtime.win** | Native bindings for Windows | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
+| **JYPPX.OpenVINO.GenAI.runtime.win** | Native OpenVINO GenAI runtime for Windows | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **OpenVINO.runtime.ubuntu.24-x86_64** | Native bindings for ubuntu.24-x86_64 | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.24-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.24-x86_64/) |
 | **OpenVINO.runtime.ubuntu.22-x86_64** | Native bindings for ubuntu.22-x86_64 | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.22-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.22-x86_64/) |
 | **OpenVINO.runtime.ubuntu.20-x86_64** | Native bindings for ubuntu.20-x86_64 | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.20-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.20-x86_64/) |

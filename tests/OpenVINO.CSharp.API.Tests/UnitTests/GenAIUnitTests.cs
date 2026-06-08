@@ -1,6 +1,9 @@
 // Copyright (c) 2026 Guojin Yan
 // Licensed under the Apache-2.0 License.
 
+using System;
+using System.IO;
+using OpenVinoSharp;
 using OpenVinoSharp.GenAI;
 using Xunit;
 
@@ -39,6 +42,39 @@ namespace OpenVinoSharp.Tests.UnitTests
                 Assert.True(OpenVinoSharp.GenAI.GenAI.IsAvailable);
             else
                 Assert.False(string.IsNullOrWhiteSpace(error));
+        }
+
+        /// <summary>
+        /// GenAI loader 应搜索 NuGet runtime native 布局 / GenAI loader should search the NuGet runtime native layout.
+        /// </summary>
+        [Fact]
+        public void GenAINativeLibraryLoaderSearchPaths_IncludeNuGetRuntimeLayout()
+        {
+            string? oldRuntimeRoot = Environment.GetEnvironmentVariable("OPENVINO_GENAI_RUNTIME_DIR");
+            string root = Path.Combine(Path.GetTempPath(), "ov-genai-runtime-" + Guid.NewGuid().ToString("N"));
+            string expected = Path.Combine(
+                root,
+                "runtimes",
+                NativeLibraryLoader.GetRuntimeIdentifier(),
+                "native",
+                GenAINativeLibraryLoader.GetLibraryName());
+
+            Directory.CreateDirectory(Path.GetDirectoryName(expected)!);
+            File.WriteAllBytes(expected, new byte[] { 0 });
+
+            try
+            {
+                Environment.SetEnvironmentVariable("OPENVINO_GENAI_RUNTIME_DIR", root);
+                string[] paths = GenAINativeLibraryLoader.GetPossibleLibraryPaths();
+
+                Assert.Contains(paths, path => string.Equals(path, expected, StringComparison.OrdinalIgnoreCase));
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("OPENVINO_GENAI_RUNTIME_DIR", oldRuntimeRoot);
+                if (Directory.Exists(root))
+                    Directory.Delete(root, recursive: true);
+            }
         }
 
         /// <summary>

@@ -4,6 +4,8 @@
   href: index.md
 - name: Windows 安装
   href: windows.md
+- name: OpenVINO GenAI Runtime
+  href: genai-runtime.md
 - name: Linux 安装
   href: linux.md
 - name: macOS 安装

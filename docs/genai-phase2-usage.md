@@ -15,11 +15,14 @@ Covered in this phase:
 - `JsonContainer`
 - `ChatHistory`
 
+Covered after Phase 2:
+
+- GenAI runtime NuGet packaging: see `docs/articles/installation/genai-runtime.md`.
+
 Not covered yet:
 
 - VLM pipeline
 - Whisper pipeline
-- GenAI runtime NuGet packaging
 
 ## Runtime Loading / Runtime 加载
 

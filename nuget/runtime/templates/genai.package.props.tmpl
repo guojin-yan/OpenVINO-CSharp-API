@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OpenVINOGenAIRuntime>$(MSBuildThisFileDirectory)..\..\runtimes</OpenVINOGenAIRuntime>
+  </PropertyGroup>
+  <!--
+    .NET 5+ resolves runtimes/<rid>/native automatically.
+    .NET Framework 4.x needs explicit copy items so native DLLs sit next to the managed assembly.
+    .NET 5+ 会自动解析 runtimes/<rid>/native；.NET Framework 4.x 需要显式复制到输出目录。
+  -->
+  <ItemGroup Condition="$(TargetFrameworkVersion.StartsWith('v4')) Or $(TargetFramework.StartsWith('net4'))">
+{CONTENT_ITEMS}
+  </ItemGroup>
+</Project>
