@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -139,7 +139,9 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
 
             IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_input_by_name(_ptr, name, ref node_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                name,
+                namePtr => ov_model_input_by_name_utf8(_ptr, namePtr, ref node_ptr)));
             return new Input(node_ptr);
         }
 
@@ -168,7 +170,9 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
             
             IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_input_by_name(_ptr, name, ref node_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                name,
+                namePtr => ov_model_input_by_name_utf8(_ptr, namePtr, ref node_ptr)));
             return new Input(node_ptr);
         }
         /// <summary>
@@ -184,6 +188,51 @@ namespace OpenVinoSharp
                 inputs.Add(get_input(index));
             }
             return inputs;
+        }
+
+        /// <summary>
+        /// 获取模型输入数量 / Gets the number of model inputs.
+        /// </summary>
+        public ulong InputCount
+        {
+            get { return get_inputs_size(); }
+        }
+
+        /// <summary>
+        /// 获取默认输入端口 / Gets the default input port.
+        /// </summary>
+        /// <returns>输入端口 / Input port.</returns>
+        public Input GetInput()
+        {
+            return input();
+        }
+
+        /// <summary>
+        /// 按索引获取输入端口 / Gets an input port by index.
+        /// </summary>
+        /// <param name="idx">输入索引 / Input index.</param>
+        /// <returns>输入端口 / Input port.</returns>
+        public Input GetInput(ulong idx)
+        {
+            return get_input(idx);
+        }
+
+        /// <summary>
+        /// 按名称获取输入端口 / Gets an input port by name.
+        /// </summary>
+        /// <param name="name">输入名称 / Input name.</param>
+        /// <returns>输入端口 / Input port.</returns>
+        public Input GetInput(string name)
+        {
+            return get_input_by_name(name);
+        }
+
+        /// <summary>
+        /// 获取全部输入端口 / Gets all input ports.
+        /// </summary>
+        public List<Input> Inputs
+        {
+            get { return inputs(); }
         }
         #endregion
 
@@ -236,7 +285,9 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
 
             IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_output_by_name(_ptr, name, ref node_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                name,
+                namePtr => ov_model_output_by_name_utf8(_ptr, namePtr, ref node_ptr)));
             return new Output(node_ptr);
         }
         /// <summary>
@@ -264,7 +315,9 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
             
             IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_output_by_name(_ptr, name, ref node_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                name,
+                namePtr => ov_model_output_by_name_utf8(_ptr, namePtr, ref node_ptr)));
             return new Output(node_ptr);
         }
 
@@ -282,6 +335,51 @@ namespace OpenVinoSharp
             }
             return outputs;
         }
+
+        /// <summary>
+        /// 获取模型输出数量 / Gets the number of model outputs.
+        /// </summary>
+        public ulong OutputCount
+        {
+            get { return get_outputs_size(); }
+        }
+
+        /// <summary>
+        /// 获取默认输出端口 / Gets the default output port.
+        /// </summary>
+        /// <returns>输出端口 / Output port.</returns>
+        public Output GetOutput()
+        {
+            return output();
+        }
+
+        /// <summary>
+        /// 按索引获取输出端口 / Gets an output port by index.
+        /// </summary>
+        /// <param name="idx">输出索引 / Output index.</param>
+        /// <returns>输出端口 / Output port.</returns>
+        public Output GetOutput(ulong idx)
+        {
+            return get_output(idx);
+        }
+
+        /// <summary>
+        /// 按名称获取输出端口 / Gets an output port by name.
+        /// </summary>
+        /// <param name="name">输出名称 / Output name.</param>
+        /// <returns>输出端口 / Output port.</returns>
+        public Output GetOutput(string name)
+        {
+            return get_output_by_name(name);
+        }
+
+        /// <summary>
+        /// 获取全部输出端口 / Gets all output ports.
+        /// </summary>
+        public List<Output> Outputs
+        {
+            get { return outputs(); }
+        }
         #endregion
 
         #region 模型属性 / Model Properties
@@ -295,9 +393,23 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             IntPtr name_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_model_get_friendly_name(_ptr, ref name_ptr));
-            string name = Marshal.PtrToStringAnsi(name_ptr) ?? string.Empty;
-            ov_free(name_ptr);
-            return name;
+            try
+            {
+                return StringUtils.Utf8PtrToString(name_ptr);
+            }
+            finally
+            {
+                if (name_ptr != IntPtr.Zero)
+                    ov_free(name_ptr);
+            }
+        }
+
+        /// <summary>
+        /// 获取模型友好名称 / Gets the model friendly name.
+        /// </summary>
+        public string FriendlyName
+        {
+            get { return get_friendly_name(); }
         }
 
         /// <summary>
@@ -324,6 +436,15 @@ namespace OpenVinoSharp
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// 检查模型是否包含动态形状 / Checks whether the model contains dynamic shapes.
+        /// </summary>
+        /// <returns>是否为动态模型 / True when the model is dynamic.</returns>
+        public bool IsDynamic()
+        {
+            return is_dynamic();
         }
 
         #endregion
@@ -372,8 +493,10 @@ namespace OpenVinoSharp
                     ov_partial_shape_t partialShape = shape.to_partial_shape_struct();
                     try
                     {
-                        ExceptionHandler.ThrowOnError(
-                            ov_model_reshape_input_by_name(_ptr, input.get_any_name(), partialShape));
+                        string inputName = input.get_any_name();
+                        ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                            inputName,
+                            namePtr => ov_model_reshape_input_by_name_utf8(_ptr, namePtr, partialShape)));
                     }
                     finally
                     {
@@ -405,8 +528,9 @@ namespace OpenVinoSharp
             ov_partial_shape_t partialShape = shape.to_partial_shape_struct();
             try
             {
-                ExceptionHandler.ThrowOnError(
-                    ov_model_reshape_input_by_name(_ptr, input_name, partialShape));
+                ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                    input_name,
+                    namePtr => ov_model_reshape_input_by_name_utf8(_ptr, namePtr, partialShape)));
             }
             finally
             {
@@ -432,8 +556,9 @@ namespace OpenVinoSharp
             ov_partial_shape_t nativeShape = partial_shape.ToNativeStruct();
             try
             {
-                ExceptionHandler.ThrowOnError(
-                    ov_model_reshape_input_by_name(_ptr, input_name, nativeShape));
+                ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                    input_name,
+                    namePtr => ov_model_reshape_input_by_name_utf8(_ptr, namePtr, nativeShape)));
             }
             finally
             {
@@ -476,6 +601,63 @@ namespace OpenVinoSharp
             {
                 reshape(pair.Key, pair.Value);
             }
+        }
+
+        /// <summary>
+        /// 重塑模型输入 / Reshapes model inputs.
+        /// </summary>
+        /// <param name="partialShape">新的部分形状 / New partial shape.</param>
+        public void Reshape(PartialShape partialShape)
+        {
+            reshape(partialShape);
+        }
+
+        /// <summary>
+        /// 重塑模型输入 / Reshapes model inputs.
+        /// </summary>
+        /// <param name="shape">新的形状 / New shape.</param>
+        public void Reshape(Shape shape)
+        {
+            reshape(shape);
+        }
+
+        /// <summary>
+        /// 按输入名称重塑模型 / Reshapes a model input by name.
+        /// </summary>
+        /// <param name="inputName">输入名称 / Input name.</param>
+        /// <param name="shape">新的形状 / New shape.</param>
+        public void Reshape(string inputName, Shape shape)
+        {
+            reshape(inputName, shape);
+        }
+
+        /// <summary>
+        /// 按输入名称重塑模型 / Reshapes a model input by name.
+        /// </summary>
+        /// <param name="inputName">输入名称 / Input name.</param>
+        /// <param name="partialShape">新的部分形状 / New partial shape.</param>
+        public void Reshape(string inputName, PartialShape partialShape)
+        {
+            reshape(inputName, partialShape);
+        }
+
+        /// <summary>
+        /// 按输入名称重塑模型 / Reshapes a model input by name.
+        /// </summary>
+        /// <param name="inputName">输入名称 / Input name.</param>
+        /// <param name="dims">维度数组 / Dimension array.</param>
+        public void Reshape(string inputName, long[] dims)
+        {
+            reshape(inputName, dims);
+        }
+
+        /// <summary>
+        /// 批量重塑多个输入 / Reshapes multiple inputs.
+        /// </summary>
+        /// <param name="shapes">形状字典 / Shape dictionary.</param>
+        public void Reshape(Dictionary<string, Shape> shapes)
+        {
+            reshape(shapes);
         }
 
         #endregion

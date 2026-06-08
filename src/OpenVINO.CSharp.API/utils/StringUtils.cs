@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -221,6 +221,78 @@ namespace OpenVinoSharp
             {
                 FreeUtf8Ptr(ptr);
             }
+        }
+
+        /// <summary>
+        /// 使用 UTF-8 原生字符串执行回调并自动释放内存 / Execute an action with a native UTF-8 string and free it automatically
+        /// </summary>
+        /// <typeparam name="T">回调返回类型 / Callback return type</typeparam>
+        /// <param name="value">托管字符串 / Managed string</param>
+        /// <param name="action">接收 UTF-8 指针的回调 / Callback receiving the UTF-8 pointer</param>
+        /// <returns>回调返回值 / Callback result</returns>
+        public static T WithUtf8Ptr<T>(string value, Func<IntPtr, T> action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            IntPtr ptr = StringToUtf8Ptr(value);
+            try
+            {
+                return action(ptr);
+            }
+            finally
+            {
+                FreeUtf8Ptr(ptr);
+            }
+        }
+
+        /// <summary>
+        /// 使用两个 UTF-8 原生字符串执行回调并自动释放内存 / Execute an action with two native UTF-8 strings and free them automatically
+        /// </summary>
+        /// <typeparam name="T">回调返回类型 / Callback return type</typeparam>
+        /// <param name="first">第一个托管字符串 / First managed string</param>
+        /// <param name="second">第二个托管字符串 / Second managed string</param>
+        /// <param name="action">接收两个 UTF-8 指针的回调 / Callback receiving the two UTF-8 pointers</param>
+        /// <returns>回调返回值 / Callback result</returns>
+        public static T WithUtf8Ptrs<T>(string first, string second, Func<IntPtr, IntPtr, T> action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            IntPtr firstPtr = StringToUtf8Ptr(first);
+            IntPtr secondPtr = StringToUtf8Ptr(second);
+            try
+            {
+                return action(firstPtr, secondPtr);
+            }
+            finally
+            {
+                FreeUtf8Ptr(secondPtr);
+                FreeUtf8Ptr(firstPtr);
+            }
+        }
+
+        /// <summary>
+        /// 将元素数量转换为本机 size_t 宽度 / Convert an element count to the native size_t width
+        /// </summary>
+        /// <param name="value">元素数量 / Element count</param>
+        /// <returns>本机 size_t 值 / Native size_t value</returns>
+        public static UIntPtr ToNativeSize(ulong value)
+        {
+            if (UIntPtr.Size == 4 && value > uint.MaxValue)
+                throw new OverflowException("size_t value exceeds 32-bit native pointer width. / size_t 数值超过 32 位本机指针宽度。");
+
+            return new UIntPtr(value);
+        }
+
+        /// <summary>
+        /// 将本机 size_t 转换为托管 ulong / Convert native size_t to managed ulong
+        /// </summary>
+        /// <param name="value">本机 size_t 值 / Native size_t value</param>
+        /// <returns>托管 ulong 值 / Managed ulong value</returns>
+        public static ulong FromNativeSize(UIntPtr value)
+        {
+            return value.ToUInt64();
         }
 
 #if HAS_SPAN

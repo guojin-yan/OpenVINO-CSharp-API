@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -70,12 +70,18 @@ namespace OpenVinoSharp
         // NuGet 包名称常量 / NuGet package name constants
         private static readonly string[] OpenVINOPackageNames = new[]
         {
+            "jyppx.openvino.csharp.api",
             "openvino.runtime",
             "openvino.runtime.win",
             "openvino.runtime.linux-x64",
             "openvino.runtime.linux-arm64",
             "openvino.runtime.osx-x64",
             "openvino.runtime.osx-arm64",
+            "openvino.runtime.ubuntu.24-x86_64",
+            "openvino.runtime.ubuntu.22-x86_64",
+            "openvino.runtime.ubuntu.22-arm64",
+            "openvino.runtime.macos-arm64",
+            "openvino.runtime.macos-x86_64",
             "openvino",
             "openvino-csharp-api"
         };
@@ -124,6 +130,45 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
+        /// 获取当前 .NET runtime identifier / Get the current .NET runtime identifier.
+        /// </summary>
+        /// <returns>运行时标识符，例如 win-x64、linux-arm64 或 osx-x64 / RID such as win-x64, linux-arm64 or osx-x64.</returns>
+        public static string GetRuntimeIdentifier()
+        {
+            string os;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                os = "win";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                os = "linux";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                os = "osx";
+            else
+                os = "unknown";
+
+            string arch;
+            switch (RuntimeInformation.ProcessArchitecture)
+            {
+                case Architecture.X64:
+                    arch = "x64";
+                    break;
+                case Architecture.X86:
+                    arch = "x86";
+                    break;
+                case Architecture.Arm64:
+                    arch = "arm64";
+                    break;
+                case Architecture.Arm:
+                    arch = "arm";
+                    break;
+                default:
+                    arch = RuntimeInformation.ProcessArchitecture.ToString().ToLower();
+                    break;
+            }
+
+            return $"{os}-{arch}";
+        }
+
+        /// <summary>
         /// 加载原生库 / Load native library
         /// </summary>
         /// <param name="libraryPath">库文件路径（可选，默认为 null，使用平台默认搜索路径）/ Library file path (optional, defaults to null, uses platform default search path)</param>
@@ -158,10 +203,11 @@ namespace OpenVinoSharp
 
                 if (_libraryHandle == IntPtr.Zero)
                 {
+                    string searchedPaths = string.Join(Environment.NewLine + "  ", GetPossibleLibraryPaths(libName));
                     throw new DllNotFoundException(
                         $"Failed to load native library '{libName}'. " +
-                        $"Platform: {GetPlatformIdentifier()}, Architecture: {GetArchitectureIdentifier()}. " +
-                        $"Please ensure OpenVINO runtime is installed.");
+                        $"Platform: {GetPlatformIdentifier()}, Architecture: {GetArchitectureIdentifier()}, RID: {GetRuntimeIdentifier()}. " +
+                        $"Please ensure OpenVINO runtime is installed. Searched paths:{Environment.NewLine}  {searchedPaths}");
                 }
 
                 _isLoaded = true;
@@ -198,6 +244,7 @@ namespace OpenVinoSharp
             string[] nugetCachePaths = GetNuGetCachePaths();
             string platform = GetPlatformIdentifier();
             string arch = GetArchitectureIdentifier();
+            string rid = GetRuntimeIdentifier();
             
             foreach (string cachePath in nugetCachePaths)
             {
@@ -219,6 +266,8 @@ namespace OpenVinoSharp
                     // 构建可能的库路径 / Build possible library paths
                     string[] possiblePaths = new[]
                     {
+                        // runtimes/{rid}/native/{libName}
+                        Path.Combine(versionPath, "runtimes", rid, "native", libName),
                         // runtimes/{platform}-{arch}/native/{libName}
                         Path.Combine(versionPath, "runtimes", $"{platform}-{arch}", "native", libName),
                         // runtimes/{platform}/native/{libName}
@@ -419,13 +468,24 @@ namespace OpenVinoSharp
             var paths = new System.Collections.Generic.List<string>();
             string baseFileName = Path.GetFileNameWithoutExtension(libName);
             string extension = Path.GetExtension(libName);
+            string rid = GetRuntimeIdentifier();
             
             // 当前目录 / Current directory
             paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, libName));
+            paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtimes", rid, "native", libName));
             
             // 平台特定子目录 / Platform-specific subdirectory
             string platform = GetPlatformIdentifier();
             string arch = GetArchitectureIdentifier();
+            string openvinoRuntimeDir = Environment.GetEnvironmentVariable("OPENVINO_RUNTIME_DIR");
+            if (!string.IsNullOrEmpty(openvinoRuntimeDir))
+            {
+                paths.Add(Path.Combine(openvinoRuntimeDir, libName));
+                paths.Add(Path.Combine(openvinoRuntimeDir, "bin", libName));
+                paths.Add(Path.Combine(openvinoRuntimeDir, "runtime", "bin", "intel64", "Release", libName));
+                paths.Add(Path.Combine(openvinoRuntimeDir, "runtime", "lib", arch, libName));
+            }
+
             // Windows 特定路径 / Windows-specific paths
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -438,9 +498,9 @@ namespace OpenVinoSharp
                     string assemblyDir = Path.GetDirectoryName(assemblyLocation);
                     paths.Add(Path.Combine(assemblyDir, libName));
                     paths.Add(Path.Combine(assemblyDir, "dll", "win-x64", libName));
-                    paths.Add(Path.Combine(assemblyDir, "runtimes", "win-x64", "native", libName));
+                    paths.Add(Path.Combine(assemblyDir, "runtimes", rid, "native", libName));
                     paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dll", "win-x64", libName));
-                    paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtimes", "win-x64", "native", libName));
+                    paths.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtimes", rid, "native", libName));
                 }
                 
                 // 检查 OPENVINO_DIR 环境变量 / Check OPENVINO_DIR environment variable
@@ -466,6 +526,7 @@ namespace OpenVinoSharp
                 {
                     string assemblyDir = Path.GetDirectoryName(assemblyLocation);
                     paths.Add(Path.Combine(assemblyDir, libName));
+                    paths.Add(Path.Combine(assemblyDir, "runtimes", rid, "native", libName));
                 }
             }
 

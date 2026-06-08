@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -151,6 +151,18 @@ namespace OpenVinoSharp.native
             ref IntPtr core);
 
         /// <summary>
+        /// 使用 UTF-8 XML 配置文件路径构造 OpenVINO Core 实例 / Constructs OpenVINO Core with an UTF-8 XML configuration path
+        /// </summary>
+        /// <param name="xml_config_file">UTF-8 配置文件路径指针 / UTF-8 configuration file path pointer</param>
+        /// <param name="core">返回的 Core 指针 / Returned Core pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_core_create_with_config",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_create_with_config_utf8(
+            IntPtr xml_config_file,
+            ref IntPtr core);
+
+        /// <summary>
         /// 释放 ov_core_t 分配的内存 / Release the memory allocated by ov_core_t
         /// </summary>
         /// <param name="core">Core 指针 / Core pointer</param>
@@ -190,6 +202,22 @@ namespace OpenVinoSharp.native
             ref IntPtr model);
 
         /// <summary>
+        /// 从 UTF-8 路径读取模型 / Reads a model from UTF-8 encoded paths
+        /// </summary>
+        /// <param name="core">Core 指针 / Core pointer</param>
+        /// <param name="model_path">UTF-8 模型路径指针 / UTF-8 model path pointer</param>
+        /// <param name="bin_path">UTF-8 权重路径指针 / UTF-8 weights path pointer</param>
+        /// <param name="model">返回的模型指针 / Returned model pointer</param>
+        /// <returns>操作状态 / Operation status</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_core_read_model",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_read_model_utf8(
+            IntPtr core,
+            IntPtr model_path,
+            IntPtr bin_path,
+            ref IntPtr model);
+
+        /// <summary>
         /// 从内存缓冲区读取模型 / Reads models from memory buffer
         /// </summary>
         /// <param name="core">Core 指针 / Core pointer</param>
@@ -204,6 +232,18 @@ namespace OpenVinoSharp.native
             IntPtr core,
             ref byte model_str,
             ulong str_len,
+            IntPtr weights,
+            ref IntPtr model);
+
+        /// <summary>
+        /// 从内存缓冲区读取模型，长度使用本机 size_t / Reads a model from memory buffer using native size_t length
+        /// </summary>
+        [DllImport("openvino_c", EntryPoint = "ov_core_read_model_from_memory_buffer",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_read_model_from_memory_buffer_native_size(
+            IntPtr core,
+            ref byte model_str,
+            UIntPtr str_len,
             IntPtr weights,
             ref IntPtr model);
 
@@ -230,6 +270,18 @@ namespace OpenVinoSharp.native
             ref IntPtr compiled_model);
 
         /// <summary>
+        /// 使用 UTF-8 设备名编译模型 / Compiles a model with an UTF-8 encoded device name
+        /// </summary>
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_utf8(
+            IntPtr core,
+            IntPtr model,
+            IntPtr device_name,
+            UIntPtr property_args_size,
+            ref IntPtr compiled_model);
+
+        /// <summary>
         /// 从源模型对象创建编译模型（带 1 个属性对）/ Creates a compiled model from a source model object with 1 property pair
         /// </summary>
         /// <param name="core">Core 指针 / Core pointer</param>
@@ -247,6 +299,17 @@ namespace OpenVinoSharp.native
             IntPtr model,
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr key1,
+            IntPtr value1);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_utf8(
+            IntPtr core,
+            IntPtr model,
+            IntPtr device_name,
+            UIntPtr property_args_size,
             ref IntPtr compiled_model,
             IntPtr key1,
             IntPtr value1);
@@ -271,6 +334,19 @@ namespace OpenVinoSharp.native
             IntPtr model,
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_utf8(
+            IntPtr core,
+            IntPtr model,
+            IntPtr device_name,
+            UIntPtr property_args_size,
             ref IntPtr compiled_model,
             IntPtr key1,
             IntPtr value1,
@@ -307,6 +383,21 @@ namespace OpenVinoSharp.native
             IntPtr key3,
             IntPtr value3);
 
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_utf8(
+            IntPtr core,
+            IntPtr model,
+            IntPtr device_name,
+            UIntPtr property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2,
+            IntPtr key3,
+            IntPtr value3);
+
         /// <summary>
         /// 从 IR/ONNX/PDPD 文件读取并创建编译模型 / Reads a model and creates a compiled model from the IR/ONNX/PDPD file
         /// </summary>
@@ -323,6 +414,18 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPStr)] string model_path,
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
+            ref IntPtr compiled_model);
+
+        /// <summary>
+        /// 使用 UTF-8 模型路径和设备名从文件编译模型 / Compiles a model from UTF-8 model path and device name
+        /// </summary>
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_from_file_utf8(
+            IntPtr core,
+            IntPtr model_path,
+            IntPtr device_name,
+            UIntPtr property_args_size,
             ref IntPtr compiled_model);
 
         /// <summary>
@@ -347,6 +450,17 @@ namespace OpenVinoSharp.native
             IntPtr key1,
             IntPtr value1);
 
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_from_file_utf8(
+            IntPtr core,
+            IntPtr model_path,
+            IntPtr device_name,
+            UIntPtr property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr key1,
+            IntPtr value1);
+
         /// <summary>
         /// 从文件读取并创建编译模型（带 2 个属性对）/ Reads a model and creates a compiled model from file with 2 property pairs
         /// </summary>
@@ -367,6 +481,19 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPStr)] string model_path,
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_from_file_utf8(
+            IntPtr core,
+            IntPtr model_path,
+            IntPtr device_name,
+            UIntPtr property_args_size,
             ref IntPtr compiled_model,
             IntPtr key1,
             IntPtr value1,
@@ -403,6 +530,21 @@ namespace OpenVinoSharp.native
             IntPtr key3,
             IntPtr value3);
 
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_from_file_utf8(
+            IntPtr core,
+            IntPtr model_path,
+            IntPtr device_name,
+            UIntPtr property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2,
+            IntPtr key3,
+            IntPtr value3);
+
         #endregion
 
         #region Properties
@@ -423,6 +565,14 @@ namespace OpenVinoSharp.native
             IntPtr key,
             IntPtr value);
 
+        [DllImport("openvino_c", EntryPoint = "ov_core_set_property",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_core_set_property_utf8(
+            IntPtr core,
+            IntPtr device_name,
+            IntPtr key,
+            IntPtr value);
+
         /// <summary>
         /// 为设备设置属性（带 2 个属性对）/ Sets properties for a device with 2 property pairs
         /// </summary>
@@ -438,6 +588,16 @@ namespace OpenVinoSharp.native
         public static extern ExceptionStatus ov_core_set_property(
             IntPtr core,
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_set_property",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_core_set_property_utf8(
+            IntPtr core,
+            IntPtr device_name,
             IntPtr key1,
             IntPtr value1,
             IntPtr key2,
@@ -467,6 +627,18 @@ namespace OpenVinoSharp.native
             IntPtr key3,
             IntPtr value3);
 
+        [DllImport("openvino_c", EntryPoint = "ov_core_set_property",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_core_set_property_utf8(
+            IntPtr core,
+            IntPtr device_name,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2,
+            IntPtr key3,
+            IntPtr value3);
+
         /// <summary>
         /// 获取与设备行为相关的属性 / Gets properties related to device behaviour
         /// </summary>
@@ -481,6 +653,14 @@ namespace OpenVinoSharp.native
             IntPtr core,
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
             [MarshalAs(UnmanagedType.LPStr)] string property_key,
+            ref IntPtr property_value);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_get_property",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_get_property_utf8(
+            IntPtr core,
+            IntPtr device_name,
+            IntPtr property_key,
             ref IntPtr property_value);
 
         #endregion
@@ -529,6 +709,15 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ref IntPtr compiled_model);
 
+        [DllImport("openvino_c", EntryPoint = "ov_core_import_model",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_import_model_utf8(
+            IntPtr core,
+            ref byte content,
+            UIntPtr content_size,
+            IntPtr device_name,
+            ref IntPtr compiled_model);
+
         #endregion
 
         #region Device Versions
@@ -545,6 +734,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_core_get_versions_by_device_name(
             IntPtr core,
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
+            IntPtr versions);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_get_versions_by_device_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_get_versions_by_device_name_utf8(
+            IntPtr core,
+            IntPtr device_name,
             IntPtr versions);
 
         /// <summary>
@@ -573,6 +769,14 @@ namespace OpenVinoSharp.native
             IntPtr core,
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ulong context_args_size,
+            ref IntPtr context);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_create_context",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_create_context_utf8(
+            IntPtr core,
+            IntPtr device_name,
+            UIntPtr context_args_size,
             ref IntPtr context);
 
         /// <summary>
@@ -607,6 +811,13 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPStr)] string device_name,
             ref IntPtr context);
 
+        [DllImport("openvino_c", EntryPoint = "ov_core_get_default_context",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_get_default_context_utf8(
+            IntPtr core,
+            IntPtr device_name,
+            ref IntPtr context);
+
         #endregion
 
         #region Extensions
@@ -622,6 +833,12 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_core_add_extension(
             IntPtr core,
             [MarshalAs(UnmanagedType.LPStr)] string path);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_add_extension",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_add_extension_utf8(
+            IntPtr core,
+            IntPtr path);
 
         #endregion
     }

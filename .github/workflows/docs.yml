@@ -7,9 +7,9 @@
 name: Documentation
 
 on:
-  # 在推送到 csharp3.2 分支时触发 / Trigger on push to csharp3.2 branch
+  # 在推送到 csharp3.3 分支时触发 / Trigger on push to csharp3.3 branch
   push:
-    branches: [ csharp3.2 ]
+    branches: [ csharp3.3 ]
     paths:
       - '**.cs'
       - '**.csproj'

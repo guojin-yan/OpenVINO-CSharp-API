@@ -29,7 +29,7 @@ namespace OpenVinoSharp.Tests.UnitTests
 
             // Assert
             Assert.NotNull(shape);
-            Assert.Equal((ulong)4, shape.get_rank());
+            Assert.Equal(4L, shape.get_rank());
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace OpenVinoSharp.Tests.UnitTests
             using var shape = Shape.scalar();
 
             // Assert
-            Assert.Equal((ulong)1, shape.get_rank());
+            Assert.Equal(1L, shape.get_rank());
             Assert.Equal(-1, shape.get_total_elements());
         }
 

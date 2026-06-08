@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -167,6 +167,17 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
+        /// 从形状和元素类型创建张量 / Creates a tensor from shape and element type.
+        /// </summary>
+        /// <param name="shape">张量形状 / Tensor shape.</param>
+        /// <param name="elementType">元素类型 / Element type.</param>
+        /// <returns>张量对象 / Tensor object.</returns>
+        public static Tensor FromShape(Shape shape, ElementType elementType)
+        {
+            return from_shape(shape, elementType);
+        }
+
+        /// <summary>
         /// 从固定指针构造张量 / Construct tensor from fixed pointer
         /// </summary>
         /// <param name="shape">张量形状 / Tensor shape</param>
@@ -257,6 +268,39 @@ namespace OpenVinoSharp
             }
         }
 
+        /// <summary>
+        /// 获取或设置张量形状 / Gets or sets the tensor shape.
+        /// </summary>
+        public Shape Shape
+        {
+            get { return shape; }
+            set { shape = value; }
+        }
+
+        /// <summary>
+        /// 获取张量元素数量 / Gets the number of tensor elements.
+        /// </summary>
+        public ulong ElementCount
+        {
+            get { return size; }
+        }
+
+        /// <summary>
+        /// 获取张量字节数 / Gets the tensor byte size.
+        /// </summary>
+        public ulong ByteSize
+        {
+            get { return byte_size; }
+        }
+
+        /// <summary>
+        /// 获取张量元素类型 / Gets the tensor element type.
+        /// </summary>
+        public ElementType ElementTypeValue
+        {
+            get { return element_type; }
+        }
+
         #endregion
 
         #region 数据访问方法 / Data Access Methods
@@ -271,6 +315,14 @@ namespace OpenVinoSharp
             IntPtr data = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_tensor_data(_ptr, ref data));
             return data;
+        }
+
+        /// <summary>
+        /// 获取张量数据指针 / Gets the tensor data pointer.
+        /// </summary>
+        public IntPtr Data
+        {
+            get { return data(); }
         }
 
         /// <summary>
@@ -305,7 +357,17 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             ulong byteSize = byte_size;
             void* ptr = data().ToPointer();
-            return new Span<T>(ptr, (int)(byteSize / (ulong)sizeof(T)));
+            return new Span<T>(ptr, CheckedArrayLength(byteSize / (ulong)sizeof(T), nameof(byte_size)));
+        }
+
+        /// <summary>
+        /// 获取可写 Span 视图 / Gets a writable Span view.
+        /// </summary>
+        /// <typeparam name="T">元素类型 / Element type.</typeparam>
+        /// <returns>Span 视图 / Span view.</returns>
+        public Span<T> AsSpan<T>() where T : unmanaged
+        {
+            return get_span<T>();
         }
 
         /// <summary>
@@ -319,7 +381,17 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             ulong byteSize = byte_size;
             void* ptr = data().ToPointer();
-            return new ReadOnlySpan<T>(ptr, (int)(byteSize / (ulong)sizeof(T)));
+            return new ReadOnlySpan<T>(ptr, CheckedArrayLength(byteSize / (ulong)sizeof(T), nameof(byte_size)));
+        }
+
+        /// <summary>
+        /// 获取只读 Span 视图 / Gets a read-only Span view.
+        /// </summary>
+        /// <typeparam name="T">元素类型 / Element type.</typeparam>
+        /// <returns>只读 Span 视图 / Read-only Span view.</returns>
+        public ReadOnlySpan<T> AsReadOnlySpan<T>() where T : unmanaged
+        {
+            return get_readonly_span<T>();
         }
 #endif
 
@@ -335,12 +407,20 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             ulong byteSize = byte_size;
             void* ptr = data().ToPointer();
-            int length = (int)(byteSize / (ulong)sizeof(T));
+            int length = CheckedArrayLength(byteSize / (ulong)sizeof(T), nameof(byte_size));
             return new PointerMemoryManager<T>(ptr, length).Memory;
         }
 #endif
 
         #endregion
+
+        private static int CheckedArrayLength(ulong length, string paramName)
+        {
+            if (length > int.MaxValue)
+                throw new OverflowException($"{paramName} is too large to copy into a managed array.");
+
+            return (int)length;
+        }
 
         #region 类型特定数据获取 / Type-Specific Data Getters
 
@@ -352,10 +432,10 @@ namespace OpenVinoSharp
         public float[] get_float_data()
         {
             ThrowIfDisposed();
-            ulong elemCount = size;
+            int elemCount = CheckedArrayLength(size, nameof(size));
             float[] result = new float[elemCount];
             IntPtr dataPtr = data();
-            Marshal.Copy(dataPtr, result, 0, (int)elemCount);
+            Marshal.Copy(dataPtr, result, 0, elemCount);
             return result;
         }
 
@@ -366,10 +446,10 @@ namespace OpenVinoSharp
         public byte[] get_byte_data()
         {
             ThrowIfDisposed();
-            ulong byteCount = byte_size;
+            int byteCount = CheckedArrayLength(byte_size, nameof(byte_size));
             byte[] result = new byte[byteCount];
             IntPtr dataPtr = data();
-            Marshal.Copy(dataPtr, result, 0, (int)byteCount);
+            Marshal.Copy(dataPtr, result, 0, byteCount);
             return result;
         }
 
@@ -381,7 +461,8 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             ulong byteCount = byte_size;
-            int[] result = new int[byteCount / (ulong)sizeof(int)];
+            int length = CheckedArrayLength(byteCount / (ulong)sizeof(int), nameof(byte_size));
+            int[] result = new int[length];
             IntPtr dataPtr = data();
             Marshal.Copy(dataPtr, result, 0, result.Length);
             return result;
@@ -395,7 +476,8 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             ulong byteCount = byte_size;
-            long[] result = new long[byteCount / (ulong)sizeof(long)];
+            int length = CheckedArrayLength(byteCount / (ulong)sizeof(long), nameof(byte_size));
+            long[] result = new long[length];
             IntPtr dataPtr = data();
             Marshal.Copy(dataPtr, result, 0, result.Length);
             return result;
@@ -409,12 +491,58 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             ulong byteCount = byte_size;
-            uint[] result = new uint[byteCount / (ulong)sizeof(uint)];
+            int length = CheckedArrayLength(byteCount / (ulong)sizeof(uint), nameof(byte_size));
+            uint[] result = new uint[length];
             IntPtr dataPtr = data();
             int[] temp = new int[result.Length];
             Marshal.Copy(dataPtr, temp, 0, result.Length);
-            Buffer.BlockCopy(temp, 0, result, 0, (int)byteCount);
+            Buffer.BlockCopy(temp, 0, result, 0, CheckedArrayLength(byteCount, nameof(byte_size)));
             return result;
+        }
+
+        /// <summary>
+        /// 获取 float 数组数据 / Gets tensor data as a float array.
+        /// </summary>
+        /// <returns>float 数组 / Float array.</returns>
+        public float[] GetFloatData()
+        {
+            return get_float_data();
+        }
+
+        /// <summary>
+        /// 获取 byte 数组数据 / Gets tensor data as a byte array.
+        /// </summary>
+        /// <returns>byte 数组 / Byte array.</returns>
+        public byte[] GetByteData()
+        {
+            return get_byte_data();
+        }
+
+        /// <summary>
+        /// 获取 int 数组数据 / Gets tensor data as an int array.
+        /// </summary>
+        /// <returns>int 数组 / Int array.</returns>
+        public int[] GetIntData()
+        {
+            return get_int_data();
+        }
+
+        /// <summary>
+        /// 获取 long 数组数据 / Gets tensor data as a long array.
+        /// </summary>
+        /// <returns>long 数组 / Long array.</returns>
+        public long[] GetLongData()
+        {
+            return get_long_data();
+        }
+
+        /// <summary>
+        /// 获取 uint 数组数据 / Gets tensor data as a uint array.
+        /// </summary>
+        /// <returns>uint 数组 / UInt array.</returns>
+        public uint[] GetUIntData()
+        {
+            return get_uint_data();
         }
 
         /// <summary>
@@ -427,14 +555,31 @@ namespace OpenVinoSharp
         public unsafe T[] get_data<T>(int length) where T : unmanaged
         {
             ThrowIfDisposed();
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
             T[] result = new T[length];
             void* src = data().ToPointer();
-            ulong srcSize = (ulong)(length * sizeof(T));
+            ulong srcSize = checked((ulong)length * (ulong)sizeof(T));
+            if (srcSize > byte_size)
+                throw new ArgumentException("Requested data length is larger than the tensor byte size.", nameof(length));
+
             fixed (void* dst = result)
             {
                 Buffer.MemoryCopy(src, dst, (long)srcSize, (long)srcSize);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 获取指定数量的泛型数据 / Gets typed tensor data with the specified element count.
+        /// </summary>
+        /// <typeparam name="T">元素类型 / Element type.</typeparam>
+        /// <param name="length">元素数量 / Element count.</param>
+        /// <returns>元素数组 / Element array.</returns>
+        public T[] GetData<T>(int length) where T : unmanaged
+        {
+            return get_data<T>(length);
         }
 
         /// <summary>
@@ -450,7 +595,10 @@ namespace OpenVinoSharp
                 throw new ArgumentException("缓冲区不能为空", nameof(buffer));
 
             void* src = data().ToPointer();
-            ulong srcSize = (ulong)(buffer.Length * sizeof(T));
+            ulong srcSize = checked((ulong)buffer.Length * (ulong)sizeof(T));
+            if (srcSize > byte_size)
+                throw new ArgumentException("Buffer length is larger than the tensor byte size.", nameof(buffer));
+
             fixed (void* dst = buffer)
             {
                 Buffer.MemoryCopy(src, dst, (long)srcSize, (long)srcSize);
@@ -464,7 +612,13 @@ namespace OpenVinoSharp
                 throw new ArgumentException("缓冲区不能为空", nameof(buffer));
 
             void* src = data().ToPointer();
-            ulong srcSize = (ulong)(length * sizeof(T));
+            if (length < 0 || length > buffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
+            ulong srcSize = checked((ulong)length * (ulong)sizeof(T));
+            if (srcSize > byte_size)
+                throw new ArgumentException("Buffer length is larger than the tensor byte size.", nameof(length));
+
             fixed (void* dst = buffer)
             {
                 Buffer.MemoryCopy(src, dst, (long)srcSize, (long)srcSize);
@@ -489,7 +643,7 @@ namespace OpenVinoSharp
 
             void* destPtr = data().ToPointer();
             ulong destSize = byte_size;
-            ulong srcSize = (ulong)(input_data.Length * sizeof(T));
+            ulong srcSize = checked((ulong)input_data.Length * (ulong)sizeof(T));
 
             if (srcSize > destSize)
                 throw new ArgumentException("输入数据太大。/ Input data is too large.");
@@ -498,6 +652,16 @@ namespace OpenVinoSharp
             {
                 Buffer.MemoryCopy(srcPtr, destPtr, (long)destSize, (long)srcSize);
             }
+        }
+
+        /// <summary>
+        /// 设置泛型数组数据 / Sets tensor data from a typed array.
+        /// </summary>
+        /// <typeparam name="T">元素类型 / Element type.</typeparam>
+        /// <param name="inputData">输入数据 / Input data.</param>
+        public void SetData<T>(T[] inputData) where T : unmanaged
+        {
+            set_data(inputData);
         }
 
 #if HAS_SPAN
@@ -513,7 +677,7 @@ namespace OpenVinoSharp
 
             void* destPtr = data().ToPointer();
             ulong destSize = byte_size;
-            ulong srcSize = (ulong)(input_data.Length * sizeof(T));
+            ulong srcSize = checked((ulong)input_data.Length * (ulong)sizeof(T));
 
             if (srcSize > destSize)
                 throw new ArgumentException("输入数据太大。/ Input data is too large.");
@@ -522,6 +686,16 @@ namespace OpenVinoSharp
             {
                 Buffer.MemoryCopy(srcPtr, destPtr, (long)destSize, (long)srcSize);
             }
+        }
+
+        /// <summary>
+        /// 设置 Span 数据 / Sets tensor data from a read-only span.
+        /// </summary>
+        /// <typeparam name="T">元素类型 / Element type.</typeparam>
+        /// <param name="inputData">输入数据 / Input data.</param>
+        public void SetData<T>(ReadOnlySpan<T> inputData) where T : unmanaged
+        {
+            set_data(inputData);
         }
 #endif
 
@@ -535,6 +709,15 @@ namespace OpenVinoSharp
             if (input_data == null)
                 throw new ArgumentNullException(nameof(input_data));
             set_data(input_data);
+        }
+
+        /// <summary>
+        /// 设置 float 数组数据 / Sets tensor data from a float array.
+        /// </summary>
+        /// <param name="inputData">输入数据 / Input data.</param>
+        public void SetFloatData(float[] inputData)
+        {
+            set_float_data(inputData);
         }
 
         /// <summary>

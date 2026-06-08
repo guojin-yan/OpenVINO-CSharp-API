@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -133,7 +133,9 @@ namespace OpenVinoSharp
                 OvLogger.Warn("原生库加载失败，可能已由系统加载 / Failed to load native library, may already be loaded by system: {0}", ex.Message);
             }
 
-            ExceptionHandler.ThrowOnError(ov_core_create_with_config(xml_config_file, ref _ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                xml_config_file,
+                xmlConfigPtr => ov_core_create_with_config_utf8(xmlConfigPtr, ref _ptr)));
             OvLogger.Info("OpenVINO Core 实例（带配置）创建成功 / OpenVINO Core instance (with config) created successfully");
         }
 
@@ -161,6 +163,11 @@ namespace OpenVinoSharp
         /// </summary>
         public static void shutdown() => ov_shutdown();
 
+        /// <summary>
+        /// 关闭 OpenVINO 并释放所有静态资源 / Shut down OpenVINO and release all static resources
+        /// </summary>
+        public static void Shutdown() => shutdown();
+
         #endregion
 
         #region 模型读取 / Model Reading
@@ -179,11 +186,21 @@ namespace OpenVinoSharp
                 throw new ArgumentException("参数不能为空", nameof(model_path));
 
             IntPtr model_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(
-                ov_core_read_model(_ptr, model_path, bin_path ?? string.Empty, ref model_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptrs(
+                model_path,
+                bin_path ?? string.Empty,
+                (modelPathPtr, binPathPtr) => ov_core_read_model_utf8(_ptr, modelPathPtr, binPathPtr, ref model_ptr)));
 
             return new Model(model_ptr);
         }
+
+        /// <summary>
+        /// 从文件读取模型 / Read a model from file
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file</param>
+        /// <param name="binPath">权重文件路径（IR 格式可选）/ Optional weights file path for IR models</param>
+        /// <returns>模型对象 / Model object</returns>
+        public Model ReadModel(string modelPath, string binPath = null) => read_model(modelPath, binPath);
 
         /// <summary>
         /// 从文件读取模型并指定权重张量 / Read model from file with weights tensor
@@ -202,9 +219,17 @@ namespace OpenVinoSharp
             byte[] data = Ov.content_from_file(model_path);
             IntPtr model_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(
-                ov_core_read_model_from_memory_buffer(_ptr, ref data[0], (ulong)data.Length, weights.OvPtr, ref model_ptr));
+                ov_core_read_model_from_memory_buffer_native_size(_ptr, ref data[0], StringUtils.ToNativeSize((ulong)data.Length), weights.OvPtr, ref model_ptr));
             return new Model(model_ptr);
         }
+
+        /// <summary>
+        /// 从文件读取模型并指定权重张量 / Read a model from file with a weights tensor
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file</param>
+        /// <param name="weights">权重张量 / Weights tensor</param>
+        /// <returns>模型对象 / Model object</returns>
+        public Model ReadModel(string modelPath, Tensor weights) => read_model(modelPath, weights);
 
         /// <summary>
         /// 从内存缓冲区读取模型 / Read model from memory buffer
@@ -222,9 +247,17 @@ namespace OpenVinoSharp
 
             IntPtr model_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(
-                ov_core_read_model_from_memory_buffer(_ptr, ref xml_model_data[0], (ulong)xml_model_data.Length, weights.OvPtr, ref model_ptr));
+                ov_core_read_model_from_memory_buffer_native_size(_ptr, ref xml_model_data[0], StringUtils.ToNativeSize((ulong)xml_model_data.Length), weights.OvPtr, ref model_ptr));
             return new Model(model_ptr);
         }
+
+        /// <summary>
+        /// 从内存缓冲区读取模型 / Read a model from a memory buffer
+        /// </summary>
+        /// <param name="xmlModelData">模型 XML 数据 / Model XML data</param>
+        /// <param name="weights">权重张量 / Weights tensor</param>
+        /// <returns>模型对象 / Model object</returns>
+        public Model ReadModel(byte[] xmlModelData, Tensor weights) => read_model(xmlModelData, weights);
 
 #if HAS_SPAN
         /// <summary>
@@ -244,10 +277,18 @@ namespace OpenVinoSharp
             fixed (byte* dataPtr = xml_model_data)
             {
                 ExceptionHandler.ThrowOnError(
-                    ov_core_read_model_from_memory_buffer(_ptr, ref *dataPtr, (ulong)xml_model_data.Length, weights.OvPtr, ref model_ptr));
+                    ov_core_read_model_from_memory_buffer_native_size(_ptr, ref *dataPtr, StringUtils.ToNativeSize((ulong)xml_model_data.Length), weights.OvPtr, ref model_ptr));
             }
             return new Model(model_ptr);
         }
+
+        /// <summary>
+        /// 从 Span 内存缓冲区读取模型 / Read a model from a Span memory buffer
+        /// </summary>
+        /// <param name="xmlModelData">模型 XML 数据 / Model XML data</param>
+        /// <param name="weights">权重张量 / Weights tensor</param>
+        /// <returns>模型对象 / Model object</returns>
+        public Model ReadModel(ReadOnlySpan<byte> xmlModelData, Tensor weights) => read_model(xmlModelData, weights);
 #endif
 
         #endregion
@@ -263,6 +304,13 @@ namespace OpenVinoSharp
             => compile_model(model, "AUTO", null);
 
         /// <summary>
+        /// 编译模型 / Compile a model
+        /// </summary>
+        /// <param name="model">模型对象 / Model object</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel CompileModel(Model model) => compile_model(model);
+
+        /// <summary>
         /// 编译模型 / Compile model
         /// </summary>
         /// <param name="model">模型对象 / Model object</param>
@@ -272,6 +320,14 @@ namespace OpenVinoSharp
             => compile_model(model, device_name, null);
 
         /// <summary>
+        /// 编译模型到指定设备 / Compile a model for the specified device
+        /// </summary>
+        /// <param name="model">模型对象 / Model object</param>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel CompileModel(Model model, string deviceName) => compile_model(model, deviceName);
+
+        /// <summary>
         /// 编译模型 / Compile model
         /// </summary>
         /// <param name="model">模型对象 / Model object</param>
@@ -279,6 +335,14 @@ namespace OpenVinoSharp
         /// <returns>编译后的模型 / Compiled model</returns>
         public CompiledModel compile_model(Model model, Dictionary<string, string> properties)
             => compile_model(model, "AUTO", properties);
+
+        /// <summary>
+        /// 使用属性编译模型 / Compile a model with properties
+        /// </summary>
+        /// <param name="model">模型对象 / Model object</param>
+        /// <param name="properties">编译属性 / Compilation properties</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel CompileModel(Model model, Dictionary<string, string> properties) => compile_model(model, properties);
 
         /// <summary>
         /// 编译模型到指定设备 / Compile model for specified device
@@ -299,8 +363,9 @@ namespace OpenVinoSharp
 
             if (properties == null || properties.Count == 0)
             {
-                ExceptionHandler.ThrowOnError(
-                    ov_core_compile_model(_ptr, model.OvPtr, device_name, 0, ref compiled_model_ptr));
+                ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                    device_name,
+                    deviceNamePtr => ov_core_compile_model_utf8(_ptr, model.OvPtr, deviceNamePtr, UIntPtr.Zero, ref compiled_model_ptr)));
             }
             else
             {
@@ -310,12 +375,28 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
+        /// 编译模型到指定设备并应用属性 / Compile a model for the specified device with properties
+        /// </summary>
+        /// <param name="model">模型对象 / Model object</param>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <param name="properties">编译属性 / Compilation properties</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel CompileModel(Model model, string deviceName, Dictionary<string, string> properties) => compile_model(model, deviceName, properties);
+
+        /// <summary>
         /// 从文件编译模型 / Compile model from file
         /// </summary>
         /// <param name="model_path">模型文件路径 / Path to model file</param>
         /// <returns>编译后的模型 / Compiled model</returns>
         public CompiledModel compile_model(string model_path)
             => compile_model(model_path, "AUTO", null);
+
+        /// <summary>
+        /// 从文件编译模型 / Compile a model from file
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel CompileModel(string modelPath) => compile_model(modelPath);
 
         /// <summary>
         /// 从文件编译模型 / Compile model from file
@@ -327,6 +408,14 @@ namespace OpenVinoSharp
             => compile_model(model_path, device_name, null);
 
         /// <summary>
+        /// 从文件编译模型到指定设备 / Compile a model from file for the specified device
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file</param>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel CompileModel(string modelPath, string deviceName) => compile_model(modelPath, deviceName);
+
+        /// <summary>
         /// 从文件编译模型 / Compile model from file
         /// </summary>
         /// <param name="model_path">模型文件路径 / Path to model file</param>
@@ -334,6 +423,14 @@ namespace OpenVinoSharp
         /// <returns>编译后的模型 / Compiled model</returns>
         public CompiledModel compile_model(string model_path, Dictionary<string, string> properties)
             => compile_model(model_path, "AUTO", properties);
+
+        /// <summary>
+        /// 从文件编译模型并应用属性 / Compile a model from file with properties
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file</param>
+        /// <param name="properties">编译属性 / Compilation properties</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel CompileModel(string modelPath, Dictionary<string, string> properties) => compile_model(modelPath, properties);
 
         /// <summary>
         /// 从文件编译模型到指定设备 / Compile model from file for specified device
@@ -356,8 +453,10 @@ namespace OpenVinoSharp
             
             if (properties == null || properties.Count == 0)
             {
-                ExceptionHandler.ThrowOnError(
-                    ov_core_compile_model_from_file(_ptr, model_path, device_name, 0, ref compiled_model_ptr));
+                ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptrs(
+                    model_path,
+                    device_name,
+                    (modelPathPtr, deviceNamePtr) => ov_core_compile_model_from_file_utf8(_ptr, modelPathPtr, deviceNamePtr, UIntPtr.Zero, ref compiled_model_ptr)));
             }
             else
             {
@@ -366,6 +465,15 @@ namespace OpenVinoSharp
             
             return new CompiledModel(compiled_model_ptr);
         }
+
+        /// <summary>
+        /// 从文件编译模型到指定设备并应用属性 / Compile a model from file for the specified device with properties
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file</param>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <param name="properties">编译属性 / Compilation properties</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel CompileModel(string modelPath, string deviceName, Dictionary<string, string> properties) => compile_model(modelPath, deviceName, properties);
 
         /// <summary>
         /// 带属性的模型编译（内部方法）/ Compile model with properties (internal method)
@@ -377,35 +485,35 @@ namespace OpenVinoSharp
             int idx = 0;
             foreach (var item in properties)
             {
-                inputs[idx++] = Marshal.StringToHGlobalAnsi(item.Key);
-                inputs[idx++] = Marshal.StringToHGlobalAnsi(item.Value);
+                inputs[idx++] = StringUtils.StringToUtf8Ptr(item.Key);
+                inputs[idx++] = StringUtils.StringToUtf8Ptr(item.Value);
             }
 
             try
             {
-                ExceptionStatus status;
-                switch (properties.Count)
+                IntPtr localCompiledModelPtr = IntPtr.Zero;
+                ExceptionStatus status = StringUtils.WithUtf8Ptr(device_name, deviceNamePtr =>
                 {
-                    case 1:
-                        status = ov_core_compile_model(_ptr, modelPtr, device_name, 2, ref compiled_model_ptr, inputs[0], inputs[1]);
-                        break;
-                    case 2:
-                        status = ov_core_compile_model(_ptr, modelPtr, device_name, 4, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3]);
-                        break;
-                    case 3:
-                        status = ov_core_compile_model(_ptr, modelPtr, device_name, 6, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
-                        break;
-                    default:
-                        throw new ArgumentException("仅支持0、1、2、3个属性参数。/ Only supports 0, 1, 2, or 3 property parameters.");
-                }
+                    switch (properties.Count)
+                    {
+                        case 1:
+                            return ov_core_compile_model_utf8(_ptr, modelPtr, deviceNamePtr, StringUtils.ToNativeSize(2), ref localCompiledModelPtr, inputs[0], inputs[1]);
+                        case 2:
+                            return ov_core_compile_model_utf8(_ptr, modelPtr, deviceNamePtr, StringUtils.ToNativeSize(4), ref localCompiledModelPtr, inputs[0], inputs[1], inputs[2], inputs[3]);
+                        case 3:
+                            return ov_core_compile_model_utf8(_ptr, modelPtr, deviceNamePtr, StringUtils.ToNativeSize(6), ref localCompiledModelPtr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
+                        default:
+                            throw new ArgumentException("仅支持0、1、2、3个属性参数。/ Only supports 0, 1, 2, or 3 property parameters.");
+                    }
+                });
                 ExceptionHandler.ThrowOnError(status);
+                compiled_model_ptr = localCompiledModelPtr;
             }
             finally
             {
                 foreach (var ptr in inputs)
                 {
-                    if (ptr != IntPtr.Zero)
-                        Marshal.FreeHGlobal(ptr);
+                    StringUtils.FreeUtf8Ptr(ptr);
                 }
             }
         }
@@ -416,35 +524,35 @@ namespace OpenVinoSharp
             int idx = 0;
             foreach (var item in properties)
             {
-                inputs[idx++] = Marshal.StringToHGlobalAnsi(item.Key);
-                inputs[idx++] = Marshal.StringToHGlobalAnsi(item.Value);
+                inputs[idx++] = StringUtils.StringToUtf8Ptr(item.Key);
+                inputs[idx++] = StringUtils.StringToUtf8Ptr(item.Value);
             }
 
             try
             {
-                ExceptionStatus status;
-                switch (properties.Count)
+                IntPtr localCompiledModelPtr = IntPtr.Zero;
+                ExceptionStatus status = StringUtils.WithUtf8Ptrs(model_path, device_name, (modelPathPtr, deviceNamePtr) =>
                 {
-                    case 1:
-                        status = ov_core_compile_model_from_file(_ptr, model_path, device_name, 2, ref compiled_model_ptr, inputs[0], inputs[1]);
-                        break;
-                    case 2:
-                        status = ov_core_compile_model_from_file(_ptr, model_path, device_name, 4, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3]);
-                        break;
-                    case 3:
-                        status = ov_core_compile_model_from_file(_ptr, model_path, device_name, 6, ref compiled_model_ptr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
-                        break;
-                    default:
-                        throw new ArgumentException("仅支持0、1、2、3个属性参数。/ Only supports 0, 1, 2, or 3 property parameters.");
-                }
+                    switch (properties.Count)
+                    {
+                        case 1:
+                            return ov_core_compile_model_from_file_utf8(_ptr, modelPathPtr, deviceNamePtr, StringUtils.ToNativeSize(2), ref localCompiledModelPtr, inputs[0], inputs[1]);
+                        case 2:
+                            return ov_core_compile_model_from_file_utf8(_ptr, modelPathPtr, deviceNamePtr, StringUtils.ToNativeSize(4), ref localCompiledModelPtr, inputs[0], inputs[1], inputs[2], inputs[3]);
+                        case 3:
+                            return ov_core_compile_model_from_file_utf8(_ptr, modelPathPtr, deviceNamePtr, StringUtils.ToNativeSize(6), ref localCompiledModelPtr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
+                        default:
+                            throw new ArgumentException("仅支持0、1、2、3个属性参数。/ Only supports 0, 1, 2, or 3 property parameters.");
+                    }
+                });
                 ExceptionHandler.ThrowOnError(status);
+                compiled_model_ptr = localCompiledModelPtr;
             }
             finally
             {
                 foreach (var ptr in inputs)
                 {
-                    if (ptr != IntPtr.Zero)
-                        Marshal.FreeHGlobal(ptr);
+                    StringUtils.FreeUtf8Ptr(ptr);
                 }
             }
         }
@@ -462,8 +570,16 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException("参数不能为空", nameof(path));
-            ExceptionHandler.ThrowOnError(ov_core_add_extension(_ptr, path));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                path,
+                pathPtr => ov_core_add_extension_utf8(_ptr, pathPtr)));
         }
+
+        /// <summary>
+        /// 添加扩展到 Core / Add an extension to Core
+        /// </summary>
+        /// <param name="path">扩展库路径 / Path to extension library</param>
+        public void AddExtension(string path) => add_extension(path);
 
         /// <summary>
         /// 导入已编译的模型 / Import compiled model
@@ -479,10 +595,19 @@ namespace OpenVinoSharp
 
             IntPtr value = IntPtr.Zero;
             byte[] data = Ov.content_from_file(model_path);
-            ExceptionHandler.ThrowOnError(
-                ov_core_import_model(_ptr, ref data[0], (ulong)data.Length, device_name, ref value));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                device_name,
+                deviceNamePtr => ov_core_import_model_utf8(_ptr, ref data[0], StringUtils.ToNativeSize((ulong)data.Length), deviceNamePtr, ref value)));
             return new CompiledModel(value);
         }
+
+        /// <summary>
+        /// 导入已编译的模型 / Import a compiled model
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file</param>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel ImportModel(string modelPath, string deviceName = "AUTO") => import_model(modelPath, deviceName);
 
         #endregion
 
@@ -501,22 +626,25 @@ namespace OpenVinoSharp
 
             int size = Marshal.SizeOf(typeof(CoreVersionList));
             IntPtr ptr_core_version_s = Marshal.AllocHGlobal(size);
+            bool versionsAllocated = false;
             try
             {
-                ExceptionHandler.ThrowOnError(
-                    ov_core_get_versions_by_device_name(_ptr, device_name, ptr_core_version_s));
+                ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                    device_name,
+                    deviceNamePtr => ov_core_get_versions_by_device_name_utf8(_ptr, deviceNamePtr, ptr_core_version_s)));
+                versionsAllocated = true;
 
                 CoreVersionList core_version_s = Marshal.PtrToStructure<CoreVersionList>(ptr_core_version_s);
                 CoreVersion core_version = Marshal.PtrToStructure<CoreVersion>(core_version_s.core_version);
                 var value = new KeyValuePair<string, Version>(
                     core_version.device_name, core_version.version);
-                ov_core_versions_free(ptr_core_version_s);
                 return value;
             }
-            catch
+            finally
             {
+                if (versionsAllocated)
+                    ov_core_versions_free(ptr_core_version_s);
                 Marshal.FreeHGlobal(ptr_core_version_s);
-                throw;
             }
         }
 
@@ -530,9 +658,11 @@ namespace OpenVinoSharp
 
             int size = Marshal.SizeOf(typeof(ov_available_devices_t));
             IntPtr devices_ptr = Marshal.AllocHGlobal(size);
+            bool devicesAllocated = false;
             try
             {
                 ExceptionHandler.ThrowOnError(ov_core_get_available_devices(_ptr, devices_ptr));
+                devicesAllocated = true;
 
                 ov_available_devices_t devices_s = Marshal.PtrToStructure<ov_available_devices_t>(devices_ptr);
                 IntPtr[] devices_ptrs = new IntPtr[devices_s.size];
@@ -541,19 +671,25 @@ namespace OpenVinoSharp
                 List<string> devices = new List<string>((int)devices_s.size);
                 for (int i = 0; i < (int)devices_s.size; ++i)
                 {
-                    string deviceName = Marshal.PtrToStringAnsi(devices_ptrs[i]);
+                string deviceName = StringUtils.Utf8PtrToString(devices_ptrs[i]);
                     if (!string.IsNullOrEmpty(deviceName))
                         devices.Add(deviceName);
                 }
-                ov_available_devices_free(devices_ptr);
                 return devices;
             }
-            catch
+            finally
             {
+                if (devicesAllocated)
+                    ov_available_devices_free(devices_ptr);
                 Marshal.FreeHGlobal(devices_ptr);
-                throw;
             }
         }
+
+        /// <summary>
+        /// 获取可用设备列表 / Get the list of available devices
+        /// </summary>
+        /// <returns>设备名称列表 / List of device names</returns>
+        public IReadOnlyList<string> GetAvailableDevices() => get_available_devices();
 
         /// <summary>
         /// 设置设备属性 / Set device property
@@ -567,19 +703,29 @@ namespace OpenVinoSharp
             if (string.IsNullOrEmpty(device_name))
                 throw new ArgumentException("参数不能为空", nameof(device_name));
             
-            IntPtr keyPtr = Marshal.StringToHGlobalAnsi(key);
-            IntPtr valuePtr = Marshal.StringToHGlobalAnsi(value);
+            IntPtr deviceNamePtr = StringUtils.StringToUtf8Ptr(device_name);
+            IntPtr keyPtr = StringUtils.StringToUtf8Ptr(key);
+            IntPtr valuePtr = StringUtils.StringToUtf8Ptr(value);
             try
             {
                 ExceptionHandler.ThrowOnError(
-                    ov_core_set_property(_ptr, device_name, keyPtr, valuePtr));
+                    ov_core_set_property_utf8(_ptr, deviceNamePtr, keyPtr, valuePtr));
             }
             finally
             {
-                Marshal.FreeHGlobal(keyPtr);
-                Marshal.FreeHGlobal(valuePtr);
+                StringUtils.FreeUtf8Ptr(valuePtr);
+                StringUtils.FreeUtf8Ptr(keyPtr);
+                StringUtils.FreeUtf8Ptr(deviceNamePtr);
             }
         }
+
+        /// <summary>
+        /// 设置设备属性 / Set a device property
+        /// </summary>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <param name="key">属性键 / Property key</param>
+        /// <param name="value">属性值 / Property value</param>
+        public void SetProperty(string deviceName, string key, string value) => set_property(deviceName, key, value);
 
         /// <summary>
         /// 批量设置设备属性 / Set multiple device properties
@@ -597,38 +743,43 @@ namespace OpenVinoSharp
             int idx = 0;
             foreach (var item in properties)
             {
-                inputs[idx++] = Marshal.StringToHGlobalAnsi(item.Key);
-                inputs[idx++] = Marshal.StringToHGlobalAnsi(item.Value);
+                inputs[idx++] = StringUtils.StringToUtf8Ptr(item.Key);
+                inputs[idx++] = StringUtils.StringToUtf8Ptr(item.Value);
             }
 
             try
             {
-                ExceptionStatus status;
-                switch (properties.Count)
+                ExceptionStatus status = StringUtils.WithUtf8Ptr(device_name, deviceNamePtr =>
                 {
-                    case 1:
-                        status = ov_core_set_property(_ptr, device_name, inputs[0], inputs[1]);
-                        break;
-                    case 2:
-                        status = ov_core_set_property(_ptr, device_name, inputs[0], inputs[1], inputs[2], inputs[3]);
-                        break;
-                    case 3:
-                        status = ov_core_set_property(_ptr, device_name, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
-                        break;
-                    default:
-                        throw new ArgumentException("仅支持1、2、3个属性参数。/ Only supports 1, 2, or 3 property parameters.");
-                }
+                    switch (properties.Count)
+                    {
+                        case 1:
+                            return ov_core_set_property_utf8(_ptr, deviceNamePtr, inputs[0], inputs[1]);
+                        case 2:
+                            return ov_core_set_property_utf8(_ptr, deviceNamePtr, inputs[0], inputs[1], inputs[2], inputs[3]);
+                        case 3:
+                            return ov_core_set_property_utf8(_ptr, deviceNamePtr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
+                        default:
+                            throw new ArgumentException("仅支持1、2、3个属性参数。/ Only supports 1, 2, or 3 property parameters.");
+                    }
+                });
                 ExceptionHandler.ThrowOnError(status);
             }
             finally
             {
                 foreach (var ptr in inputs)
                 {
-                    if (ptr != IntPtr.Zero)
-                        Marshal.FreeHGlobal(ptr);
+                    StringUtils.FreeUtf8Ptr(ptr);
                 }
             }
         }
+
+        /// <summary>
+        /// 批量设置设备属性 / Set multiple device properties
+        /// </summary>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <param name="properties">属性字典 / Properties dictionary</param>
+        public void SetProperty(string deviceName, Dictionary<string, string> properties) => set_property(deviceName, properties);
 
         /// <summary>
         /// 获取设备属性 / Get device property
@@ -645,10 +796,28 @@ namespace OpenVinoSharp
                 throw new ArgumentException("参数不能为空", nameof(key));
 
             IntPtr value = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(
-                ov_core_get_property(_ptr, device_name, key, ref value));
-            return Marshal.PtrToStringAnsi(value) ?? string.Empty;
+            try
+            {
+                ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptrs(
+                    device_name,
+                    key,
+                    (deviceNamePtr, keyPtr) => ov_core_get_property_utf8(_ptr, deviceNamePtr, keyPtr, ref value)));
+                return StringUtils.Utf8PtrToString(value) ?? string.Empty;
+            }
+            finally
+            {
+                if (value != IntPtr.Zero)
+                    ov_free(value);
+            }
         }
+
+        /// <summary>
+        /// 获取设备属性 / Get a device property
+        /// </summary>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <param name="key">属性键 / Property key</param>
+        /// <returns>属性值 / Property value</returns>
+        public string GetProperty(string deviceName, string key) => get_property(deviceName, key);
 
         #endregion
 
@@ -667,9 +836,18 @@ namespace OpenVinoSharp
                 throw new ArgumentException("参数不能为空", nameof(device_name));
 
             IntPtr context_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_core_create_context(_ptr, device_name, 0, ref context_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                device_name,
+                deviceNamePtr => ov_core_create_context_utf8(_ptr, deviceNamePtr, UIntPtr.Zero, ref context_ptr)));
             return context_ptr;
         }
+
+        /// <summary>
+        /// 创建远程上下文 / Create a remote context
+        /// </summary>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <returns>远程上下文指针 / Remote context pointer</returns>
+        public IntPtr CreateContext(string deviceName) => create_context(deviceName);
 
         /// <summary>
         /// 获取默认远程上下文 / Get default remote context
@@ -683,9 +861,18 @@ namespace OpenVinoSharp
                 throw new ArgumentException("参数不能为空", nameof(device_name));
 
             IntPtr context_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_core_get_default_context(_ptr, device_name, ref context_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                device_name,
+                deviceNamePtr => ov_core_get_default_context_utf8(_ptr, deviceNamePtr, ref context_ptr)));
             return context_ptr;
         }
+
+        /// <summary>
+        /// 获取默认远程上下文 / Get the default remote context
+        /// </summary>
+        /// <param name="deviceName">设备名称 / Device name</param>
+        /// <returns>远程上下文指针 / Remote context pointer</returns>
+        public IntPtr GetDefaultContext(string deviceName) => get_default_context(deviceName);
 
         /// <summary>
         /// 在远程上下文中编译模型 / Compile model with remote context
@@ -706,6 +893,14 @@ namespace OpenVinoSharp
                 ov_core_compile_model_with_context(_ptr, model.OvPtr, context, 0, ref compiled_model_ptr));
             return new CompiledModel(compiled_model_ptr);
         }
+
+        /// <summary>
+        /// 在远程上下文中编译模型 / Compile a model with a remote context
+        /// </summary>
+        /// <param name="model">模型对象 / Model object</param>
+        /// <param name="context">远程上下文指针 / Remote context pointer</param>
+        /// <returns>编译后的模型 / Compiled model</returns>
+        public CompiledModel CompileModelWithContext(Model model, IntPtr context) => compile_model_with_context(model, context);
 
         #endregion
 

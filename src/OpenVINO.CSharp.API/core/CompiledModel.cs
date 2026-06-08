@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -126,9 +126,38 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(tensor_name));
             
             IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(
-                ov_compiled_model_input_by_name(_ptr, tensor_name, ref node_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                tensor_name,
+                namePtr => ov_compiled_model_input_by_name_utf8(_ptr, namePtr, ref node_ptr)));
             return new Input(node_ptr);
+        }
+
+        /// <summary>
+        /// 获取输入端口数量 / Gets the number of input ports.
+        /// </summary>
+        public ulong InputCount
+        {
+            get { return get_inputs_size(); }
+        }
+
+        /// <summary>
+        /// 按索引获取输入端口 / Gets an input port by index.
+        /// </summary>
+        /// <param name="idx">输入索引 / Input index.</param>
+        /// <returns>输入端口 / Input port.</returns>
+        public Input GetInput(ulong idx)
+        {
+            return get_input(idx);
+        }
+
+        /// <summary>
+        /// 按名称获取输入端口 / Gets an input port by name.
+        /// </summary>
+        /// <param name="tensorName">张量名称 / Tensor name.</param>
+        /// <returns>输入端口 / Input port.</returns>
+        public Input GetInput(string tensorName)
+        {
+            return get_input_by_name(tensorName);
         }
 
         #endregion
@@ -172,9 +201,38 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(tensor_name));
             
             IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(
-                ov_compiled_model_output_by_name(_ptr, tensor_name, ref node_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                tensor_name,
+                namePtr => ov_compiled_model_output_by_name_utf8(_ptr, namePtr, ref node_ptr)));
             return new Output(node_ptr);
+        }
+
+        /// <summary>
+        /// 获取输出端口数量 / Gets the number of output ports.
+        /// </summary>
+        public ulong OutputCount
+        {
+            get { return get_outputs_size(); }
+        }
+
+        /// <summary>
+        /// 按索引获取输出端口 / Gets an output port by index.
+        /// </summary>
+        /// <param name="idx">输出索引 / Output index.</param>
+        /// <returns>输出端口 / Output port.</returns>
+        public Output GetOutput(ulong idx)
+        {
+            return get_output(idx);
+        }
+
+        /// <summary>
+        /// 按名称获取输出端口 / Gets an output port by name.
+        /// </summary>
+        /// <param name="tensorName">张量名称 / Tensor name.</param>
+        /// <returns>输出端口 / Output port.</returns>
+        public Output GetOutput(string tensorName)
+        {
+            return get_output_by_name(tensorName);
         }
 
         #endregion
@@ -194,6 +252,15 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
+        /// 创建推理请求 / Creates an inference request.
+        /// </summary>
+        /// <returns>推理请求 / Inference request.</returns>
+        public InferRequest CreateInferRequest()
+        {
+            return create_infer_request();
+        }
+
+        /// <summary>
         /// 导出模型 / Export model
         /// </summary>
         /// <param name="model_path">导出路径 / Export path</param>
@@ -203,7 +270,18 @@ namespace OpenVinoSharp
             if (string.IsNullOrEmpty(model_path))
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(model_path));
 
-            ExceptionHandler.ThrowOnError(ov_compiled_model_export_model(_ptr, model_path));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                model_path,
+                pathPtr => ov_compiled_model_export_model_utf8(_ptr, pathPtr)));
+        }
+
+        /// <summary>
+        /// 导出编译模型 / Exports the compiled model.
+        /// </summary>
+        /// <param name="modelPath">导出路径 / Export path.</param>
+        public void ExportModel(string modelPath)
+        {
+            export_model(modelPath);
         }
 
         /// <summary>
@@ -220,6 +298,15 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
+        /// 获取运行时模型 / Gets the runtime model.
+        /// </summary>
+        /// <returns>运行时模型 / Runtime model.</returns>
+        public Model GetRuntimeModel()
+        {
+            return get_runtime_model();
+        }
+
+        /// <summary>
         /// 设置编译模型属性 / Set property for compiled model
         /// </summary>
         /// <param name="key">属性键 / Property key</param>
@@ -230,18 +317,28 @@ namespace OpenVinoSharp
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(key));
 
-            IntPtr keyPtr = Marshal.StringToHGlobalAnsi(key);
-            IntPtr valuePtr = Marshal.StringToHGlobalAnsi(value ?? string.Empty);
+            IntPtr keyPtr = StringUtils.StringToUtf8Ptr(key);
+            IntPtr valuePtr = StringUtils.StringToUtf8Ptr(value ?? string.Empty);
             try
             {
                 ExceptionHandler.ThrowOnError(
-                    ov_compiled_model_set_property(_ptr, 2, keyPtr, valuePtr));
+                    ov_compiled_model_set_property_native_size(_ptr, StringUtils.ToNativeSize(2), keyPtr, valuePtr));
             }
             finally
             {
                 Marshal.FreeHGlobal(keyPtr);
                 Marshal.FreeHGlobal(valuePtr);
             }
+        }
+
+        /// <summary>
+        /// 设置编译模型属性 / Sets a compiled model property.
+        /// </summary>
+        /// <param name="key">属性键 / Property key.</param>
+        /// <param name="value">属性值 / Property value.</param>
+        public void SetProperty(string key, string value)
+        {
+            set_property(key, value);
         }
 
         /// <summary>
@@ -256,9 +353,28 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(key));
 
             IntPtr value = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(
-                ov_compiled_model_get_property(_ptr, key, ref value));
-            return Marshal.PtrToStringAnsi(value) ?? string.Empty;
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                key,
+                keyPtr => ov_compiled_model_get_property_utf8(_ptr, keyPtr, ref value)));
+            try
+            {
+                return StringUtils.Utf8PtrToString(value);
+            }
+            finally
+            {
+                if (value != IntPtr.Zero)
+                    ov_free(value);
+            }
+        }
+
+        /// <summary>
+        /// 获取编译模型属性 / Gets a compiled model property.
+        /// </summary>
+        /// <param name="key">属性键 / Property key.</param>
+        /// <returns>属性值 / Property value.</returns>
+        public string GetProperty(string key)
+        {
+            return get_property(key);
         }
 
         #endregion
@@ -276,6 +392,15 @@ namespace OpenVinoSharp
             IntPtr context_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_compiled_model_get_context(_ptr, ref context_ptr));
             return new RemoteContext(context_ptr);
+        }
+
+        /// <summary>
+        /// 获取远程上下文 / Gets the remote context.
+        /// </summary>
+        /// <returns>远程上下文 / Remote context.</returns>
+        public RemoteContext GetContext()
+        {
+            return get_context();
         }
 
         #endregion

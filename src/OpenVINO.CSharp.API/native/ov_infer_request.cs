@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -112,6 +112,20 @@ namespace OpenVinoSharp.native
             string tensor_name,
             IntPtr tensor);
 
+        /// <summary>
+        /// 通过 UTF-8 张量名称设置输入/输出张量 / Set an input/output tensor by UTF-8 tensor name.
+        /// </summary>
+        /// <param name="infer_request">推理请求指针 / Inference request pointer.</param>
+        /// <param name="tensor_name">UTF-8 名称指针 / UTF-8 name pointer.</param>
+        /// <param name="tensor">张量指针 / Tensor pointer.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_infer_request_set_tensor",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_infer_request_set_tensor_utf8(
+            IntPtr infer_request,
+            IntPtr tensor_name,
+            IntPtr tensor);
+
         #endregion
 
         #region Set Input Tensor
@@ -188,6 +202,20 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_infer_request_get_tensor(
             IntPtr infer_request,
             string tensor_name,
+            ref IntPtr tensor);
+
+        /// <summary>
+        /// 通过 UTF-8 张量名称获取输入/输出张量 / Get an input/output tensor by UTF-8 tensor name.
+        /// </summary>
+        /// <param name="infer_request">推理请求指针 / Inference request pointer.</param>
+        /// <param name="tensor_name">UTF-8 名称指针 / UTF-8 name pointer.</param>
+        /// <param name="tensor">返回的张量指针 / Returned tensor pointer.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_infer_request_get_tensor",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_infer_request_get_tensor_utf8(
+            IntPtr infer_request,
+            IntPtr tensor_name,
             ref IntPtr tensor);
 
         #endregion

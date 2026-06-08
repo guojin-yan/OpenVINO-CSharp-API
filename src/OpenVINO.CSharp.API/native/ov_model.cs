@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -161,6 +161,20 @@ namespace OpenVinoSharp.native
             ref IntPtr input_port);
 
         /// <summary>
+        /// 通过 UTF-8 名称获取输入端口 / Get an input port by UTF-8 tensor name.
+        /// </summary>
+        /// <param name="model">模型指针 / Model pointer.</param>
+        /// <param name="tensor_name">UTF-8 名称指针 / UTF-8 name pointer.</param>
+        /// <param name="input_port">返回的输入端口 / Returned input port.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_model_input_by_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_input_by_name_utf8(
+            IntPtr model,
+            IntPtr tensor_name,
+            ref IntPtr input_port);
+
+        /// <summary>
         /// 通过端口索引获取 ov_model_t 的输入端口 / Get an input port of ov_model_t by port index
         /// </summary>
         /// <param name="model">模型指针 / Model pointer</param>
@@ -258,6 +272,20 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPStr)] string tensor_name,
             ref IntPtr output_port);
 
+        /// <summary>
+        /// 通过 UTF-8 名称获取输出端口 / Get an output port by UTF-8 tensor name.
+        /// </summary>
+        /// <param name="model">模型指针 / Model pointer.</param>
+        /// <param name="tensor_name">UTF-8 名称指针 / UTF-8 name pointer.</param>
+        /// <param name="output_port">返回的输出端口 / Returned output port.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_model_output_by_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_output_by_name_utf8(
+            IntPtr model,
+            IntPtr tensor_name,
+            ref IntPtr output_port);
+
         #endregion
 
         #region Model Properties
@@ -314,6 +342,20 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_model_reshape_input_by_name(
             IntPtr model,
             [MarshalAs(UnmanagedType.LPStr)] string tensor_name,
+            ov_partial_shape_t partial_shape);
+
+        /// <summary>
+        /// 使用 UTF-8 名称 reshape 指定输入 / Reshape a specified input by UTF-8 tensor name.
+        /// </summary>
+        /// <param name="model">模型指针 / Model pointer.</param>
+        /// <param name="tensor_name">UTF-8 名称指针 / UTF-8 name pointer.</param>
+        /// <param name="partial_shape">部分形状 / Partial shape.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_model_reshape_input_by_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_reshape_input_by_name_utf8(
+            IntPtr model,
+            IntPtr tensor_name,
             ov_partial_shape_t partial_shape);
 
         /// <summary>

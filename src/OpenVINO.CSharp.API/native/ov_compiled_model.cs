@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -118,6 +118,20 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPStr)] string tensor_name,
             ref IntPtr input_port);
 
+        /// <summary>
+        /// 通过 UTF-8 名称获取编译模型输入端口 / Get compiled model input by UTF-8 tensor name.
+        /// </summary>
+        /// <param name="compiled_model">编译模型指针 / Compiled model pointer.</param>
+        /// <param name="tensor_name">UTF-8 名称指针 / UTF-8 name pointer.</param>
+        /// <param name="input_port">返回的输入端口 / Returned input port.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_compiled_model_input_by_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_compiled_model_input_by_name_utf8(
+            IntPtr compiled_model,
+            IntPtr tensor_name,
+            ref IntPtr input_port);
+
         #endregion
 
         #region Output Methods
@@ -170,6 +184,20 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPStr)] string tensor_name,
             ref IntPtr output_port);
 
+        /// <summary>
+        /// 通过 UTF-8 名称获取编译模型输出端口 / Get compiled model output by UTF-8 tensor name.
+        /// </summary>
+        /// <param name="compiled_model">编译模型指针 / Compiled model pointer.</param>
+        /// <param name="tensor_name">UTF-8 名称指针 / UTF-8 name pointer.</param>
+        /// <param name="output_port">返回的输出端口 / Returned output port.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_compiled_model_output_by_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_compiled_model_output_by_name_utf8(
+            IntPtr compiled_model,
+            IntPtr tensor_name,
+            ref IntPtr output_port);
+
         #endregion
 
         #region Runtime Model and Inference Request
@@ -215,6 +243,18 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPStr)] string export_model_path);
 
         /// <summary>
+        /// 使用 UTF-8 文件路径导出编译模型 / Export compiled model to a UTF-8 file path.
+        /// </summary>
+        /// <param name="compiled_model">编译模型指针 / Compiled model pointer.</param>
+        /// <param name="export_model_path">UTF-8 路径指针 / UTF-8 path pointer.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_compiled_model_export_model",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_compiled_model_export_model_utf8(
+            IntPtr compiled_model,
+            IntPtr export_model_path);
+
+        /// <summary>
         /// 为编译模型设置属性 / Sets properties for the compiled model
         /// </summary>
         /// <param name="compiled_model">编译模型指针 / Compiled model pointer</param>
@@ -231,6 +271,22 @@ namespace OpenVinoSharp.native
             IntPtr property_value);
 
         /// <summary>
+        /// 使用原生 size_t 设置编译模型属性 / Set compiled model property using native size_t.
+        /// </summary>
+        /// <param name="compiled_model">编译模型指针 / Compiled model pointer.</param>
+        /// <param name="property_args_size">属性参数数量 / Property argument count.</param>
+        /// <param name="property_key">属性键 / Property key.</param>
+        /// <param name="property_value">属性值 / Property value.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_compiled_model_set_property",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_compiled_model_set_property_native_size(
+            IntPtr compiled_model,
+            UIntPtr property_args_size,
+            IntPtr property_key,
+            IntPtr property_value);
+
+        /// <summary>
         /// 获取编译模型的属性 / Gets properties for the compiled model
         /// </summary>
         /// <param name="compiled_model">编译模型指针 / Compiled model pointer</param>
@@ -242,6 +298,20 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_compiled_model_get_property(
             IntPtr compiled_model,
             [MarshalAs(UnmanagedType.LPStr)] string property_key,
+            ref IntPtr property_value);
+
+        /// <summary>
+        /// 使用 UTF-8 属性键获取编译模型属性 / Get compiled model property by UTF-8 key.
+        /// </summary>
+        /// <param name="compiled_model">编译模型指针 / Compiled model pointer.</param>
+        /// <param name="property_key">UTF-8 属性键指针 / UTF-8 property key pointer.</param>
+        /// <param name="property_value">返回的属性值指针 / Returned property value pointer.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_compiled_model_get_property",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_compiled_model_get_property_utf8(
+            IntPtr compiled_model,
+            IntPtr property_key,
             ref IntPtr property_value);
 
         #endregion

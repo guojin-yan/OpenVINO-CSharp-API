@@ -22,7 +22,7 @@
 //  📌 GitHub仓库：https://github.com/guojin-yan/OpenVINO-CSharp-API
 //  📌 NuGet包：https://www.nuget.org/packages/OpenVINO.CSharp.API
 //  📌 在线文档：https://guojin-yan.github.io/OpenVINO-CSharp-API/index.html
-//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples
+//  📌 示例代码：https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples
 //  -----------------------------------------------------------------------
 //  【社区支持】
 //  💬 QQ交流群：945057948（加入获取技术支持）
@@ -173,8 +173,9 @@ namespace OpenVinoSharp
             if (tensor == null)
                 throw new ArgumentNullException(nameof(tensor));
             
-            ExceptionHandler.ThrowOnError(
-                ov_infer_request_set_tensor(_ptr, tensor_name, tensor.OvPtr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                tensor_name,
+                namePtr => ov_infer_request_set_tensor_utf8(_ptr, namePtr, tensor.OvPtr)));
         }
 
         /// <summary>
@@ -191,6 +192,44 @@ namespace OpenVinoSharp
             {
                 set_input_tensor(pair.Key, pair.Value);
             }
+        }
+
+        /// <summary>
+        /// 设置默认输入张量 / Sets the default input tensor.
+        /// </summary>
+        /// <param name="tensor">输入张量 / Input tensor.</param>
+        public void SetInputTensor(Tensor tensor)
+        {
+            set_input_tensor(tensor);
+        }
+
+        /// <summary>
+        /// 按索引设置输入张量 / Sets an input tensor by index.
+        /// </summary>
+        /// <param name="idx">输入索引 / Input index.</param>
+        /// <param name="tensor">输入张量 / Input tensor.</param>
+        public void SetInputTensor(ulong idx, Tensor tensor)
+        {
+            set_input_tensor(idx, tensor);
+        }
+
+        /// <summary>
+        /// 按名称设置输入张量 / Sets an input tensor by name.
+        /// </summary>
+        /// <param name="tensorName">张量名称 / Tensor name.</param>
+        /// <param name="tensor">输入张量 / Input tensor.</param>
+        public void SetInputTensor(string tensorName, Tensor tensor)
+        {
+            set_input_tensor(tensorName, tensor);
+        }
+
+        /// <summary>
+        /// 批量设置输入张量 / Sets multiple input tensors.
+        /// </summary>
+        /// <param name="tensors">张量字典 / Tensor dictionary.</param>
+        public void SetInputTensors(Dictionary<string, Tensor> tensors)
+        {
+            set_input_tensors(tensors);
         }
 
         #endregion
@@ -240,8 +279,9 @@ namespace OpenVinoSharp
             if (tensor == null)
                 throw new ArgumentNullException(nameof(tensor));
             
-            ExceptionHandler.ThrowOnError(
-                ov_infer_request_set_tensor(_ptr, tensor_name, tensor.OvPtr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                tensor_name,
+                namePtr => ov_infer_request_set_tensor_utf8(_ptr, namePtr, tensor.OvPtr)));
         }
 
         /// <summary>
@@ -276,6 +316,55 @@ namespace OpenVinoSharp
 
             ExceptionHandler.ThrowOnError(
                 ov_infer_request_set_tensor_by_const_port(_ptr, port.OvPtr, tensor.OvPtr));
+        }
+
+        /// <summary>
+        /// 设置默认输出张量 / Sets the default output tensor.
+        /// </summary>
+        /// <param name="tensor">输出张量 / Output tensor.</param>
+        public void SetOutputTensor(Tensor tensor)
+        {
+            set_output_tensor(tensor);
+        }
+
+        /// <summary>
+        /// 按索引设置输出张量 / Sets an output tensor by index.
+        /// </summary>
+        /// <param name="idx">输出索引 / Output index.</param>
+        /// <param name="tensor">输出张量 / Output tensor.</param>
+        public void SetOutputTensor(ulong idx, Tensor tensor)
+        {
+            set_output_tensor(idx, tensor);
+        }
+
+        /// <summary>
+        /// 按名称设置输出张量 / Sets an output tensor by name.
+        /// </summary>
+        /// <param name="tensorName">张量名称 / Tensor name.</param>
+        /// <param name="tensor">输出张量 / Output tensor.</param>
+        public void SetOutputTensor(string tensorName, Tensor tensor)
+        {
+            set_output_tensor(tensorName, tensor);
+        }
+
+        /// <summary>
+        /// 按端口设置张量 / Sets a tensor by port.
+        /// </summary>
+        /// <param name="port">输出端口 / Output port.</param>
+        /// <param name="tensor">张量 / Tensor.</param>
+        public void SetTensorByPort(Output port, Tensor tensor)
+        {
+            set_tensor_by_port(port, tensor);
+        }
+
+        /// <summary>
+        /// 按常量端口设置张量 / Sets a tensor by const port.
+        /// </summary>
+        /// <param name="port">输入端口 / Input port.</param>
+        /// <param name="tensor">张量 / Tensor.</param>
+        public void SetTensorByConstPort(Input port, Tensor tensor)
+        {
+            set_tensor_by_const_port(port, tensor);
         }
 
         #endregion
@@ -321,8 +410,9 @@ namespace OpenVinoSharp
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(tensor_name));
             
             IntPtr tensor_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(
-                ov_infer_request_get_tensor(_ptr, tensor_name, ref tensor_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                tensor_name,
+                namePtr => ov_infer_request_get_tensor_utf8(_ptr, namePtr, ref tensor_ptr)));
             return new Tensor(tensor_ptr);
         }
 
@@ -397,6 +487,84 @@ namespace OpenVinoSharp
             return new Tensor(tensor_ptr);
         }
 
+        /// <summary>
+        /// 获取默认输入张量 / Gets the default input tensor.
+        /// </summary>
+        /// <returns>输入张量 / Input tensor.</returns>
+        public Tensor GetInputTensor()
+        {
+            return get_input_tensor();
+        }
+
+        /// <summary>
+        /// 按索引获取输入张量 / Gets an input tensor by index.
+        /// </summary>
+        /// <param name="idx">输入索引 / Input index.</param>
+        /// <returns>输入张量 / Input tensor.</returns>
+        public Tensor GetInputTensor(ulong idx)
+        {
+            return get_input_tensor(idx);
+        }
+
+        /// <summary>
+        /// 按名称获取张量 / Gets a tensor by name.
+        /// </summary>
+        /// <param name="tensorName">张量名称 / Tensor name.</param>
+        /// <returns>张量 / Tensor.</returns>
+        public Tensor GetTensor(string tensorName)
+        {
+            return get_tensor(tensorName);
+        }
+
+        /// <summary>
+        /// 获取默认输出张量 / Gets the default output tensor.
+        /// </summary>
+        /// <returns>输出张量 / Output tensor.</returns>
+        public Tensor GetOutputTensor()
+        {
+            return get_output_tensor();
+        }
+
+        /// <summary>
+        /// 按索引获取输出张量 / Gets an output tensor by index.
+        /// </summary>
+        /// <param name="idx">输出索引 / Output index.</param>
+        /// <returns>输出张量 / Output tensor.</returns>
+        public Tensor GetOutputTensor(ulong idx)
+        {
+            return get_output_tensor(idx);
+        }
+
+        /// <summary>
+        /// 按名称获取输出张量 / Gets an output tensor by name.
+        /// </summary>
+        /// <param name="tensorName">张量名称 / Tensor name.</param>
+        /// <returns>输出张量 / Output tensor.</returns>
+        public Tensor GetOutputTensor(string tensorName)
+        {
+            return get_output_tensor(tensorName);
+        }
+
+        /// <summary>
+        /// 按端口获取张量 / Gets a tensor by port.
+        /// </summary>
+        /// <param name="port">输出端口 / Output port.</param>
+        /// <returns>张量 / Tensor.</returns>
+        public Tensor GetTensorByPort(Output port)
+        {
+            return get_tensor_by_port(port);
+        }
+
+        /// <summary>
+        /// 按常量端口获取张量 / Gets a tensor by const port.
+        /// </summary>
+        /// <param name="port">输入端口 / Input port.</param>
+        /// <returns>张量 / Tensor.</returns>
+        public Tensor GetTensorByConstPort(Input port)
+        {
+            return get_tensor_by_const_port(port);
+        }
+
         #endregion
 
         #region 推理执行 / Inference Execution
@@ -423,6 +591,23 @@ namespace OpenVinoSharp
             // so we assume single output for this helper method
             // Users should call get_output_tensor() directly for multiple outputs
             return new Tensor[] { get_output_tensor() };
+        }
+
+        /// <summary>
+        /// 执行同步推理 / Performs synchronous inference.
+        /// </summary>
+        public void Infer()
+        {
+            infer();
+        }
+
+        /// <summary>
+        /// 执行同步推理并获取输出 / Performs synchronous inference and gets outputs.
+        /// </summary>
+        /// <returns>输出张量数组 / Output tensor array.</returns>
+        public Tensor[] InferAndGetResults()
+        {
+            return infer_and_get_results();
         }
 
         #endregion
@@ -468,6 +653,40 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             ExceptionHandler.ThrowOnError(ov_infer_request_cancel(_ptr));
+        }
+
+        /// <summary>
+        /// 启动异步推理 / Starts asynchronous inference.
+        /// </summary>
+        public void StartAsync()
+        {
+            start_async();
+        }
+
+        /// <summary>
+        /// 等待推理完成 / Waits for inference completion.
+        /// </summary>
+        public void Wait()
+        {
+            wait();
+        }
+
+        /// <summary>
+        /// 等待推理完成 / Waits for inference completion with timeout.
+        /// </summary>
+        /// <param name="timeout">超时时间（毫秒）/ Timeout in milliseconds.</param>
+        /// <returns>是否完成 / Whether completed.</returns>
+        public bool WaitFor(long timeout)
+        {
+            return wait_for(timeout);
+        }
+
+        /// <summary>
+        /// 取消推理 / Cancels inference.
+        /// </summary>
+        public void Cancel()
+        {
+            cancel();
         }
 
         /// <summary>
@@ -540,6 +759,15 @@ namespace OpenVinoSharp
             ExceptionHandler.ThrowOnError(ov_infer_request_set_callback(_ptr, ref _callbackStruct));
         }
 
+        /// <summary>
+        /// 设置异步推理完成回调 / Sets the async inference completion callback.
+        /// </summary>
+        /// <param name="callback">回调函数 / Callback function.</param>
+        public void SetCallback(Action callback)
+        {
+            set_callback(callback);
+        }
+
 #if HAS_ASYNC_ENUMERABLE
         /// <summary>
         /// 执行异步推理（async/await 模式）/ Perform asynchronous inference (async/await pattern)
@@ -569,6 +797,16 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
+        /// 执行异步推理 / Performs asynchronous inference.
+        /// </summary>
+        /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+        /// <returns>异步任务 / Async task.</returns>
+        public Task InferAsync(CancellationToken cancellationToken = default)
+        {
+            return infer_async(cancellationToken);
+        }
+
+        /// <summary>
         /// 执行异步推理并获取结果 / Perform asynchronous inference and get results
         /// </summary>
         /// <param name="cancellationToken">取消令牌 / Cancellation token</param>
@@ -577,6 +815,16 @@ namespace OpenVinoSharp
         {
             await infer_async(cancellationToken);
             return new Tensor[] { get_output_tensor() };
+        }
+
+        /// <summary>
+        /// 执行异步推理并获取输出 / Performs asynchronous inference and gets outputs.
+        /// </summary>
+        /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+        /// <returns>输出张量数组 / Output tensor array.</returns>
+        public Task<Tensor[]> InferAsyncAndGetResults(CancellationToken cancellationToken = default)
+        {
+            return infer_async_and_get_results(cancellationToken);
         }
 #endif
 
@@ -611,9 +859,9 @@ namespace OpenVinoSharp
                         status = (ProfilingInfo.Status)(int)native_info.status,
                         real_time = native_info.real_time,
                         cpu_time = native_info.cpu_time,
-                        node_name = Marshal.PtrToStringAnsi(native_info.node_name) ?? string.Empty,
-                        exec_type = Marshal.PtrToStringAnsi(native_info.exec_type) ?? string.Empty,
-                        node_type = Marshal.PtrToStringAnsi(native_info.node_type) ?? string.Empty
+                        node_name = StringUtils.Utf8PtrToString(native_info.node_name),
+                        exec_type = StringUtils.Utf8PtrToString(native_info.exec_type),
+                        node_type = StringUtils.Utf8PtrToString(native_info.node_type)
                     };
                 }
                 
@@ -626,6 +874,15 @@ namespace OpenVinoSharp
                     ov_profiling_info_list_free(ref info_list);
                 }
             }
+        }
+
+        /// <summary>
+        /// 获取性能分析信息 / Gets profiling information.
+        /// </summary>
+        /// <returns>性能分析信息数组 / Profiling information array.</returns>
+        public ProfilingInfo[] GetProfilingInfo()
+        {
+            return get_profiling_info();
         }
 
         #endregion

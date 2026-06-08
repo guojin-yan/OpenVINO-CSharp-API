@@ -101,7 +101,7 @@ namespace OpenVinoSharp.Tests.Benchmarks
         }
 
         [Benchmark(Description = "get_rank")]
-        public ulong GetRank()
+        public long GetRank()
         {
             return _shape!.get_rank();
         }

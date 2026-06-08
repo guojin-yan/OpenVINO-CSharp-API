@@ -11,7 +11,7 @@
     <AssemblyName>OpenVINO.CSharp.API</AssemblyName>
     <RootNamespace>OpenVinoSharp</RootNamespace>
 	
-    <Version>3.2.2</Version>
+    <Version>3.3.0</Version>
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVINO C# API</Product>
@@ -148,6 +148,13 @@
   <!-- 包文件 -->
   <ItemGroup>
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+  </ItemGroup>
+
+  <!-- 测试程序集可访问 internal 互操作工具 / Allow tests to access internal interop helpers. -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>OpenVINO.CSharp.API.Tests</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
   
   <!-- 包含 README 文件到 NuGet 包 -->

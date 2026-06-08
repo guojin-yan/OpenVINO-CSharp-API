@@ -73,7 +73,7 @@ var output = request.get_output_tensor().get_data<float>();
 dotnet run
 ```
 
-📚 **[View Full YOLO Samples](https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples)** (Includes four versions for .NET 4.6/4.8/Core 3.1/10.0)
+📚 **[View Full YOLO Samples](https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples)** (Includes four versions for .NET 4.6/4.8/Core 3.1/10.0)
 
 ---
 
@@ -82,7 +82,7 @@ dotnet run
 | Resource | Link | Description |
 |----------|------|-------------|
 | **API Docs** | [guojin-yan.github.io/OpenVINO-CSharp-API](https://guojin-yan.github.io/OpenVINO-CSharp-API) | Complete class library reference |
-| **Sample Code** | [samples/](https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.2/samples) | YOLO detection samples for 4 framework versions |
+| **Sample Code** | [samples/](https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples) | YOLO detection samples for 4 framework versions |
 | **NuGet Package** | [nuget.org/packages/OpenVINO.CSharp.API](https://www.nuget.org/packages/OpenVINO.CSharp.API/) | Latest version download |
 
 ## ✨ Complete Feature List
