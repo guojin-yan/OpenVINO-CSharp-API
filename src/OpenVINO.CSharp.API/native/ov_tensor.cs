@@ -131,6 +131,10 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_tensor_get_size(IntPtr tensor, ref ulong size);
 
+        [DllImport("openvino_c", EntryPoint = "ov_tensor_get_size",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_tensor_get_size_native_size(IntPtr tensor, ref UIntPtr size);
+
         /// <summary>
         /// 获取张量字节大小 / Get the tensor byte size
         /// </summary>
@@ -140,6 +144,10 @@ namespace OpenVinoSharp.native
         [DllImport("openvino_c", EntryPoint = "ov_tensor_get_byte_size",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_tensor_get_byte_size(IntPtr tensor, ref ulong size);
+
+        [DllImport("openvino_c", EntryPoint = "ov_tensor_get_byte_size",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_tensor_get_byte_size_native_size(IntPtr tensor, ref UIntPtr size);
 
         /// <summary>
         /// 获取张量数据指针 / Get the tensor data pointer
@@ -167,6 +175,14 @@ namespace OpenVinoSharp.native
             ov_shape_t shape,
             ref IntPtr tensor);
 
+        [DllImport("openvino_c", EntryPoint = "ov_tensor_create_from_string_array",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_tensor_create_from_string_array_native_size(
+            IntPtr string_array,
+            UIntPtr array_size,
+            ov_shape_t shape,
+            ref IntPtr tensor);
+
         /// <summary>
         /// 为张量设置字符串数据 / Set string data for tensor
         /// </summary>
@@ -180,5 +196,12 @@ namespace OpenVinoSharp.native
             IntPtr tensor,
             IntPtr string_array,
             ulong array_size);
+
+        [DllImport("openvino_c", EntryPoint = "ov_tensor_set_string_data",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_tensor_set_string_data_native_size(
+            IntPtr tensor,
+            IntPtr string_array,
+            UIntPtr array_size);
     }
 }

@@ -63,12 +63,20 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_node_get_output_size(IntPtr node, ref ulong size);
 
+        [DllImport("openvino_c", EntryPoint = "ov_node_get_output_size",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_node_get_output_size_native_size(IntPtr node, ref UIntPtr size);
+
         /// <summary>
         /// Get the output port of the node by index.
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_node_get_output",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_node_get_output(IntPtr node, ulong idx, ref IntPtr output_port);
+
+        [DllImport("openvino_c", EntryPoint = "ov_node_get_output",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_node_get_output_native_size(IntPtr node, UIntPtr idx, ref IntPtr output_port);
 
         /// <summary>
         /// Get the number of input ports of the node.
@@ -77,12 +85,20 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_node_get_input_size(IntPtr node, ref ulong size);
 
+        [DllImport("openvino_c", EntryPoint = "ov_node_get_input_size",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_node_get_input_size_native_size(IntPtr node, ref UIntPtr size);
+
         /// <summary>
         /// Get the input port of the node by index.
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_node_get_input",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_node_get_input(IntPtr node, ulong idx, ref IntPtr input_port);
+
+        [DllImport("openvino_c", EntryPoint = "ov_node_get_input",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_node_get_input_native_size(IntPtr node, UIntPtr idx, ref IntPtr input_port);
 
         /// <summary>
         /// Get the input port of the node by name.
@@ -91,12 +107,20 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_node_get_input_by_name(IntPtr node, ref sbyte name, ref IntPtr input_port);
 
+        [DllImport("openvino_c", EntryPoint = "ov_node_get_input_by_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_node_get_input_by_name_utf8(IntPtr node, IntPtr name, ref IntPtr input_port);
+
         /// <summary>
         /// Get the output port of the node by name.
         /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_node_get_output_by_name",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_node_get_output_by_name(IntPtr node, ref sbyte name, ref IntPtr output_port);
+
+        [DllImport("openvino_c", EntryPoint = "ov_node_get_output_by_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_node_get_output_by_name_utf8(IntPtr node, IntPtr name, ref IntPtr output_port);
 
         /// <summary>
         /// Get the name of the node.

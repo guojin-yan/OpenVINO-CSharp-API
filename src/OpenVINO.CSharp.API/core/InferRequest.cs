@@ -157,7 +157,8 @@ namespace OpenVinoSharp
             if (tensor == null)
                 throw new ArgumentNullException(nameof(tensor));
             ExceptionHandler.ThrowOnError(
-                ov_infer_request_set_input_tensor_by_index(_ptr, idx, tensor.OvPtr));
+                ov_infer_request_set_input_tensor_by_index_native_size(
+                    _ptr, StringUtils.ToNativeSize(idx), tensor.OvPtr));
         }
 
         /// <summary>
@@ -263,7 +264,8 @@ namespace OpenVinoSharp
             if (tensor == null)
                 throw new ArgumentNullException(nameof(tensor));
             ExceptionHandler.ThrowOnError(
-                ov_infer_request_set_output_tensor_by_index(_ptr, idx, tensor.OvPtr));
+                ov_infer_request_set_output_tensor_by_index_native_size(
+                    _ptr, StringUtils.ToNativeSize(idx), tensor.OvPtr));
         }
 
         /// <summary>
@@ -315,7 +317,7 @@ namespace OpenVinoSharp
                 throw new ArgumentNullException(nameof(tensor));
 
             ExceptionHandler.ThrowOnError(
-                ov_infer_request_set_tensor_by_const_port(_ptr, port.OvPtr, tensor.OvPtr));
+                ov_infer_request_set_tensor_by_const_port(_ptr, port.ConstPortPtr, tensor.OvPtr));
         }
 
         /// <summary>
@@ -394,7 +396,8 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             IntPtr tensor_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(
-                ov_infer_request_get_input_tensor_by_index(_ptr, idx, ref tensor_ptr));
+                ov_infer_request_get_input_tensor_by_index_native_size(
+                    _ptr, StringUtils.ToNativeSize(idx), ref tensor_ptr));
             return new Tensor(tensor_ptr);
         }
 
@@ -439,7 +442,8 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             IntPtr tensor_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(
-                ov_infer_request_get_output_tensor_by_index(_ptr, idx, ref tensor_ptr));
+                ov_infer_request_get_output_tensor_by_index_native_size(
+                    _ptr, StringUtils.ToNativeSize(idx), ref tensor_ptr));
             return new Tensor(tensor_ptr);
         }
 
@@ -483,7 +487,7 @@ namespace OpenVinoSharp
 
             IntPtr tensor_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(
-                ov_infer_request_get_tensor_by_const_port(_ptr, port.OvPtr, ref tensor_ptr));
+                ov_infer_request_get_tensor_by_const_port(_ptr, port.ConstPortPtr, ref tensor_ptr));
             return new Tensor(tensor_ptr);
         }
 
@@ -841,15 +845,16 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             
-            ov_profiling_info_list_t info_list = new ov_profiling_info_list_t();
+            ov_profiling_info_list_native_t info_list = new ov_profiling_info_list_native_t();
             try
             {
-                ExceptionHandler.ThrowOnError(ov_infer_request_get_profiling_info(_ptr, ref info_list));
+                ExceptionHandler.ThrowOnError(ov_infer_request_get_profiling_info_native(_ptr, ref info_list));
                 
-                ProfilingInfo[] result = new ProfilingInfo[info_list.size];
+                ulong infoCount = StringUtils.FromNativeSize(info_list.size);
+                ProfilingInfo[] result = new ProfilingInfo[CheckedArrayLength(infoCount, nameof(info_list.size))];
                 int structSize = Marshal.SizeOf(typeof(ov_profiling_info_t));
                 
-                for (ulong i = 0; i < info_list.size; i++)
+                for (ulong i = 0; i < infoCount; i++)
                 {
                     IntPtr ptr = new IntPtr(info_list.profiling_infos.ToInt64() + (long)(i * (ulong)structSize));
                     ov_profiling_info_t native_info = Marshal.PtrToStructure<ov_profiling_info_t>(ptr);
@@ -871,7 +876,7 @@ namespace OpenVinoSharp
             {
                 if (info_list.profiling_infos != IntPtr.Zero)
                 {
-                    ov_profiling_info_list_free(ref info_list);
+                    ov_profiling_info_list_free_native(ref info_list);
                 }
             }
         }
@@ -891,5 +896,13 @@ namespace OpenVinoSharp
         /// 获取原生指针（兼容属性）/ Get native pointer (compatibility property)
         /// </summary>
         public IntPtr Ptr => OvPtr;
+
+        private static int CheckedArrayLength(ulong length, string paramName)
+        {
+            if (length > int.MaxValue)
+                throw new OverflowException($"{paramName} is too large for a managed array. / {paramName} 太大，无法放入托管数组。");
+
+            return (int)length;
+        }
     }
 }

@@ -50,7 +50,6 @@
 //
 
 using System;
-using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
 using OpenVinoSharp.native;
@@ -115,7 +114,7 @@ namespace OpenVinoSharp
             if (string.IsNullOrEmpty(device_name))
                 throw new ArgumentException("参数不能为空 / Parameter cannot be empty", nameof(device_name));
 
-            ExceptionHandler.ThrowOnError(ov_core_create_context(core.OvPtr, device_name, 0, ref _ptr));
+            _ptr = core.create_context(device_name);
         }
 
         #endregion
@@ -155,10 +154,64 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             IntPtr name_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_remote_context_get_device_name(_ptr, ref name_ptr));
-            string name = Marshal.PtrToStringAnsi(name_ptr) ?? string.Empty;
-            ov_free(name_ptr);
-            return name;
+            try
+            {
+                ExceptionHandler.ThrowOnError(ov_remote_context_get_device_name(_ptr, ref name_ptr));
+                return StringUtils.Utf8PtrToString(name_ptr) ?? string.Empty;
+            }
+            finally
+            {
+                if (name_ptr != IntPtr.Zero)
+                    ov_free(name_ptr);
+            }
+        }
+
+        /// <summary>
+        /// 获取设备名称 / Gets the device name.
+        /// </summary>
+        /// <returns>设备名称 / Device name.</returns>
+        public string GetDeviceName()
+        {
+            return get_device_name();
+        }
+
+        /// <summary>
+        /// 获取设备名称 / Gets the device name.
+        /// </summary>
+        public string DeviceName
+        {
+            get { return get_device_name(); }
+        }
+
+        /// <summary>
+        /// 获取远程上下文参数字符串 / Get remote context parameter string
+        /// </summary>
+        /// <returns>设备相关参数字符串 / Device-specific parameter string.</returns>
+        public string get_params()
+        {
+            ThrowIfDisposed();
+            UIntPtr size = UIntPtr.Zero;
+            IntPtr paramsPtr = IntPtr.Zero;
+            try
+            {
+                ExceptionHandler.ThrowOnError(
+                    ov_remote_context_get_params_native_size(_ptr, ref size, ref paramsPtr));
+                return StringUtils.Utf8PtrToString(paramsPtr) ?? string.Empty;
+            }
+            finally
+            {
+                if (paramsPtr != IntPtr.Zero)
+                    ov_free(paramsPtr);
+            }
+        }
+
+        /// <summary>
+        /// 获取远程上下文参数字符串 / Gets remote context parameters.
+        /// </summary>
+        /// <returns>设备相关参数字符串 / Device-specific parameter string.</returns>
+        public string GetParams()
+        {
+            return get_params();
         }
 
         #endregion
@@ -184,8 +237,19 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             IntPtr tensor_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(
-                ov_remote_context_create_tensor(_ptr, (uint)type, shape, 0, ref tensor_ptr));
+                ov_remote_context_create_tensor_native_size(_ptr, (uint)type, shape, UIntPtr.Zero, ref tensor_ptr));
             return tensor_ptr;
+        }
+
+        /// <summary>
+        /// 在远程设备上创建张量 / Creates a tensor on the remote device.
+        /// </summary>
+        /// <param name="type">元素类型 / Element type.</param>
+        /// <param name="shape">张量形状 / Tensor shape.</param>
+        /// <returns>原生张量指针 / Native tensor pointer.</returns>
+        public IntPtr CreateTensor(ElementType type, ov_shape_t shape)
+        {
+            return create_tensor(type, shape);
         }
 
         /// <summary>
@@ -214,6 +278,17 @@ namespace OpenVinoSharp
             ExceptionHandler.ThrowOnError(
                 ov_remote_context_create_host_tensor(_ptr, (uint)type, shape, ref tensor_ptr));
             return tensor_ptr;
+        }
+
+        /// <summary>
+        /// 创建主机张量 / Creates a host tensor with device-friendly memory.
+        /// </summary>
+        /// <param name="type">元素类型 / Element type.</param>
+        /// <param name="shape">张量形状 / Tensor shape.</param>
+        /// <returns>原生张量指针 / Native tensor pointer.</returns>
+        public IntPtr CreateHostTensor(ElementType type, ov_shape_t shape)
+        {
+            return create_host_tensor(type, shape);
         }
 
         #endregion

@@ -53,8 +53,8 @@ using OpenVinoSharp.Internal;
 using OpenVinoSharp.native;
 using System;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
+using static OpenVinoSharp.native.NativeMethods;
 
 namespace OpenVinoSharp
 {
@@ -76,6 +76,8 @@ namespace OpenVinoSharp
         /// </summary>
         private Dimension[] _dims = new Dimension[0];
 
+        private readonly bool _ownsNativeStruct;
+
         #endregion
 
         #region 构造函数 / Constructors
@@ -90,15 +92,12 @@ namespace OpenVinoSharp
 
         /// <summary>
         /// 从原生指针构造 / Construct from native pointer
-        /// </summary>
-        /// <param name="ptr">原生部分形状指针 / Native partial shape pointer</param>
-        /// <summary>
-        /// 从原生指针构造 / Construct from native pointer
         /// <para>注意：此构造函数会读取指针指向的原生数据，并初始化 C# 侧的 Rank 和 Dimension 数组。</para>
         /// </summary>
         /// <param name="ptr">原生部分形状指针 / Native partial shape pointer</param>
         public PartialShape(IntPtr ptr) : base(ptr)
         {
+            _ownsNativeStruct = ptr != IntPtr.Zero;
             if (ptr == IntPtr.Zero)
             {
                 _rank = Rank.dynamic();
@@ -120,7 +119,7 @@ namespace OpenVinoSharp
                     _dims[i] = new Dimension(data[2 * i], data[2 * i + 1]);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // 如果解析失败，回退到动态形状，防止崩溃
                 _rank = Rank.dynamic();
@@ -182,8 +181,6 @@ namespace OpenVinoSharp
         /// <returns>ov_partial_shape_t 结构体 / ov_partial_shape_t structure</returns>
         internal ov_partial_shape_t ToNativeStruct()
         {
-            int rank = _dims.Length;
-            
             // 如果秩是动态的 / If rank is dynamic
             if (_rank.is_dynamic())
             {
@@ -194,25 +191,41 @@ namespace OpenVinoSharp
                 };
             }
 
-            // 分配维度数组内存 / Allocate dimension array memory
+            int rank = _dims.Length;
+            if (rank == 0)
+            {
+                return new ov_partial_shape_t
+                {
+                    rank = ov_rank_t.Static(0),
+                    dims = IntPtr.Zero
+                };
+            }
+
             ov_dimension_t[] dimensions = new ov_dimension_t[rank];
             for (int i = 0; i < rank; i++)
             {
                 dimensions[i] = _dims[i].ToNativeStruct();
             }
 
-            IntPtr dimsPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ov_dimension_t)) * rank);
-            for (int i = 0; i < rank; i++)
-            {
-                IntPtr offset = new IntPtr(dimsPtr.ToInt64() + Marshal.SizeOf(typeof(ov_dimension_t)) * i);
-                Marshal.StructureToPtr(dimensions[i], offset, false);
-            }
+            ov_partial_shape_t nativeShape = new ov_partial_shape_t();
+            ExceptionHandler.ThrowOnError(ov_partial_shape_create_dynamic(
+                new ov_rank_t(_rank.min, _rank.max),
+                dimensions,
+                ref nativeShape));
+            return nativeShape;
+        }
 
-            return new ov_partial_shape_t
+        /// <summary>
+        /// 释放由 OpenVINO C API 创建的部分形状内部内存 / Free internal memory of a partial shape created by OpenVINO C API.
+        /// </summary>
+        /// <param name="partialShape">待释放的部分形状结构 / Partial shape structure to free.</param>
+        internal static void FreeNativeStruct(ref ov_partial_shape_t partialShape)
+        {
+            if (partialShape.dims != IntPtr.Zero)
             {
-                rank = ov_rank_t.Static(rank),
-                dims = dimsPtr
-            };
+                ov_partial_shape_free(ref partialShape);
+                partialShape.dims = IntPtr.Zero;
+            }
         }
 
         #endregion
@@ -343,7 +356,14 @@ namespace OpenVinoSharp
         /// <inheritdoc/>
         protected override void DisposeUnmanaged()
         {
-            // 清理原生资源（如果已分配）/ Clean up native resources if allocated
+            if (_ptr != IntPtr.Zero && IsEnabledDispose && _ownsNativeStruct)
+            {
+                ov_partial_shape_t nativeShape = Marshal.PtrToStructure<ov_partial_shape_t>(_ptr);
+                FreeNativeStruct(ref nativeShape);
+                Marshal.FreeHGlobal(_ptr);
+                _ptr = IntPtr.Zero;
+            }
+
             base.DisposeUnmanaged();
         }
 

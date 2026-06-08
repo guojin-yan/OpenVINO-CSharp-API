@@ -143,8 +143,9 @@ namespace OpenVinoSharp
         /// </example>
         public static Version get_openvino_version()
         {
-            int size = Marshal.SizeOf(typeof(Version));
+            int size = Marshal.SizeOf(typeof(OpenVinoSharp.native.ov_version_t));
             IntPtr ptr = Marshal.AllocHGlobal(size);
+            bool versionAllocated = false;
             try
             {
                 ExceptionStatus status = ov_get_openvino_version(ptr);
@@ -154,15 +155,16 @@ namespace OpenVinoSharp
                     return new Version();
                 }
 
-                Version version = Marshal.PtrToStructure<Version>(ptr);
-                string build = string.Copy(version.buildNumber);
-                string description = string.Copy(version.description);
-                Version new_version = new Version(build, description);
-                ov_version_free(ptr);
-                return new_version;
+                versionAllocated = true;
+                OpenVinoSharp.native.ov_version_t version = Marshal.PtrToStructure<OpenVinoSharp.native.ov_version_t>(ptr);
+                string build = StringUtils.Utf8PtrToString(version.buildNumber) ?? string.Empty;
+                string description = StringUtils.Utf8PtrToString(version.description) ?? string.Empty;
+                return new Version(build, description);
             }
             finally
             {
+                if (versionAllocated)
+                    ov_version_free(ptr);
                 Marshal.FreeHGlobal(ptr);
             }
         }
@@ -274,7 +276,7 @@ namespace OpenVinoSharp
                 IntPtr msgPtr = ov_get_last_err_msg();
                 if (msgPtr != IntPtr.Zero)
                 {
-                    return Marshal.PtrToStringAnsi(msgPtr) ?? "Unknown error";
+                    return StringUtils.Utf8PtrToString(msgPtr) ?? "Unknown error";
                 }
             }
             catch
@@ -303,8 +305,9 @@ namespace OpenVinoSharp
         {
             try
             {
-                string info = ov_get_error_info(status);
-                return info ?? "Unknown error";
+                IntPtr infoPtr = ov_get_error_info_ptr(status);
+                string info = StringUtils.Utf8PtrToString(infoPtr);
+                return string.IsNullOrEmpty(info) ? "Unknown error" : info;
             }
             catch
             {

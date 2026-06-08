@@ -80,6 +80,10 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_compiled_model_inputs_size(IntPtr compiled_model, ref ulong size);
 
+        [DllImport("openvino_c", EntryPoint = "ov_compiled_model_inputs_size",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_compiled_model_inputs_size_native_size(IntPtr compiled_model, ref UIntPtr size);
+
         /// <summary>
         /// 获取 ov_compiled_model_t 的单个常量输入端口 / Get the single const input port of ov_compiled_model_t
         /// </summary>
@@ -102,6 +106,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_compiled_model_input_by_index(
             IntPtr compiled_model,
             ulong index,
+            ref IntPtr input_port);
+
+        [DllImport("openvino_c", EntryPoint = "ov_compiled_model_input_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_compiled_model_input_by_index_native_size(
+            IntPtr compiled_model,
+            UIntPtr index,
             ref IntPtr input_port);
 
         /// <summary>
@@ -146,6 +157,10 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_compiled_model_outputs_size(IntPtr compiled_model, ref ulong size);
 
+        [DllImport("openvino_c", EntryPoint = "ov_compiled_model_outputs_size",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_compiled_model_outputs_size_native_size(IntPtr compiled_model, ref UIntPtr size);
+
         /// <summary>
         /// 获取 ov_compiled_model_t 的单个常量输出端口 / Get the single const output port of ov_compiled_model_t
         /// </summary>
@@ -168,6 +183,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_compiled_model_output_by_index(
             IntPtr compiled_model,
             ulong index,
+            ref IntPtr output_port);
+
+        [DllImport("openvino_c", EntryPoint = "ov_compiled_model_output_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_compiled_model_output_by_index_native_size(
+            IntPtr compiled_model,
+            UIntPtr index,
             ref IntPtr output_port);
 
         /// <summary>

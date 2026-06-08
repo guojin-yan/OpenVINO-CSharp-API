@@ -76,6 +76,24 @@ namespace OpenVinoSharp.native
             ref IntPtr remote_tensor);
 
         /// <summary>
+        /// 使用原生 size_t 创建远程张量 / Create a remote tensor using native size_t.
+        /// </summary>
+        /// <param name="context">远程上下文指针 / Remote context pointer.</param>
+        /// <param name="type">元素类型 / Element type.</param>
+        /// <param name="shape">张量形状 / Tensor shape.</param>
+        /// <param name="object_args_size">参数数量 / Argument count.</param>
+        /// <param name="remote_tensor">返回的远程张量 / Returned remote tensor.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_remote_context_create_tensor",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_remote_context_create_tensor_native_size(
+            IntPtr context,
+            uint type,
+            ov_shape_t shape,
+            UIntPtr object_args_size,
+            ref IntPtr remote_tensor);
+
+        /// <summary>
         /// Returns name of a device on which underlying object is allocated.
         /// </summary>
         /// <param name="context">A pointer to the ov_remote_context_t instance.</param>
@@ -100,6 +118,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_remote_context_get_params(
             IntPtr context,
             ref ulong size,
+            ref IntPtr @params);
+
+        [DllImport("openvino_c", EntryPoint = "ov_remote_context_get_params",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_remote_context_get_params_native_size(
+            IntPtr context,
+            ref UIntPtr size,
             ref IntPtr @params);
 
         /// <summary>
@@ -139,6 +164,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_remote_tensor_get_params(
             IntPtr tensor,
             ref ulong size,
+            ref IntPtr @params);
+
+        [DllImport("openvino_c", EntryPoint = "ov_remote_tensor_get_params",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_remote_tensor_get_params_native_size(
+            IntPtr tensor,
+            ref UIntPtr size,
             ref IntPtr @params);
 
         /// <summary>

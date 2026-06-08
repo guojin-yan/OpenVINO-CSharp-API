@@ -114,6 +114,26 @@ namespace OpenVinoSharp
             }
         }
 
+        /// <summary>
+        /// 从形状和 UTF-8 字符串数组构造字符串张量 / Construct a string tensor from shape and UTF-8 string array
+        /// </summary>
+        /// <param name="shape">张量形状 / Tensor shape</param>
+        /// <param name="input_data">字符串数据 / String data</param>
+        public Tensor(Shape shape, string[] input_data) : base()
+        {
+            if (shape == null)
+                throw new ArgumentNullException(nameof(shape));
+            if (input_data == null)
+                throw new ArgumentNullException(nameof(input_data));
+
+            ov_shape_t nativeShape = Marshal.PtrToStructure<ov_shape_t>(shape.OvPtr);
+            WithUtf8StringArray(input_data, (arrayPtr, arraySize) =>
+            {
+                ExceptionHandler.ThrowOnError(
+                    ov_tensor_create_from_string_array_native_size(arrayPtr, arraySize, nativeShape, ref _ptr));
+            });
+        }
+
 #if HAS_SPAN
         /// <summary>
         /// 从形状和浮点Span构造（.NET Core 2.1+）/ Construct from shape and float Span (.NET Core 2.1+)
@@ -178,6 +198,28 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
+        /// 从字符串数组创建字符串张量 / Create a string tensor from a string array
+        /// </summary>
+        /// <param name="shape">张量形状 / Tensor shape</param>
+        /// <param name="inputData">字符串数据 / String data</param>
+        /// <returns>字符串张量 / String tensor</returns>
+        public static Tensor from_strings(Shape shape, string[] inputData)
+        {
+            return new Tensor(shape, inputData);
+        }
+
+        /// <summary>
+        /// 从字符串数组创建字符串张量 / Creates a string tensor from a string array.
+        /// </summary>
+        /// <param name="shape">张量形状 / Tensor shape.</param>
+        /// <param name="inputData">字符串数据 / String data.</param>
+        /// <returns>字符串张量 / String tensor.</returns>
+        public static Tensor FromStrings(Shape shape, string[] inputData)
+        {
+            return from_strings(shape, inputData);
+        }
+
+        /// <summary>
         /// 从固定指针构造张量 / Construct tensor from fixed pointer
         /// </summary>
         /// <param name="shape">张量形状 / Tensor shape</param>
@@ -234,9 +276,9 @@ namespace OpenVinoSharp
             get
             {
                 ThrowIfDisposed();
-                ulong sizeValue = 0;
-                ExceptionHandler.ThrowOnError(ov_tensor_get_size(_ptr, ref sizeValue));
-                return sizeValue;
+                UIntPtr sizeValue = UIntPtr.Zero;
+                ExceptionHandler.ThrowOnError(ov_tensor_get_size_native_size(_ptr, ref sizeValue));
+                return StringUtils.FromNativeSize(sizeValue);
             }
         }
 
@@ -248,9 +290,9 @@ namespace OpenVinoSharp
             get
             {
                 ThrowIfDisposed();
-                ulong sizeValue = 0;
-                ExceptionHandler.ThrowOnError(ov_tensor_get_byte_size(_ptr, ref sizeValue));
-                return sizeValue;
+                UIntPtr sizeValue = UIntPtr.Zero;
+                ExceptionHandler.ThrowOnError(ov_tensor_get_byte_size_native_size(_ptr, ref sizeValue));
+                return StringUtils.FromNativeSize(sizeValue);
             }
         }
 
@@ -420,6 +462,38 @@ namespace OpenVinoSharp
                 throw new OverflowException($"{paramName} is too large to copy into a managed array.");
 
             return (int)length;
+        }
+
+        private static void WithUtf8StringArray(string[] values, Action<IntPtr, UIntPtr> action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            if (values.Length == 0)
+            {
+                action(IntPtr.Zero, UIntPtr.Zero);
+                return;
+            }
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (values[i] == null)
+                    throw new ArgumentException("String tensor values cannot be null. / 字符串张量元素不能为 null。", nameof(values));
+            }
+
+            IntPtr[] stringPtrs = StringUtils.StringArrayToUtf8PtrArray(values);
+            GCHandle arrayHandle = default;
+            try
+            {
+                arrayHandle = GCHandle.Alloc(stringPtrs, GCHandleType.Pinned);
+                action(arrayHandle.AddrOfPinnedObject(), StringUtils.ToNativeSize((ulong)values.Length));
+            }
+            finally
+            {
+                if (arrayHandle.IsAllocated)
+                    arrayHandle.Free();
+                StringUtils.FreeUtf8PtrArray(stringPtrs);
+            }
         }
 
         #region 类型特定数据获取 / Type-Specific Data Getters
@@ -721,6 +795,32 @@ namespace OpenVinoSharp
         }
 
         /// <summary>
+        /// 设置字符串数据 / Set string data
+        /// </summary>
+        /// <param name="input_data">字符串数组 / String array</param>
+        public void set_string_data(string[] input_data)
+        {
+            ThrowIfDisposed();
+            if (input_data == null)
+                throw new ArgumentNullException(nameof(input_data));
+
+            WithUtf8StringArray(input_data, (arrayPtr, arraySize) =>
+            {
+                ExceptionHandler.ThrowOnError(
+                    ov_tensor_set_string_data_native_size(_ptr, arrayPtr, arraySize));
+            });
+        }
+
+        /// <summary>
+        /// 设置字符串数据 / Sets string data.
+        /// </summary>
+        /// <param name="inputData">字符串数组 / String array.</param>
+        public void SetStringData(string[] inputData)
+        {
+            set_string_data(inputData);
+        }
+
+        /// <summary>
         /// 批量设置数据（高性能内存拷贝）/ Batch set data (high-performance memory copy)
         /// </summary>
         /// <param name="source">源数据指针 / Source data pointer</param>
@@ -746,6 +846,69 @@ namespace OpenVinoSharp
         /// 获取原生指针（兼容属性）/ Get native pointer (compatibility property)
         /// </summary>
         public IntPtr Ptr => OvPtr;
+
+        /// <summary>
+        /// 获取远程张量参数字符串 / Get remote tensor parameter string
+        /// </summary>
+        /// <returns>远程张量参数字符串 / Remote tensor parameter string.</returns>
+        /// <remarks>仅适用于远程张量 / Only valid for remote tensors.</remarks>
+        public string get_remote_params()
+        {
+            ThrowIfDisposed();
+            UIntPtr size = UIntPtr.Zero;
+            IntPtr paramsPtr = IntPtr.Zero;
+            try
+            {
+                ExceptionHandler.ThrowOnError(
+                    ov_remote_tensor_get_params_native_size(_ptr, ref size, ref paramsPtr));
+                return StringUtils.Utf8PtrToString(paramsPtr) ?? string.Empty;
+            }
+            finally
+            {
+                if (paramsPtr != IntPtr.Zero)
+                    ov_free(paramsPtr);
+            }
+        }
+
+        /// <summary>
+        /// 获取远程张量参数字符串 / Gets remote tensor parameters.
+        /// </summary>
+        /// <returns>远程张量参数字符串 / Remote tensor parameter string.</returns>
+        public string GetRemoteParams()
+        {
+            return get_remote_params();
+        }
+
+        /// <summary>
+        /// 获取远程张量所在设备名称 / Get the device name for a remote tensor
+        /// </summary>
+        /// <returns>设备名称 / Device name.</returns>
+        /// <remarks>仅适用于远程张量 / Only valid for remote tensors.</remarks>
+        public string get_remote_device_name()
+        {
+            ThrowIfDisposed();
+            IntPtr deviceNamePtr = IntPtr.Zero;
+            try
+            {
+                ExceptionHandler.ThrowOnError(
+                    ov_remote_tensor_get_device_name(_ptr, ref deviceNamePtr));
+                return StringUtils.Utf8PtrToString(deviceNamePtr) ?? string.Empty;
+            }
+            finally
+            {
+                if (deviceNamePtr != IntPtr.Zero)
+                    ov_free(deviceNamePtr);
+            }
+        }
+
+        /// <summary>
+        /// 获取远程张量所在设备名称 / Gets the device name for a remote tensor.
+        /// </summary>
+        /// <returns>设备名称 / Device name.</returns>
+        public string GetRemoteDeviceName()
+        {
+            return get_remote_device_name();
+        }
 
 #if HAS_MEMORY
         /// <summary>

@@ -97,9 +97,9 @@ namespace OpenVinoSharp
         public ulong get_inputs_size()
         {
             ThrowIfDisposed();
-            ulong size = 0;
-            ExceptionHandler.ThrowOnError(ov_model_inputs_size(_ptr, ref size));
-            return size;
+            UIntPtr size = UIntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_model_inputs_size_native_size(_ptr, ref size));
+            return StringUtils.FromNativeSize(size);
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ namespace OpenVinoSharp
         public Input input()
         {
             ThrowIfDisposed();
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_input(_ptr, ref node_ptr));
-            return new Input(node_ptr);
+            return CreateInputPort(
+                (ref IntPtr port) => ov_model_input(_ptr, ref port),
+                (ref IntPtr constPort) => ov_model_const_input(_ptr, ref constPort));
         }
 
         /// <summary>
@@ -121,10 +121,7 @@ namespace OpenVinoSharp
         /// <returns>节点输入端口 / Node input port</returns>
         public Input input(ulong idx)
         {
-            ThrowIfDisposed();
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_input_by_index(_ptr, idx, ref node_ptr));
-            return new Input(node_ptr);
+            return get_input(idx);
         }
 
         /// <summary>
@@ -134,15 +131,7 @@ namespace OpenVinoSharp
         /// <returns>节点输入端口 / Node input port</returns>
         public Input input(string name)
         {
-            ThrowIfDisposed();
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
-
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
-                name,
-                namePtr => ov_model_input_by_name_utf8(_ptr, namePtr, ref node_ptr)));
-            return new Input(node_ptr);
+            return get_input_by_name(name);
         }
 
         /// <summary>
@@ -153,9 +142,10 @@ namespace OpenVinoSharp
         public Input get_input(ulong idx)
         {
             ThrowIfDisposed();
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_input_by_index(_ptr, idx, ref node_ptr));
-            return new Input(node_ptr);
+            UIntPtr nativeIndex = StringUtils.ToNativeSize(idx);
+            return CreateInputPort(
+                (ref IntPtr port) => ov_model_input_by_index_native_size(_ptr, nativeIndex, ref port),
+                (ref IntPtr constPort) => ov_model_const_input_by_index_native_size(_ptr, nativeIndex, ref constPort));
         }
 
         /// <summary>
@@ -168,12 +158,10 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
-            
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
-                name,
-                namePtr => ov_model_input_by_name_utf8(_ptr, namePtr, ref node_ptr)));
-            return new Input(node_ptr);
+
+            return StringUtils.WithUtf8Ptr(name, namePtr => CreateInputPort(
+                (ref IntPtr port) => ov_model_input_by_name_utf8(_ptr, namePtr, ref port),
+                (ref IntPtr constPort) => ov_model_const_input_by_name_utf8(_ptr, namePtr, ref constPort)));
         }
         /// <summary>
         /// Get all input of model.
@@ -245,9 +233,9 @@ namespace OpenVinoSharp
         public ulong get_outputs_size()
         {
             ThrowIfDisposed();
-            ulong size = 0;
-            ExceptionHandler.ThrowOnError(ov_model_outputs_size(_ptr, ref size));
-            return size;
+            UIntPtr size = UIntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_model_outputs_size_native_size(_ptr, ref size));
+            return StringUtils.FromNativeSize(size);
         }
         /// <summary>
         /// 获取输入 / Get input
@@ -256,9 +244,9 @@ namespace OpenVinoSharp
         public Output output()
         {
             ThrowIfDisposed();
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_output(_ptr, ref node_ptr));
-            return new Output(node_ptr);
+            return CreateOutputPort(
+                (ref IntPtr port) => ov_model_output(_ptr, ref port),
+                (ref IntPtr constPort) => ov_model_const_output(_ptr, ref constPort));
         }
         /// <summary>
         /// 获取指定索引的输出 / Get output at specified index
@@ -267,10 +255,7 @@ namespace OpenVinoSharp
         /// <returns>输出节点描述 / Output node description</returns>
         public Output output(ulong idx)
         {
-            ThrowIfDisposed();
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_output_by_index(_ptr, idx, ref node_ptr));
-            return new Output(node_ptr);
+            return get_output(idx);
         }
 
         /// <summary>
@@ -280,15 +265,7 @@ namespace OpenVinoSharp
         /// <returns>输出节点描述 / Output node description</returns>
         public Output output(string name)
         {
-            ThrowIfDisposed();
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
-
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
-                name,
-                namePtr => ov_model_output_by_name_utf8(_ptr, namePtr, ref node_ptr)));
-            return new Output(node_ptr);
+            return get_output_by_name(name);
         }
         /// <summary>
         /// 获取指定索引的输出 / Get output at specified index
@@ -298,9 +275,10 @@ namespace OpenVinoSharp
         public Output get_output(ulong idx)
         {
             ThrowIfDisposed();
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_model_output_by_index(_ptr, idx, ref node_ptr));
-            return new Output(node_ptr);
+            UIntPtr nativeIndex = StringUtils.ToNativeSize(idx);
+            return CreateOutputPort(
+                (ref IntPtr port) => ov_model_output_by_index_native_size(_ptr, nativeIndex, ref port),
+                (ref IntPtr constPort) => ov_model_const_output_by_index_native_size(_ptr, nativeIndex, ref constPort));
         }
 
         /// <summary>
@@ -313,12 +291,10 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Parameter cannot be null or empty", nameof(name));
-            
-            IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
-                name,
-                namePtr => ov_model_output_by_name_utf8(_ptr, namePtr, ref node_ptr)));
-            return new Output(node_ptr);
+
+            return StringUtils.WithUtf8Ptr(name, namePtr => CreateOutputPort(
+                (ref IntPtr port) => ov_model_output_by_name_utf8(_ptr, namePtr, ref port),
+                (ref IntPtr constPort) => ov_model_const_output_by_name_utf8(_ptr, namePtr, ref constPort)));
         }
 
         /// <summary>
@@ -468,9 +444,7 @@ namespace OpenVinoSharp
             }
             finally
             {
-                // 释放维度数组内存 / Free dimension array memory
-                if (nativeShape.dims != IntPtr.Zero)
-                    Marshal.FreeHGlobal(nativeShape.dims);
+                PartialShape.FreeNativeStruct(ref nativeShape);
             }
         }
 
@@ -500,9 +474,7 @@ namespace OpenVinoSharp
                     }
                     finally
                     {
-                        // 释放维度数组内存 / Free dimension array memory
-                        if (partialShape.dims != IntPtr.Zero)
-                            Marshal.FreeHGlobal(partialShape.dims);
+                        PartialShape.FreeNativeStruct(ref partialShape);
                     }
                 }
                 finally
@@ -534,9 +506,7 @@ namespace OpenVinoSharp
             }
             finally
             {
-                // 释放维度数组内存 / Free dimension array memory
-                if (partialShape.dims != IntPtr.Zero)
-                    Marshal.FreeHGlobal(partialShape.dims);
+                PartialShape.FreeNativeStruct(ref partialShape);
             }
         }
 
@@ -562,9 +532,7 @@ namespace OpenVinoSharp
             }
             finally
             {
-                // 释放维度数组内存 / Free dimension array memory
-                if (nativeShape.dims != IntPtr.Zero)
-                    Marshal.FreeHGlobal(nativeShape.dims);
+                PartialShape.FreeNativeStruct(ref nativeShape);
             }
         }
 
@@ -666,5 +634,47 @@ namespace OpenVinoSharp
         /// 获取原生指针（兼容属性）/ Get native pointer (compatibility property)
         /// </summary>
         public IntPtr Ptr => OvPtr;
+
+        private delegate ExceptionStatus PortCreator(ref IntPtr port);
+
+        private Input CreateInputPort(PortCreator createPort, PortCreator createConstPort)
+        {
+            IntPtr portPtr = IntPtr.Zero;
+            IntPtr constPortPtr = IntPtr.Zero;
+            try
+            {
+                ExceptionHandler.ThrowOnError(createPort(ref portPtr));
+                ExceptionHandler.ThrowOnError(createConstPort(ref constPortPtr));
+                return new Input(portPtr, false, constPortPtr);
+            }
+            catch
+            {
+                if (constPortPtr != IntPtr.Zero)
+                    ov_output_const_port_free(constPortPtr);
+                if (portPtr != IntPtr.Zero)
+                    ov_output_port_free(portPtr);
+                throw;
+            }
+        }
+
+        private Output CreateOutputPort(PortCreator createPort, PortCreator createConstPort)
+        {
+            IntPtr portPtr = IntPtr.Zero;
+            IntPtr constPortPtr = IntPtr.Zero;
+            try
+            {
+                ExceptionHandler.ThrowOnError(createPort(ref portPtr));
+                ExceptionHandler.ThrowOnError(createConstPort(ref constPortPtr));
+                return new Output(portPtr, false, constPortPtr);
+            }
+            catch
+            {
+                if (constPortPtr != IntPtr.Zero)
+                    ov_output_const_port_free(constPortPtr);
+                if (portPtr != IntPtr.Zero)
+                    ov_output_port_free(portPtr);
+                throw;
+            }
+        }
     }
 }

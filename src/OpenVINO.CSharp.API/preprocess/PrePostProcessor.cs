@@ -50,7 +50,6 @@
 //
 
 using System;
-using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
 using OpenVinoSharp.element;
@@ -123,6 +122,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 构建并应用预处理步骤 / Builds and applies preprocessing steps.
+        /// </summary>
+        /// <returns>应用预处理后的模型 / Model with preprocessing applied.</returns>
+        public Model Build()
+        {
+            return build();
+        }
+
+        /// <summary>
         /// 获取输入信息 / Get input info
         /// </summary>
         /// <returns>输入信息对象 / Input info object</returns>
@@ -133,6 +141,15 @@ namespace OpenVinoSharp.preprocess
             IntPtr info_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_preprocess_prepostprocessor_get_input_info(_ptr, ref info_ptr));
             return new InputInfo(info_ptr);
+        }
+
+        /// <summary>
+        /// 获取输入信息 / Gets input information.
+        /// </summary>
+        /// <returns>输入信息对象 / Input info object.</returns>
+        public InputInfo GetInputInfo()
+        {
+            return get_input_info();
         }
 
         /// <summary>
@@ -154,8 +171,20 @@ namespace OpenVinoSharp.preprocess
                 throw new ArgumentNullException(nameof(tensor_name));
 
             IntPtr info_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_preprocess_prepostprocessor_get_input_info_by_name(_ptr, tensor_name, ref info_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                tensor_name,
+                namePtr => ov_preprocess_prepostprocessor_get_input_info_by_name_utf8(_ptr, namePtr, ref info_ptr)));
             return new InputInfo(info_ptr);
+        }
+
+        /// <summary>
+        /// 根据名称获取输入信息 / Gets input information by tensor name.
+        /// </summary>
+        /// <param name="tensorName">输入张量名称 / Input tensor name.</param>
+        /// <returns>输入信息对象 / Input info object.</returns>
+        public InputInfo GetInputInfoByName(string tensorName)
+        {
+            return get_input_info_by_name(tensorName);
         }
 
         /// <summary>
@@ -173,8 +202,20 @@ namespace OpenVinoSharp.preprocess
         {
             ThrowIfDisposed();
             IntPtr info_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_preprocess_prepostprocessor_get_input_info_by_index(_ptr, tensor_index, ref info_ptr));
+            ExceptionHandler.ThrowOnError(
+                ov_preprocess_prepostprocessor_get_input_info_by_index_native_size(
+                    _ptr, StringUtils.ToNativeSize(tensor_index), ref info_ptr));
             return new InputInfo(info_ptr);
+        }
+
+        /// <summary>
+        /// 根据索引获取输入信息 / Gets input information by index.
+        /// </summary>
+        /// <param name="tensorIndex">输入张量索引 / Input tensor index.</param>
+        /// <returns>输入信息对象 / Input info object.</returns>
+        public InputInfo GetInputInfoByIndex(ulong tensorIndex)
+        {
+            return get_input_info_by_index(tensorIndex);
         }
 
         /// <summary>
@@ -191,6 +232,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 获取输出信息 / Gets output information.
+        /// </summary>
+        /// <returns>输出信息对象 / Output info object.</returns>
+        public OutputInfo GetOutputInfo()
+        {
+            return get_output_info();
+        }
+
+        /// <summary>
         /// 根据索引获取输出信息 / Get output info by index
         /// </summary>
         /// <param name="tensor_index">输出张量索引 / Output tensor index</param>
@@ -199,8 +249,20 @@ namespace OpenVinoSharp.preprocess
         {
             ThrowIfDisposed();
             IntPtr info_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_preprocess_prepostprocessor_get_output_info_by_index(_ptr, tensor_index, ref info_ptr));
+            ExceptionHandler.ThrowOnError(
+                ov_preprocess_prepostprocessor_get_output_info_by_index_native_size(
+                    _ptr, StringUtils.ToNativeSize(tensor_index), ref info_ptr));
             return new OutputInfo(info_ptr);
+        }
+
+        /// <summary>
+        /// 根据索引获取输出信息 / Gets output information by index.
+        /// </summary>
+        /// <param name="tensorIndex">输出张量索引 / Output tensor index.</param>
+        /// <returns>输出信息对象 / Output info object.</returns>
+        public OutputInfo GetOutputInfoByIndex(ulong tensorIndex)
+        {
+            return get_output_info_by_index(tensorIndex);
         }
 
         /// <summary>
@@ -216,8 +278,20 @@ namespace OpenVinoSharp.preprocess
                 throw new ArgumentNullException(nameof(tensor_name));
 
             IntPtr info_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_preprocess_prepostprocessor_get_output_info_by_name(_ptr, tensor_name, ref info_ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                tensor_name,
+                namePtr => ov_preprocess_prepostprocessor_get_output_info_by_name_utf8(_ptr, namePtr, ref info_ptr)));
             return new OutputInfo(info_ptr);
+        }
+
+        /// <summary>
+        /// 根据名称获取输出信息 / Gets output information by tensor name.
+        /// </summary>
+        /// <param name="tensorName">输出张量名称 / Output tensor name.</param>
+        /// <returns>输出信息对象 / Output info object.</returns>
+        public OutputInfo GetOutputInfoByName(string tensorName)
+        {
+            return get_output_info_by_name(tensorName);
         }
     }
 
@@ -267,6 +341,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 获取张量信息 / Gets tensor information.
+        /// </summary>
+        /// <returns>输入张量信息对象 / Input tensor info object.</returns>
+        public InputTensorInfo GetTensorInfo()
+        {
+            return get_tensor_info();
+        }
+
+        /// <summary>
         /// 获取预处理步骤 / Get preprocess steps
         /// </summary>
         /// <returns>预处理步骤对象 / Preprocessing steps object</returns>
@@ -280,6 +363,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 获取预处理步骤 / Gets preprocessing steps.
+        /// </summary>
+        /// <returns>预处理步骤对象 / Preprocessing steps object.</returns>
+        public PreprocessSteps GetPreprocessSteps()
+        {
+            return get_preprocess_steps();
+        }
+
+        /// <summary>
         /// 获取模型信息 / Get model info
         /// </summary>
         /// <returns>输入模型信息对象 / Input model info object</returns>
@@ -290,6 +382,15 @@ namespace OpenVinoSharp.preprocess
             IntPtr info_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(ov_preprocess_input_info_get_model_info(_ptr, ref info_ptr));
             return new InputModelInfo(info_ptr);
+        }
+
+        /// <summary>
+        /// 获取模型信息 / Gets model information.
+        /// </summary>
+        /// <returns>输入模型信息对象 / Input model info object.</returns>
+        public InputModelInfo GetModelInfo()
+        {
+            return get_model_info();
         }
     }
 
@@ -344,6 +445,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 设置元素类型 / Sets element type.
+        /// </summary>
+        /// <param name="elementType">元素类型 / Element type.</param>
+        public void SetElementType(ElementType elementType)
+        {
+            set_element_type(elementType);
+        }
+
+        /// <summary>
         /// 设置颜色格式 / Set color format
         /// </summary>
         /// <param name="color_format">颜色格式 / Color format (e.g., ColorFormat.RGB, ColorFormat.BGR)</param>
@@ -361,6 +471,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 设置颜色格式 / Sets color format.
+        /// </summary>
+        /// <param name="colorFormat">颜色格式 / Color format.</param>
+        public void SetColorFormat(ColorFormat colorFormat)
+        {
+            set_color_format(colorFormat);
+        }
+
+        /// <summary>
         /// 设置布局 / Set layout
         /// </summary>
         /// <param name="layout">张量布局 / Tensor layout (e.g., "NCHW", "NHWC")</param>
@@ -374,6 +493,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 设置布局 / Sets layout.
+        /// </summary>
+        /// <param name="layout">布局 / Layout.</param>
+        public void SetLayout(Layout layout)
+        {
+            set_layout(layout);
+        }
+
+        /// <summary>
         /// 设置静态空间形状（高度和宽度）/ Set spatial static shape (height and width)
         /// </summary>
         /// <param name="height">图像高度 / Image height</param>
@@ -382,7 +510,19 @@ namespace OpenVinoSharp.preprocess
         public void set_spatial_static_shape(ulong height, ulong width)
         {
             ThrowIfDisposed();
-            ExceptionHandler.ThrowOnError(ov_preprocess_input_tensor_info_set_spatial_static_shape(_ptr, height, width));
+            ExceptionHandler.ThrowOnError(
+                ov_preprocess_input_tensor_info_set_spatial_static_shape_native_size(
+                    _ptr, StringUtils.ToNativeSize(height), StringUtils.ToNativeSize(width)));
+        }
+
+        /// <summary>
+        /// 设置静态空间形状 / Sets spatial static shape.
+        /// </summary>
+        /// <param name="height">高度 / Height.</param>
+        /// <param name="width">宽度 / Width.</param>
+        public void SetSpatialStaticShape(ulong height, ulong width)
+        {
+            set_spatial_static_shape(height, width);
         }
 
         /// <summary>
@@ -406,37 +546,56 @@ namespace OpenVinoSharp.preprocess
                 return;
             }
 
-            // Convert string array to unmanaged memory
-            IntPtr[] ptrArray = new IntPtr[sub_names.Length];
-            GCHandle[] handles = new GCHandle[sub_names.Length];
+            if (sub_names.Length > 4)
+                throw new NotSupportedException("A maximum of four color plane sub-names is supported by this wrapper. / 当前封装最多支持四个颜色平面子名称。");
+
+            for (int i = 0; i < sub_names.Length; i++)
+            {
+                if (string.IsNullOrEmpty(sub_names[i]))
+                    throw new ArgumentException("Sub-name cannot be null or empty. / 子名称不能为空。", nameof(sub_names));
+            }
+
+            IntPtr[] ptrArray = StringUtils.StringArrayToUtf8PtrArray(sub_names);
             try
             {
-                for (int i = 0; i < sub_names.Length; i++)
+                UIntPtr size = StringUtils.ToNativeSize((ulong)sub_names.Length);
+                ExceptionStatus status;
+                switch (sub_names.Length)
                 {
-                    handles[i] = GCHandle.Alloc(System.Text.Encoding.ASCII.GetBytes(sub_names[i] + '\0'), GCHandleType.Pinned);
-                    ptrArray[i] = handles[i].AddrOfPinnedObject();
+                    case 1:
+                        status = ov_preprocess_input_tensor_info_set_color_format_with_subname_utf8_1(
+                            _ptr, (uint)color_format, size, ptrArray[0]);
+                        break;
+                    case 2:
+                        status = ov_preprocess_input_tensor_info_set_color_format_with_subname_utf8_2(
+                            _ptr, (uint)color_format, size, ptrArray[0], ptrArray[1]);
+                        break;
+                    case 3:
+                        status = ov_preprocess_input_tensor_info_set_color_format_with_subname_utf8_3(
+                            _ptr, (uint)color_format, size, ptrArray[0], ptrArray[1], ptrArray[2]);
+                        break;
+                    default:
+                        status = ov_preprocess_input_tensor_info_set_color_format_with_subname_utf8_4(
+                            _ptr, (uint)color_format, size, ptrArray[0], ptrArray[1], ptrArray[2], ptrArray[3]);
+                        break;
                 }
 
-                GCHandle arrayHandle = GCHandle.Alloc(ptrArray, GCHandleType.Pinned);
-                try
-                {
-                    ExceptionHandler.ThrowOnError(
-                        ov_preprocess_input_tensor_info_set_color_format_with_subname(
-                            _ptr, (uint)color_format, (ulong)sub_names.Length, arrayHandle.AddrOfPinnedObject()));
-                }
-                finally
-                {
-                    arrayHandle.Free();
-                }
+                ExceptionHandler.ThrowOnError(status);
             }
             finally
             {
-                for (int i = 0; i < handles.Length; i++)
-                {
-                    if (handles[i].IsAllocated)
-                        handles[i].Free();
-                }
+                StringUtils.FreeUtf8PtrArray(ptrArray);
             }
+        }
+
+        /// <summary>
+        /// 设置颜色格式及平面子名称 / Sets color format with plane sub-names.
+        /// </summary>
+        /// <param name="colorFormat">颜色格式 / Color format.</param>
+        /// <param name="subNames">平面子名称 / Plane sub-names.</param>
+        public void SetColorFormat(ColorFormat colorFormat, string[] subNames)
+        {
+            set_color_format(colorFormat, subNames);
         }
 
         /// <summary>
@@ -451,7 +610,18 @@ namespace OpenVinoSharp.preprocess
             if (string.IsNullOrEmpty(mem_type))
                 throw new ArgumentNullException(nameof(mem_type));
 
-            ExceptionHandler.ThrowOnError(ov_preprocess_input_tensor_info_set_memory_type(_ptr, mem_type));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                mem_type,
+                memTypePtr => ov_preprocess_input_tensor_info_set_memory_type_utf8(_ptr, memTypePtr)));
+        }
+
+        /// <summary>
+        /// 设置内存类型 / Sets memory type.
+        /// </summary>
+        /// <param name="memType">内存类型 / Memory type.</param>
+        public void SetMemoryType(string memType)
+        {
+            set_memory_type(memType);
         }
 
         /// <summary>
@@ -466,6 +636,15 @@ namespace OpenVinoSharp.preprocess
             if (tensor == null) throw new ArgumentNullException(nameof(tensor));
 
             ExceptionHandler.ThrowOnError(ov_preprocess_input_tensor_info_set_from(_ptr, tensor.OvPtr));
+        }
+
+        /// <summary>
+        /// 从已有张量设置输入信息 / Sets input tensor information from an existing tensor.
+        /// </summary>
+        /// <param name="tensor">源张量 / Source tensor.</param>
+        public void SetFrom(Tensor tensor)
+        {
+            set_from(tensor);
         }
     }
 
@@ -520,6 +699,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 添加调整大小操作 / Adds a resize operation.
+        /// </summary>
+        /// <param name="algorithm">调整大小算法 / Resize algorithm.</param>
+        public void Resize(ResizeAlgorithm algorithm)
+        {
+            resize(algorithm);
+        }
+
+        /// <summary>
         /// 添加缩放操作（单通道）/ Add scale operation (single channel)
         /// </summary>
         /// <param name="value">缩放值 / Scale value</param>
@@ -537,6 +725,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 添加缩放操作 / Adds a scale operation.
+        /// </summary>
+        /// <param name="value">缩放值 / Scale value.</param>
+        public void Scale(float value)
+        {
+            scale(value);
+        }
+
+        /// <summary>
         /// 添加均值操作（单通道）/ Add mean operation (single channel)
         /// </summary>
         /// <param name="value">均值值 / Mean value</param>
@@ -551,6 +748,15 @@ namespace OpenVinoSharp.preprocess
         {
             ThrowIfDisposed();
             ExceptionHandler.ThrowOnError(ov_preprocess_preprocess_steps_mean(_ptr, value));
+        }
+
+        /// <summary>
+        /// 添加均值操作 / Adds a mean operation.
+        /// </summary>
+        /// <param name="value">均值 / Mean value.</param>
+        public void Mean(float value)
+        {
+            mean(value);
         }
 
         /// <summary>
@@ -576,6 +782,16 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 添加裁剪操作 / Adds a crop operation.
+        /// </summary>
+        /// <param name="begin">起始索引 / Begin indexes.</param>
+        /// <param name="end">结束索引 / End indexes.</param>
+        public void Crop(int[] begin, int[] end)
+        {
+            crop(begin, end);
+        }
+
+        /// <summary>
         /// 添加布局转换操作 / Add convert layout operation
         /// </summary>
         /// <param name="layout">目标布局 / Target layout</param>
@@ -586,6 +802,15 @@ namespace OpenVinoSharp.preprocess
             ThrowIfDisposed();
             if (layout == null) throw new ArgumentNullException(nameof(layout));
             ExceptionHandler.ThrowOnError(ov_preprocess_preprocess_steps_convert_layout(_ptr, layout.OvPtr));
+        }
+
+        /// <summary>
+        /// 添加布局转换操作 / Adds a layout conversion operation.
+        /// </summary>
+        /// <param name="layout">目标布局 / Target layout.</param>
+        public void ConvertLayout(Layout layout)
+        {
+            convert_layout(layout);
         }
 
         /// <summary>
@@ -600,6 +825,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 添加元素类型转换操作 / Adds an element type conversion operation.
+        /// </summary>
+        /// <param name="elementType">目标元素类型 / Target element type.</param>
+        public void ConvertElementType(ElementType elementType)
+        {
+            convert_element_type(elementType);
+        }
+
+        /// <summary>
         /// 添加颜色转换操作 / Add convert color operation
         /// </summary>
         /// <param name="color_format">目标颜色格式 / Target color format</param>
@@ -611,6 +845,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 添加颜色转换操作 / Adds a color conversion operation.
+        /// </summary>
+        /// <param name="colorFormat">目标颜色格式 / Target color format.</param>
+        public void ConvertColor(ColorFormat colorFormat)
+        {
+            convert_color(colorFormat);
+        }
+
+        /// <summary>
         /// 反转通道顺序 / Reverse channels
         /// </summary>
         /// <remarks>反转颜色通道顺序，如 RGB 变为 BGR / Reverses color channel order, e.g., RGB becomes BGR</remarks>
@@ -618,6 +861,14 @@ namespace OpenVinoSharp.preprocess
         {
             ThrowIfDisposed();
             ExceptionHandler.ThrowOnError(ov_preprocess_preprocess_steps_reverse_channels(_ptr));
+        }
+
+        /// <summary>
+        /// 反转通道顺序 / Reverses channel order.
+        /// </summary>
+        public void ReverseChannels()
+        {
+            reverse_channels();
         }
 
         /// <summary>
@@ -642,6 +893,15 @@ namespace OpenVinoSharp.preprocess
         }
 
         /// <summary>
+        /// 添加多通道缩放操作 / Adds a multi-channel scale operation.
+        /// </summary>
+        /// <param name="values">每个通道的缩放值 / Per-channel scale values.</param>
+        public void ScaleMultiChannels(float[] values)
+        {
+            scale_multi_channels(values);
+        }
+
+        /// <summary>
         /// 添加多通道均值操作 / Add mean operation for multiple channels
         /// </summary>
         /// <param name="values">每个通道的均值数组 / Mean values array for each channel</param>
@@ -660,6 +920,15 @@ namespace OpenVinoSharp.preprocess
 
             ExceptionHandler.ThrowOnError(
                 ov_preprocess_preprocess_steps_mean_multi_channels(_ptr, values, values.Length));
+        }
+
+        /// <summary>
+        /// 添加多通道均值操作 / Adds a multi-channel mean operation.
+        /// </summary>
+        /// <param name="values">每个通道的均值 / Per-channel mean values.</param>
+        public void MeanMultiChannels(float[] values)
+        {
+            mean_multi_channels(values);
         }
 
         /// <summary>
@@ -684,8 +953,26 @@ namespace OpenVinoSharp.preprocess
             if (pads_end == null) throw new ArgumentNullException(nameof(pads_end));
 
             ExceptionHandler.ThrowOnError(
-                ov_preprocess_preprocess_steps_pad(_ptr, pads_begin, (ulong)pads_begin.Length, 
-                    pads_end, (ulong)pads_end.Length, value, (uint)mode));
+                ov_preprocess_preprocess_steps_pad_native_size(
+                    _ptr,
+                    pads_begin,
+                    StringUtils.ToNativeSize((ulong)pads_begin.Length),
+                    pads_end,
+                    StringUtils.ToNativeSize((ulong)pads_end.Length),
+                    value,
+                    (uint)mode));
+        }
+
+        /// <summary>
+        /// 添加填充操作 / Adds a pad operation.
+        /// </summary>
+        /// <param name="padsBegin">起始填充 / Begin padding.</param>
+        /// <param name="padsEnd">结束填充 / End padding.</param>
+        /// <param name="value">填充值 / Padding value.</param>
+        /// <param name="mode">填充模式 / Padding mode.</param>
+        public void Pad(int[] padsBegin, int[] padsEnd, float value = 0.0f, PaddingMode mode = PaddingMode.CONSTANT)
+        {
+            pad(padsBegin, padsEnd, value, mode);
         }
     }
 
@@ -725,6 +1012,15 @@ namespace OpenVinoSharp.preprocess
             if (layout == null) throw new ArgumentNullException(nameof(layout));
             ExceptionHandler.ThrowOnError(ov_preprocess_input_model_info_set_layout(_ptr, layout.OvPtr));
         }
+
+        /// <summary>
+        /// 设置模型输入布局 / Sets model input layout.
+        /// </summary>
+        /// <param name="layout">布局 / Layout.</param>
+        public void SetLayout(Layout layout)
+        {
+            set_layout(layout);
+        }
     }
 
     /// <summary>
@@ -763,6 +1059,15 @@ namespace OpenVinoSharp.preprocess
             ExceptionHandler.ThrowOnError(ov_preprocess_output_info_get_tensor_info(_ptr, ref info_ptr));
             return new OutputTensorInfo(info_ptr);
         }
+
+        /// <summary>
+        /// 获取输出张量信息 / Gets output tensor information.
+        /// </summary>
+        /// <returns>输出张量信息对象 / Output tensor info object.</returns>
+        public OutputTensorInfo GetTensorInfo()
+        {
+            return get_tensor_info();
+        }
     }
 
     /// <summary>
@@ -798,6 +1103,15 @@ namespace OpenVinoSharp.preprocess
         {
             ThrowIfDisposed();
             ExceptionHandler.ThrowOnError(ov_preprocess_output_set_element_type(_ptr, (uint)element_type));
+        }
+
+        /// <summary>
+        /// 设置输出元素类型 / Sets output element type.
+        /// </summary>
+        /// <param name="elementType">元素类型 / Element type.</param>
+        public void SetElementType(ElementType elementType)
+        {
+            set_element_type(elementType);
         }
     }
 }

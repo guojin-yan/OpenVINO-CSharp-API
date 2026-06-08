@@ -108,7 +108,7 @@ namespace OpenVinoSharp.native
         {
             // Create a wrapper that marshals string from IntPtr
             ov_util_log_callback_func wrapper = (IntPtr msgPtr) => {
-                string message = Marshal.PtrToStringAnsi(msgPtr) ?? string.Empty;
+                string message = OpenVinoSharp.StringUtils.Utf8PtrToString(msgPtr) ?? string.Empty;
                 func(message);
             };
             ov_util_set_log_callback(wrapper);
@@ -795,6 +795,15 @@ namespace OpenVinoSharp.native
             IntPtr model,
             IntPtr context,
             ulong property_args_size,
+            ref IntPtr compiled_model);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_with_context",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_with_context_native_size(
+            IntPtr core,
+            IntPtr model,
+            IntPtr context,
+            UIntPtr property_args_size,
             ref IntPtr compiled_model);
 
         /// <summary>

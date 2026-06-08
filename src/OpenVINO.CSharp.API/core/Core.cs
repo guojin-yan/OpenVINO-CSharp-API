@@ -55,6 +55,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using static OpenVinoSharp.native.NativeMethods;
 using OpenVinoSharp.Internal;
+using OpenVinoSharp.native;
 
 // 日志使用示例 / OvLogger usage example:
 // OvLogger.Info("消息 / Message");
@@ -82,7 +83,14 @@ namespace OpenVinoSharp
         private struct ov_available_devices_t
         {
             public IntPtr devices;
-            public ulong size;
+            public UIntPtr size;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct ov_core_version_list_native_t
+        {
+            public IntPtr versions;
+            public UIntPtr size;
         }
 
         #region 静态构造函数 / Static Constructor
@@ -242,6 +250,8 @@ namespace OpenVinoSharp
             ThrowIfDisposed();
             if (xml_model_data == null)
                 throw new ArgumentNullException(nameof(xml_model_data));
+            if (xml_model_data.Length == 0)
+                throw new ArgumentException("Model buffer cannot be empty. / 模型缓冲区不能为空。", nameof(xml_model_data));
             if (weights == null)
                 throw new ArgumentNullException(nameof(weights));
 
@@ -270,6 +280,8 @@ namespace OpenVinoSharp
         public unsafe Model read_model(ReadOnlySpan<byte> xml_model_data, Tensor weights)
         {
             ThrowIfDisposed();
+            if (xml_model_data.IsEmpty)
+                throw new ArgumentException("Model buffer cannot be empty. / 模型缓冲区不能为空。", nameof(xml_model_data));
             if (weights == null)
                 throw new ArgumentNullException(nameof(weights));
 
@@ -624,7 +636,7 @@ namespace OpenVinoSharp
             if (string.IsNullOrEmpty(device_name))
                 throw new ArgumentException("参数不能为空", nameof(device_name));
 
-            int size = Marshal.SizeOf(typeof(CoreVersionList));
+            int size = Marshal.SizeOf(typeof(ov_core_version_list_native_t));
             IntPtr ptr_core_version_s = Marshal.AllocHGlobal(size);
             bool versionsAllocated = false;
             try
@@ -634,10 +646,16 @@ namespace OpenVinoSharp
                     deviceNamePtr => ov_core_get_versions_by_device_name_utf8(_ptr, deviceNamePtr, ptr_core_version_s)));
                 versionsAllocated = true;
 
-                CoreVersionList core_version_s = Marshal.PtrToStructure<CoreVersionList>(ptr_core_version_s);
-                CoreVersion core_version = Marshal.PtrToStructure<CoreVersion>(core_version_s.core_version);
+                ov_core_version_list_native_t core_version_s = Marshal.PtrToStructure<ov_core_version_list_native_t>(ptr_core_version_s);
+                if (core_version_s.versions == IntPtr.Zero || StringUtils.FromNativeSize(core_version_s.size) == 0)
+                    return default(KeyValuePair<string, Version>);
+
+                ov_core_version_t core_version = Marshal.PtrToStructure<ov_core_version_t>(core_version_s.versions);
+                string deviceName = StringUtils.Utf8PtrToString(core_version.device_name) ?? string.Empty;
+                string buildNumber = StringUtils.Utf8PtrToString(core_version.version.buildNumber) ?? string.Empty;
+                string description = StringUtils.Utf8PtrToString(core_version.version.description) ?? string.Empty;
                 var value = new KeyValuePair<string, Version>(
-                    core_version.device_name, core_version.version);
+                    deviceName, new Version(buildNumber, description));
                 return value;
             }
             finally
@@ -665,11 +683,13 @@ namespace OpenVinoSharp
                 devicesAllocated = true;
 
                 ov_available_devices_t devices_s = Marshal.PtrToStructure<ov_available_devices_t>(devices_ptr);
-                IntPtr[] devices_ptrs = new IntPtr[devices_s.size];
-                Marshal.Copy(devices_s.devices, devices_ptrs, 0, (int)devices_s.size);
+                ulong deviceCount = StringUtils.FromNativeSize(devices_s.size);
+                int deviceArrayLength = CheckedArrayLength(deviceCount, nameof(devices_s.size));
+                IntPtr[] devices_ptrs = new IntPtr[deviceArrayLength];
+                Marshal.Copy(devices_s.devices, devices_ptrs, 0, deviceArrayLength);
                 
-                List<string> devices = new List<string>((int)devices_s.size);
-                for (int i = 0; i < (int)devices_s.size; ++i)
+                List<string> devices = new List<string>(deviceArrayLength);
+                for (int i = 0; i < deviceArrayLength; ++i)
                 {
                 string deviceName = StringUtils.Utf8PtrToString(devices_ptrs[i]);
                     if (!string.IsNullOrEmpty(deviceName))
@@ -890,7 +910,7 @@ namespace OpenVinoSharp
 
             IntPtr compiled_model_ptr = IntPtr.Zero;
             ExceptionHandler.ThrowOnError(
-                ov_core_compile_model_with_context(_ptr, model.OvPtr, context, 0, ref compiled_model_ptr));
+                ov_core_compile_model_with_context_native_size(_ptr, model.OvPtr, context, UIntPtr.Zero, ref compiled_model_ptr));
             return new CompiledModel(compiled_model_ptr);
         }
 
@@ -908,5 +928,13 @@ namespace OpenVinoSharp
         /// 获取原生指针（兼容属性）/ Get native pointer (compatibility property)
         /// </summary>
         public IntPtr Ptr => OvPtr;
+
+        private static int CheckedArrayLength(ulong length, string paramName)
+        {
+            if (length > int.MaxValue)
+                throw new OverflowException($"{paramName} is too large for a managed array. / {paramName} 太大，无法放入托管数组。");
+
+            return (int)length;
+        }
     }
 }

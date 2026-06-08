@@ -64,12 +64,9 @@ namespace OpenVinoSharp
         // UTF-8 编码实例（缓存以提高性能） / UTF-8 encoding instance (cached for performance)
         internal static readonly Encoding Utf8Encoding = new UTF8Encoding(false, false);
         
-        // ANSI 编码实例 / ANSI encoding instance
-        internal static readonly Encoding AnsiEncoding = Encoding.Default;
-
         /// <summary>
         /// 将 C# 字符串转换为 C 字符串指针 (UTF-8 编码) / Convert C# string to C string pointer (UTF-8 encoding)
-        /// <para>使用 Marshal.StringToHGlobalAnsi 在 .NET Framework 上更稳定 / Using Marshal.StringToHGlobalAnsi is more stable on .NET Framework</para>
+        /// <para>OpenVINO C API 使用 UTF-8 char*，这里显式分配 UTF-8 + null 终止符内存。/ OpenVINO C API uses UTF-8 char*, so this allocates UTF-8 + null-terminated memory explicitly.</para>
         /// </summary>
         /// <param name="str">C# 字符串 / C# string</param>
         /// <returns>指向 UTF-8 编码的内存指针，需要用 Marshal.FreeHGlobal 释放 / Pointer to UTF-8 encoded memory, needs to be freed with Marshal.FreeHGlobal</returns>

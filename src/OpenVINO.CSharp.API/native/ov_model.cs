@@ -80,6 +80,10 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_model_inputs_size(IntPtr model, ref ulong size);
 
+        [DllImport("openvino_c", EntryPoint = "ov_model_inputs_size",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_inputs_size_native_size(IntPtr model, ref UIntPtr size);
+
         /// <summary>
         /// 获取 ov_model_t 的输出数量 / Get the output size of ov_model_t
         /// </summary>
@@ -89,6 +93,10 @@ namespace OpenVinoSharp.native
         [DllImport("openvino_c", EntryPoint = "ov_model_outputs_size",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_model_outputs_size(IntPtr model, ref ulong size);
+
+        [DllImport("openvino_c", EntryPoint = "ov_model_outputs_size",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_outputs_size_native_size(IntPtr model, ref UIntPtr size);
 
         #endregion
 
@@ -118,6 +126,13 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPStr)] string tensor_name,
             ref IntPtr input_port);
 
+        [DllImport("openvino_c", EntryPoint = "ov_model_const_input_by_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_const_input_by_name_utf8(
+            IntPtr model,
+            IntPtr tensor_name,
+            ref IntPtr input_port);
+
         /// <summary>
         /// 通过端口索引获取 ov_model_t 的常量输入端口 / Get a const input port of ov_model_t by port index
         /// </summary>
@@ -130,6 +145,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_model_const_input_by_index(
             IntPtr model,
             ulong index,
+            ref IntPtr input_port);
+
+        [DllImport("openvino_c", EntryPoint = "ov_model_const_input_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_const_input_by_index_native_size(
+            IntPtr model,
+            UIntPtr index,
             ref IntPtr input_port);
 
         #endregion
@@ -188,6 +210,13 @@ namespace OpenVinoSharp.native
             ulong index,
             ref IntPtr input_port);
 
+        [DllImport("openvino_c", EntryPoint = "ov_model_input_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_input_by_index_native_size(
+            IntPtr model,
+            UIntPtr index,
+            ref IntPtr input_port);
+
         #endregion
 
         #region Const Output Ports
@@ -216,6 +245,13 @@ namespace OpenVinoSharp.native
             ulong index,
             ref IntPtr output_port);
 
+        [DllImport("openvino_c", EntryPoint = "ov_model_const_output_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_const_output_by_index_native_size(
+            IntPtr model,
+            UIntPtr index,
+            ref IntPtr output_port);
+
         /// <summary>
         /// 通过名称获取 ov_model_t 的常量输出端口 / Get a const output port of ov_model_t by name
         /// </summary>
@@ -228,6 +264,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_model_const_output_by_name(
             IntPtr model,
             [MarshalAs(UnmanagedType.LPStr)] string tensor_name,
+            ref IntPtr output_port);
+
+        [DllImport("openvino_c", EntryPoint = "ov_model_const_output_by_name",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_const_output_by_name_utf8(
+            IntPtr model,
+            IntPtr tensor_name,
             ref IntPtr output_port);
 
         #endregion
@@ -256,6 +299,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_model_output_by_index(
             IntPtr model,
             ulong index,
+            ref IntPtr output_port);
+
+        [DllImport("openvino_c", EntryPoint = "ov_model_output_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_model_output_by_index_native_size(
+            IntPtr model,
+            UIntPtr index,
             ref IntPtr output_port);
 
         /// <summary>

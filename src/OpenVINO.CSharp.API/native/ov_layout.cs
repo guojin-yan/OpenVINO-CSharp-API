@@ -67,6 +67,16 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_layout_create(string layout_desc, ref IntPtr layout);
 
         /// <summary>
+        /// 使用 UTF-8 布局字符串创建布局对象 / Create a layout object from a UTF-8 layout string.
+        /// </summary>
+        /// <param name="layout_desc">UTF-8 布局字符串指针 / UTF-8 layout string pointer.</param>
+        /// <param name="layout">返回的布局指针 / Returned layout pointer.</param>
+        /// <returns>操作状态 / Operation status.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_layout_create",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_layout_create_utf8(IntPtr layout_desc, ref IntPtr layout);
+
+        /// <summary>
         /// Free layout object.
         /// </summary>
         /// <param name="layout">Layout to be released.</param>

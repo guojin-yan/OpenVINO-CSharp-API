@@ -63,13 +63,24 @@ namespace OpenVinoSharp
     /// </summary>
     public class Output : DisposableOvObject
     {
+        private readonly bool _isConstPort;
+        private IntPtr _constPortPtr;
+
         #region 构造函数 / Constructors
 
         /// <summary>
         /// 从原生指针构造 / Construct from native pointer
         /// </summary>
         /// <param name="ptr">原生节点输出指针 / Native node output pointer</param>
-        public Output(IntPtr ptr) : base(ptr) { }
+        public Output(IntPtr ptr) : this(ptr, false) { }
+
+        internal Output(IntPtr ptr, bool isConstPort) : this(ptr, isConstPort, IntPtr.Zero) { }
+
+        internal Output(IntPtr ptr, bool isConstPort, IntPtr constPortPtr) : base(ptr)
+        {
+            _isConstPort = isConstPort;
+            _constPortPtr = constPortPtr;
+        }
 
         #endregion
 
@@ -78,8 +89,22 @@ namespace OpenVinoSharp
         /// <inheritdoc/>
         protected override void DisposeUnmanaged()
         {
-            // 节点输出由父模型/节点管理 / Node outputs are managed by parent model/node
-            // 仅在我们拥有指针时才释放 / Only free if we own the pointer
+            if (IsEnabledDispose)
+            {
+                if (_constPortPtr != IntPtr.Zero && _constPortPtr != _ptr)
+                {
+                    ov_output_const_port_free(_constPortPtr);
+                    _constPortPtr = IntPtr.Zero;
+                }
+
+                if (_ptr != IntPtr.Zero)
+                {
+                    if (_isConstPort)
+                        ov_output_const_port_free(_ptr);
+                    else
+                        ov_output_port_free(_ptr);
+                }
+            }
             base.DisposeUnmanaged();
         }
 
@@ -95,7 +120,7 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             uint type = 0;
-            ExceptionHandler.ThrowOnError(ov_port_get_element_type(_ptr, ref type));
+            ExceptionHandler.ThrowOnError(ov_port_get_element_type(ConstPortPtr, ref type));
             return new OvType((ElementType)type);
         }
 
@@ -110,7 +135,9 @@ namespace OpenVinoSharp
             IntPtr shape_ptr = Marshal.AllocHGlobal(size);
             try
             {
-                ExceptionHandler.ThrowOnError(ov_port_get_shape(_ptr, shape_ptr));
+                ExceptionHandler.ThrowOnError(_isConstPort
+                    ? ov_const_port_get_shape(_ptr, shape_ptr)
+                    : ov_port_get_shape(_ptr, shape_ptr));
                 return new Shape(shape_ptr);
             }
             catch
@@ -131,7 +158,7 @@ namespace OpenVinoSharp
             IntPtr shape_ptr = Marshal.AllocHGlobal(size);
             try
             {
-                ExceptionHandler.ThrowOnError(ov_port_get_partial_shape(_ptr, shape_ptr));
+                ExceptionHandler.ThrowOnError(ov_port_get_partial_shape(ConstPortPtr, shape_ptr));
                 return new PartialShape(shape_ptr);
             }
             catch
@@ -149,10 +176,25 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             IntPtr name_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_port_get_any_name(_ptr, ref name_ptr));
-            string name = Marshal.PtrToStringAnsi(name_ptr) ?? string.Empty;
-            ov_free(name_ptr);
-            return name;
+            ExceptionHandler.ThrowOnError(ov_port_get_any_name(ConstPortPtr, ref name_ptr));
+            try
+            {
+                return StringUtils.Utf8PtrToString(name_ptr);
+            }
+            finally
+            {
+                if (name_ptr != IntPtr.Zero)
+                    ov_free(name_ptr);
+            }
+        }
+
+        /// <summary>
+        /// 获取输出端口任意名称 / Gets any name of this output port.
+        /// </summary>
+        /// <returns>端口名称 / Port name.</returns>
+        public string GetAnyName()
+        {
+            return get_any_name();
         }
 
 
@@ -162,5 +204,14 @@ namespace OpenVinoSharp
         /// 获取原生指针（兼容属性）/ Get native pointer (compatibility property)
         /// </summary>
         public IntPtr Ptr => OvPtr;
+
+        internal IntPtr ConstPortPtr
+        {
+            get
+            {
+                ThrowIfDisposed();
+                return _isConstPort || _constPortPtr == IntPtr.Zero ? _ptr : _constPortPtr;
+            }
+        }
     }
 }

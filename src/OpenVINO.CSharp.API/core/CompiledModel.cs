@@ -96,9 +96,9 @@ namespace OpenVinoSharp
         public ulong get_inputs_size()
         {
             ThrowIfDisposed();
-            ulong size = 0;
-            ExceptionHandler.ThrowOnError(ov_compiled_model_inputs_size(_ptr, ref size));
-            return size;
+            UIntPtr size = UIntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_compiled_model_inputs_size_native_size(_ptr, ref size));
+            return StringUtils.FromNativeSize(size);
         }
 
         /// <summary>
@@ -110,8 +110,9 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_compiled_model_input_by_index(_ptr, idx, ref node_ptr));
-            return new Input(node_ptr);
+            ExceptionHandler.ThrowOnError(
+                ov_compiled_model_input_by_index_native_size(_ptr, StringUtils.ToNativeSize(idx), ref node_ptr));
+            return new Input(node_ptr, true);
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace OpenVinoSharp
             ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
                 tensor_name,
                 namePtr => ov_compiled_model_input_by_name_utf8(_ptr, namePtr, ref node_ptr)));
-            return new Input(node_ptr);
+            return new Input(node_ptr, true);
         }
 
         /// <summary>
@@ -171,9 +172,9 @@ namespace OpenVinoSharp
         public ulong get_outputs_size()
         {
             ThrowIfDisposed();
-            ulong size = 0;
-            ExceptionHandler.ThrowOnError(ov_compiled_model_outputs_size(_ptr, ref size));
-            return size;
+            UIntPtr size = UIntPtr.Zero;
+            ExceptionHandler.ThrowOnError(ov_compiled_model_outputs_size_native_size(_ptr, ref size));
+            return StringUtils.FromNativeSize(size);
         }
 
         /// <summary>
@@ -185,8 +186,9 @@ namespace OpenVinoSharp
         {
             ThrowIfDisposed();
             IntPtr node_ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_compiled_model_output_by_index(_ptr, idx, ref node_ptr));
-            return new Output(node_ptr);
+            ExceptionHandler.ThrowOnError(
+                ov_compiled_model_output_by_index_native_size(_ptr, StringUtils.ToNativeSize(idx), ref node_ptr));
+            return new Output(node_ptr, true);
         }
 
         /// <summary>
@@ -204,7 +206,7 @@ namespace OpenVinoSharp
             ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
                 tensor_name,
                 namePtr => ov_compiled_model_output_by_name_utf8(_ptr, namePtr, ref node_ptr)));
-            return new Output(node_ptr);
+            return new Output(node_ptr, true);
         }
 
         /// <summary>

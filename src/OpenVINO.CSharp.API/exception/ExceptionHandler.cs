@@ -134,7 +134,7 @@ namespace OpenVinoSharp
                         return System.Text.Encoding.UTF8.GetString(ptr, len);
                     }
 #else
-                    return Marshal.PtrToStringAnsi(msgPtr) ?? "未知错误 / Unknown error";
+                    return StringUtils.Utf8PtrToString(msgPtr) ?? "未知错误 / Unknown error";
 #endif
                 }
             }

@@ -144,6 +144,13 @@ namespace OpenVinoSharp.native
             ulong idx,
             IntPtr tensor);
 
+        [DllImport("openvino_c", EntryPoint = "ov_infer_request_set_input_tensor_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_infer_request_set_input_tensor_by_index_native_size(
+            IntPtr infer_request,
+            UIntPtr idx,
+            IntPtr tensor);
+
         /// <summary>
         /// 为单输入模型设置输入张量 / Set an input tensor for the model with single input to infer on
         /// </summary>
@@ -172,6 +179,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_infer_request_set_output_tensor_by_index(
             IntPtr infer_request,
             ulong idx,
+            IntPtr tensor);
+
+        [DllImport("openvino_c", EntryPoint = "ov_infer_request_set_output_tensor_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_infer_request_set_output_tensor_by_index_native_size(
+            IntPtr infer_request,
+            UIntPtr idx,
             IntPtr tensor);
 
         /// <summary>
@@ -268,6 +282,13 @@ namespace OpenVinoSharp.native
             ulong idx,
             ref IntPtr tensor);
 
+        [DllImport("openvino_c", EntryPoint = "ov_infer_request_get_input_tensor_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_infer_request_get_input_tensor_by_index_native_size(
+            IntPtr infer_request,
+            UIntPtr idx,
+            ref IntPtr tensor);
+
         /// <summary>
         /// 从单输入模型获取输入张量 / Get an input tensor from the model with only one input tensor
         /// </summary>
@@ -296,6 +317,13 @@ namespace OpenVinoSharp.native
         public extern static ExceptionStatus ov_infer_request_get_output_tensor_by_index(
             IntPtr infer_request,
             ulong idx,
+            ref IntPtr tensor);
+
+        [DllImport("openvino_c", EntryPoint = "ov_infer_request_get_output_tensor_by_index",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_infer_request_get_output_tensor_by_index_native_size(
+            IntPtr infer_request,
+            UIntPtr idx,
             ref IntPtr tensor);
 
         /// <summary>
@@ -409,6 +437,12 @@ namespace OpenVinoSharp.native
             IntPtr infer_request,
             ref ov_profiling_info_list_t profiling_infos);
 
+        [DllImport("openvino_c", EntryPoint = "ov_infer_request_get_profiling_info",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_infer_request_get_profiling_info_native(
+            IntPtr infer_request,
+            ref ov_profiling_info_list_native_t profiling_infos);
+
         /// <summary>
         /// 释放 ov_profiling_info_list_t 分配的内存 / Release the memory allocated by ov_profiling_info_list_t
         /// </summary>
@@ -416,6 +450,10 @@ namespace OpenVinoSharp.native
         [DllImport("openvino_c", EntryPoint = "ov_profiling_info_list_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_profiling_info_list_free(ref ov_profiling_info_list_t profiling_infos);
+
+        [DllImport("openvino_c", EntryPoint = "ov_profiling_info_list_free",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static void ov_profiling_info_list_free_native(ref ov_profiling_info_list_native_t profiling_infos);
 
         #endregion
     }
@@ -501,5 +539,12 @@ namespace OpenVinoSharp.native
         /// 信息数量 / Number of infos
         /// </summary>
         public ulong size;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ov_profiling_info_list_native_t
+    {
+        public IntPtr profiling_infos;
+        public UIntPtr size;
     }
 }

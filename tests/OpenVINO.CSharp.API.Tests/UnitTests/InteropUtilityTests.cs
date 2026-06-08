@@ -30,6 +30,24 @@ namespace OpenVinoSharp.Tests.UnitTests
         }
 
         /// <summary>
+        /// 空字符串应以 UTF-8 null 终止符形式往返 / Empty strings should round-trip as UTF-8 null-terminated strings.
+        /// </summary>
+        [Fact]
+        public void Utf8PtrRoundTrip_PreservesEmptyString()
+        {
+            IntPtr ptr = StringUtils.StringToUtf8Ptr(string.Empty);
+
+            try
+            {
+                Assert.Equal(string.Empty, StringUtils.Utf8PtrToString(ptr));
+            }
+            finally
+            {
+                StringUtils.FreeUtf8Ptr(ptr);
+            }
+        }
+
+        /// <summary>
         /// size_t 辅助函数应按当前进程指针宽度转换 / size_t helpers should convert with the current pointer width.
         /// </summary>
         [Fact]

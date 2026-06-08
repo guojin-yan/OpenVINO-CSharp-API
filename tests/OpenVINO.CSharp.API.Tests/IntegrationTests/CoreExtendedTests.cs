@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Guojin Yan
 // Licensed under the Apache-2.0 License.
 
+using System;
 using System.Collections.Generic;
 using Xunit;
 using OpenVinoSharp.Tests.TestHelpers;
@@ -45,6 +46,19 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             {
                 // 如果格式不正确可能会抛出异常，这是可接受的
             }
+        }
+
+        [OpenVINOFact]
+        [Trait("Category", TestCategories.Integration)]
+        [Trait("Category", TestCategories.RequiresOpenVINO)]
+        public void ReadModel_FromEmptyMemoryBuffer_ThrowsArgumentException()
+        {
+            // Arrange
+            using var core = new Core();
+            using var weights = new Tensor(new Shape(new long[] { 1 }), ElementType.U8);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => core.read_model(Array.Empty<byte>(), weights));
         }
 
         [OpenVINOFact]

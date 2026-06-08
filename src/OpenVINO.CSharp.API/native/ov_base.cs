@@ -66,6 +66,15 @@ namespace OpenVinoSharp.native
         public extern static string ov_get_error_info(int status);
 
         /// <summary>
+        /// 获取错误信息指针，调用方按 UTF-8 解码且不释放返回值 / Get error info pointer; caller decodes it as UTF-8 and must not free it.
+        /// </summary>
+        /// <param name="status">状态码 / Status code.</param>
+        /// <returns>错误信息指针 / Error info pointer.</returns>
+        [DllImport("openvino_c", EntryPoint = "ov_get_error_info",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal extern static IntPtr ov_get_error_info_ptr(int status);
+
+        /// <summary>
         /// free char
         /// </summary>
         /// <param name="content">The pointer to the char to free.</param>

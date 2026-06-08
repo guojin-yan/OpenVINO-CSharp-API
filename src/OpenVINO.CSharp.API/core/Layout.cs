@@ -103,7 +103,9 @@ namespace OpenVinoSharp
 
             _layoutDesc = layout;
             IntPtr ptr = IntPtr.Zero;
-            ExceptionHandler.ThrowOnError(ov_layout_create(layout, ref ptr));
+            ExceptionHandler.ThrowOnError(StringUtils.WithUtf8Ptr(
+                layout,
+                layoutPtr => ov_layout_create_utf8(layoutPtr, ref ptr)));
             _ptr = ptr;
         }
 
@@ -221,9 +223,16 @@ namespace OpenVinoSharp
                 return _layoutDesc ?? "<empty>";
 
             IntPtr strPtr = ov_layout_to_string(_ptr);
-            string result = Marshal.PtrToStringAnsi(strPtr) ?? _layoutDesc ?? "<empty>";
-            ov_free(strPtr);
-            return result;
+            try
+            {
+                string result = StringUtils.Utf8PtrToString(strPtr);
+                return string.IsNullOrEmpty(result) ? _layoutDesc ?? "<empty>" : result;
+            }
+            finally
+            {
+                if (strPtr != IntPtr.Zero)
+                    ov_free(strPtr);
+            }
         }
 
         #endregion
