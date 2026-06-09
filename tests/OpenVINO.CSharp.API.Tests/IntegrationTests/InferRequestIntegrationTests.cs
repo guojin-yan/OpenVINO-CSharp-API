@@ -30,7 +30,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var request = model.create_infer_request();
 
             // 获取输入信息并创建张量
@@ -53,7 +53,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var request = model.create_infer_request();
 
             // Act
@@ -75,7 +75,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var request = model.create_infer_request();
 
             // Act
@@ -97,7 +97,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var request = model.create_infer_request();
 
             // Act & Assert
@@ -116,7 +116,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var request = model.create_infer_request();
 
             // Act & Assert
@@ -136,7 +136,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var request = model.create_infer_request();
             request.start_async();
 

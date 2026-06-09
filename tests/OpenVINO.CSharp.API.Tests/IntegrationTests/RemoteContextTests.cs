@@ -61,7 +61,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             }
 
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "GPU", null);
+            using var model = core.compile_model(modelObj, "GPU", null!);
 
             // Act
             using var context = model.get_context();

@@ -26,7 +26,6 @@ namespace OpenVinoSharp.Tests.UnitTests
             var version = Ov.get_openvino_version();
 
             // Assert
-            Assert.NotNull(version);
             Assert.False(string.IsNullOrEmpty(version.description));
             Assert.False(string.IsNullOrEmpty(version.buildNumber));
         }

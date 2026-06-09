@@ -62,7 +62,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
 
             // Assert
             Assert.NotNull(versionInfo.Key);
-            Assert.NotNull(versionInfo.Value);
+            Assert.False(string.IsNullOrEmpty(versionInfo.Value.description));
         }
 
         [OpenVINOFact]
@@ -74,7 +74,6 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             var version = Ov.get_openvino_version();
 
             // Assert
-            Assert.NotNull(version);
             Assert.False(string.IsNullOrEmpty(version.description));
             Assert.False(string.IsNullOrEmpty(version.buildNumber));
         }

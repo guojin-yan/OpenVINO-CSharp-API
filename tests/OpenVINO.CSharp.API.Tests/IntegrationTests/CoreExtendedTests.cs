@@ -74,7 +74,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             }
 
             // Act
-            using var compiled = core.compile_model("model/yolo26n.xml", "CPU", null);
+            using var compiled = core.compile_model("model/yolo26n.xml", "CPU", null!);
 
             // Assert
             Assert.NotNull(compiled);
@@ -147,7 +147,6 @@ namespace OpenVinoSharp.Tests.IntegrationTests
 
             // Assert
             Assert.NotNull(version.Key);
-            Assert.NotNull(version.Value);
             Assert.False(string.IsNullOrEmpty(version.Value.description));
         }
 

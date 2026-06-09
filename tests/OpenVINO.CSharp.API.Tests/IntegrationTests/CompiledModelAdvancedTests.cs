@@ -30,7 +30,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var compiled = core.compile_model(modelObj, "CPU", null);
+            using var compiled = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             using var runtimeModel = compiled.get_runtime_model();
@@ -52,7 +52,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var compiled = core.compile_model(modelObj, "CPU", null);
+            using var compiled = core.compile_model(modelObj, "CPU", null!);
             
             // 获取输入名称
             using var input = compiled.get_input(0);
@@ -77,7 +77,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var compiled = core.compile_model(modelObj, "CPU", null);
+            using var compiled = core.compile_model(modelObj, "CPU", null!);
             
             // 获取输出名称
             using var output = compiled.get_output(0);
@@ -102,7 +102,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var compiled = core.compile_model(modelObj, "CPU", null);
+            using var compiled = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             string value = compiled.get_property("NETWORK_NAME");
@@ -123,7 +123,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var compiled = core.compile_model(modelObj, "CPU", null);
+            using var compiled = core.compile_model(modelObj, "CPU", null!);
             
             string exportPath = "exported_model.bin";
             if (System.IO.File.Exists(exportPath))
@@ -157,7 +157,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var compiled = core.compile_model(modelObj, "CPU", null);
+            using var compiled = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             ulong size = compiled.get_inputs_size();
@@ -178,7 +178,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var compiled = core.compile_model(modelObj, "CPU", null);
+            using var compiled = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             ulong size = compiled.get_outputs_size();
@@ -201,7 +201,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var compiled = core.compile_model(modelObj, "CPU", null);
+            using var compiled = core.compile_model(modelObj, "CPU", null!);
             using var output = compiled.get_output(0);
 
             // Act

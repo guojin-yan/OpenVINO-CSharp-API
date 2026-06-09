@@ -28,7 +28,7 @@ namespace OpenVinoSharp.Tests.UnitTests
             // Arrange
             using var core = new Core();
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             using var pool = new InferRequestPool(model, initialSize: 2, maxSize: 4);
@@ -46,7 +46,7 @@ namespace OpenVinoSharp.Tests.UnitTests
             // Arrange
             using var core = new Core();
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var pool = new InferRequestPool(model, initialSize: 1, maxSize: 2);
 
             // Act
@@ -68,7 +68,7 @@ namespace OpenVinoSharp.Tests.UnitTests
             // Arrange
             using var core = new Core();
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var pool = new InferRequestPool(model, initialSize: 0, maxSize: 1);
 
             // Act
@@ -90,7 +90,7 @@ namespace OpenVinoSharp.Tests.UnitTests
             // Arrange
             using var core = new Core();
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var pool = new InferRequestPool(model, initialSize: 1, maxSize: 2);
             var request = pool.Rent();
             int countBefore = pool.AvailableCount;
@@ -110,7 +110,7 @@ namespace OpenVinoSharp.Tests.UnitTests
             // Arrange
             using var core = new Core();
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             var pool = new InferRequestPool(model, initialSize: 2, maxSize: 4);
 
             // Act

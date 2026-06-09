@@ -1,4 +1,4 @@
-# 文档目录结构 / Documentation table of contents
+﻿# 文档目录结构 / Documentation table of contents
 
 items:
 - name: 首页 / Home
@@ -9,7 +9,7 @@ items:
   homepage: api/OpenVinoSharp.yml
 
 - name: GenAI 使用说明 / GenAI Usage
-  href: genai-phase2-usage.md
+  href: genai-usage.md
 
 - name: GenAI C API 覆盖矩阵 / GenAI C API Coverage
   href: genai-c-api-coverage.md
@@ -17,3 +17,4 @@ items:
 - name: 文章 / Articles
   href: articles/
   homepage: articles/index.md
+

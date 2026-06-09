@@ -32,7 +32,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var request = model.create_infer_request();
 
             // 执行推理 / Execute inference
@@ -65,7 +65,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var request = model.create_infer_request();
 
             bool callbackInvoked = false;
@@ -100,14 +100,14 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
             using var request = model.create_infer_request();
 
             bool callbackInvoked = false;
             request.set_callback(() => callbackInvoked = true);
 
             // Act - 清除回调 / Clear callback
-            request.set_callback(null);
+            request.set_callback(null!);
             request.start_async();
             request.wait();
 

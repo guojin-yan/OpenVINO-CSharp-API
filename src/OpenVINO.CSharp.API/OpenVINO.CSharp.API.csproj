@@ -32,7 +32,7 @@
     <LangVersion Condition="'$(TargetFramework)' == 'net8.0'">12.0</LangVersion>
     <LangVersion Condition="'$(TargetFramework)' == 'net9.0'">13.0</LangVersion>
     <LangVersion Condition="'$(TargetFramework)' == 'net10.0'">14.0</LangVersion>
-    <Nullable Condition="'$(TargetFramework)' != 'net46' and '$(TargetFramework)' != 'net461' and '$(TargetFramework)' != 'net462' and '$(TargetFramework)' != 'net47' and '$(TargetFramework)' != 'net471' and '$(TargetFramework)' != 'net472' and '$(TargetFramework)' != 'net48' and '$(TargetFramework)' != 'net481' and '$(TargetFramework)' != 'netcoreapp3.1'">annotations</Nullable>
+    <Nullable>annotations</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 

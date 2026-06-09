@@ -193,7 +193,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             var elementType = input.get_element_type();
 
             // Assert
-            Assert.NotNull(elementType);
+            Assert.True(System.Enum.IsDefined(typeof(ElementType), elementType.get_type()));
         }
 
         [OpenVINOFact]
@@ -257,7 +257,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             var elementType = output.get_element_type();
 
             // Assert
-            Assert.NotNull(elementType);
+            Assert.True(System.Enum.IsDefined(typeof(ElementType), elementType.get_type()));
         }
 
         [OpenVINOFact]

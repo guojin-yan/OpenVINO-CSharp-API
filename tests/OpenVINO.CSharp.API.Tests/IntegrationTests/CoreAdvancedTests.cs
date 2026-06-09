@@ -125,7 +125,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             using var model = core.read_model("model/yolo26n.xml");
 
             // Act
-            using var compiled = core.compile_model(model, "CPU", null);
+            using var compiled = core.compile_model(model, "CPU", null!);
 
             // Assert
             Assert.NotNull(compiled);

@@ -656,12 +656,13 @@ namespace OpenVinoSharp
             return get_data<T>(length);
         }
 
-        /// <summary>
-        /// 获取数据到已存在的缓冲区（零分配）/ Get data into existing buffer (zero allocation)
-        /// </summary>
-        /// <typeparam name="T">元素类型 / Element type</typeparam>
-        /// <param name="buffer">目标缓冲区 / Destination buffer</param>
 #if HAS_SPAN
+        /// <summary>
+        /// 将张量数据复制到已有缓冲区，避免额外分配。
+        /// Copies tensor data into an existing buffer without extra allocation.
+        /// </summary>
+        /// <typeparam name="T">元素类型 / Element type.</typeparam>
+        /// <param name="buffer">目标缓冲区 / Destination buffer.</param>
         public unsafe void get_data_to<T>(Span<T> buffer) where T : unmanaged
         {
             ThrowIfDisposed();
@@ -679,6 +680,13 @@ namespace OpenVinoSharp
             }
         }
 #else
+        /// <summary>
+        /// 将张量数据复制到已有数组缓冲区，避免额外分配。
+        /// Copies tensor data into an existing array buffer without extra allocation.
+        /// </summary>
+        /// <typeparam name="T">元素类型 / Element type.</typeparam>
+        /// <param name="buffer">目标缓冲区 / Destination buffer.</param>
+        /// <param name="length">要复制的元素数量 / Number of elements to copy.</param>
         public unsafe void get_data_to<T>(T[] buffer, int length) where T : unmanaged
         {
             ThrowIfDisposed();

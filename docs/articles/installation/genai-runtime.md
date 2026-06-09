@@ -1,57 +1,59 @@
 # OpenVINO GenAI Runtime Package / GenAI 运行时包
 
-This page describes the OpenVINO GenAI runtime NuGet workflow added in csharp3.3.
+This page describes the OpenVINO GenAI runtime NuGet workflow added in `csharp3.3`.
 
-本文说明 csharp3.3 新增的 OpenVINO GenAI runtime NuGet 自动打包流程。
+本文说明 `csharp3.3` 新增的 OpenVINO GenAI runtime NuGet 自动打包流程。
 
-## Packages / 包
+## Packages / 包选择
 
-Use the pure OpenVINO runtime package when your application only needs the core OpenVINO C API:
+Use the normal OpenVINO runtime package when an application only calls the core OpenVINO APIs:
+
+如果应用只调用基础 OpenVINO API，请安装普通 OpenVINO runtime 包：
 
 ```bash
 dotnet add package JYPPX.OpenVINO.CSharp.API
 dotnet add package OpenVINO.runtime.win
 ```
 
-Use the GenAI runtime package when your application calls `OpenVinoSharp.GenAI`:
+Install a GenAI runtime package only when the application calls `OpenVinoSharp.GenAI` APIs:
+
+只有应用调用 `OpenVinoSharp.GenAI` API 时，才需要安装 GenAI runtime 包：
 
 ```bash
 dotnet add package JYPPX.OpenVINO.CSharp.API
 dotnet add package JYPPX.OpenVINO.GenAI.runtime.win
 ```
 
-The GenAI runtime package contains OpenVINO Core, OpenVINO GenAI C API, tokenizers, frontends, device plugins, and native runtime dependencies.
+The managed API assembly can contain both core and GenAI wrappers. Core APIs such as `Core`, `Model`, `Tensor`, `CompiledModel`, and `InferRequest` do not load `openvino_genai_c`.
 
-GenAI runtime 包包含 OpenVINO Core、OpenVINO GenAI C API、tokenizers、frontends、设备插件和原生运行时依赖。
-
-If an application only uses `Core`, `Model`, `Tensor`, `CompiledModel`, or `InferRequest`, install only the normal `OpenVINO.runtime.*` package. The managed assembly contains GenAI wrappers, but `openvino_genai_c` is loaded only when `OpenVinoSharp.GenAI` APIs are called.
-
-如果应用只使用 `Core`、`Model`、`Tensor`、`CompiledModel` 或 `InferRequest`，只安装普通 `OpenVINO.runtime.*` 包即可。托管程序集虽然包含 GenAI 封装，但只有调用 `OpenVinoSharp.GenAI` API 时才会加载 `openvino_genai_c`。
+托管 API 程序集可以同时包含基础 OpenVINO 与 GenAI 封装。`Core`、`Model`、`Tensor`、`CompiledModel`、`InferRequest` 等基础 API 不会加载 `openvino_genai_c`。
 
 ## GitHub Packaging / GitHub 自动打包
 
-The package is built in GitHub Actions, mirroring the existing pure OpenVINO runtime workflow:
+The GenAI runtime package is built in GitHub Actions, using the same packaging model as the core OpenVINO runtime package.
 
-打包流程在 GitHub Actions 中执行，并与已有的纯 OpenVINO runtime 自动打包流程保持一致：
+GenAI runtime 包在 GitHub Actions 中构建，打包模型与基础 OpenVINO runtime 包保持一致。
 
 - Workflow: `.github/workflows/update-genai-runtime-packages.yml`
 - Discovery script: `.github/scripts/discover_genai.py`
 - Pack script: `.github/scripts/build_genai_runtime_nupkg.py`
-- Template files: `nuget/runtime/templates/genai.package.*.tmpl`
+- Templates: `nuget/runtime/templates/genai.package.*.tmpl`
 
 The workflow discovers official archives from:
+
+workflow 会从以下官方地址发现并下载 archive：
 
 ```text
 https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/
 ```
 
-For every package build, the script downloads the official archive and the matching `.sha256` sidecar. The archive hash is verified before extraction and packaging. No local runtime directory is used as the formal package source.
+Each build downloads the official archive and the matching `.sha256` file, verifies the hash, extracts the archive, then builds the NuGet package. The formal GitHub workflow does not package a local runtime directory.
 
-每次构建都会下载官方 archive 及其匹配的 `.sha256` 校验文件，校验通过后才会解压并打包。正式打包源不是本地 runtime 目录。
+每次构建都会下载官方 archive 和匹配的 `.sha256` 文件，校验哈希后再解压并打包。正式 GitHub workflow 不使用本地 runtime 目录作为打包源。
 
-For OpenVINO GenAI 2026.2, the official CDN exposes these packageable platforms:
+For OpenVINO GenAI 2026.2, the workflow builds these packages:
 
-以 OpenVINO GenAI 2026.2 为例，官方 CDN 提供以下可打包平台：
+以 OpenVINO GenAI 2026.2 为例，workflow 会构建以下包：
 
 - `JYPPX.OpenVINO.GenAI.runtime.win`
 - `JYPPX.OpenVINO.GenAI.runtime.ubuntu.24-x86_64`
@@ -60,46 +62,44 @@ For OpenVINO GenAI 2026.2, the official CDN exposes these packageable platforms:
 - `JYPPX.OpenVINO.GenAI.runtime.rhel8-x86_64`
 - `JYPPX.OpenVINO.GenAI.runtime.macos-arm64`
 
-If an older or newer official release contains more platform archives, such as `macos-x86_64`, the workflow will include them automatically.
+If a future official release adds more platform archives, the discovery script can include them automatically.
 
-如果旧版或新版官方 release 包含更多平台 archive，例如 `macos-x86_64`，workflow 会自动纳入矩阵。
+如果未来官方 release 增加更多平台 archive，发现脚本可以自动纳入。
 
 Manual dry-run example:
 
-```powershell
-$env:PKG_ID = "win"
-$env:PKG_VERSION = "<version>"
-$env:ARCHIVE_URL = "https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/<version-dir>/windows/openvino_genai_windows_<version>.0_x86_64.zip"
-$env:SHA256_URL = "$env:ARCHIVE_URL.sha256"
-$env:RID = "win-x64"
-$env:KIND = "zip"
-$env:DRY_RUN = "true"
+手动 dry-run 示例：
 
-python .github/scripts/build_genai_runtime_nupkg.py
+```powershell
+gh workflow run update-genai-runtime-packages.yml --ref csharp3.3 -f dry_run=true -f force_republish=true
 ```
 
-The workflow can also be started manually from GitHub with an optional version input. When `dry_run` is enabled, it builds artifacts but skips publishing and GitHub Release creation.
+When `dry_run=true`, the workflow uploads artifacts but skips NuGet publishing and GitHub Release creation.
 
-也可以在 GitHub 页面手动触发 workflow，并可指定版本。启用 `dry_run` 时只构建 artifact，不执行 NuGet 发布，也不会创建 GitHub Release。
+当 `dry_run=true` 时，workflow 只上传 artifacts，不执行 NuGet 发布，也不会创建 GitHub Release。
 
 ## File Layout / 文件布局
 
-The GenAI runtime package uses the same NuGet layout as the core runtime package:
+The GenAI runtime package intentionally uses the same NuGet layout as the core runtime package:
 
-GenAI runtime 包使用与基础 runtime 包一致的 NuGet 布局：
+GenAI runtime 包刻意使用与基础 runtime 包一致的 NuGet 布局：
 
 ```text
 runtimes/<rid>/native/<native libraries>
-build/net/<package id>.props
-lib/net/_._
+build/net46/<package id>.props
+build/netstandard2.0/<package id>.props
+lib/net46/_._
+lib/netstandard2.0/_._
+licenses/**
+manifest.txt
 LICENSE.txt
 README.md
 logo.jpg
 ```
 
-Windows packages include files such as:
+Windows packages include GenAI libraries, tokenizers, OpenVINO core libraries, plugins, frontends, and release TBB libraries, for example:
 
-Windows 包会包含以下文件：
+Windows 包会包含 GenAI 库、tokenizers、OpenVINO 基础库、插件、frontends 和 release TBB 库，例如：
 
 - `openvino_genai_c.dll`
 - `openvino_genai.dll`
@@ -113,43 +113,49 @@ Windows 包会包含以下文件：
 - `tbbmalloc.dll`
 - `tbbmalloc_proxy.dll`
 
-Debug libraries are excluded. Native libraries are packaged as flat runtime assets so platform loader dependency resolution can find them from the same native directory.
+Debug libraries and duplicated nested directories such as `runtimes/runtimes/**` or `build/build/**` are excluded.
 
-Debug 库不会进入包。原生动态库会平铺放入 native 目录，便于平台加载器从同一目录解析依赖。
+Debug 库以及 `runtimes/runtimes/**`、`build/build/**` 这类重复嵌套目录不会进入包。
 
 ## Loading / 加载
 
-For .NET 5+, NuGet restores runtime assets under `runtimes/<rid>/native`; `GenAINativeLibraryLoader` searches that layout automatically.
+For SDK-style projects, NuGet restores runtime assets under `runtimes/<rid>/native`, and the GenAI loader searches that layout automatically.
 
-对于 .NET 5+，NuGet 会把运行时资产还原到 `runtimes/<rid>/native`；`GenAINativeLibraryLoader` 会自动搜索该布局。
+对于 SDK 风格项目，NuGet 会把 runtime assets 还原到 `runtimes/<rid>/native`，GenAI loader 会自动搜索该布局。
 
-For .NET Framework 4.x, the package includes `build/net/<package id>.props`, which copies native files to the output directory.
+For .NET Framework projects, the package includes `build/net46/<package id>.props` to copy native files into the output directory.
 
-对于 .NET Framework 4.x，包内包含 `build/net/<package id>.props`，用于将原生文件复制到输出目录。
+对于 .NET Framework 项目，包内包含 `build/net46/<package id>.props`，用于将 native 文件复制到输出目录。
 
-Manual fallback for local development:
+For local development and diagnostics, you may also set:
+
+本地开发和诊断时，也可以设置：
+
+```powershell
+$env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64"
+```
+
+or initialize with an explicit library path:
+
+或者使用显式库路径初始化：
 
 ```csharp
 OpenVinoSharp.GenAI.GenAI.Initialize(
     @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release\openvino_genai_c.dll");
 ```
 
-Or set:
+The fallback paths above are only for development and diagnostics. NuGet runtime packages should be produced from official archives in GitHub Actions.
 
-```powershell
-$env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64"
-```
-
-The fallback is only for development and diagnostics. The NuGet runtime package should be produced from the official archive URL in GitHub Actions.
-
-上述 fallback 仅用于本地开发和诊断。正式 NuGet runtime 包应由 GitHub Actions 从官方 archive URL 生成。
+以上 fallback 路径仅用于本地开发和诊断。NuGet runtime 包应由 GitHub Actions 从官方 archive 生成。
 
 ## Diagnostics / 诊断
 
 If loading fails, check:
 
+如果加载失败，请检查：
+
 - `openvino_genai_c` exists under `runtimes/<rid>/native`.
 - Runtime dependencies exist in the same native directory.
 - The process architecture matches the installed runtime package.
-- The package version matches the GenAI C API wrapper version used by the managed library.
+- The GenAI runtime package version matches the managed wrapper version.
 - The exception message includes searched paths and native load errors.

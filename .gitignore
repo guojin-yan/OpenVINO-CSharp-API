@@ -176,6 +176,10 @@ DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
 
+# DocFX generated outputs
+_site/
+docs/api/
+
 # Click-Once directory
 publish/
 

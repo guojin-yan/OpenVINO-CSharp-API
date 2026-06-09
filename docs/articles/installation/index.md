@@ -1,79 +1,59 @@
 # 安装方式 / Installation
 
-本文档介绍如何在不同平台安装和配置 OpenVINO C# API。
+This guide explains how to install and configure OpenVINO C# API packages.
 
-This guide explains how to install and configure the OpenVINO C# API on supported platforms.
+本文介绍如何安装和配置 OpenVINO C# API 相关 NuGet 包。
 
-## 支持的平台 / Supported Platforms
+## Supported Platforms / 支持平台
 
-| 平台 / Platform | 状态 / Status | 说明 / Description |
+| Platform / 平台 | Core runtime / 基础 runtime | GenAI runtime / GenAI runtime |
 | --- | --- | --- |
-| Windows | Supported / 已支持 | Windows 10/11, Windows Server 2019/2022 |
-| Linux | Planned / 计划中 | Ubuntu 20.04/22.04, CentOS, and related distributions |
-| macOS | Planned / 计划中 | macOS 11+ on Intel or Apple Silicon |
+| Windows x64 | Supported / 已支持 | Supported / 已支持 |
+| Ubuntu 24 x64 | Supported / 已支持 | Supported / 已支持 |
+| Ubuntu 22 x64 | Supported / 已支持 | Supported / 已支持 |
+| Ubuntu 22 ARM64 | Supported / 已支持 | Supported / 已支持 |
+| RHEL 8 x64 | Supported / 已支持 | Supported / 已支持 |
+| macOS ARM64 | Supported / 已支持 | Supported / 已支持 |
 
-## 安装方式概览 / Installation Methods
+## Package Choice / 包选择
 
-### Windows
+For normal OpenVINO inference, install the managed API package and one platform runtime package:
 
-- [Windows 安装指南](windows.md) - 在 Windows 平台安装 OpenVINO C# API。
-
-### Linux
-
-- [Linux 安装指南](linux.md) - 在 Linux 平台安装 OpenVINO C# API。
-
-### macOS
-
-- [macOS 安装指南](macos.md) - 在 macOS 平台安装 OpenVINO C# API。
-
-### OpenVINO GenAI Runtime
-
-- [OpenVINO GenAI Runtime](genai-runtime.md) - 安装可选的 GenAI runtime 包，用于 `OpenVinoSharp.GenAI`。
-
-## 快速开始 / Quick Start
-
-### NuGet 包安装 / NuGet Packages
+普通 OpenVINO 推理需要安装托管 API 包和一个平台 runtime 包：
 
 ```bash
 dotnet add package JYPPX.OpenVINO.CSharp.API
 dotnet add package OpenVINO.runtime.win
 ```
 
-If your application uses GenAI APIs, also install the GenAI runtime package:
+If your application calls `OpenVinoSharp.GenAI`, install a GenAI runtime package instead of, or in addition to, the normal runtime package:
 
-如果应用使用 GenAI API，还需要安装 GenAI runtime 包：
+如果应用调用 `OpenVinoSharp.GenAI`，请安装 GenAI runtime 包。它可以替代或补充普通 runtime 包：
 
 ```bash
+dotnet add package JYPPX.OpenVINO.CSharp.API
 dotnet add package JYPPX.OpenVINO.GenAI.runtime.win
 ```
 
-### 基础用法 / Basic Usage
+Core OpenVINO APIs do not load `openvino_genai_c`, so applications that only use `Core`, `Model`, `Tensor`, `CompiledModel`, or `InferRequest` do not need GenAI runtime.
+
+基础 OpenVINO API 不会加载 `openvino_genai_c`，只使用 `Core`、`Model`、`Tensor`、`CompiledModel` 或 `InferRequest` 的应用不需要 GenAI runtime。
+
+## Quick Start / 快速开始
 
 ```csharp
 using OpenVinoSharp;
 
 using Core core = new Core();
-Model model = core.read_model("model.xml");
-CompiledModel compiled = core.compile_model(model, "CPU");
-InferRequest request = compiled.create_infer_request();
+using Model model = core.ReadModel("model.xml");
+using CompiledModel compiled = core.CompileModel(model, "CPU");
+using InferRequest request = compiled.CreateInferRequest();
 ```
 
-## 系统要求 / System Requirements
+## Related Guides / 相关文档
 
-### 最低配置 / Minimum
-
-- .NET Framework 4.6.1+, .NET Core 3.1+, or .NET 5+
-- 4 GB RAM
-- 2 GB available disk space
-
-### 推荐配置 / Recommended
-
-- .NET 8.0 or newer
-- 8 GB+ RAM
-- 5 GB available disk space
-- CPU with AVX2 support
-
-## 获取帮助 / Getting Help
-
+- [Windows 安装指南](windows.md)
+- [Linux 安装指南](linux.md)
+- [macOS 安装指南](macos.md)
+- [OpenVINO GenAI Runtime](genai-runtime.md)
 - [问题排查 / Troubleshooting](../troubleshooting/index.md)
-- [GitHub Issues](https://github.com/guojin-yan/OpenVINO-CSharp-API/issues)

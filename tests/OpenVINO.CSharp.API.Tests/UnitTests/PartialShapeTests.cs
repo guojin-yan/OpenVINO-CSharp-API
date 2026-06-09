@@ -113,7 +113,7 @@ namespace OpenVinoSharp.Tests.UnitTests
             // Assert
             Assert.NotNull(shape);
             Assert.True(shape.is_static());
-            Assert.Equal(0, shape.dims.Length);
+            Assert.Empty(shape.dims);
         }
 
         [Fact]

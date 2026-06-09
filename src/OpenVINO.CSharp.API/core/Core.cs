@@ -147,6 +147,10 @@ namespace OpenVinoSharp
             OvLogger.Info("OpenVINO Core 实例（带配置）创建成功 / OpenVINO Core instance (with config) created successfully");
         }
 
+        private Core(IntPtr ptr) : base(ptr)
+        {
+        }
+
         #endregion
 
         #region 资源释放 / Resource Disposal
@@ -166,15 +170,86 @@ namespace OpenVinoSharp
         #region 静态方法 / Static Methods
 
         /// <summary>
-        /// 关闭OpenVINO并释放所有静态资源 / Shut down OpenVINO and release all static resources
-        /// <para>高级用户可以使用此函数在动态加载库卸载时清理资源。/ Advanced users can use this to clean up resources when dynamically loaded library is unloaded.</para>
+        /// 使用 Windows Unicode 配置文件路径创建 Core / Creates a Core from a Windows Unicode configuration path.
         /// </summary>
+        /// <param name="xml_config_file">XML 配置文件路径 / XML configuration file path.</param>
+        /// <returns>Core 实例 / Core instance.</returns>
+        /// <remarks>
+        /// 该方法显式调用 OpenVINO 的 unicode C API，不会影响默认 UTF-8 路径接口。
+        /// This method explicitly calls the OpenVINO unicode C API and does not change the default UTF-8 path APIs.
+        /// </remarks>
+        public static Core create_with_config_unicode(string xml_config_file)
+        {
+            if (string.IsNullOrEmpty(xml_config_file))
+                throw new ArgumentException("Parameter cannot be empty. / 参数不能为空。", nameof(xml_config_file));
+
+            IntPtr corePtr = IntPtr.Zero;
+            try
+            {
+                ExceptionStatus status = InvokeUnicodePathApi(
+                    () => ov_core_create_with_config_unicode(xml_config_file, ref corePtr));
+                ExceptionHandler.ThrowOnError(status);
+                return new Core(corePtr);
+            }
+            catch
+            {
+                if (corePtr != IntPtr.Zero)
+                    ov_core_free(corePtr);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 使用 Windows Unicode 配置文件路径创建 Core / Creates a Core from a Windows Unicode configuration path.
+        /// </summary>
+        /// <param name="xmlConfigFile">XML 配置文件路径 / XML configuration file path.</param>
+        /// <returns>Core 实例 / Core instance.</returns>
+        public static Core CreateWithConfigUnicode(string xmlConfigFile) => create_with_config_unicode(xmlConfigFile);
+
+        /// <summary>
+        /// 关闭 OpenVINO 并释放所有静态资源 / Shut down OpenVINO and release all static resources.
+        /// </summary>
+        /// <remarks>
+        /// 高级用户可以在动态卸载 native runtime 前调用该方法清理全局资源。
+        /// Advanced users can call this before unloading the native runtime to clean up global resources.
+        /// </remarks>
         public static void shutdown() => ov_shutdown();
 
         /// <summary>
         /// 关闭 OpenVINO 并释放所有静态资源 / Shut down OpenVINO and release all static resources
         /// </summary>
         public static void Shutdown() => shutdown();
+
+        private static ExceptionStatus InvokeUnicodePathApi(Func<ExceptionStatus> action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                throw CreateUnicodePathNotSupportedException();
+
+            try
+            {
+                return action();
+            }
+            catch (EntryPointNotFoundException ex)
+            {
+                throw CreateUnicodePathNotSupportedException(ex);
+            }
+        }
+
+        private static PlatformNotSupportedException CreateUnicodePathNotSupportedException()
+        {
+            return new PlatformNotSupportedException(
+                "OpenVINO Unicode path C API is only available on Windows runtimes built with OPENVINO_ENABLE_UNICODE_PATH_SUPPORT. / OpenVINO Unicode 路径 C API 仅在启用 OPENVINO_ENABLE_UNICODE_PATH_SUPPORT 的 Windows runtime 中可用。");
+        }
+
+        private static PlatformNotSupportedException CreateUnicodePathNotSupportedException(Exception innerException)
+        {
+            return new PlatformNotSupportedException(
+                "OpenVINO Unicode path C API is only available on Windows runtimes built with OPENVINO_ENABLE_UNICODE_PATH_SUPPORT. / OpenVINO Unicode 路径 C API 仅在启用 OPENVINO_ENABLE_UNICODE_PATH_SUPPORT 的 Windows runtime 中可用。",
+                innerException);
+        }
 
         #endregion
 
@@ -209,6 +284,46 @@ namespace OpenVinoSharp
         /// <param name="binPath">权重文件路径（IR 格式可选）/ Optional weights file path for IR models</param>
         /// <returns>模型对象 / Model object</returns>
         public Model ReadModel(string modelPath, string binPath = null) => read_model(modelPath, binPath);
+
+        /// <summary>
+        /// 使用 Windows Unicode 路径从文件读取模型 / Reads a model from a file using Windows Unicode paths.
+        /// </summary>
+        /// <param name="model_path">模型文件路径 / Path to model file.</param>
+        /// <param name="bin_path">IR 权重文件路径，可选 / Optional weights file path for IR models.</param>
+        /// <returns>模型对象 / Model object.</returns>
+        /// <remarks>
+        /// 该方法显式调用 OpenVINO unicode C API；返回的 native model 指针由 Model 对象拥有并释放。
+        /// This method explicitly calls the OpenVINO unicode C API; the returned native model pointer is owned and released by the Model object.
+        /// </remarks>
+        public Model read_model_unicode(string model_path, string bin_path = null)
+        {
+            ThrowIfDisposed();
+            if (string.IsNullOrEmpty(model_path))
+                throw new ArgumentException("Parameter cannot be empty. / 参数不能为空。", nameof(model_path));
+
+            IntPtr modelPtr = IntPtr.Zero;
+            try
+            {
+                ExceptionStatus status = InvokeUnicodePathApi(
+                    () => ov_core_read_model_unicode(_ptr, model_path, bin_path ?? string.Empty, ref modelPtr));
+                ExceptionHandler.ThrowOnError(status);
+                return new Model(modelPtr);
+            }
+            catch
+            {
+                if (modelPtr != IntPtr.Zero)
+                    ov_model_free(modelPtr);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 使用 Windows Unicode 路径从文件读取模型 / Reads a model from a file using Windows Unicode paths.
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file.</param>
+        /// <param name="binPath">IR 权重文件路径，可选 / Optional weights file path for IR models.</param>
+        /// <returns>模型对象 / Model object.</returns>
+        public Model ReadModelUnicode(string modelPath, string binPath = null) => read_model_unicode(modelPath, binPath);
 
         /// <summary>
         /// 从文件读取模型并指定权重张量 / Read model from file with weights tensor
@@ -488,6 +603,110 @@ namespace OpenVinoSharp
         public CompiledModel CompileModel(string modelPath, string deviceName, Dictionary<string, string> properties) => compile_model(modelPath, deviceName, properties);
 
         /// <summary>
+        /// 使用 Windows Unicode 模型路径从文件编译模型 / Compiles a model from a file using a Windows Unicode model path.
+        /// </summary>
+        /// <param name="model_path">模型文件路径 / Path to model file.</param>
+        /// <returns>编译后的模型 / Compiled model.</returns>
+        public CompiledModel compile_model_unicode(string model_path)
+            => compile_model_unicode(model_path, "AUTO", null);
+
+        /// <summary>
+        /// 使用 Windows Unicode 模型路径从文件编译模型 / Compiles a model from a file using a Windows Unicode model path.
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file.</param>
+        /// <returns>编译后的模型 / Compiled model.</returns>
+        public CompiledModel CompileModelUnicode(string modelPath) => compile_model_unicode(modelPath);
+
+        /// <summary>
+        /// 使用 Windows Unicode 模型路径从文件编译模型到指定设备 / Compiles a model from a Windows Unicode model path for the specified device.
+        /// </summary>
+        /// <param name="model_path">模型文件路径 / Path to model file.</param>
+        /// <param name="device_name">设备名称 / Device name.</param>
+        /// <returns>编译后的模型 / Compiled model.</returns>
+        public CompiledModel compile_model_unicode(string model_path, string device_name)
+            => compile_model_unicode(model_path, device_name, null);
+
+        /// <summary>
+        /// 使用 Windows Unicode 模型路径从文件编译模型到指定设备 / Compiles a model from a Windows Unicode model path for the specified device.
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file.</param>
+        /// <param name="deviceName">设备名称 / Device name.</param>
+        /// <returns>编译后的模型 / Compiled model.</returns>
+        public CompiledModel CompileModelUnicode(string modelPath, string deviceName) => compile_model_unicode(modelPath, deviceName);
+
+        /// <summary>
+        /// 使用 Windows Unicode 模型路径并应用属性从文件编译模型 / Compiles a model from a Windows Unicode model path with properties.
+        /// </summary>
+        /// <param name="model_path">模型文件路径 / Path to model file.</param>
+        /// <param name="properties">编译属性 / Compilation properties.</param>
+        /// <returns>编译后的模型 / Compiled model.</returns>
+        public CompiledModel compile_model_unicode(string model_path, Dictionary<string, string> properties)
+            => compile_model_unicode(model_path, "AUTO", properties);
+
+        /// <summary>
+        /// 使用 Windows Unicode 模型路径并应用属性从文件编译模型 / Compiles a model from a Windows Unicode model path with properties.
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file.</param>
+        /// <param name="properties">编译属性 / Compilation properties.</param>
+        /// <returns>编译后的模型 / Compiled model.</returns>
+        public CompiledModel CompileModelUnicode(string modelPath, Dictionary<string, string> properties) => compile_model_unicode(modelPath, properties);
+
+        /// <summary>
+        /// 使用 Windows Unicode 模型路径从文件编译模型到指定设备并应用属性 / Compiles a model from a Windows Unicode model path for the specified device with properties.
+        /// </summary>
+        /// <param name="model_path">模型文件路径 / Path to model file.</param>
+        /// <param name="device_name">设备名称 / Device name.</param>
+        /// <param name="properties">编译属性，可选 / Optional compilation properties.</param>
+        /// <returns>编译后的模型 / Compiled model.</returns>
+        /// <remarks>
+        /// 该方法显式调用 OpenVINO unicode C API；返回的 native compiled model 指针由 CompiledModel 对象拥有并释放。
+        /// This method explicitly calls the OpenVINO unicode C API; the returned native compiled model pointer is owned and released by the CompiledModel object.
+        /// </remarks>
+        public CompiledModel compile_model_unicode(string model_path, string device_name, Dictionary<string, string> properties)
+        {
+            ThrowIfDisposed();
+            if (string.IsNullOrEmpty(model_path))
+                throw new ArgumentException("Parameter cannot be empty. / 参数不能为空。", nameof(model_path));
+            if (string.IsNullOrEmpty(device_name))
+                throw new ArgumentException("Parameter cannot be empty. / 参数不能为空。", nameof(device_name));
+
+            IntPtr compiledModelPtr = IntPtr.Zero;
+            try
+            {
+                if (properties == null || properties.Count == 0)
+                {
+                    ExceptionStatus status = StringUtils.WithUtf8Ptr(
+                        device_name,
+                        deviceNamePtr => InvokeUnicodePathApi(
+                            () => ov_core_compile_model_from_file_unicode(_ptr, model_path, deviceNamePtr, UIntPtr.Zero, ref compiledModelPtr)));
+                    ExceptionHandler.ThrowOnError(status);
+                }
+                else
+                {
+                    CompileModelFromFileUnicodeWithProperties(model_path, device_name, properties, ref compiledModelPtr);
+                }
+
+                return new CompiledModel(compiledModelPtr);
+            }
+            catch
+            {
+                if (compiledModelPtr != IntPtr.Zero)
+                    ov_compiled_model_free(compiledModelPtr);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 使用 Windows Unicode 模型路径从文件编译模型到指定设备并应用属性 / Compiles a model from a Windows Unicode model path for the specified device with properties.
+        /// </summary>
+        /// <param name="modelPath">模型文件路径 / Path to model file.</param>
+        /// <param name="deviceName">设备名称 / Device name.</param>
+        /// <param name="properties">编译属性，可选 / Optional compilation properties.</param>
+        /// <returns>编译后的模型 / Compiled model.</returns>
+        public CompiledModel CompileModelUnicode(string modelPath, string deviceName, Dictionary<string, string> properties)
+            => compile_model_unicode(modelPath, deviceName, properties);
+
+        /// <summary>
         /// 带属性的模型编译（内部方法）/ Compile model with properties (internal method)
         /// </summary>
         private void CompileModelWithProperties(IntPtr modelPtr, string device_name, Dictionary<string, string> properties, ref IntPtr compiled_model_ptr)
@@ -555,6 +774,49 @@ namespace OpenVinoSharp
                             return ov_core_compile_model_from_file_utf8(_ptr, modelPathPtr, deviceNamePtr, StringUtils.ToNativeSize(6), ref localCompiledModelPtr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]);
                         default:
                             throw new ArgumentException("仅支持0、1、2、3个属性参数。/ Only supports 0, 1, 2, or 3 property parameters.");
+                    }
+                });
+                ExceptionHandler.ThrowOnError(status);
+                compiled_model_ptr = localCompiledModelPtr;
+            }
+            finally
+            {
+                foreach (var ptr in inputs)
+                {
+                    StringUtils.FreeUtf8Ptr(ptr);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 使用 Windows Unicode 模型路径和属性从文件编译模型（内部方法）。
+        /// Compile a model from a Windows Unicode model path with properties (internal method).
+        /// </summary>
+        private void CompileModelFromFileUnicodeWithProperties(string model_path, string device_name, Dictionary<string, string> properties, ref IntPtr compiled_model_ptr)
+        {
+            IntPtr[] inputs = new IntPtr[properties.Count * 2];
+            int idx = 0;
+            foreach (var item in properties)
+            {
+                inputs[idx++] = StringUtils.StringToUtf8Ptr(item.Key);
+                inputs[idx++] = StringUtils.StringToUtf8Ptr(item.Value ?? string.Empty);
+            }
+
+            try
+            {
+                IntPtr localCompiledModelPtr = IntPtr.Zero;
+                ExceptionStatus status = StringUtils.WithUtf8Ptr(device_name, deviceNamePtr =>
+                {
+                    switch (properties.Count)
+                    {
+                        case 1:
+                            return InvokeUnicodePathApi(() => ov_core_compile_model_from_file_unicode(_ptr, model_path, deviceNamePtr, StringUtils.ToNativeSize(2), ref localCompiledModelPtr, inputs[0], inputs[1]));
+                        case 2:
+                            return InvokeUnicodePathApi(() => ov_core_compile_model_from_file_unicode(_ptr, model_path, deviceNamePtr, StringUtils.ToNativeSize(4), ref localCompiledModelPtr, inputs[0], inputs[1], inputs[2], inputs[3]));
+                        case 3:
+                            return InvokeUnicodePathApi(() => ov_core_compile_model_from_file_unicode(_ptr, model_path, deviceNamePtr, StringUtils.ToNativeSize(6), ref localCompiledModelPtr, inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]));
+                        default:
+                            throw new ArgumentException("Only supports 0, 1, 2, or 3 property parameters. / 仅支持 0、1、2 或 3 组属性参数。");
                     }
                 });
                 ExceptionHandler.ThrowOnError(status);

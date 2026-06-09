@@ -32,7 +32,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             ulong inputSize = model.get_inputs_size();
@@ -53,7 +53,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             ulong outputSize = model.get_outputs_size();
@@ -74,7 +74,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             using var request = model.create_infer_request();
@@ -96,7 +96,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             using var input = model.get_input(0);
@@ -117,7 +117,7 @@ namespace OpenVinoSharp.Tests.IntegrationTests
                 return;
             }
             using var modelObj = core.read_model("model/yolo26n.xml");
-            using var model = core.compile_model(modelObj, "CPU", null);
+            using var model = core.compile_model(modelObj, "CPU", null!);
 
             // Act
             using var output = model.get_output(0);

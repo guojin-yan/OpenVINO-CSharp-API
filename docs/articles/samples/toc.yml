@@ -2,6 +2,8 @@
 
 - name: 案例概述 / Overview
   href: index.md
+- name: GenAI QuickStart (.NET 8.0)
+  href: genai-quickstart.md
 - name: YOLO Detection (.NET 10.0)
   href: yolo-net10.md
 - name: YOLO Detection (.NET 4.8)

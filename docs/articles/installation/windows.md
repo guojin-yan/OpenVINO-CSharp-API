@@ -1,51 +1,79 @@
 # Windows 安装指南 / Windows Installation Guide
 
-本文档介绍如何在 Windows 平台上安装 OpenVINO C# API。
+This page explains how to install and verify OpenVINO C# API on Windows.
 
-## 系统要求 / System Requirements
+本文说明如何在 Windows 上安装并验证 OpenVINO C# API。
 
-- Windows 10/11 (x64)
-- Windows Server 2019/2022
-- .NET Framework 4.6.1+ 或 .NET Core 3.1+ 或 .NET 5+
+## Requirements / 系统要求
 
-## 安装步骤 / Installation Steps
+- Windows 10/11 x64 or Windows Server 2019/2022
+- .NET Framework 4.6.1+, .NET Core 3.1+, or .NET 5+
+- A x64 process when using the `win-x64` runtime package
 
-### 1. 安装 .NET SDK
+## Install Packages / 安装 NuGet 包
 
-从 [.NET 官网](https://dotnet.microsoft.com/download) 下载并安装 .NET SDK。
+For core OpenVINO inference:
 
-### 2. 安装 NuGet 包
-
-在项目中安装以下 NuGet 包：
+基础 OpenVINO 推理：
 
 ```bash
 dotnet add package JYPPX.OpenVINO.CSharp.API
 dotnet add package OpenVINO.runtime.win
 ```
 
-### 3. 验证安装
+For GenAI APIs:
 
-创建一个测试程序验证安装：
+GenAI API：
+
+```bash
+dotnet add package JYPPX.OpenVINO.CSharp.API
+dotnet add package JYPPX.OpenVINO.GenAI.runtime.win
+```
+
+## Verify Installation / 验证安装
 
 ```csharp
+using System;
 using OpenVinoSharp;
 
 class Program
 {
     static void Main()
     {
+        Version version = Ov.get_openvino_version();
+        Console.WriteLine($"OpenVINO: {version.description} {version.buildNumber}");
+
         using Core core = new Core();
-        Console.WriteLine("OpenVINO 版本: " + core.get_version());
-        Console.WriteLine("安装成功！");
+        foreach (string device in core.GetAvailableDevices())
+        {
+            Console.WriteLine(device);
+        }
     }
 }
 ```
 
-## 常见问题 / Troubleshooting
+## Unicode Paths / Unicode 路径
 
-- 如遇 DLL 加载错误，请检查 Visual C++ Redistributable 是否已安装
-- 确保项目目标平台为 x64
+The default `Core`, `ReadModel`, and `CompileModel` APIs use explicit UTF-8 string marshalling and work across platforms.
 
----
+默认 `Core`、`ReadModel`、`CompileModel` API 使用显式 UTF-8 字符串 marshalling，可跨平台使用。
 
-*文档完善中... / Documentation in progress...*
+Windows runtimes that export OpenVINO Unicode path APIs can also use explicit Unicode methods:
+
+导出 OpenVINO Unicode 路径 API 的 Windows runtime 也可以使用显式 Unicode 方法：
+
+```csharp
+using Core core = new Core();
+using Model model = core.ReadModelUnicode(@"D:\模型\yolo26n.xml");
+using CompiledModel compiled = core.CompileModelUnicode(@"D:\模型\yolo26n.xml", "CPU");
+```
+
+If the installed runtime does not export the Unicode C API, these methods throw `PlatformNotSupportedException`. The normal UTF-8 APIs are unaffected.
+
+如果已安装 runtime 未导出 Unicode C API，这些方法会抛出 `PlatformNotSupportedException`。普通 UTF-8 API 不受影响。
+
+## Troubleshooting / 常见问题
+
+- If native DLL loading fails, confirm the runtime package matches the process architecture.
+- If C++ runtime dependencies are missing, install the Microsoft Visual C++ Redistributable.
+- If only core APIs are used, do not install a GenAI runtime package unless you need `OpenVinoSharp.GenAI`.

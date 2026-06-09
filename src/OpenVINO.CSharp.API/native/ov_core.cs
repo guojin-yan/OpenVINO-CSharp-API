@@ -163,6 +163,19 @@ namespace OpenVinoSharp.native
             ref IntPtr core);
 
         /// <summary>
+        /// 使用 Windows Unicode 配置文件路径构造 OpenVINO Core 实例 / Constructs OpenVINO Core with a Windows Unicode configuration path.
+        /// </summary>
+        /// <remarks>
+        /// 该函数只在启用 OPENVINO_ENABLE_UNICODE_PATH_SUPPORT 的 OpenVINO C runtime 中导出。
+        /// This entry point is exported only by OpenVINO C runtimes built with OPENVINO_ENABLE_UNICODE_PATH_SUPPORT.
+        /// </remarks>
+        [DllImport("openvino_c", EntryPoint = "ov_core_create_with_config_unicode",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_create_with_config_unicode(
+            [MarshalAs(UnmanagedType.LPWStr)] string xml_config_file_ws,
+            ref IntPtr core);
+
+        /// <summary>
         /// 释放 ov_core_t 分配的内存 / Release the memory allocated by ov_core_t
         /// </summary>
         /// <param name="core">Core 指针 / Core pointer</param>
@@ -215,6 +228,21 @@ namespace OpenVinoSharp.native
             IntPtr core,
             IntPtr model_path,
             IntPtr bin_path,
+            ref IntPtr model);
+
+        /// <summary>
+        /// 使用 Windows Unicode 路径读取模型 / Reads a model from Windows Unicode paths.
+        /// </summary>
+        /// <remarks>
+        /// 返回的 model 为 owned pointer，调用方必须用 ov_model_free 释放。
+        /// The returned model is an owned pointer and must be released with ov_model_free by the managed wrapper.
+        /// </remarks>
+        [DllImport("openvino_c", EntryPoint = "ov_core_read_model_unicode",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_read_model_unicode(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPWStr)] string model_path,
+            [MarshalAs(UnmanagedType.LPWStr)] string bin_path,
             ref IntPtr model);
 
         /// <summary>
@@ -429,6 +457,18 @@ namespace OpenVinoSharp.native
             ref IntPtr compiled_model);
 
         /// <summary>
+        /// 使用 Windows Unicode 模型路径从文件编译模型 / Compiles a model from a Windows Unicode model path.
+        /// </summary>
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file_unicode",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_from_file_unicode(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPWStr)] string model_path,
+            IntPtr device_name,
+            UIntPtr property_args_size,
+            ref IntPtr compiled_model);
+
+        /// <summary>
         /// 从文件读取并创建编译模型（带 1 个属性对）/ Reads a model and creates a compiled model from file with 1 property pair
         /// </summary>
         /// <param name="core">Core 指针 / Core pointer</param>
@@ -455,6 +495,17 @@ namespace OpenVinoSharp.native
         internal extern static ExceptionStatus ov_core_compile_model_from_file_utf8(
             IntPtr core,
             IntPtr model_path,
+            IntPtr device_name,
+            UIntPtr property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr key1,
+            IntPtr value1);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file_unicode",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_from_file_unicode(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPWStr)] string model_path,
             IntPtr device_name,
             UIntPtr property_args_size,
             ref IntPtr compiled_model,
@@ -500,6 +551,19 @@ namespace OpenVinoSharp.native
             IntPtr key2,
             IntPtr value2);
 
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file_unicode",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_from_file_unicode(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPWStr)] string model_path,
+            IntPtr device_name,
+            UIntPtr property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2);
+
         /// <summary>
         /// 从文件读取并创建编译模型（带 3 个属性对）/ Reads a model and creates a compiled model from file with 3 property pairs
         /// </summary>
@@ -535,6 +599,21 @@ namespace OpenVinoSharp.native
         internal extern static ExceptionStatus ov_core_compile_model_from_file_utf8(
             IntPtr core,
             IntPtr model_path,
+            IntPtr device_name,
+            UIntPtr property_args_size,
+            ref IntPtr compiled_model,
+            IntPtr key1,
+            IntPtr value1,
+            IntPtr key2,
+            IntPtr value2,
+            IntPtr key3,
+            IntPtr value3);
+
+        [DllImport("openvino_c", EntryPoint = "ov_core_compile_model_from_file_unicode",
+            CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static ExceptionStatus ov_core_compile_model_from_file_unicode(
+            IntPtr core,
+            [MarshalAs(UnmanagedType.LPWStr)] string model_path,
             IntPtr device_name,
             UIntPtr property_args_size,
             ref IntPtr compiled_model,
