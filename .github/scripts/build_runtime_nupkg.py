@@ -284,6 +284,12 @@ def build_package(
         props_dir = stage / "build" / "net"
         props_dir.mkdir(parents=True)
         (props_dir / f"{nuget_id}.props").write_text(props_text, encoding="utf-8")
+        # Runtime-only packages include a framework placeholder to silence
+        # NU5127 and keep NuGet compatibility metadata aligned with build/net.
+        # 运行时包没有托管程序集，因此放置空占位文件，明确该包与 build/net 对齐。
+        lib_net_dir = stage / "lib" / "net"
+        lib_net_dir.mkdir(parents=True)
+        (lib_net_dir / "_._").write_text("", encoding="utf-8")
 
         # Readme + nuspec + license + logo at package root.
         (stage / "README.md").write_text(render(templates / "package.readme.tmpl.md", mapping), encoding="utf-8")
