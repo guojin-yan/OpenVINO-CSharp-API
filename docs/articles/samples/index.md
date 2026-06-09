@@ -6,7 +6,7 @@
 
 | 案例 | 框架 | 特性 | 说明 |
 |------|------|------|------|
-| [GenAI QuickStart (.NET 8.0)](genai-quickstart.md) | .NET 8.0 | GenAI optional loading, LLM, Whisper, VLM | OpenVINO GenAI runtime 可选加载和基础 pipeline 示例 |
+| [GenAI Samples (.NET 8.0)](genai-samples.md) | .NET 8.0 | LLM, streaming, chat, benchmark, Whisper, VLM | OpenVINO GenAI runtime 可选加载和官方样例复刻 |
 | [YOLO Detection (.NET 10.0)](yolo-net10.md) | .NET 10.0 | Span<T>, IAsyncEnumerable, Parallel.ForEachAsync | 最新 .NET 版本的高性能实现 |
 | [YOLO Detection (.NET 4.8)](yolo-net48.md) | .NET Framework 4.8 | Span<T>, async/await | 完整功能的 .NET Framework 实现 |
 | [YOLO Detection (.NET 4.6)](yolo-net46.md) | .NET Framework 4.6 | 传统异步模式 | 兼容旧版 .NET Framework 的实现 |
