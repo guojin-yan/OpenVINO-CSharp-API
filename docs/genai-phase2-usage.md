@@ -1,12 +1,12 @@
-# OpenVINO GenAI Phase 2 Usage
+# OpenVINO GenAI Usage / GenAI 使用说明
 
 ## Overview / 概览
 
-Phase 2 adds the first C# wrapper for the OpenVINO GenAI C API under `OpenVinoSharp.GenAI`.
+The `OpenVinoSharp.GenAI` namespace wraps the OpenVINO GenAI C API in the same repository as the core OpenVINO C# API. The GenAI native library remains optional: applications that only use `Core`, `Model`, `Tensor`, `CompiledModel`, or `InferRequest` do not load `openvino_genai_c`.
 
-本阶段在 `OpenVinoSharp.GenAI` 命名空间下加入 OpenVINO GenAI C API 的第一版 C# 封装。
+`OpenVinoSharp.GenAI` 命名空间封装 OpenVINO GenAI C API，并与基础 OpenVINO C# API 放在同一仓库中。GenAI 原生库保持可选加载：只使用 `Core`、`Model`、`Tensor`、`CompiledModel` 或 `InferRequest` 的应用不会加载 `openvino_genai_c`。
 
-Covered in this phase:
+Covered wrappers:
 
 - `GenerationConfig`
 - `LLMPipeline`
@@ -15,29 +15,30 @@ Covered in this phase:
 - `JsonContainer`
 - `ChatHistory`
 - `WhisperGenerationConfig`
-
-Covered after Phase 2:
-
-- GenAI runtime NuGet packaging: see `docs/articles/installation/genai-runtime.md`.
-
-Not covered yet:
-
-- VLM pipeline
-- Whisper pipeline
+- `WhisperPipeline`
+- `WhisperDecodedResults`
+- `WhisperDecodedResultChunk`
+- `VLMPipeline`
+- `VLMDecodedResults`
 
 ## Runtime Loading / Runtime 加载
 
-Set `OPENVINO_GENAI_RUNTIME_DIR` to the extracted GenAI runtime root, or pass the full `openvino_genai_c` path:
+Install a GenAI runtime package when using `OpenVinoSharp.GenAI`:
 
-设置 `OPENVINO_GENAI_RUNTIME_DIR` 到 GenAI runtime 解压目录，或显式传入 `openvino_genai_c` 完整路径：
+```bash
+dotnet add package JYPPX.OpenVINO.CSharp.API
+dotnet add package JYPPX.OpenVINO.GenAI.runtime.win
+```
+
+For local development, set `OPENVINO_GENAI_RUNTIME_DIR` or initialize with an explicit library path:
 
 ```csharp
 using OpenVinoSharp.GenAI;
 
-OpenVinoSharp.GenAI.GenAI.Initialize();
+GenAI.Initialize();
 
-// Or:
-OpenVinoSharp.GenAI.GenAI.Initialize(@"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release\openvino_genai_c.dll");
+GenAI.Initialize(
+    @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release\openvino_genai_c.dll");
 ```
 
 ## Text Generation / 文本生成
@@ -45,7 +46,7 @@ OpenVinoSharp.GenAI.GenAI.Initialize(@"E:\OpenVINOSharp\openvino\openvino_genai_
 ```csharp
 using OpenVinoSharp.GenAI;
 
-OpenVinoSharp.GenAI.GenAI.Initialize();
+GenAI.Initialize();
 
 using var config = new GenerationConfig()
     .SetMaxNewTokens(128)
@@ -57,34 +58,6 @@ using var pipe = new LLMPipeline(@"D:\models\qwen2.5-ov", "CPU");
 using DecodedResults results = pipe.Generate("你好，请介绍 OpenVINO。", config);
 
 Console.WriteLine(results.Text);
-```
-
-## Whisper Generation Config / Whisper 生成配置
-
-`WhisperGenerationConfig` wraps `ov_genai_whisper_generation_config`. It is a configuration-only wrapper in this phase;
-Whisper audio pipeline inference will be added separately.
-
-`WhisperGenerationConfig` 封装 `ov_genai_whisper_generation_config`。本阶段只提供配置对象封装，Whisper 音频推理
-pipeline 会在后续阶段单独实现。
-
-```csharp
-using OpenVinoSharp.GenAI;
-
-OpenVinoSharp.GenAI.GenAI.Initialize();
-
-using var whisperConfig = new WhisperGenerationConfig()
-    .SetLanguage("zh")
-    .SetTask("transcribe")
-    .SetReturnTimestamps(true)
-    .SetInitialPrompt("你好 OpenVINO")
-    .SetHotwords("OpenVINO 热词")
-    .SetBeginSuppressTokens(220, 50257)
-    .SetSuppressTokens(1, 2, 3);
-
-using GenerationConfig textConfig = whisperConfig.GetGenerationConfig();
-textConfig.SetMaxNewTokens(128);
-
-Console.WriteLine(whisperConfig.Language);
 ```
 
 ## Streaming / 流式输出
@@ -112,4 +85,69 @@ using var history = new ChatHistory()
 using var pipe = new LLMPipeline(@"D:\models\chat-model-ov", "CPU");
 using DecodedResults results = pipe.GenerateWithHistory(history);
 Console.WriteLine(results.Text);
+```
+
+## Whisper / 语音识别
+
+`WhisperGenerationConfig` configures Whisper decoding. `WhisperPipeline` accepts raw `float` speech samples and returns `WhisperDecodedResults`.
+
+`WhisperGenerationConfig` 用于配置 Whisper 解码行为。`WhisperPipeline` 接收原始 `float` 语音采样并返回 `WhisperDecodedResults`。
+
+```csharp
+using OpenVinoSharp.GenAI;
+
+GenAI.Initialize();
+
+using var whisperConfig = new WhisperGenerationConfig()
+    .SetLanguage("zh")
+    .SetTask("transcribe")
+    .SetReturnTimestamps(true)
+    .SetInitialPrompt("你好 OpenVINO")
+    .SetHotwords("OpenVINO 热词");
+
+using var pipe = new WhisperPipeline(@"D:\models\whisper-ov", "CPU");
+using WhisperDecodedResults results = pipe.Generate(rawSpeechFloatArray, whisperConfig);
+
+Console.WriteLine(results.GetString());
+
+if (results.HasChunks)
+{
+    for (ulong i = 0; i < results.ChunkCount; i++)
+    {
+        using WhisperDecodedResultChunk? chunk = results.GetChunkAt(i);
+        Console.WriteLine($"{chunk?.StartTimestamp}-{chunk?.EndTimestamp}: {chunk?.Text}");
+    }
+}
+```
+
+## VLM / 视觉语言模型
+
+`VLMPipeline` supports text-only prompts, optional image tensors, chat-history generation, and streaming callbacks. Image tensors are borrowed during the call; callers still own and dispose the `Tensor` instances.
+
+`VLMPipeline` 支持纯文本 prompt、可选图像 Tensor、聊天历史生成和流式回调。图像 Tensor 在调用期间是借用关系，仍由调用方负责释放。
+
+```csharp
+using OpenVinoSharp;
+using OpenVinoSharp.GenAI;
+
+GenAI.Initialize();
+
+using var config = new GenerationConfig().SetMaxNewTokens(64);
+using var pipe = new VLMPipeline(@"D:\models\vlm-ov", "CPU");
+
+// Optional image tensors. They remain owned by the caller.
+Tensor[] images = LoadImageTensors();
+
+using VLMDecodedResults results = pipe.Generate("Describe this image.", images, config);
+Console.WriteLine(results.Text);
+```
+
+## Model-Gated Tests / 模型门控测试
+
+Pipeline integration tests are skipped unless model directories are configured:
+
+```powershell
+$env:OPENVINO_GENAI_WHISPER_MODEL_DIR = "D:\models\whisper-ov"
+$env:OPENVINO_GENAI_VLM_MODEL_DIR = "D:\models\vlm-ov"
+dotnet test tests/OpenVINO.CSharp.API.Tests/OpenVINO.CSharp.API.Tests.csproj --framework net8.0
 ```

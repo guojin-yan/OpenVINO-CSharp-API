@@ -6,38 +6,39 @@ Source headers:
 E:\OpenVINOSharp\openvino\openvino.genai-master\src\c\include\openvino\genai\c
 ```
 
-## Covered In Phase 2 / Phase 2 已覆盖
+## Covered / 已覆盖
 
-| Header | C# wrapper | Notes |
+| Header | C# wrapper | Ownership and ABI notes |
 | --- | --- | --- |
-| `generation_config.h` | `GenerationConfig` | UTF-8 JSON path, size_t as `UIntPtr`, C bool as 1 byte. |
-| `llm_pipeline.h` | `LLMPipeline`, `DecodedResults` | Prompt generation, chat history generation, streaming callback, config get/set. |
-| `perf_metrics.h` | `PerformanceMetrics` | Returned metrics are owned and released through the matching GenAI free function. |
-| `json_container.h` | `JsonContainer` | Two-call UTF-8 JSON string bridge. |
-| `chat_history.h` | `ChatHistory` | Message list, tools, extra context, JSON helper methods. |
-| `whisper_generation_config.h` | `WhisperGenerationConfig` | Phase 4 wrapper. Optional strings map NOT_FOUND to `null`, size_t maps to `UIntPtr`, C bool uses 1-byte marshalling, and token arrays are pinned during native calls. |
+| `generation_config.h` | `GenerationConfig` | `size_t` maps to `UIntPtr`; C bool uses 1-byte marshalling; UTF-8 strings are explicitly allocated and freed. |
+| `llm_pipeline.h` | `LLMPipeline`, `DecodedResults` | Pipeline and decoded results own native pointers; streaming callbacks are kept alive for the native call. |
+| `perf_metrics.h` | `PerformanceMetrics` | Metrics returned by result objects are owned by managed wrappers and released with the matching native free function. |
+| `json_container.h` | `JsonContainer` | JSON strings use the two-call UTF-8 buffer pattern. |
+| `chat_history.h` | `ChatHistory` | Message JSON containers returned from native are owned by managed wrappers. |
+| `whisper_generation_config.h` | `WhisperGenerationConfig` | Optional native strings map `NOT_FOUND` to `null`; token arrays are pinned only for the native call. |
+| `whisper_pipeline.h` | `WhisperPipeline`, `WhisperDecodedResults`, `WhisperDecodedResultChunk` | Raw audio buffers are pinned for `generate`; result chunks and metrics are owned by returned wrappers. Whisper metrics use the exported decoded-results metrics free function because 2026.2 does not export a generic metrics free symbol. |
+| `vlm_pipeline.h` | `VLMPipeline`, `VLMDecodedResults` | Image tensors are borrowed from callers; only the pointer array is pinned during native calls. |
+| `visibility.h` | No managed wrapper required | Macro-only export/visibility header. |
 
-## Audited In Phase 3 / Phase 3 已审计
+## Runtime Loading / Runtime 加载
 
-| Header | Status | Decision |
-| --- | --- | --- |
-| `vlm_pipeline.h` | Not wrapped yet | ABI uses `ov_tensor_t**` image arrays plus text/history and streaming. It should be implemented with image tensor tests in a media-focused phase. |
-| `whisper_pipeline.h` | Not wrapped yet | ABI uses raw `float*` speech buffers and result chunks. It should be implemented together with audio buffer tests and model-gated integration tests. |
-| Tokenizer C headers | No standalone header found | Tokenizer runtime is packaged through `openvino_tokenizers.dll`; no separate C wrapper header exists under `src\c`. |
+- 基础 OpenVINO API 不会主动加载 `openvino_genai_c`。
+- GenAI runtime only loads when code calls `OpenVinoSharp.GenAI` APIs such as `GenAI.Initialize`, `GenerationConfig`, `LLMPipeline`, `WhisperPipeline`, or `VLMPipeline`.
+- `OPENVINO_GENAI_RUNTIME_DIR` can point to a GenAI runtime root for local development, but official NuGet runtime packages are built from GitHub Actions downloads of Intel archives.
 
 ## ABI Rules / ABI 规则
 
-- `size_t` maps to `UIntPtr`.
-- C `bool` must use 1-byte marshalling.
-- `char*` and `const char*` are explicit UTF-8 `IntPtr`.
-- Two-call string APIs should use managed temporary buffers and trim the trailing null.
-- Owned native objects must inherit or follow `DisposableOvObject` ownership patterns.
-- Borrowed pointers must be documented in XML comments.
+- `size_t` maps to `UIntPtr`, with public `ulong` helpers where convenient.
+- C `bool` maps to a 1-byte value (`byte`) at the P/Invoke boundary.
+- `char*` and `const char*` are represented as `IntPtr` and converted with explicit UTF-8 helpers.
+- `char**` and arrays are pinned or allocated for the shortest possible native call scope.
+- Owned native pointers use `DisposableOvObject` and matching `*_free` functions.
+- Borrowed native pointers, such as VLM input tensors, remain owned by the caller and are documented in XML comments.
 
-## Next API Work / 下一步 API 工作
+## Test Coverage / 测试覆盖
 
-Suggested order:
-
-1. Add `WhisperDecodedResults` and chunk wrappers.
-2. Add `WhisperPipeline.Generate(float[])` with audio buffer tests.
-3. Add `VLMDecodedResults` and `VLMPipeline` with `Tensor[]` image input tests.
+- Runtime-gated unit tests cover config objects, JSON containers, chat history, default decoded result objects, metrics release paths, and constructor validation.
+- Model-gated integration tests use:
+  - `OPENVINO_GENAI_WHISPER_MODEL_DIR`
+  - `OPENVINO_GENAI_VLM_MODEL_DIR`
+- When model variables are absent, xUnit marks those pipeline integration tests as skipped.

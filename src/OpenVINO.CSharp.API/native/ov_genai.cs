@@ -355,6 +355,137 @@ namespace OpenVinoSharp.native
 
         #endregion
 
+        #region Whisper decoded results and pipeline / Whisper 解码结果与 Pipeline
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_result_chunk_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_result_chunk_create(ref IntPtr chunk);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_result_chunk_free", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void ov_genai_whisper_decoded_result_chunk_free(IntPtr chunk);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_result_chunk_get_start_ts", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_result_chunk_get_start_ts(IntPtr chunk, ref float start_ts);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_result_chunk_get_end_ts", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_result_chunk_get_end_ts(IntPtr chunk, ref float end_ts);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_result_chunk_get_text", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_result_chunk_get_text(IntPtr chunk, IntPtr text, ref UIntPtr text_size);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_results_create(ref IntPtr results);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_free", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void ov_genai_whisper_decoded_results_free(IntPtr results);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_get_perf_metrics", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_results_get_perf_metrics(IntPtr results, ref IntPtr metrics);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_get_texts_count", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_results_get_texts_count(IntPtr results, ref UIntPtr count);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_get_text_at", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_results_get_text_at(IntPtr results, UIntPtr index, IntPtr text, ref UIntPtr text_size);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_get_score_at", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_results_get_score_at(IntPtr results, UIntPtr index, ref float score);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_has_chunks", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_results_has_chunks(IntPtr results, ref byte has_chunks);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_get_chunks_count", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_results_get_chunks_count(IntPtr results, ref UIntPtr count);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_get_chunk_at", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_results_get_chunk_at(IntPtr results, UIntPtr index, ref IntPtr chunk);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_decoded_results_get_string", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_decoded_results_get_string(IntPtr results, IntPtr output, ref UIntPtr output_size);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_pipeline_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_pipeline_create(IntPtr models_path, IntPtr device, UIntPtr property_args_size, ref IntPtr pipeline);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_pipeline_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_pipeline_create(IntPtr models_path, IntPtr device, UIntPtr property_args_size, ref IntPtr pipeline, IntPtr key0, IntPtr value0);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_pipeline_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_pipeline_create(IntPtr models_path, IntPtr device, UIntPtr property_args_size, ref IntPtr pipeline, IntPtr key0, IntPtr value0, IntPtr key1, IntPtr value1);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_pipeline_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_pipeline_create(IntPtr models_path, IntPtr device, UIntPtr property_args_size, ref IntPtr pipeline, IntPtr key0, IntPtr value0, IntPtr key1, IntPtr value1, IntPtr key2, IntPtr value2);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_pipeline_free", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void ov_genai_whisper_pipeline_free(IntPtr pipeline);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_pipeline_generate", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_pipeline_generate(IntPtr pipeline, IntPtr raw_speech, UIntPtr raw_speech_size, IntPtr config, ref IntPtr results);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_pipeline_get_generation_config", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_pipeline_get_generation_config(IntPtr pipeline, ref IntPtr config);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_pipeline_set_generation_config", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_pipeline_set_generation_config(IntPtr pipeline, IntPtr config);
+
+        #endregion
+
+        #region VLM decoded results and pipeline / VLM 解码结果与 Pipeline
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_decoded_results_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_decoded_results_create(ref IntPtr results);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_decoded_results_free", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void ov_genai_vlm_decoded_results_free(IntPtr results);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_decoded_results_get_perf_metrics", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_decoded_results_get_perf_metrics(IntPtr results, ref IntPtr metrics);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_decoded_results_perf_metrics_free", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void ov_genai_vlm_decoded_results_perf_metrics_free(IntPtr metrics);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_decoded_results_get_string", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_decoded_results_get_string(IntPtr results, IntPtr output, ref UIntPtr output_size);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_create(IntPtr models_path, IntPtr device, UIntPtr property_args_size, ref IntPtr pipe);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_create(IntPtr models_path, IntPtr device, UIntPtr property_args_size, ref IntPtr pipe, IntPtr key0, IntPtr value0);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_create(IntPtr models_path, IntPtr device, UIntPtr property_args_size, ref IntPtr pipe, IntPtr key0, IntPtr value0, IntPtr key1, IntPtr value1);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_create(IntPtr models_path, IntPtr device, UIntPtr property_args_size, ref IntPtr pipe, IntPtr key0, IntPtr value0, IntPtr key1, IntPtr value1, IntPtr key2, IntPtr value2);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_free", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void ov_genai_vlm_pipeline_free(IntPtr pipe);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_generate", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_generate(IntPtr pipe, IntPtr text_inputs, IntPtr rgbs, UIntPtr num_images, IntPtr config, IntPtr streamer, ref IntPtr results);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_generate", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_generate(IntPtr pipe, IntPtr text_inputs, IntPtr rgbs, UIntPtr num_images, IntPtr config, ref streamer_callback streamer, ref IntPtr results);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_generate_with_history", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_generate_with_history(IntPtr pipe, IntPtr history, IntPtr rgbs, UIntPtr num_images, IntPtr config, IntPtr streamer, ref IntPtr results);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_generate_with_history", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_generate_with_history(IntPtr pipe, IntPtr history, IntPtr rgbs, UIntPtr num_images, IntPtr config, ref streamer_callback streamer, ref IntPtr results);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_start_chat", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_start_chat(IntPtr pipe);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_finish_chat", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_finish_chat(IntPtr pipe);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_get_generation_config", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_get_generation_config(IntPtr pipe, ref IntPtr config);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_vlm_pipeline_set_generation_config", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_vlm_pipeline_set_generation_config(IntPtr pipe, IntPtr config);
+
+        #endregion
+
         #region JsonContainer / JSON 容器
 
         [DllImport(GenAILibrary, EntryPoint = "ov_genai_json_container_create", CallingConvention = CallingConvention.Cdecl)]

@@ -245,5 +245,78 @@ namespace OpenVinoSharp.Tests.UnitTests
                 }
             }
         }
+
+        /// <summary>
+        /// Whisper 分段结果应能安全创建、读取默认值并释放。
+        /// Whisper result chunks should be safely created, read with default values, and released.
+        /// </summary>
+        [OpenVINOGenAIFact]
+        public void WhisperDecodedResultChunk_DefaultObject_IsReadable()
+        {
+            using (var chunk = new WhisperDecodedResultChunk())
+            {
+                Assert.False(float.IsNaN(chunk.StartTimestamp));
+                Assert.False(float.IsNaN(chunk.EndTimestamp));
+                Assert.Equal(string.Empty, chunk.Text);
+                Assert.Equal(string.Empty, chunk.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Whisper 解码结果应能安全创建、读取计数、处理空分段并释放 metrics。
+        /// Whisper decoded results should safely expose counts, empty chunks, and owned metrics.
+        /// </summary>
+        [OpenVINOGenAIFact]
+        public void WhisperDecodedResults_DefaultObject_IsReadable()
+        {
+            using (var results = new WhisperDecodedResults())
+            {
+                Assert.Equal(0UL, results.TextCount);
+                Assert.False(results.HasChunks);
+                Assert.Equal(0UL, results.ChunkCount);
+                Assert.Null(results.GetChunkAt(0));
+                Assert.ThrowsAny<Exception>(() => results.GetTextAt(0));
+                Assert.ThrowsAny<Exception>(() => results.GetScoreAt(0));
+
+                using (PerformanceMetrics metrics = results.GetPerformanceMetrics())
+                {
+                    Assert.NotNull(metrics);
+                }
+
+                Assert.NotNull(results.GetString());
+            }
+        }
+
+        /// <summary>
+        /// VLM 解码结果应能安全创建、读取默认文本并释放 metrics。
+        /// VLM decoded results should safely expose default text and owned metrics.
+        /// </summary>
+        [OpenVINOGenAIFact]
+        public void VLMDecodedResults_DefaultObject_IsReadable()
+        {
+            using (var results = new VLMDecodedResults())
+            {
+                Assert.NotNull(results.Text);
+                Assert.Equal(results.Text, results.ToString());
+
+                using (PerformanceMetrics metrics = results.GetPerformanceMetrics())
+                {
+                    Assert.NotNull(metrics);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Pipeline 构造函数应在进入 native 前验证托管参数。
+        /// Pipeline constructors should validate managed arguments before entering native code.
+        /// </summary>
+        [Fact]
+        public void GenAIPipelines_ValidateConstructorArguments()
+        {
+            Assert.Throws<ArgumentException>(() => new WhisperPipeline(string.Empty, "CPU"));
+            Assert.Throws<ArgumentException>(() => new WhisperPipeline("model", string.Empty));
+            Assert.Throws<ArgumentException>(() => new VLMPipeline(string.Empty, "CPU"));
+            Assert.Throws<ArgumentException>(() => new VLMPipeline("model", string.Empty));
+        }
     }
 }
