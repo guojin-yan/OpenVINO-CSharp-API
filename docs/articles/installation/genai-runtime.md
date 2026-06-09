@@ -157,5 +157,5 @@ If loading fails, check:
 - `openvino_genai_c` exists under `runtimes/<rid>/native`.
 - Runtime dependencies exist in the same native directory.
 - The process architecture matches the installed runtime package.
-- The GenAI runtime package version matches the managed wrapper version.
+- The GenAI runtime package version matches the OpenVINO GenAI native version expected by this wrapper, for example 2026.2.x for the csharp3.3 release. / GenAI runtime 包版本应匹配当前封装期望的 OpenVINO GenAI 原生版本，例如 csharp3.3 对应 2026.2.x。
 - The exception message includes searched paths and native load errors.

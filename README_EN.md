@@ -3,20 +3,28 @@
 # OpenVINO C# API
 
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![NuGet](https://img.shields.io/nuget/v/OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API/)
-[![Downloads](https://img.shields.io/nuget/dt/OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API/)
+[![NuGet](https://img.shields.io/nuget/v/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
+[![Downloads](https://img.shields.io/nuget/dt/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![.NET](https://img.shields.io/badge/.NET-4.6%20%7C%205.0%20%7C%206.0%20%7C%207.0%20%7C%208.0%20%7C%209.0%20%7C%2010.0-blue)](https://dotnet.microsoft.com/)
-[![OpenVINO](https://img.shields.io/badge/OpenVINO-2025.4-orange)](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html)
+[![OpenVINO](https://img.shields.io/badge/OpenVINO-2026.2-orange)](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html)
 
 English | [简体中文](README.md)
 
-  Intel Distribution [OpenVINO™](www.openvino. ai) tool suite is developed based on the oneAPI and can accelerate the development speed of high-performance computer vision and deep learning visual applications. It is suitable for various Intel platforms from the edge to the cloud, helping users deploy more accurate real-world results to production systems faster. By simplifying the development workflow, OpenVINO™ Empowering developers to deploy high-performance applications and algorithms in the real world.
+Intel Distribution [OpenVINO™](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html) tool suite is developed based on oneAPI and can accelerate the development of high-performance computer vision and deep learning applications. It is suitable for various Intel platforms from the edge to the cloud, helping users deploy more accurate real-world results to production systems faster. By simplifying the development workflow, OpenVINO™ empowers developers to deploy high-performance applications and algorithms in the real world.
 
 **OpenVINO C# API is a .NET wrapper library for Intel OpenVINO, enabling C# developers to run deep learning model inference with high performance on Windows, Linux, and macOS. Supports mainstream models like YOLO, ResNet, BERT, etc.**
 
-The latest version currently released is **OpenVINO™ C# API 3.2 ** pre release version, which has been further updated on version 3.1, improving all test codes and addressing some errors. Relevant case projects and applications will be released based on the latest version in the future.
+The current development version is **OpenVINO™ C# API 3.3.0**. This release keeps the published API compatible, refreshes OpenVINO 2026.2 C API coverage, adds optional OpenVINO GenAI C API wrappers, and updates runtime packaging, tests, samples, and documentation.
 
-Finally, if you have any questions during use, you can communicate and contact me. We also welcome C # developers to join us in OpenVINO™ C# API development.
+## 📢 3.3.0 Release Highlights
+
+- Keeps the published core API compatible while refreshing OpenVINO 2026.2 C API coverage and adding C# friendly PascalCase helpers.
+- Adds optional `OpenVinoSharp.GenAI` wrappers for LLM, Whisper, VLM, and related OpenVINO GenAI C APIs.
+- Keeps GenAI runtime optional: applications that only use `Core`, `Model`, `Tensor`, `CompiledModel`, or `InferRequest` do not load `openvino_genai_c`.
+- Updates runtime NuGet automation for both core OpenVINO runtime and GenAI runtime. GenAI 2026.2 packages cover Windows, Ubuntu, RHEL, and macOS ARM64.
+- Strengthens UTF-8 strings, Windows Unicode paths, owned/borrowed native pointer lifetimes, tests, samples, and documentation.
+
+Finally, if you have any questions during use, you can communicate and contact me. We also welcome C# developers to join OpenVINO™ C# API development.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -44,9 +52,15 @@ Finally, if you have any questions during use, you can communicate and contact m
 ### 1. Install NuGet Packages
 
 ```bash
-dotnet add package OpenVINO.CSharp.API
+dotnet add package JYPPX.OpenVINO.CSharp.API
 dotnet add package OpenVINO.runtime.win
 (Install different runtime packages for different platforms/devices)
+```
+
+If you need `OpenVinoSharp.GenAI`, install a matching GenAI runtime package, for example:
+
+```bash
+dotnet add package JYPPX.OpenVINO.GenAI.runtime.win
 ```
 
 ### 2. Write Inference Code
@@ -83,7 +97,7 @@ dotnet run
 |----------|------|-------------|
 | **API Docs** | [guojin-yan.github.io/OpenVINO-CSharp-API](https://guojin-yan.github.io/OpenVINO-CSharp-API) | Complete class library reference |
 | **Sample Code** | [samples/](https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/samples) | YOLO detection samples for 4 framework versions |
-| **NuGet Package** | [nuget.org/packages/OpenVINO.CSharp.API](https://www.nuget.org/packages/OpenVINO.CSharp.API/) | Latest version download |
+| **NuGet Package** | [nuget.org/packages/JYPPX.OpenVINO.CSharp.API](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/) | Latest version download |
 
 ## ✨ Complete Feature List
 
@@ -104,7 +118,7 @@ dotnet run
 
 | Package | Description | Link |
 | ------- | ----------- | ---- |
-| **OpenVINO.CSharp.API** | OpenVINO C# API core libraries | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/OpenVINO.CSharp.API/) |
+| **JYPPX.OpenVINO.CSharp.API** | OpenVINO C# API core libraries | [![NuGet Gallery](https://badge.fury.io/nu/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/) |
 
 ### Native Runtime Libraries
 
@@ -112,6 +126,11 @@ dotnet run
 | ------- | ----------- | ---- |
 | **OpenVINO.runtime.win** | Native bindings for Windows | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
 | **JYPPX.OpenVINO.GenAI.runtime.win** | Native OpenVINO GenAI runtime for Windows | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.24-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 24 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 22 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-arm64** | Native OpenVINO GenAI runtime for Ubuntu 22 ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.rhel8-x86_64** | Native OpenVINO GenAI runtime for RHEL 8 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.macos-arm64** | Native OpenVINO GenAI runtime for macOS ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **OpenVINO.runtime.ubuntu.24-x86_64** | Native bindings for ubuntu.24-x86_64 | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.24-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.24-x86_64/) |
 | **OpenVINO.runtime.ubuntu.22-x86_64** | Native bindings for ubuntu.22-x86_64 | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.22-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.22-x86_64/) |
 | **OpenVINO.runtime.ubuntu.20-x86_64** | Native bindings for ubuntu.20-x86_64 | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.20-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.20-x86_64/) |
@@ -225,7 +244,7 @@ OpenVINO.CSharp.API/
 ### Requirements
 
 - .NET SDK 5.0 or higher (or Visual Studio 2019+)
-- OpenVINO Runtime 2025.4+
+- OpenVINO Runtime 2026.2+
 
 ### Build Steps
 
@@ -299,7 +318,7 @@ This project is open-sourced under the [Apache-2.0 License](LICENSE).
 ## 📮 Contact
 
 - GitHub: [@guojin-yan](https://github.com/guojin-yan)
-- NuGet: [OpenVINO.CSharp.API](https://www.nuget.org/packages/OpenVINO.CSharp.API/)
+- NuGet: [JYPPX.OpenVINO.CSharp.API](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 
 ---
 

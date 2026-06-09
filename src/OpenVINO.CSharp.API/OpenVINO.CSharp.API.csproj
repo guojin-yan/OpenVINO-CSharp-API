@@ -15,13 +15,13 @@
     <Authors>Guojin Yan</Authors>
     <Company>Guojin Yan</Company>
     <Product>OpenVINO C# API</Product>
-    <Description>      OpenVINO C# API - A .NET wrapper for OpenVINO C API.
-      Supports .NET Framework 4.6-4.8 and .NET 5-10.
-      Cross-platform support for Windows, Linux, and macOS.</Description>
+    <Description>OpenVINO C# API 3.3.0 - .NET wrappers for OpenVINO 2026.2 C API and optional OpenVINO GenAI C API.</Description>
+    <PackageDescription>OpenVINO C# API 3.3.0 provides managed .NET wrappers for the OpenVINO 2026.2 C API and optional OpenVINO GenAI C API. It keeps the published core API compatible, adds C# friendly helpers, supports .NET Framework 4.6-4.8 and .NET 5-10, and works with separate cross-platform native runtime NuGet packages.</PackageDescription>
     <PackageProjectUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</PackageProjectUrl>
     <RepositoryUrl>https://github.com/guojin-yan/OpenVINO-CSharp-API</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>OpenVINO;CSharp-API;C#-API;DeepLearning;AI;Inference</PackageTags>
+    <PackageTags>OpenVINO;OpenVINO.GenAI;GenAI;CSharp-API;C#-API;DeepLearning;AI;Inference;LLM;Whisper;VLM;PInvoke;NuGet</PackageTags>
+    <PackageReleaseNotes>3.3.0: refreshed OpenVINO 2026.2 C API coverage, added optional OpenVINO GenAI C API wrappers, improved UTF-8 and Unicode path handling, kept GenAI runtime optional for core APIs, updated runtime packaging workflows, tests, samples, and documentation.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <NeutralLanguage>zh</NeutralLanguage>
     <LangVersion Condition="'$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">8.0</LangVersion>
@@ -106,7 +106,7 @@
     <PackageIcon>logo.jpg</PackageIcon>
     <PackageOutputPath>..\..\nuget</PackageOutputPath>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   
   <!-- NativeLibrary 类支持 (.NET Core 3.0+, .NET 5+) -->

@@ -2,7 +2,7 @@
 
 # OpenVINO C# API
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![Downloads](https://img.shields.io/nuget/dt/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![.NET](https://img.shields.io/badge/.NET-4.6%20%7C%205.0%20%7C%206.0%20%7C%207.0%20%7C%208.0%20%7C%209.0%20%7C%2010.0-blue)](https://dotnet.microsoft.com/)
@@ -15,6 +15,14 @@
 **OpenVINO C# API 是 Intel OpenVINO 的 .NET 封装库，让 C# 开发者能够在 Windows、Linux、macOS 上高性能运行深度学习模型推理，支持 YOLO、ResNet、BERT 等主流模型。**
 
 当前开发版本为 **OpenVINO™ C# API 3.3.0**，该版本继续保持已发布 API 兼容，并补齐 OpenVINO 2026.2 C API、OpenVINO GenAI C API、runtime 自动打包、测试和文档。
+
+## 📢 3.3.0 发布要点
+
+- 保持已发布基础 API 兼容，同时补齐 OpenVINO 2026.2 C API 封装并新增 PascalCase 友好接口。
+- 新增可选 `OpenVinoSharp.GenAI` 封装，覆盖 LLM、Whisper、VLM 等 OpenVINO GenAI C API。
+- GenAI runtime 保持可选加载：只使用 `Core`、`Model`、`Tensor`、`CompiledModel`、`InferRequest` 时不会加载 `openvino_genai_c`。
+- runtime NuGet 自动打包已支持基础 OpenVINO runtime 与 GenAI runtime；GenAI 2026.2 覆盖 Windows、Ubuntu、RHEL 和 macOS ARM64 平台包。
+- 强化 UTF-8 字符串、Windows 中文路径、owned/borrowed native pointer 生命周期、测试、示例和文档。
 
 最后，如果各位在使用中有什么问题，可以与我沟通联系，也欢迎广大C#开发者加入到OpenVINO™ C# API 开发中。
 
@@ -118,6 +126,11 @@ dotnet run
 | ------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------ |
 | **OpenVINO.runtime.win**              | Native bindings for Windows                           | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.win.svg)](https://www.nuget.org/packages/OpenVINO.runtime.win/) |
 | **JYPPX.OpenVINO.GenAI.runtime.win**  | Native OpenVINO GenAI runtime for Windows             | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.24-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 24 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 22 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-arm64** | Native OpenVINO GenAI runtime for Ubuntu 22 ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.rhel8-x86_64** | Native OpenVINO GenAI runtime for RHEL 8 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.macos-arm64** | Native OpenVINO GenAI runtime for macOS ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **OpenVINO.runtime.ubuntu.24-x86_64** | Native bindings for ubuntu.24-x86_64                  | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.24-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.24-x86_64/) |
 | **OpenVINO.runtime.ubuntu.22-x86_64** | Native bindings for ubuntu.22-x86_64                  | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.22-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.22-x86_64/) |
 | **OpenVINO.runtime.ubuntu.20-x86_64** | Native bindings for ubuntu.20-x86_64                  | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.20-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.20-x86_64/) |
@@ -232,7 +245,7 @@ OpenVINO.CSharp.API/
 ### 环境要求
 
 - .NET SDK 5.0 或更高版本（或 Visual Studio 2019+）
-- OpenVINO Runtime 2025.4+
+- OpenVINO Runtime 2026.2+
 
 ### 构建步骤
 

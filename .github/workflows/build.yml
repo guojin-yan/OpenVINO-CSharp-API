@@ -2,19 +2,19 @@ name: Build
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, master, develop, csharp3.3 ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, master, develop, csharp3.3 ]
 
 jobs:
   # Linux 构建 - 只构建 .NET Core/.NET 5+ 项目
   build-linux:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: |
           6.0.x
@@ -38,10 +38,10 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: |
           6.0.x
