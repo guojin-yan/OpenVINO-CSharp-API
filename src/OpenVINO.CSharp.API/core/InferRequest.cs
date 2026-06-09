@@ -713,8 +713,11 @@ namespace OpenVinoSharp
         /// 设置异步推理完成回调 / Set callback for async inference completion
         /// <para>当异步推理完成时，将调用此回调函数。</para>
         /// </summary>
-        /// <param name="callback">回调函数 / Callback function</param>
-        public void set_callback(Action callback)
+        /// <param name="callback">
+        /// 回调函数；传入 <see langword="null"/> 可清除当前回调。 /
+        /// Callback function; pass <see langword="null"/> to clear the current callback.
+        /// </param>
+        public void set_callback(Action? callback)
         {
             ThrowIfDisposed();
             
@@ -766,8 +769,11 @@ namespace OpenVinoSharp
         /// <summary>
         /// 设置异步推理完成回调 / Sets the async inference completion callback.
         /// </summary>
-        /// <param name="callback">回调函数 / Callback function.</param>
-        public void SetCallback(Action callback)
+        /// <param name="callback">
+        /// 回调函数；传入 <see langword="null"/> 可清除当前回调。 /
+        /// Callback function; pass <see langword="null"/> to clear the current callback.
+        /// </param>
+        public void SetCallback(Action? callback)
         {
             set_callback(callback);
         }

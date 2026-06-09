@@ -342,9 +342,10 @@ namespace Yolo26Det_net10._0
             using (var model = core.read_model(modelPath))
             using (var compiledModel = core.compile_model(model, device))
             {
-                // 获取所有图片
-                var imageFiles = Directory.GetFiles(Path.GetDirectoryName(imagePath), "*.jpg")
-                    .Concat(Directory.GetFiles(Path.GetDirectoryName(imagePath), "*.png"))
+                // 获取所有图片 / Get all images from the resolved image directory.
+                var imageDirectory = Path.GetDirectoryName(Path.GetFullPath(imagePath)) ?? Directory.GetCurrentDirectory();
+                var imageFiles = Directory.GetFiles(imageDirectory, "*.jpg")
+                    .Concat(Directory.GetFiles(imageDirectory, "*.png"))
                     .Take(4) // 最多处理4张
                     .ToArray();
 
@@ -427,8 +428,9 @@ namespace Yolo26Det_net10._0
                 {
                     OvLogger.Info($"   池大小 / Pool size: {pool.Count}");
 
-                    var imageFiles = Directory.GetFiles(Path.GetDirectoryName(imagePath), "*.jpg")
-                        .Concat(Directory.GetFiles(Path.GetDirectoryName(imagePath), "*.png"))
+                    var imageDirectory = Path.GetDirectoryName(Path.GetFullPath(imagePath)) ?? Directory.GetCurrentDirectory();
+                    var imageFiles = Directory.GetFiles(imageDirectory, "*.jpg")
+                        .Concat(Directory.GetFiles(imageDirectory, "*.png"))
                         .Take(6)
                         .ToArray();
 
@@ -675,7 +677,7 @@ namespace Yolo26Det_net10._0
         /// <summary>
         /// 处理单张图片（带性能分析）/ Process single image with profiling
         /// </summary>
-        static void ProcessImageWithProfiler(InferRequest inferRequest, string imagePath, string windowName, InferenceProfiler profiler)
+        static void ProcessImageWithProfiler(InferRequest inferRequest, string imagePath, string? windowName, InferenceProfiler? profiler)
         {
             var totalStopwatch = Stopwatch.StartNew();
             var stageStopwatch = new Stopwatch();
@@ -1073,7 +1075,7 @@ namespace Yolo26Det_net10._0
     {
         private readonly Dictionary<string, List<double>> _timings = new Dictionary<string, List<double>>();
         private readonly Stopwatch _stopwatch = new Stopwatch();
-        private string _currentStage;
+        private string _currentStage = string.Empty;
 
         /// <summary>
         /// 开始记录阶段 / Start recording stage

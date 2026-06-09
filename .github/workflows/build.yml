@@ -30,8 +30,8 @@ jobs:
     # 构建跨平台示例（.NET Core 3.1 / .NET 10.0）
     - name: Build Cross-Platform Samples
       run: |
-        dotnet build samples/Yolo26Det-netcoreapp3.1/Yolo26Det-netcoreapp3.1.csproj --configuration Release || true
-        dotnet build samples/Yolo26Det-net10.0/Yolo26Det-net10.0.csproj --configuration Release || true
+        dotnet build samples/Yolo26Det-netcoreapp3.1/Yolo26Det-netcoreapp3.1.csproj --configuration Release -p:CheckEolTargetFramework=false -p:SuppressTfmSupportBuildWarnings=true -p:NoWarn=NU1701 || true
+        dotnet build samples/Yolo26Det-net10.0/Yolo26Det-net10.0.csproj --configuration Release -p:NoWarn=NU1701 || true
       continue-on-error: true
 
   # Windows 构建 - 构建所有项目包括 .NET Framework
