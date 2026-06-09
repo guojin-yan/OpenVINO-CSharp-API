@@ -29,12 +29,17 @@
         "dest": "api"
       },
       {
-        "files": [ "articles/**/*.md", "*.md", "toc.yml" ]
+        "files": [
+          "articles/**/*.md",
+          "articles/**/*.yml",
+          "*.md",
+          "toc.yml"
+        ]
       }
     ],
     "resource": [
       {
-        "files": [ "images/**", "favicon.ico", "logo.svg" ]
+        "files": [ "images/**", "favicon.ico", "logo.svg", "LICENSE" ]
       }
     ],
     "overwrite": [
@@ -44,9 +49,9 @@
       }
     ],
     "globalMetadata": {
-      "_appTitle": "OpenVINO C# API 文档",
+      "_appTitle": "OpenVINO C# API \u6587\u6863",
       "_appName": "OpenVINO C# API",
-      "_appFooter": "<span>© 2024-2026 Guojin Yan · Licensed under Apache-2.0</span>",
+      "_appFooter": "<span>&copy; 2024-2026 Guojin Yan &middot; Licensed under Apache-2.0</span>",
       "_enableSearch": true,
       "_disableNavbar": false,
       "_disableBreadcrumb": false,

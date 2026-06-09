@@ -1,13 +1,9 @@
-# Copyright (c) 2024 Guojin Yan
+# Copyright (c) 2024-2026 Guojin Yan
 # Licensed under the MIT License.
-
-# GitHub Actions workflow to build and deploy documentation to GitHub Pages
-# 构建并部署文档到 GitHub Pages 的工作流
 
 name: Documentation
 
 on:
-  # 在推送到 csharp3.3 分支时触发 / Trigger on push to csharp3.3 branch
   push:
     branches: [ csharp3.3 ]
     paths:
@@ -15,83 +11,83 @@ on:
       - '**.csproj'
       - 'docs/**'
       - 'README.md'
+      - 'README_EN.md'
+      - 'LICENSE.txt'
       - '.github/workflows/docs.yml'
-  
-  # 允许手动触发 / Allow manual trigger
+
   workflow_dispatch:
 
-# 设置 GITHUB_TOKEN 权限 / Set GITHUB_TOKEN permissions
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 允许一个并发部署 / Allow one concurrent deployment
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
-  # 构建文档 / Build documentation
   build:
+    name: Build documentation
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout / 检出代码
+    - name: Checkout
       uses: actions/checkout@v4
-      
-    - name: Setup .NET / 设置 .NET 环境
+
+    - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-    
-    - name: Setup DocFX / 设置 DocFX
-      run: |
-        dotnet tool install -g docfx
-        
-    - name: Sync README.md to docs/index.md / 同步 README.md 到 docs/index.md
+
+    - name: Setup DocFX
+      run: dotnet tool install -g docfx
+
+    - name: Sync root documents
       run: |
         cp README.md docs/index.md
-        echo "✅ README.md synced to docs/index.md"
-        
-    - name: Verify docs structure / 验证文档结构
+        cp README.md docs/README.md
+        cp README_EN.md docs/README_EN.md
+        cp LICENSE.txt docs/LICENSE
+
+    - name: Verify docs structure
       run: |
-        echo "📁 docs/ 目录结构:"
+        echo "docs directory:"
         ls -la docs/
         echo ""
-        echo "📁 docs/articles/ 目录结构:"
+        echo "docs/articles directory:"
         ls -la docs/articles/
-        
-    - name: Restore API packages / 还原 API 包
+
+    - name: Restore API packages
       run: dotnet restore src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj
-        
-    - name: Build API project (net8.0 only) / 构建 API 项目 (仅 net8.0)
+
+    - name: Build API project
       run: dotnet build src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj -c Release --framework net8.0 --no-restore
-        
-    - name: Generate API metadata / 生成 API 元数据
+
+    - name: Generate API metadata
       run: |
         cd docs
         docfx metadata docfx.json
-        
-    - name: Build documentation / 构建文档
+
+    - name: Build documentation
       run: |
         cd docs
         docfx build docfx.json
-        
-    - name: Upload artifact / 上传构建产物
+
+    - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
         path: _site
 
-  # 部署到 GitHub Pages / Deploy to GitHub Pages
   deploy:
+    name: Deploy documentation
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
-    
+
     steps:
-    - name: Deploy to GitHub Pages / 部署到 GitHub Pages
+    - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4

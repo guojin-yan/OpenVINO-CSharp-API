@@ -2,11 +2,11 @@
 
 - name: 安装概览 / Overview
   href: index.md
-- name: Windows 安装
+- name: Windows 安装 / Windows
   href: windows.md
 - name: OpenVINO GenAI Runtime
   href: genai-runtime.md
-- name: Linux 安装
+- name: Linux 安装 / Linux
   href: linux.md
-- name: macOS 安装
+- name: macOS 安装 / macOS
   href: macos.md

@@ -8,6 +8,12 @@ items:
   href: api/
   homepage: api/OpenVinoSharp.yml
 
+- name: GenAI 使用说明 / GenAI Usage
+  href: genai-phase2-usage.md
+
+- name: GenAI C API 覆盖矩阵 / GenAI C API Coverage
+  href: genai-c-api-coverage.md
+
 - name: 文章 / Articles
   href: articles/
   homepage: articles/index.md
