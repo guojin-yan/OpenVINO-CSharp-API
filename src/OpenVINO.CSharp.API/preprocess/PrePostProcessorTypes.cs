@@ -52,40 +52,125 @@
 namespace OpenVinoSharp.preprocess
 {
     /// <summary>
-    /// Color format enumeration
+    /// 颜色格式枚举。
+    /// Color format enumeration.
     /// </summary>
     public enum ColorFormat : uint
     {
+        /// <summary>
+        /// 未定义颜色格式。
+        /// Undefined color format.
+        /// </summary>
         UNDEFINE = 0U,
+
+        /// <summary>
+        /// 单平面 NV12 图像格式，Y 与 UV 数据位于同一个平面。
+        /// Single-plane NV12 image format with Y and UV data in one plane.
+        /// </summary>
         NV12_SINGLE_PLANE,
+
+        /// <summary>
+        /// 双平面 NV12 图像格式，Y 与 UV 数据位于两个独立平面。
+        /// Two-plane NV12 image format with Y and UV data in separate planes.
+        /// </summary>
         NV12_TWO_PLANES,
+
+        /// <summary>
+        /// 单平面 I420 图像格式，Y、U、V 数据位于同一个平面。
+        /// Single-plane I420 image format with Y, U, and V data in one plane.
+        /// </summary>
         I420_SINGLE_PLANE,
+
+        /// <summary>
+        /// 三平面 I420 图像格式，Y、U、V 数据位于三个独立平面。
+        /// Three-plane I420 image format with Y, U, and V data in separate planes.
+        /// </summary>
         I420_THREE_PLANES,
+
+        /// <summary>
+        /// RGB 三通道颜色格式。
+        /// Three-channel RGB color format.
+        /// </summary>
         RGB,
+
+        /// <summary>
+        /// BGR 三通道颜色格式。
+        /// Three-channel BGR color format.
+        /// </summary>
         BGR,
+
+        /// <summary>
+        /// 单通道灰度颜色格式。
+        /// Single-channel grayscale color format.
+        /// </summary>
         GRAY,
+
+        /// <summary>
+        /// RGBX 四通道颜色格式，第四通道通常作为填充通道。
+        /// Four-channel RGBX color format where the fourth channel is usually padding.
+        /// </summary>
         RGBX,
+
+        /// <summary>
+        /// BGRX 四通道颜色格式，第四通道通常作为填充通道。
+        /// Four-channel BGRX color format where the fourth channel is usually padding.
+        /// </summary>
         BGRX
     }
 
     /// <summary>
-    /// Resize algorithm enumeration
+    /// 尺寸调整算法枚举。
+    /// Resize algorithm enumeration.
     /// </summary>
     public enum ResizeAlgorithm : uint
     {
+        /// <summary>
+        /// 线性插值。
+        /// Linear interpolation.
+        /// </summary>
         RESIZE_LINEAR,
+
+        /// <summary>
+        /// 三次插值。
+        /// Cubic interpolation.
+        /// </summary>
         RESIZE_CUBIC,
+
+        /// <summary>
+        /// 最近邻插值。
+        /// Nearest-neighbor interpolation.
+        /// </summary>
         RESIZE_NEAREST
     }
 
     /// <summary>
-    /// Padding mode enumeration
+    /// 填充模式枚举。
+    /// Padding mode enumeration.
     /// </summary>
     public enum PaddingMode : uint
     {
+        /// <summary>
+        /// 使用常量值填充。
+        /// Pads with a constant value.
+        /// </summary>
         CONSTANT = 0,
+
+        /// <summary>
+        /// 使用边缘值填充。
+        /// Pads with edge values.
+        /// </summary>
         EDGE,
+
+        /// <summary>
+        /// 使用反射值填充，不重复边界元素。
+        /// Pads with reflected values without repeating border elements.
+        /// </summary>
         REFLECT,
+
+        /// <summary>
+        /// 使用对称反射值填充，包含边界元素。
+        /// Pads with symmetric reflected values including border elements.
+        /// </summary>
         SYMMETRIC
     }
 }

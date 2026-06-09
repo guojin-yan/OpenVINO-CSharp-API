@@ -75,6 +75,10 @@ namespace OpenVinoSharp
         ///// </summary>
         //internal new IntPtr _ptr;
 
+        /// <summary>
+        /// 获取底层 OpenVINO native shape 指针，主要用于低层互操作场景。
+        /// Gets the underlying OpenVINO native shape pointer, primarily for low-level interop scenarios.
+        /// </summary>
         public IntPtr Ptr => OvPtr;
         /// <summary>
         /// 维度数据指针 / Dimension data pointer

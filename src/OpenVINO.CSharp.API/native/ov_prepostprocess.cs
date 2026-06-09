@@ -58,14 +58,26 @@ namespace OpenVinoSharp.native
     {
         #region PrePostProcessor Creation and Destruction
 
+        /// <summary>
+        /// 为指定模型创建预处理/后处理配置句柄，返回的句柄由调用方释放。
+        /// Creates a pre/postprocessor handle for the specified model. The returned handle is owned by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_create",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_create(IntPtr model, ref IntPtr preprocess);
 
+        /// <summary>
+        /// 释放预处理/后处理配置句柄。
+        /// Releases a pre/postprocessor handle.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_preprocess_prepostprocessor_free(IntPtr preprocess);
 
+        /// <summary>
+        /// 将预处理/后处理配置应用到模型并返回新的模型句柄。
+        /// Builds a model with the configured pre/postprocessing steps and returns a new model handle.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_build",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_build(IntPtr preprocess, ref IntPtr model);
@@ -74,10 +86,18 @@ namespace OpenVinoSharp.native
 
         #region Input Info
 
+        /// <summary>
+        /// 获取默认输入信息句柄，返回的句柄由调用方释放。
+        /// Gets the default input info handle. The returned handle is owned by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_get_input_info",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_get_input_info(IntPtr preprocess, ref IntPtr input_info);
 
+        /// <summary>
+        /// 按张量名称获取输入信息句柄。旧兼容入口按 ANSI 字符串编组。
+        /// Gets an input info handle by tensor name. This legacy-compatible entry marshals the string as ANSI.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_get_input_info_by_name",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_get_input_info_by_name(IntPtr preprocess, string tensor_name, ref IntPtr input_info);
@@ -89,6 +109,10 @@ namespace OpenVinoSharp.native
             IntPtr tensor_name,
             ref IntPtr input_info);
 
+        /// <summary>
+        /// 按张量索引获取输入信息句柄。
+        /// Gets an input info handle by tensor index.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_get_input_info_by_index",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_get_input_info_by_index(IntPtr preprocess, ulong tensor_index, ref IntPtr input_info);
@@ -100,6 +124,10 @@ namespace OpenVinoSharp.native
             UIntPtr tensor_index,
             ref IntPtr input_info);
 
+        /// <summary>
+        /// 释放输入信息句柄。
+        /// Releases an input info handle.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_info_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_preprocess_input_info_free(IntPtr input_info);
@@ -108,22 +136,42 @@ namespace OpenVinoSharp.native
 
         #region Input Tensor Info
 
+        /// <summary>
+        /// 从输入信息中获取输入张量信息句柄，返回的句柄由调用方释放。
+        /// Gets an input tensor info handle from input info. The returned handle is owned by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_info_get_tensor_info",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_info_get_tensor_info(IntPtr input_info, ref IntPtr tensor_info);
 
+        /// <summary>
+        /// 释放输入张量信息句柄。
+        /// Releases an input tensor info handle.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_preprocess_input_tensor_info_free(IntPtr tensor_info);
 
+        /// <summary>
+        /// 设置输入张量元素类型。
+        /// Sets the input tensor element type.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_element_type",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_element_type(IntPtr tensor_info, uint element_type);
 
+        /// <summary>
+        /// 设置输入张量颜色格式。
+        /// Sets the input tensor color format.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_color_format",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_color_format(IntPtr tensor_info, uint color_format);
 
+        /// <summary>
+        /// 设置输入张量颜色格式及其子平面名称。旧兼容入口按 ANSI 字符串数组指针传递。
+        /// Sets the input tensor color format and sub-plane names. This legacy-compatible entry passes ANSI string pointers.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_color_format_with_subname",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_color_format_with_subname(
@@ -170,10 +218,18 @@ namespace OpenVinoSharp.native
             IntPtr sub_name3,
             IntPtr sub_name4);
 
+        /// <summary>
+        /// 设置输入张量布局，layout 句柄由调用方管理。
+        /// Sets the input tensor layout. The layout handle lifetime is managed by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_layout",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_layout(IntPtr tensor_info, IntPtr layout);
 
+        /// <summary>
+        /// 设置输入张量的静态空间尺寸。
+        /// Sets the static spatial shape of the input tensor.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_spatial_static_shape",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_spatial_static_shape(IntPtr tensor_info, ulong input_height, ulong input_width);
@@ -185,6 +241,10 @@ namespace OpenVinoSharp.native
             UIntPtr input_height,
             UIntPtr input_width);
 
+        /// <summary>
+        /// 设置输入张量内存类型。旧兼容入口按 ANSI 字符串编组。
+        /// Sets the input tensor memory type. This legacy-compatible entry marshals the string as ANSI.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_memory_type",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_memory_type(IntPtr tensor_info, string mem_type);
@@ -195,6 +255,10 @@ namespace OpenVinoSharp.native
             IntPtr tensor_info,
             IntPtr mem_type);
 
+        /// <summary>
+        /// 使用已有张量描述输入张量信息，tensor 句柄由调用方管理。
+        /// Sets input tensor info from an existing tensor. The tensor handle lifetime is managed by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_tensor_info_set_from",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_tensor_info_set_from(IntPtr tensor_info, IntPtr tensor);
@@ -203,22 +267,42 @@ namespace OpenVinoSharp.native
 
         #region Preprocess Steps
 
+        /// <summary>
+        /// 获取输入预处理步骤句柄，返回的句柄由调用方释放。
+        /// Gets the input preprocess steps handle. The returned handle is owned by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_info_get_preprocess_steps",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_info_get_preprocess_steps(IntPtr input_info, ref IntPtr steps);
 
+        /// <summary>
+        /// 释放预处理步骤句柄。
+        /// Releases a preprocess steps handle.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_preprocess_preprocess_steps_free(IntPtr steps);
 
+        /// <summary>
+        /// 添加 resize 预处理步骤。
+        /// Adds a resize preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_resize",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_resize(IntPtr steps, uint resize_algorithm);
 
+        /// <summary>
+        /// 添加单值 scale 预处理步骤。
+        /// Adds a scalar scale preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_scale",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_scale(IntPtr steps, float value);
 
+        /// <summary>
+        /// 添加多通道 scale 预处理步骤。
+        /// Adds a per-channel scale preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_scale_multi_channels",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_scale_multi_channels(
@@ -226,10 +310,18 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPArray)] float[] values,
             int value_size);
 
+        /// <summary>
+        /// 添加单值 mean 预处理步骤。
+        /// Adds a scalar mean preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_mean",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_mean(IntPtr steps, float value);
 
+        /// <summary>
+        /// 添加多通道 mean 预处理步骤。
+        /// Adds a per-channel mean preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_mean_multi_channels",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_mean_multi_channels(
@@ -237,6 +329,10 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPArray)] float[] values,
             int value_size);
 
+        /// <summary>
+        /// 添加裁剪预处理步骤。
+        /// Adds a crop preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_crop",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_crop(
@@ -246,22 +342,42 @@ namespace OpenVinoSharp.native
             [MarshalAs(UnmanagedType.LPArray)] int[] end,
             int end_size);
 
+        /// <summary>
+        /// 添加布局转换预处理步骤。
+        /// Adds a layout conversion preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_convert_layout",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_convert_layout(IntPtr steps, IntPtr layout);
 
+        /// <summary>
+        /// 添加元素类型转换预处理步骤。
+        /// Adds an element type conversion preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_convert_element_type",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_convert_element_type(IntPtr steps, uint element_type);
 
+        /// <summary>
+        /// 添加颜色格式转换预处理步骤。
+        /// Adds a color format conversion preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_convert_color",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_convert_color(IntPtr steps, uint color_format);
 
+        /// <summary>
+        /// 添加通道反转预处理步骤。
+        /// Adds a channel reversal preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_reverse_channels",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_reverse_channels(IntPtr steps);
 
+        /// <summary>
+        /// 添加填充预处理步骤。
+        /// Adds a padding preprocess step.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_preprocess_steps_pad",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_preprocess_steps_pad(
@@ -288,10 +404,18 @@ namespace OpenVinoSharp.native
 
         #region Output Info
 
+        /// <summary>
+        /// 获取默认输出信息句柄，返回的句柄由调用方释放。
+        /// Gets the default output info handle. The returned handle is owned by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_get_output_info",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_get_output_info(IntPtr preprocess, ref IntPtr output_info);
 
+        /// <summary>
+        /// 按张量索引获取输出信息句柄。
+        /// Gets an output info handle by tensor index.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_get_output_info_by_index",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_get_output_info_by_index(IntPtr preprocess, ulong tensor_index, ref IntPtr output_info);
@@ -303,6 +427,10 @@ namespace OpenVinoSharp.native
             UIntPtr tensor_index,
             ref IntPtr output_info);
 
+        /// <summary>
+        /// 按张量名称获取输出信息句柄。旧兼容入口按 ANSI 字符串编组。
+        /// Gets an output info handle by tensor name. This legacy-compatible entry marshals the string as ANSI.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_prepostprocessor_get_output_info_by_name",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_prepostprocessor_get_output_info_by_name(IntPtr preprocess, string tensor_name, ref IntPtr output_info);
@@ -314,18 +442,34 @@ namespace OpenVinoSharp.native
             IntPtr tensor_name,
             ref IntPtr output_info);
 
+        /// <summary>
+        /// 释放输出信息句柄。
+        /// Releases an output info handle.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_output_info_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_preprocess_output_info_free(IntPtr output_info);
 
+        /// <summary>
+        /// 从输出信息中获取输出张量信息句柄，返回的句柄由调用方释放。
+        /// Gets an output tensor info handle from output info. The returned handle is owned by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_output_info_get_tensor_info",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_output_info_get_tensor_info(IntPtr output_info, ref IntPtr tensor_info);
 
+        /// <summary>
+        /// 释放输出张量信息句柄。
+        /// Releases an output tensor info handle.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_output_tensor_info_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_preprocess_output_tensor_info_free(IntPtr tensor_info);
 
+        /// <summary>
+        /// 设置输出张量元素类型。
+        /// Sets the output tensor element type.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_output_set_element_type",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_output_set_element_type(IntPtr tensor_info, uint element_type);
@@ -334,14 +478,26 @@ namespace OpenVinoSharp.native
 
         #region Model Info
 
+        /// <summary>
+        /// 从输入信息中获取模型信息句柄，返回的句柄由调用方释放。
+        /// Gets an input model info handle from input info. The returned handle is owned by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_info_get_model_info",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_info_get_model_info(IntPtr input_info, ref IntPtr model_info);
 
+        /// <summary>
+        /// 释放输入模型信息句柄。
+        /// Releases an input model info handle.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_model_info_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_preprocess_input_model_info_free(IntPtr model_info);
 
+        /// <summary>
+        /// 设置模型输入布局，layout 句柄由调用方管理。
+        /// Sets the model input layout. The layout handle lifetime is managed by the caller.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_preprocess_input_model_info_set_layout",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_preprocess_input_model_info_set_layout(IntPtr model_info, IntPtr layout);

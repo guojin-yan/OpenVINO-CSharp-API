@@ -73,9 +73,24 @@ namespace OpenVinoSharp.native
     [StructLayout(LayoutKind.Sequential)]
     public struct ov_dimension_t
     {
+        /// <summary>
+        /// 维度下界；静态维度时与 <see cref="max"/> 相同。
+        /// Minimum dimension bound. For static dimensions this equals <see cref="max"/>.
+        /// </summary>
         public long min;
+
+        /// <summary>
+        /// 维度上界；完全动态维度通常为 -1。
+        /// Maximum dimension bound. Fully dynamic dimensions commonly use -1.
+        /// </summary>
         public long max;
 
+        /// <summary>
+        /// 使用指定上下界创建维度结构。
+        /// Creates a dimension structure with the specified bounds.
+        /// </summary>
+        /// <param name="min">维度下界 / Minimum dimension bound.</param>
+        /// <param name="max">维度上界 / Maximum dimension bound.</param>
         public ov_dimension_t(long min, long max)
         {
             this.min = min;

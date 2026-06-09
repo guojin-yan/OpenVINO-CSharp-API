@@ -86,7 +86,16 @@ namespace OpenVinoSharp.native
     [StructLayout(LayoutKind.Sequential)]
     public struct ov_shape_t
     {
+        /// <summary>
+        /// 形状 rank，也就是维度数量。
+        /// Shape rank, namely the number of dimensions.
+        /// </summary>
         public long rank;
+
+        /// <summary>
+        /// 指向 native 维度数组的指针，该内存由 OpenVINO C API 管理。
+        /// Pointer to the native dimension array. The memory is managed by the OpenVINO C API.
+        /// </summary>
         public IntPtr dims;
 
         /// <summary>

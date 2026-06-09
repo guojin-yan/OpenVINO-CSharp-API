@@ -151,31 +151,51 @@ namespace OpenVinoSharp.native
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_output_get_partial_shape(IntPtr output, IntPtr partial_shape);
 
-        // Port shape
+        /// <summary>
+        /// 获取只读端口的静态形状，调用方传入的 shape 结构由 native 函数填充。
+        /// Gets the static shape of a const port. The caller-provided shape structure is filled by native code.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_const_port_get_shape",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_const_port_get_shape(IntPtr port, IntPtr shape);
 
+        /// <summary>
+        /// 获取端口的静态形状，调用方传入的 shape 结构由 native 函数填充。
+        /// Gets the static shape of a port. The caller-provided shape structure is filled by native code.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_port_get_shape",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_port_get_shape(IntPtr port, IntPtr shape);
 
-        // Port partial shape
+        /// <summary>
+        /// 获取端口的部分形状，调用方传入的 partial shape 结构由 native 函数填充。
+        /// Gets the partial shape of a port. The caller-provided partial shape structure is filled by native code.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_port_get_partial_shape",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_port_get_partial_shape(IntPtr port, IntPtr partial_shape);
 
 
-        // Port name
+        /// <summary>
+        /// 获取端口任意名称。返回的 native 字符串指针需要按 OpenVINO C API 约定释放。
+        /// Gets any name of a port. The returned native string pointer must be released according to OpenVINO C API rules.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_port_get_any_name",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static ExceptionStatus ov_port_get_any_name(IntPtr port, ref IntPtr tensor_name);
 
-        // Free ports
+        /// <summary>
+        /// 释放由 OpenVINO C API 返回的输出端口句柄。
+        /// Releases an output port handle returned by the OpenVINO C API.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_output_port_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_output_port_free(IntPtr port);
 
+        /// <summary>
+        /// 释放由 OpenVINO C API 返回的只读输出端口句柄。
+        /// Releases a const output port handle returned by the OpenVINO C API.
+        /// </summary>
         [DllImport("openvino_c", EntryPoint = "ov_output_const_port_free",
             CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public extern static void ov_output_const_port_free(IntPtr port);

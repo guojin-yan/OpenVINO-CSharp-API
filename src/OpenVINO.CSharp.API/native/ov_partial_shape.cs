@@ -168,7 +168,16 @@ namespace OpenVinoSharp.native
     [StructLayout(LayoutKind.Sequential)]
     public struct ov_partial_shape_t
     {
+        /// <summary>
+        /// 部分形状的 rank，可为静态或动态。
+        /// Partial shape rank, which may be static or dynamic.
+        /// </summary>
         public ov_rank_t rank;
+
+        /// <summary>
+        /// 指向 native 维度数组的指针，该内存由 OpenVINO C API 管理。
+        /// Pointer to the native dimension array. The memory is managed by the OpenVINO C API.
+        /// </summary>
         public IntPtr dims;
     }
 }

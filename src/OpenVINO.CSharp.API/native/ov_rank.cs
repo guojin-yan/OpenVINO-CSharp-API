@@ -73,9 +73,24 @@ namespace OpenVinoSharp.native
     [StructLayout(LayoutKind.Sequential)]
     public struct ov_rank_t
     {
+        /// <summary>
+        /// rank 下界；静态 rank 时与 <see cref="max"/> 相同。
+        /// Minimum rank bound. For static ranks this equals <see cref="max"/>.
+        /// </summary>
         public long min;
+
+        /// <summary>
+        /// rank 上界；动态 rank 通常为 -1。
+        /// Maximum rank bound. Dynamic ranks commonly use -1.
+        /// </summary>
         public long max;
 
+        /// <summary>
+        /// 使用指定上下界创建 rank 结构。
+        /// Creates a rank structure with the specified bounds.
+        /// </summary>
+        /// <param name="min">rank 下界 / Minimum rank bound.</param>
+        /// <param name="max">rank 上界 / Maximum rank bound.</param>
         public ov_rank_t(long min, long max)
         {
             this.min = min;
