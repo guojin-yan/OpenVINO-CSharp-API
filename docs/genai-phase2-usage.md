@@ -14,6 +14,7 @@ Covered in this phase:
 - `PerformanceMetrics`
 - `JsonContainer`
 - `ChatHistory`
+- `WhisperGenerationConfig`
 
 Covered after Phase 2:
 
@@ -56,6 +57,34 @@ using var pipe = new LLMPipeline(@"D:\models\qwen2.5-ov", "CPU");
 using DecodedResults results = pipe.Generate("你好，请介绍 OpenVINO。", config);
 
 Console.WriteLine(results.Text);
+```
+
+## Whisper Generation Config / Whisper 生成配置
+
+`WhisperGenerationConfig` wraps `ov_genai_whisper_generation_config`. It is a configuration-only wrapper in this phase;
+Whisper audio pipeline inference will be added separately.
+
+`WhisperGenerationConfig` 封装 `ov_genai_whisper_generation_config`。本阶段只提供配置对象封装，Whisper 音频推理
+pipeline 会在后续阶段单独实现。
+
+```csharp
+using OpenVinoSharp.GenAI;
+
+OpenVinoSharp.GenAI.GenAI.Initialize();
+
+using var whisperConfig = new WhisperGenerationConfig()
+    .SetLanguage("zh")
+    .SetTask("transcribe")
+    .SetReturnTimestamps(true)
+    .SetInitialPrompt("你好 OpenVINO")
+    .SetHotwords("OpenVINO 热词")
+    .SetBeginSuppressTokens(220, 50257)
+    .SetSuppressTokens(1, 2, 3);
+
+using GenerationConfig textConfig = whisperConfig.GetGenerationConfig();
+textConfig.SetMaxNewTokens(128);
+
+Console.WriteLine(whisperConfig.Language);
 ```
 
 ## Streaming / 流式输出

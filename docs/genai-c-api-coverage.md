@@ -15,13 +15,13 @@ E:\OpenVINOSharp\openvino\openvino.genai-master\src\c\include\openvino\genai\c
 | `perf_metrics.h` | `PerformanceMetrics` | Returned metrics are owned and released through the matching GenAI free function. |
 | `json_container.h` | `JsonContainer` | Two-call UTF-8 JSON string bridge. |
 | `chat_history.h` | `ChatHistory` | Message list, tools, extra context, JSON helper methods. |
+| `whisper_generation_config.h` | `WhisperGenerationConfig` | Phase 4 wrapper. Optional strings map NOT_FOUND to `null`, size_t maps to `UIntPtr`, C bool uses 1-byte marshalling, and token arrays are pinned during native calls. |
 
 ## Audited In Phase 3 / Phase 3 已审计
 
 | Header | Status | Decision |
 | --- | --- | --- |
 | `vlm_pipeline.h` | Not wrapped yet | ABI uses `ov_tensor_t**` image arrays plus text/history and streaming. It should be implemented with image tensor tests in a media-focused phase. |
-| `whisper_generation_config.h` | Not wrapped yet | Low-risk config API, good candidate for the next API expansion. Needs careful optional string handling for NOT_FOUND and bool marshalling. |
 | `whisper_pipeline.h` | Not wrapped yet | ABI uses raw `float*` speech buffers and result chunks. It should be implemented together with audio buffer tests and model-gated integration tests. |
 | Tokenizer C headers | No standalone header found | Tokenizer runtime is packaged through `openvino_tokenizers.dll`; no separate C wrapper header exists under `src\c`. |
 
@@ -38,7 +38,6 @@ E:\OpenVINOSharp\openvino\openvino.genai-master\src\c\include\openvino\genai\c
 
 Suggested order:
 
-1. Add `WhisperGenerationConfig`, because it can be validated without media/model files.
-2. Add `WhisperDecodedResults` and chunk wrappers.
-3. Add `WhisperPipeline.Generate(float[])` with audio buffer tests.
-4. Add `VLMDecodedResults` and `VLMPipeline` with `Tensor[]` image input tests.
+1. Add `WhisperDecodedResults` and chunk wrappers.
+2. Add `WhisperPipeline.Generate(float[])` with audio buffer tests.
+3. Add `VLMDecodedResults` and `VLMPipeline` with `Tensor[]` image input tests.

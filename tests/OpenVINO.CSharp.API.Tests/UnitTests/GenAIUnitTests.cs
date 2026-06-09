@@ -101,7 +101,113 @@ namespace OpenVinoSharp.Tests.UnitTests
         }
 
         /// <summary>
-        /// JsonContainer 应能处理 UTF-8 JSON 字符串 / JsonContainer should handle UTF-8 JSON strings.
+        /// WhisperGenerationConfig 应支持基础 token、size_t 和 bool getter/setter / WhisperGenerationConfig should support basic token, size_t, and bool getters/setters.
+        /// </summary>
+        [OpenVINOGenAIFact]
+        public void WhisperGenerationConfig_DefaultsAndSetters_Work()
+        {
+            using (var config = new WhisperGenerationConfig())
+            {
+                Assert.Equal(50258L, config.GetDecoderStartTokenId());
+                Assert.Equal(50257L, config.GetPadTokenId());
+                Assert.Equal(50358L, config.GetTranslateTokenId());
+                Assert.Equal(50359L, config.GetTranscribeTokenId());
+                Assert.Equal(50361L, config.GetPrevSotTokenId());
+                Assert.Equal(50363L, config.GetNoTimestampsTokenId());
+
+                config
+                    .SetDecoderStartTokenId(60001)
+                    .SetPadTokenId(60002)
+                    .SetTranslateTokenId(60003)
+                    .SetTranscribeTokenId(60004)
+                    .SetPrevSotTokenId(60005)
+                    .SetNoTimestampsTokenId(60006)
+                    .SetMaxInitialTimestampIndex(24)
+                    .SetIsMultilingual(true)
+                    .SetReturnTimestamps(true);
+
+                Assert.Equal(60001L, config.DecoderStartTokenId);
+                Assert.Equal(60002L, config.PadTokenId);
+                Assert.Equal(60003L, config.TranslateTokenId);
+                Assert.Equal(60004L, config.TranscribeTokenId);
+                Assert.Equal(60005L, config.PrevSotTokenId);
+                Assert.Equal(60006L, config.NoTimestampsTokenId);
+                Assert.Equal(24UL, config.MaxInitialTimestampIndex);
+                Assert.True(config.IsMultilingual);
+                Assert.True(config.ReturnTimestamps);
+
+                using (GenerationConfig generationConfig = config.GetGenerationConfig())
+                {
+                    generationConfig.SetMaxNewTokens(8);
+                    Assert.Equal(8UL, generationConfig.GetMaxNewTokens());
+                }
+            }
+        }
+
+        /// <summary>
+        /// WhisperGenerationConfig 应正确处理 UTF-8 可选字符串 / WhisperGenerationConfig should handle optional UTF-8 strings.
+        /// </summary>
+        [OpenVINOGenAIFact]
+        public void WhisperGenerationConfig_OptionalStrings_WorkWithUtf8AndUnset()
+        {
+            using (var config = new WhisperGenerationConfig())
+            {
+                Assert.Null(config.GetLanguage());
+                Assert.Null(config.GetTask());
+                Assert.Null(config.GetInitialPrompt());
+                Assert.Null(config.GetHotwords());
+
+                config
+                    .SetLanguage("zh")
+                    .SetTask("transcribe")
+                    .SetInitialPrompt("你好 OpenVINO")
+                    .SetHotwords("OpenVINO 热词");
+
+                Assert.Equal("zh", config.Language);
+                Assert.Equal("transcribe", config.Task);
+                Assert.Equal("你好 OpenVINO", config.InitialPrompt);
+                Assert.Equal("OpenVINO 热词", config.Hotwords);
+
+                config
+                    .SetLanguage(null)
+                    .SetTask(null)
+                    .SetInitialPrompt(null)
+                    .SetHotwords(null);
+
+                Assert.Null(config.Language);
+                Assert.Null(config.Task);
+                Assert.Null(config.InitialPrompt);
+                Assert.Null(config.Hotwords);
+            }
+        }
+
+        /// <summary>
+        /// WhisperGenerationConfig 应正确读写 token 数组 / WhisperGenerationConfig should read and write token arrays.
+        /// </summary>
+        [OpenVINOGenAIFact]
+        public void WhisperGenerationConfig_TokenArrays_RoundTrip()
+        {
+            using (var config = new WhisperGenerationConfig())
+            {
+                config
+                    .SetBeginSuppressTokens(1, 2, 3)
+                    .SetSuppressTokens(4, 5, 6, 7);
+
+                Assert.Equal(3UL, config.GetBeginSuppressTokensCount());
+                Assert.Equal(new long[] { 1, 2, 3 }, config.GetBeginSuppressTokens());
+                Assert.Equal(4UL, config.GetSuppressTokensCount());
+                Assert.Equal(new long[] { 4, 5, 6, 7 }, config.GetSuppressTokens());
+
+                config.BeginSuppressTokens = new long[0];
+                config.SuppressTokens = new long[0];
+
+                Assert.Empty(config.BeginSuppressTokens);
+                Assert.Empty(config.SuppressTokens);
+            }
+        }
+
+        /// <summary>
+        /// JsonContainer should handle UTF-8 JSON strings. / JsonContainer 应能处理 UTF-8 JSON 字符串。
         /// </summary>
         [OpenVINOGenAIFact]
         public void JsonContainer_RoundTripsJsonString()

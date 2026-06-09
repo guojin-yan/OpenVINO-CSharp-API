@@ -139,6 +139,121 @@ namespace OpenVinoSharp.native
 
         #endregion
 
+        #region Whisper generation config / Whisper 生成配置
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_create", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_create(ref IntPtr config);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_create_from_json", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_create_from_json(IntPtr json_path, ref IntPtr config);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_free", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void ov_genai_whisper_generation_config_free(IntPtr config);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_generation_config", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_generation_config(IntPtr config, ref IntPtr generation_config);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_decoder_start_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_decoder_start_token_id(IntPtr config, long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_decoder_start_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_decoder_start_token_id(IntPtr config, ref long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_pad_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_pad_token_id(IntPtr config, long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_pad_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_pad_token_id(IntPtr config, ref long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_translate_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_translate_token_id(IntPtr config, long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_translate_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_translate_token_id(IntPtr config, ref long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_transcribe_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_transcribe_token_id(IntPtr config, long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_transcribe_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_transcribe_token_id(IntPtr config, ref long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_prev_sot_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_prev_sot_token_id(IntPtr config, long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_prev_sot_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_prev_sot_token_id(IntPtr config, ref long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_no_timestamps_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_no_timestamps_token_id(IntPtr config, long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_no_timestamps_token_id", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_no_timestamps_token_id(IntPtr config, ref long token_id);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_max_initial_timestamp_index", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_max_initial_timestamp_index(IntPtr config, UIntPtr index);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_max_initial_timestamp_index", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_max_initial_timestamp_index(IntPtr config, ref UIntPtr index);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_is_multilingual", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_is_multilingual(IntPtr config, [MarshalAs(UnmanagedType.I1)] bool is_multilingual);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_is_multilingual", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_is_multilingual(IntPtr config, ref byte is_multilingual);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_language", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_language(IntPtr config, IntPtr language);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_language", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_language(IntPtr config, IntPtr language, ref UIntPtr language_size);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_task", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_task(IntPtr config, IntPtr task);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_task", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_task(IntPtr config, IntPtr task, ref UIntPtr task_size);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_return_timestamps", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_return_timestamps(IntPtr config, [MarshalAs(UnmanagedType.I1)] bool return_timestamps);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_return_timestamps", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_return_timestamps(IntPtr config, ref byte return_timestamps);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_initial_prompt", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_initial_prompt(IntPtr config, IntPtr initial_prompt);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_initial_prompt", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_initial_prompt(IntPtr config, IntPtr initial_prompt, ref UIntPtr prompt_size);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_hotwords", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_hotwords(IntPtr config, IntPtr hotwords);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_hotwords", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_hotwords(IntPtr config, IntPtr hotwords, ref UIntPtr hotwords_size);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_begin_suppress_tokens", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_begin_suppress_tokens(IntPtr config, IntPtr tokens, UIntPtr tokens_count);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_begin_suppress_tokens_count", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_begin_suppress_tokens_count(IntPtr config, ref UIntPtr tokens_count);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_begin_suppress_tokens", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_begin_suppress_tokens(IntPtr config, IntPtr tokens, UIntPtr tokens_count);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_set_suppress_tokens", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_set_suppress_tokens(IntPtr config, IntPtr tokens, UIntPtr tokens_count);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_suppress_tokens_count", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_suppress_tokens_count(IntPtr config, ref UIntPtr tokens_count);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_get_suppress_tokens", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_get_suppress_tokens(IntPtr config, IntPtr tokens, UIntPtr tokens_count);
+
+        [DllImport(GenAILibrary, EntryPoint = "ov_genai_whisper_generation_config_validate", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern ExceptionStatus ov_genai_whisper_generation_config_validate(IntPtr config);
+
+        #endregion
+
         #region Decoded results and LLM pipeline / 解码结果与 LLM Pipeline
 
         [DllImport(GenAILibrary, EntryPoint = "ov_genai_decoded_results_create", CallingConvention = CallingConvention.Cdecl)]
@@ -318,4 +433,3 @@ namespace OpenVinoSharp.native
         #endregion
     }
 }
-
