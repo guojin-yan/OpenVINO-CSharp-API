@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Download, verify, extract, and pack an OpenVINO GenAI runtime NuGet package.
 
-This script mirrors build_runtime_nupkg.py, but targets the OpenVINO GenAI
-archive repository:
-
-  https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/
+This intentionally mirrors build_runtime_nupkg.py. The only functional
+difference is the NuGet ID prefix and the official OpenVINO GenAI archive
+source.
 
 Inputs come from environment variables in GitHub Actions:
   PKG_ID          NuGet ID suffix, e.g. "win" -> JYPPX.OpenVINO.GenAI.runtime.win
@@ -38,26 +37,33 @@ from pathlib import Path
 
 NUGET_ID_PREFIX = "JYPPX.OpenVINO.GenAI.runtime."
 DEFAULT_RID = "win-x64"
+
+# Match the platform labels used by the core OpenVINO runtime packaging flow.
+# 平台显示名称与基础 OpenVINO runtime 打包流程保持一致，便于用户理解和检索。
 PLATFORM_LABELS = {
     "win": "Windows (x86_64)",
+    "ubuntu.24-x86_64": "Ubuntu 24.04 (x86_64)",
+    "ubuntu.22-x86_64": "Ubuntu 22.04 (x86_64)",
+    "ubuntu.22-arm64": "Ubuntu 22.04 (arm64)",
+    "rhel8-x86_64": "RHEL 8 (x86_64)",
+    "macos-x86_64": "macOS (x86_64)",
+    "macos-arm64": "macOS (arm64)",
 }
 
-REQUIRED_RUNTIME_FILES = {
-    "openvino.dll",
-    "openvino_c.dll",
-    "openvino_genai.dll",
-    "openvino_genai_c.dll",
-    "openvino_tokenizers.dll",
-    "openvino_intel_cpu_plugin.dll",
-    "tbb12.dll",
+EXCLUDE_DIR_PARTS = {
+    "python",
+    "samples",
+    "tools",
+    "docs",
+    "share",
+    "include",
+    "cmake",
+    "pyopenvino",
+    "tests",
+    "test",
 }
 
-
-def env(name: str, default: str | None = None) -> str:
-    val = os.environ.get(name, default)
-    if val is None:
-        sys.exit(f"missing required env var: {name}")
-    return val
+NATIVE_PATTERNS = re.compile(r"\.(dll|so|dylib)(\.\d+)*$", re.IGNORECASE)
 
 
 def truthy(value: str | None) -> bool:
@@ -113,6 +119,53 @@ def extract(archive: Path, kind: str, dest: Path) -> Path:
     return dest
 
 
+def is_native_file(path: Path) -> bool:
+    name = path.name.lower()
+    if ".cpython-" in name or ".python-" in name:
+        return False
+    if name.endswith(".pdb"):
+        return False
+    if "_debug" in name:
+        return False
+    return bool(NATIVE_PATTERNS.search(path.name))
+
+
+def collect_native_files(root: Path) -> list[Path]:
+    """Collect native runtime libraries using the same shape as the core package.
+
+    按基础 OpenVINO runtime 包的方式递归收集原生动态库。只打包运行时库，
+    不把 headers、docs、samples、Python 扩展或 debug 库放进 NuGet。
+    """
+    files: list[Path] = []
+    for path in root.rglob("*"):
+        if not path.is_file() and not path.is_symlink():
+            continue
+        rel_parts = {part.lower() for part in path.relative_to(root).parts}
+        if rel_parts & EXCLUDE_DIR_PARTS:
+            continue
+        if is_native_file(path):
+            files.append(path)
+    return files
+
+
+def stage_files(files: list[Path], target_dir: Path) -> list[str]:
+    target_dir.mkdir(parents=True, exist_ok=True)
+    staged: dict[str, Path] = {}
+    for src in files:
+        name = src.name
+        if name in staged:
+            print(f"  WARN: duplicate basename {name} (keeping first)", file=sys.stderr)
+            continue
+        dst = target_dir / name
+        shutil.copyfile(str(src), str(dst), follow_symlinks=True)
+        try:
+            shutil.copystat(str(src), str(dst), follow_symlinks=True)
+        except OSError:
+            pass
+        staged[name] = dst
+    return sorted(staged.keys(), key=str.lower)
+
+
 def render(template_path: Path, mapping: dict[str, str]) -> str:
     text = template_path.read_text(encoding="utf-8")
     for key, value in mapping.items():
@@ -123,109 +176,6 @@ def render(template_path: Path, mapping: dict[str, str]) -> str:
 def require_file(path: Path, label: str) -> None:
     if not path.exists() or not path.is_file():
         sys.exit(f"missing {label}: {path}")
-
-
-def require_directory(path: Path, label: str) -> None:
-    if not path.exists() or not path.is_dir():
-        sys.exit(f"missing {label}: {path}")
-
-
-def find_runtime_root(extracted_root: Path) -> Path:
-    """Find the extracted OpenVINO GenAI runtime root.
-
-    查找解压后的 OpenVINO GenAI runtime 根目录。官方归档通常只有一个顶层目录，
-    但这里仍递归检查，便于兼容未来包结构。
-    """
-    candidates = [extracted_root]
-    candidates.extend([p for p in extracted_root.rglob("*") if p.is_dir() and "openvino_genai" in p.name.lower()])
-    for candidate in candidates:
-        release_dir = candidate / "runtime" / "bin" / "intel64" / "Release"
-        if (release_dir / "openvino_genai_c.dll").exists():
-            return candidate
-    sys.exit(f"could not locate OpenVINO GenAI runtime root under {extracted_root}")
-
-
-def collect_runtime_files(runtime_root: Path) -> list[Path]:
-    """Collect native runtime files for runtimes/<rid>/native.
-
-    收集进入 runtimes/<rid>/native 的运行时文件。仅包含 Release 运行时、
-    GenAI/tokenizers/frontends/plugins、cache.json 和 TBB release DLL。
-    Debug DLLs are deliberately excluded to avoid debug/release ABI mixing.
-    """
-    release_dir = runtime_root / "runtime" / "bin" / "intel64" / "Release"
-    tbb_dir = runtime_root / "runtime" / "3rdparty" / "tbb" / "bin"
-    require_directory(release_dir, "OpenVINO Release binary directory")
-    require_directory(tbb_dir, "TBB binary directory")
-
-    files: list[Path] = []
-    files.extend(sorted(release_dir.glob("*.dll")))
-
-    cache_json = release_dir / "cache.json"
-    if cache_json.exists():
-        files.append(cache_json)
-
-    for path in sorted(tbb_dir.glob("*.dll")):
-        if "_debug" in path.name.lower():
-            continue
-        files.append(path)
-
-    by_name: dict[str, Path] = {}
-    for path in files:
-        if path.name in by_name:
-            sys.exit(f"duplicate runtime file basename '{path.name}': {by_name[path.name]} and {path}")
-        by_name[path.name] = path
-
-    missing = sorted(REQUIRED_RUNTIME_FILES - set(by_name))
-    if missing:
-        sys.exit("missing required GenAI runtime files: " + ", ".join(missing))
-
-    return sorted(by_name.values(), key=lambda p: p.name.lower())
-
-
-def collect_license_files(runtime_root: Path) -> list[Path]:
-    """Collect upstream license and notice files.
-
-    收集上游许可和 third-party notice 文件，保留在 nupkg 的 licenses/ 目录。
-    """
-    roots = [
-        runtime_root / "docs" / "licensing",
-        runtime_root / "docs" / "openvino_tokenizers",
-    ]
-    files: list[Path] = []
-    for root in roots:
-        if root.exists():
-            files.extend([p for p in root.rglob("*") if p.is_file()])
-
-    tbb_license = runtime_root / "runtime" / "3rdparty" / "tbb" / "TBB-LICENSE"
-    if tbb_license.exists():
-        files.append(tbb_license)
-
-    version_file = runtime_root / "runtime" / "version.txt"
-    if version_file.exists():
-        files.append(version_file)
-
-    return sorted(set(files), key=lambda p: str(p).lower())
-
-
-def copy_runtime_files(files: list[Path], target_dir: Path) -> list[str]:
-    target_dir.mkdir(parents=True, exist_ok=True)
-    names: list[str] = []
-    for src in files:
-        dst = target_dir / src.name
-        shutil.copy2(src, dst)
-        names.append(src.name)
-    return sorted(names, key=str.lower)
-
-
-def copy_license_files(files: list[Path], runtime_root: Path, target_dir: Path) -> list[str]:
-    copied: list[str] = []
-    for src in files:
-        rel = src.relative_to(runtime_root)
-        dst = target_dir / rel
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dst)
-        copied.append(str(rel).replace("\\", "/"))
-    return sorted(copied, key=str.lower)
 
 
 def render_content_items(filenames: list[str], rid: str, link_subdir: str) -> str:
@@ -239,22 +189,6 @@ def render_content_items(filenames: list[str], rid: str, link_subdir: str) -> st
             f'{indent}</Content>',
         ])
     return "\n".join(lines)
-
-
-def write_manifest(stage: Path, archive_url: str, runtime_names: list[str], license_names: list[str]) -> None:
-    lines = [
-        "OpenVINO GenAI runtime package manifest",
-        "",
-        f"Source archive: {archive_url}",
-        "",
-        "Runtime files:",
-        *[f"  runtimes/*/native/{name}" for name in runtime_names],
-        "",
-        "License and notice files:",
-        *[f"  licenses/{name}" for name in license_names],
-        "",
-    ]
-    (stage / "manifest.txt").write_text("\n".join(lines), encoding="utf-8")
 
 
 def normalized_package_file(out_dir: Path, nuget_id: str, version: str) -> Path:
@@ -317,22 +251,20 @@ def build_package(
             )
         print(f"  SHA-256 OK: {actual}", flush=True)
 
-        extracted = extract(archive_path, kind, workdir / "extracted")
-        runtime_root = find_runtime_root(extracted)
+        runtime_root = extract(archive_path, kind, workdir / "extracted")
         print(f"  runtime root: {runtime_root}", flush=True)
 
-        runtime_files = collect_runtime_files(runtime_root)
-        license_files = collect_license_files(runtime_root)
-        if not license_files:
-            sys.exit(f"no license or notice files found under {runtime_root}")
+        native_files = collect_native_files(runtime_root)
+        if not native_files:
+            sys.exit(f"no native files found under {runtime_root}")
+        print(f"  found {len(native_files)} native files", flush=True)
 
         stage = stage_dir.resolve() if stage_dir else workdir / "stage"
         if stage.exists():
             shutil.rmtree(stage)
 
         runtime_dir = stage / "runtimes" / rid / "native"
-        runtime_names = copy_runtime_files(runtime_files, runtime_dir)
-        license_names = copy_license_files(license_files, runtime_root, stage / "licenses")
+        filenames = stage_files(native_files, runtime_dir)
 
         mapping = {
             "NUGET_ID": nuget_id,
@@ -342,15 +274,13 @@ def build_package(
             "ARCHIVE_URL": archive_url,
             "SHA256_URL": sha256_url,
             "RID": rid,
-            "LINK_SUBDIR": "win-x64",
+            "LINK_SUBDIR": pkg_id,
         }
 
         props_text = render(
             templates / "genai.package.props.tmpl",
-            {**mapping, "CONTENT_ITEMS": render_content_items(runtime_names, rid, "win-x64")},
+            {**mapping, "CONTENT_ITEMS": render_content_items(filenames, rid, pkg_id)},
         )
-        # Keep the same build asset layout as the core runtime package.
-        # 与基础 runtime 包保持一致，使用 build/net 放置 props。
         props_dir = stage / "build" / "net"
         props_dir.mkdir(parents=True, exist_ok=True)
         (props_dir / f"{nuget_id}.props").write_text(props_text, encoding="utf-8")
@@ -360,10 +290,8 @@ def build_package(
         shutil.copyfile(license_path, stage / "LICENSE.txt")
         shutil.copyfile(logo_path, stage / "logo.jpg")
         shutil.copyfile(templates / "pack.csproj.tmpl", stage / "pack.csproj")
-        write_manifest(stage, archive_url, runtime_names, license_names)
 
-        print(f"  staged runtime files: {len(runtime_names)}", flush=True)
-        print(f"  staged license files: {len(license_names)}", flush=True)
+        print(f"  staged native files: {len(filenames)}", flush=True)
         print(f"  stage: {stage}", flush=True)
 
         if dry_run:

@@ -10,19 +10,17 @@
     <readme>README.md</readme>
     <license type="file">LICENSE.txt</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Native OpenVINO GenAI {VERSION} runtime libraries for {PLATFORM_LABEL}. Includes OpenVINO Core, OpenVINO GenAI C API, tokenizers, frontends, device plugins, and TBB runtime dependencies. Companion native package to JYPPX.OpenVINO.CSharp.API.</description>
+    <description>Native OpenVINO GenAI {VERSION} runtime libraries for {PLATFORM_LABEL}. Bundled from the upstream Intel release at storage.openvinotoolkit.org. Companion native package to JYPPX.OpenVINO.CSharp.API.</description>
     <summary>OpenVINO GenAI {VERSION} native runtime for {PLATFORM_LABEL}.</summary>
     <releaseNotes>Packaged from official OpenVINO GenAI archive: {ARCHIVE_URL}</releaseNotes>
     <tags>OpenVINO OpenVINO.GenAI GenAI native runtime {PLATFORM_LABEL} DeepLearning AI Inference LLM</tags>
     <repository type="git" url="https://github.com/guojin-yan/OpenVINO-CSharp-API" />
   </metadata>
   <files>
-    <file src="runtimes/**" target="" />
-    <file src="build/**" target="" />
-    <file src="licenses/**" target="" />
+    <file src="runtimes\{RID}\native\*.*" target="runtimes\{RID}\native" />
+    <file src="build\net\*.*" target="build\net" />
     <file src="LICENSE.txt" target="" />
     <file src="logo.jpg" target="" />
     <file src="README.md" target="" />
-    <file src="manifest.txt" target="" />
   </files>
 </package>
