@@ -12,10 +12,12 @@ namespace GenAI.Common;
 public sealed class SampleOptions
 {
     private readonly Dictionary<string, string> _values;
+    private readonly Dictionary<string, List<string>> _allValues;
 
-    private SampleOptions(Dictionary<string, string> values)
+    private SampleOptions(Dictionary<string, string> values, Dictionary<string, List<string>> allValues)
     {
         _values = values;
+        _allValues = allValues;
     }
 
     /// <summary>
@@ -25,6 +27,7 @@ public sealed class SampleOptions
     public static SampleOptions Parse(string[] args)
     {
         Dictionary<string, string> values = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, List<string>> allValues = new(StringComparer.OrdinalIgnoreCase);
 
         for (int i = 0; i < args.Length; i++)
         {
@@ -50,9 +53,15 @@ public sealed class SampleOptions
             }
 
             values[key] = value;
+            if (!allValues.TryGetValue(key, out List<string>? keyValues))
+            {
+                keyValues = new List<string>();
+                allValues[key] = keyValues;
+            }
+            keyValues.Add(value);
         }
 
-        return new SampleOptions(values);
+        return new SampleOptions(values, allValues);
     }
 
     /// <summary>
@@ -132,6 +141,17 @@ public sealed class SampleOptions
     /// 检查是否传入参数。
     /// </summary>
     public bool Has(string key) => _values.ContainsKey(NormalizeKey(key));
+
+    /// <summary>
+    /// Gets every value supplied for a repeatable option.
+    /// 获取可重复参数的全部值。
+    /// </summary>
+    public IReadOnlyList<string> GetAll(string key)
+    {
+        return _allValues.TryGetValue(NormalizeKey(key), out List<string>? values)
+            ? values
+            : Array.Empty<string>();
+    }
 
     private static string NormalizeKey(string key)
     {

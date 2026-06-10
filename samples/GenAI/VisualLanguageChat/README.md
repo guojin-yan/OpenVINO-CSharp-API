@@ -13,9 +13,15 @@ For full local validation, use the real `OpenVINO/InternVL2-1B-int4-ov` model:
 完整本地验证使用真实的 `OpenVINO/InternVL2-1B-int4-ov` 模型：
 
 ```powershell
-hf download OpenVINO/InternVL2-1B-int4-ov `
-  --local-dir E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov
+$modelRoot = "E:\LlmModel"
+$vlm = Join-Path $modelRoot "InternVL2-1B-int4-ov"
+
+conda run -n PaddleOCR hf download OpenVINO/InternVL2-1B-int4-ov `
+  --local-dir $vlm
 ```
+
+`PaddleOCR` is the conda environment that contains `hf` on this machine.
+Replace it with your own Hugging Face CLI environment name if needed.
 
 If direct Hugging Face access is slow, use the same model from
 `https://hf-mirror.com/OpenVINO/InternVL2-1B-int4-ov`.
@@ -33,7 +39,7 @@ conda activate ov-genai-samples
 optimum-cli export openvino `
   --model Qwen/Qwen3-VL-2B-Instruct `
   --trust-remote-code `
-  E:\OpenVINOSharp\models\genai-samples\Qwen3-VL-2B-Instruct-ov
+  (Join-Path $modelRoot "Qwen3-VL-2B-Instruct-ov")
 ```
 
 ## Prepare Image / 准备图片
@@ -54,9 +60,11 @@ python -c "from PIL import Image; Image.open(r'input.jpg').convert('RGB').save(r
 ## Run Single Turn / 运行单轮问答
 
 ```powershell
+$image = Join-Path "E:\LlmModel" "assets\color_blocks_30.ppm"
+
 dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- `
-  --model E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov `
-  --image E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm `
+  --model $vlm `
+  --image $image `
   --device CPU `
   --prompt "What colors are visible in this image? Answer with color names only." `
   --max-new-tokens 48
@@ -66,8 +74,8 @@ dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj 
 
 ```powershell
 dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- `
-  --model E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov `
-  --image E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm `
+  --model $vlm `
+  --image $image `
   --device CPU `
   --interactive true `
   --max-new-tokens 48

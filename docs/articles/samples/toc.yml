@@ -4,6 +4,12 @@
   href: index.md
 - name: GenAI Samples (.NET 8.0)
   href: genai-samples.md
+- name: GenAI Text Generation
+  href: genai-text-generation-tutorial.md
+- name: GenAI Whisper Speech Recognition
+  href: genai-whisper-tutorial.md
+- name: GenAI Visual Language Chat
+  href: genai-vlm-tutorial.md
 - name: YOLO Detection (.NET 10.0)
   href: yolo-net10.md
 - name: YOLO Detection (.NET 4.8)

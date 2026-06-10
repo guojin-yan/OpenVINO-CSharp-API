@@ -10,15 +10,21 @@ and performance metrics.
 ## Prepare Model and Audio / 准备模型和音频
 
 ```powershell
-conda activate ov-genai-samples
+$modelRoot = "E:\LlmModel"
+$whisper = Join-Path $modelRoot "whisper-tiny-int8-ov"
+$audio = Join-Path $modelRoot "assets\how_are_you_doing_today.wav"
+New-Item -ItemType Directory -Force (Split-Path $audio) | Out-Null
 
-hf download OpenVINO/whisper-tiny-int8-ov `
-  --local-dir E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov
+conda run -n PaddleOCR hf download OpenVINO/whisper-tiny-int8-ov `
+  --local-dir $whisper
 
 curl.exe -L `
-  -o E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav `
+  -o $audio `
   https://storage.openvinotoolkit.org/models_contrib/speech/2021.2/librispeech_s5/how_are_you_doing_today.wav
 ```
+
+`PaddleOCR` is the conda environment that contains `hf` on this machine.
+Replace it with your own Hugging Face CLI environment name if needed.
 
 For your own audio, convert it to mono 16 kHz WAV:
 
@@ -33,8 +39,8 @@ ffmpeg -i input.mp3 -ac 1 -ar 16000 speech.wav
 
 ```powershell
 dotnet run --project samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj --framework net8.0 -- `
-  --model E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov `
-  --audio E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav `
+  --model $whisper `
+  --audio $audio `
   --device CPU `
   --language en `
   --task transcribe `

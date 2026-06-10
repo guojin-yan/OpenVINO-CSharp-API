@@ -1,46 +1,37 @@
-# GenAI Samples (.NET 8.0) / GenAI 示例
+# OpenVINO GenAI C# 示例总览
 
-The old single `GenAIQuickStart-net8.0` sample has been replaced by a structured
-`samples/GenAI` tree. The new samples mirror the currently wrapped OpenVINO
-GenAI C API scenarios and are designed for independent reproduction, testing,
-and article writing.
+OpenVINO C# API 3.3 将 OpenVINO GenAI 的核心 pipeline 引入 .NET：文本生成、流式输出、多轮聊天、Whisper 语音识别和视觉语言问答都可以直接从 C# 调用。`samples/GenAI` 不再是一个简单的 quick start，而是一组按场景拆分的可运行示例，方便开发者从单个能力开始验证，再逐步组合到自己的应用中。
 
-旧的单一 `GenAIQuickStart-net8.0` 示例已替换为结构化的 `samples/GenAI` 目录。新的
-示例按当前已经封装的 OpenVINO GenAI C API 场景拆分，便于独立复现、测试和撰写技术
-文章。
+这组示例的目标很明确：用 NuGet 管理托管 API 和 native runtime，用 C# 编写应用逻辑，用 OpenVINO GenAI 执行本地生成式 AI 推理。传统 OpenVINO 推理项目不需要加载 GenAI runtime；只有调用 `OpenVinoSharp.GenAI` 时才会进入这条路径。
 
-The full step-by-step runbook is in:
+## 示例覆盖范围
 
-完整运行手册见：
+| 目录 | 场景 | 价值 |
+|---|---|---|
+| `TextGeneration/Greedy` | 贪心解码 | 最稳定的 LLM smoke test |
+| `TextGeneration/BeamSearch` | Beam Search | 确定性候选搜索 |
+| `TextGeneration/Multinomial` | temperature、top-p、top-k | 更开放的采样式生成 |
+| `TextGeneration/Streaming` | token 流式输出 | 适合聊天窗口和实时控制台 |
+| `TextGeneration/Chat` | 中文/英文对话 | 支持交互输入和 `--turn` scripted turns |
+| `TextGeneration/Benchmark` | 预热、重复迭代、性能指标 | 快速观察延迟和吞吐 |
+| `WhisperSpeechRecognition` | Whisper ASR | 本地语音识别和时间戳 |
+| `VisualLanguageChat` | VLM 图文问答 | 图片 Tensor + 文本 prompt 的多模态推理 |
 
-```text
-samples/GenAI/RUNBOOK.md
-```
+图像生成、RAG、语音生成和视频生成没有放进当前示例集，因为对应的托管 pipeline 尚未形成完整稳定封装。当前文档只覆盖已经能在 C# 中明确复现的能力。
 
-## Covered Samples / 覆盖示例
+## 推荐阅读路径
 
-| Folder | Scenario |
-|---|---|
-| `samples/GenAI/TextGeneration/Greedy` | Greedy LLM text generation |
-| `samples/GenAI/TextGeneration/BeamSearch` | Beam search decoding |
-| `samples/GenAI/TextGeneration/Multinomial` | Sampling with temperature, top-p, top-k, seed |
-| `samples/GenAI/TextGeneration/Streaming` | Streaming callback |
-| `samples/GenAI/TextGeneration/Chat` | Multi-turn chat |
-| `samples/GenAI/TextGeneration/Benchmark` | Warmup, repeated generation, performance metrics |
-| `samples/GenAI/WhisperSpeechRecognition` | Whisper speech recognition and timestamp chunks |
-| `samples/GenAI/VisualLanguageChat` | VLM image question answering and interactive chat flow |
+第一次接触这组示例时，建议按下面顺序阅读：
 
-Image generation, RAG, speech generation, and video generation are not added yet
-because their managed pipeline wrappers are not complete.
+1. [用 C# 跑通 OpenVINO GenAI 文本生成](genai-text-generation-tutorial.md)
+2. [用 C# 调用 OpenVINO GenAI Whisper](genai-whisper-tutorial.md)
+3. [用 C# 构建 OpenVINO GenAI 视觉语言问答](genai-vlm-tutorial.md)
 
-图像生成、RAG、语音生成和视频生成暂未添加，因为对应的托管 pipeline 封装还没有完成。
+这三篇文章分别对应文本、语音和视觉语言三条主线。每篇都包含模型准备、运行命令、核心代码、参数说明和排错路径，可以直接作为技术宣发文章或开发者教程发布。
 
-## Reproducible Setup / 可复现环境
+## 环境准备
 
-The samples are C# projects. Conda is only used for model download/export and
-media conversion:
-
-示例本身是 C# 项目。conda 只用于模型下载、模型导出和媒体转换：
+示例本身是 C# 项目。Python/Conda 只用于下载模型、导出模型或转换媒体文件，不参与 C# 程序运行。
 
 ```powershell
 conda create -n ov-genai-samples python=3.11 -y
@@ -51,107 +42,63 @@ python -m pip install --upgrade-strategy eager "optimum-intel[openvino]" openvin
 conda install -c conda-forge ffmpeg -y
 ```
 
-When running from the repository source tree, set:
+Windows 源码运行时，示例项目默认恢复 `JYPPX.OpenVINO.GenAI.runtime.win`。只有在验证本地编译的 native runtime 时，才需要设置 `OPENVINO_GENAI_RUNTIME_DIR`。
 
-从源码目录运行时设置：
+## 已验证资源
 
-The sample projects restore `JYPPX.OpenVINO.GenAI.runtime.win` 2026.2.0 by
-default on Windows. Set `OPENVINO_GENAI_RUNTIME_DIR` only when validating a
-local native runtime build instead of the published NuGet package.
-
-示例项目在 Windows 上默认安装 `JYPPX.OpenVINO.GenAI.runtime.win` 2026.2.0。只有在
-验证本地 native runtime 构建、而不是已发布 NuGet 包时，才需要设置
-`OPENVINO_GENAI_RUNTIME_DIR`。
-
-## Validated Local Assets / 已验证本地资源
-
-| Asset | Suggested path |
+| 资源 | 推荐路径 |
 |---|---|
-| LLM model | `E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov` |
-| Whisper model | `E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov` |
-| VLM model | `E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov` |
-| Whisper audio | `E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav` |
-| VLM image | `E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm` |
+| 模型根目录 | `E:\LlmModel` |
+| LLM 模型 | `E:\LlmModel\TinyLlama-1.1B-Chat-v1.0-int4-ov` |
+| Whisper 模型 | `E:\LlmModel\whisper-tiny-int8-ov` |
+| VLM 模型 | `E:\LlmModel\InternVL2-1B-int4-ov` |
+| Whisper 音频 | `E:\LlmModel\assets\how_are_you_doing_today.wav` |
+| VLM 图片 | `E:\LlmModel\assets\color_blocks_30.ppm` |
 
-The VLM validation uses the real `OpenVINO/InternVL2-1B-int4-ov` model and
-requires non-empty generated text. Tiny random VLM models can still be useful
-for ABI smoke tests, but they should not be used as article-quality validation.
+`color_blocks_30.ppm` 适合验证图片 Tensor 通路。正式展示 VLM 能力时，建议换成语义明确的真实图片。
 
-VLM 验证使用真实的 `OpenVINO/InternVL2-1B-int4-ov` 模型，并要求生成非空文本。
-tiny random VLM 模型仍可用于 ABI 烟测，但不能作为文章级验证依据。
-
-## Batch Validation / 批量验证
-
-Run all samples with:
-
-使用下面命令运行全部示例：
+## 一次运行全部示例
 
 ```powershell
+$modelRoot = "E:\LlmModel"
+$llm = Join-Path $modelRoot "TinyLlama-1.1B-Chat-v1.0-int4-ov"
+$whisper = Join-Path $modelRoot "whisper-tiny-int8-ov"
+$vlm = Join-Path $modelRoot "InternVL2-1B-int4-ov"
+$audio = Join-Path $modelRoot "assets\how_are_you_doing_today.wav"
+$image = Join-Path $modelRoot "assets\color_blocks_30.ppm"
+
 powershell -ExecutionPolicy Bypass -File samples\GenAI\RunAllSamples.ps1 `
-  -LlmModelDir "E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov" `
-  -WhisperModelDir "E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov" `
-  -VlmModelDir "E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov" `
-  -AudioPath "E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav" `
-  -ImagePath "E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm" `
+  -LlmModelDir $llm `
+  -WhisperModelDir $whisper `
+  -VlmModelDir $vlm `
+  -AudioPath $audio `
+  -ImagePath $image `
   -Device CPU
 ```
 
-The script publishes each sample first, runs the generated exe, and writes logs
-to `out\genai-samples-validation`:
+脚本会先 publish 每个 sample，再运行生成的 exe，并将日志写入 `out\genai-samples-validation`。这种方式可以规避部分 Windows 机器上应用控制策略拦截 `dotnet run` 直接加载新 DLL 的问题。
 
-脚本会先 publish 每个 sample，再运行生成的 exe，并把日志写入
-`out\genai-samples-validation`：
-
-```text
-01-greedy.log
-02-beam-search.log
-03-multinomial.log
-04-streaming.log
-05-benchmark.log
-06-chat.log
-07-whisper.log
-08-vlm-single.log
-09-vlm-interactive.log
-```
-
-On Windows machines with application control policies, direct `dotnet run` can
-be blocked for newly built DLLs. The batch script avoids that local issue by
-publishing each sample and running the generated exe.
-
-在启用应用控制策略的 Windows 机器上，`dotnet run` 直接加载新构建 DLL 可能被拦截。
-批量脚本通过先 publish 再运行 exe 来规避该本地问题。
-
-## Individual Commands / 单个示例命令
+## 单个示例命令
 
 ```powershell
-dotnet run --project samples/GenAI/TextGeneration/Greedy/Greedy.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
-dotnet run --project samples/GenAI/TextGeneration/BeamSearch/BeamSearch.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --beams 4
-dotnet run --project samples/GenAI/TextGeneration/Multinomial/Multinomial.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --temperature 0.8 --top-p 0.95 --top-k 50
-dotnet run --project samples/GenAI/TextGeneration/Streaming/Streaming.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
-dotnet run --project samples/GenAI/TextGeneration/Chat/Chat.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
-dotnet run --project samples/GenAI/TextGeneration/Benchmark/Benchmark.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --iterations 3 --warmup 1
-dotnet run --project samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_WHISPER_MODEL_DIR" --audio "$env:OPENVINO_GENAI_AUDIO_PATH" --timestamps true
-dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_VLM_MODEL_DIR" --image "$env:OPENVINO_GENAI_IMAGE_PATH" --interactive true
+dotnet run --project samples/GenAI/TextGeneration/Greedy/Greedy.csproj --framework net8.0 -- --model $llm --device CPU
+dotnet run --project samples/GenAI/TextGeneration/BeamSearch/BeamSearch.csproj --framework net8.0 -- --model $llm --device CPU --beams 4
+dotnet run --project samples/GenAI/TextGeneration/Multinomial/Multinomial.csproj --framework net8.0 -- --model $llm --device CPU --temperature 0.8 --top-p 0.95 --top-k 50
+dotnet run --project samples/GenAI/TextGeneration/Streaming/Streaming.csproj --framework net8.0 -- --model $llm --device CPU
+dotnet run --project samples/GenAI/TextGeneration/Chat/Chat.csproj --framework net8.0 -- --model $llm --device CPU --turn "请用中文列出三个 OpenVINO 关键词。"
+dotnet run --project samples/GenAI/TextGeneration/Benchmark/Benchmark.csproj --framework net8.0 -- --model $llm --device CPU --iterations 3 --warmup 1
+dotnet run --project samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj --framework net8.0 -- --model $whisper --audio $audio --device CPU --timestamps true
+dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- --model $vlm --image $image --device CPU --prompt "请用中文描述这张图片。"
 ```
 
-## Important Notes / 重要说明
+## 关键实现说明
 
-- `WhisperSpeechRecognition` accepts `--language en`; it normalizes the value to
-  `<|en|>` before calling the native C API.
-- `VisualLanguageChat` uses `StartChat()` plus streamed `Generate()`. The
-  validated OpenVINO GenAI 2026.2 Windows C runtime does not export
-  `ov_genai_vlm_pipeline_generate_with_history`.
-- `VisualLanguageChat` treats empty output as a failure by default. Pass
-  `--allow-empty true` only for explicit ABI smoke tests.
-- The GenAI runtime remains optional. Core OpenVINO API scenarios do not load
-  `openvino_genai_c`.
+`TextGeneration/Chat` 支持 `--turn`，可重复传入多轮问题，用于稳定复现中文或英文对话。C# 字符串到 native GenAI 的链路使用 UTF-8，中文 prompt 可以正常传递；最终回答质量取决于模型本身，正式中文对话建议使用中文或多语模型。
 
-- `WhisperSpeechRecognition` 支持 `--language en`；示例会在调用原生 C API 前转换为
-  `<|en|>`。
-- `VisualLanguageChat` 使用 `StartChat()` 加流式 `Generate()`。已验证的
-  OpenVINO GenAI 2026.2 Windows C runtime 未导出
-  `ov_genai_vlm_pipeline_generate_with_history`。
-- `VisualLanguageChat` 默认把空输出视为失败。只有明确做 ABI 烟测时才传入
-  `--allow-empty true`。
-- GenAI runtime 仍保持可选加载。只使用基础 OpenVINO API 时不会加载
-  `openvino_genai_c`。
+`WhisperSpeechRecognition` 支持 `--language en` 这类普通语言代码，示例会在调用 native C API 前转换为 `<|en|>`。`VisualLanguageChat` 使用 `StartChat()` 加 `Generate()` 的方式实现交互流程，因为已验证的 OpenVINO GenAI 2026.2 Windows C runtime 未导出 `ov_genai_vlm_pipeline_generate_with_history`。VLM 示例已验证中文 prompt，可以返回中文图片描述。
+
+VLM 示例默认把空输出视为失败。只有明确做 ABI smoke test 时，才使用 `--allow-empty true`。
+
+## 小结
+
+`samples/GenAI` 展示的是 OpenVINO C# API 3.3 的新增应用边界：不仅能做传统推理，也能把生成式 AI pipeline 纳入 .NET 工程。开发者可以从文本生成开始验证本地 LLM，再扩展到语音识别和视觉语言问答，最终把这些能力组合到桌面、服务端或边缘应用中。

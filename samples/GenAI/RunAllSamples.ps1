@@ -81,6 +81,15 @@ $env:OPENVINO_GENAI_IMAGE_PATH = (Resolve-Path -LiteralPath $ImagePath).Path
 $env:OPENVINO_GENAI_DEVICE = $Device
 Remove-Item Env:OPENVINO_GENAI_C_LIBRARY -ErrorAction SilentlyContinue
 
+function ConvertFrom-Utf8Base64 {
+    param([Parameter(Mandatory = $true)][string]$Value)
+    return [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Value))
+}
+
+$promptGreedyZh = ConvertFrom-Utf8Base64 "6K+355So5Lit5paH55So5Lik5Y+l6K+d5LuL57uNIE9wZW5WSU5P44CC"
+$promptChatZh = ConvertFrom-Utf8Base64 "6K+355So5Lit5paH5YiX5Ye65LiJ5LiqIE9wZW5WSU5PIOWFs+mUruivjeOAgg=="
+$promptVlmZh = ConvertFrom-Utf8Base64 "6K+355So5Lit5paH5o+P6L+w6L+Z5byg5Zu+54mH44CC"
+
 function Invoke-Sample {
     param(
         [Parameter(Mandatory = $true)]
@@ -123,15 +132,45 @@ function Invoke-Sample {
 
     "$command $($Arguments -join ' ')" | Tee-Object -FilePath $logPath -Append
 
-    if ($InputLines.Count -gt 0) {
-        $InputLines | & $command @invokeArguments 2>&1 | Tee-Object -FilePath $logPath -Append
+    $previousErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        if ($InputLines.Count -gt 0) {
+            $InputLines | & $command @invokeArguments 2>&1 | Tee-Object -FilePath $logPath -Append
+        }
+        else {
+            & $command @invokeArguments 2>&1 | Tee-Object -FilePath $logPath -Append
+        }
     }
-    else {
-        & $command @invokeArguments 2>&1 | Tee-Object -FilePath $logPath -Append
+    finally {
+        $ErrorActionPreference = $previousErrorActionPreference
     }
 
     if ($LASTEXITCODE -ne 0) {
-        throw "$Name failed with exit code $LASTEXITCODE. See $logPath"
+        $logText = Get-Content -LiteralPath $logPath -Raw
+        if ($logText -match "0x800711C7") {
+            "Published executable was blocked by application control policy; retrying with dotnet run." | Tee-Object -FilePath $logPath -Append
+            $runArguments = @("run", "--project", $Project, "--framework", "net8.0", "-c", $Configuration, "--") + $Arguments
+            "dotnet $($runArguments -join ' ')" | Tee-Object -FilePath $logPath -Append
+
+            $previousErrorActionPreference = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+            try {
+                if ($InputLines.Count -gt 0) {
+                    $InputLines | & dotnet @runArguments 2>&1 | Tee-Object -FilePath $logPath -Append
+                }
+                else {
+                    & dotnet @runArguments 2>&1 | Tee-Object -FilePath $logPath -Append
+                }
+            }
+            finally {
+                $ErrorActionPreference = $previousErrorActionPreference
+            }
+        }
+
+        if ($LASTEXITCODE -ne 0) {
+            throw "$Name failed with exit code $LASTEXITCODE. See $logPath"
+        }
     }
 }
 
@@ -182,10 +221,25 @@ try {
     Invoke-Sample "06-chat" "samples/GenAI/TextGeneration/Chat/Chat.csproj" @(
         "--model", $env:OPENVINO_GENAI_LLM_MODEL_DIR,
         "--device", $Device,
-        "--max-new-tokens", "8"
-    ) -InputLines @("What is OpenVINO?", "/exit")
+        "--max-new-tokens", "64",
+        "--turn", "What is OpenVINO?"
+    )
 
-    Invoke-Sample "07-whisper" "samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj" @(
+    Invoke-Sample "07-greedy-zh" "samples/GenAI/TextGeneration/Greedy/Greedy.csproj" @(
+        "--model", $env:OPENVINO_GENAI_LLM_MODEL_DIR,
+        "--prompt", $promptGreedyZh,
+        "--device", $Device,
+        "--max-new-tokens", "96"
+    )
+
+    Invoke-Sample "08-chat-zh" "samples/GenAI/TextGeneration/Chat/Chat.csproj" @(
+        "--model", $env:OPENVINO_GENAI_LLM_MODEL_DIR,
+        "--device", $Device,
+        "--max-new-tokens", "96",
+        "--turn", $promptChatZh
+    )
+
+    Invoke-Sample "09-whisper" "samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj" @(
         "--model", $env:OPENVINO_GENAI_WHISPER_MODEL_DIR,
         "--audio", $env:OPENVINO_GENAI_AUDIO_PATH,
         "--device", $Device,
@@ -194,7 +248,7 @@ try {
         "--timestamps", "true"
     )
 
-    Invoke-Sample "08-vlm-single" "samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj" @(
+    Invoke-Sample "10-vlm-single" "samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj" @(
         "--model", $env:OPENVINO_GENAI_VLM_MODEL_DIR,
         "--image", $env:OPENVINO_GENAI_IMAGE_PATH,
         "--device", $Device,
@@ -202,13 +256,22 @@ try {
         "--max-new-tokens", "48"
     )
 
-    Invoke-Sample "09-vlm-interactive" "samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj" @(
+    Invoke-Sample "11-vlm-interactive" "samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj" @(
         "--model", $env:OPENVINO_GENAI_VLM_MODEL_DIR,
         "--image", $env:OPENVINO_GENAI_IMAGE_PATH,
         "--device", $Device,
         "--interactive", "true",
         "--max-new-tokens", "48"
     ) -InputLines @("What colors are visible in this image? Answer with color names only.", "/exit")
+
+    Invoke-Sample "12-vlm-zh" "samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj" @(
+        "--model", $env:OPENVINO_GENAI_VLM_MODEL_DIR,
+        "--image", $env:OPENVINO_GENAI_IMAGE_PATH,
+        "--device", $Device,
+        "--prompt", $promptVlmZh,
+        "--max-new-tokens", "96",
+        "--allow-empty", "false"
+    )
 }
 finally {
     Pop-Location

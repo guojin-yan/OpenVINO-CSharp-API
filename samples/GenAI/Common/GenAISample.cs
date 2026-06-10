@@ -2,6 +2,7 @@
 // Licensed under the Apache-2.0 License.
 
 using OpenVinoSharp.GenAI;
+using System.Text;
 
 namespace GenAI.Common;
 
@@ -91,12 +92,31 @@ public static class GenAISample
     {
         try
         {
+            ConfigureConsoleUtf8();
             return action();
         }
         catch (Exception ex)
         {
             Console.Error.WriteLine(ex.GetType().Name + ": " + ex.Message);
             return 1;
+        }
+    }
+
+    /// <summary>
+    /// Uses UTF-8 console input/output so Chinese prompts survive redirected and interactive runs.
+    /// 使用 UTF-8 控制台输入输出，保证中文 prompt 在重定向和交互运行中不乱码。
+    /// </summary>
+    public static void ConfigureConsoleUtf8()
+    {
+        try
+        {
+            Console.OutputEncoding = new UTF8Encoding(false);
+            if (!Console.IsInputRedirected)
+                Console.InputEncoding = new UTF8Encoding(false);
+        }
+        catch
+        {
+            // Some hosted consoles do not allow changing encodings. The samples can still run.
         }
     }
 

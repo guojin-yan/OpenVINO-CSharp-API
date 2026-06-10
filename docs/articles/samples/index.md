@@ -1,65 +1,55 @@
-# 案例应用 / Samples
+# 案例应用
 
-本文档包含 OpenVINO C# API 的完整案例应用，展示如何在不同 .NET 框架版本中使用 API 进行深度学习模型推理。
+本节汇总 OpenVINO C# API 的案例应用，覆盖两类主线：传统视觉推理和 OpenVINO GenAI。YOLO 示例展示跨 .NET Framework、.NET Core 和现代 .NET 的推理工程写法；GenAI 示例展示文本生成、语音识别和视觉语言问答如何进入 C# 应用。
 
-## 案例列表 / Sample List
+## 案例列表
 
 | 案例 | 框架 | 特性 | 说明 |
-|------|------|------|------|
-| [GenAI Samples (.NET 8.0)](genai-samples.md) | .NET 8.0 | LLM, streaming, chat, benchmark, Whisper, VLM | OpenVINO GenAI runtime 可选加载和官方样例复刻 |
-| [YOLO Detection (.NET 10.0)](yolo-net10.md) | .NET 10.0 | Span<T>, IAsyncEnumerable, Parallel.ForEachAsync | 最新 .NET 版本的高性能实现 |
-| [YOLO Detection (.NET 4.8)](yolo-net48.md) | .NET Framework 4.8 | Span<T>, async/await | 完整功能的 .NET Framework 实现 |
+|---|---|---|---|
+| [OpenVINO GenAI C# 示例总览](genai-samples.md) | .NET 8.0 | LLM、Streaming、Chat、Benchmark、Whisper、VLM | GenAI 能力入口和批量复现 |
+| [GenAI 文本生成](genai-text-generation-tutorial.md) | .NET 8.0 | TinyLlama、Greedy、Beam Search、Sampling、Streaming | 本地 LLM 文本生成技术文章 |
+| [GenAI Whisper 语音识别](genai-whisper-tutorial.md) | .NET 8.0 | Whisper、WAV、timestamps | 本地 ASR 和时间戳输出 |
+| [GenAI 视觉语言问答](genai-vlm-tutorial.md) | .NET 8.0 | InternVL2、image tensor、VLM chat | 图片理解和交互式问答 |
+| [YOLO Detection (.NET 10.0)](yolo-net10.md) | .NET 10.0 | Span<T>、IAsyncEnumerable、Parallel.ForEachAsync | 最新 .NET 版本的高性能实现 |
+| [YOLO Detection (.NET 4.8)](yolo-net48.md) | .NET Framework 4.8 | Span<T>、async/await | 完整功能的 .NET Framework 实现 |
 | [YOLO Detection (.NET 4.6)](yolo-net46.md) | .NET Framework 4.6 | 传统异步模式 | 兼容旧版 .NET Framework 的实现 |
-| [YOLO Detection (.NET Core 3.1)](yolo-netcoreapp31.md) | .NET Core 3.1 | Span<T>, Memory<T>, IAsyncEnumerable | 跨平台的 .NET Core 实现 |
+| [YOLO Detection (.NET Core 3.1)](yolo-netcoreapp31.md) | .NET Core 3.1 | Span<T>、Memory<T>、IAsyncEnumerable | 跨平台 .NET Core 实现 |
 
-## 案例概述 / Overview
+## GenAI 示例亮点
 
-所有案例均使用 YOLO 目标检测模型，展示以下功能：
+OpenVINO C# API 3.3 的 GenAI 示例使用 `OpenVinoSharp.GenAI` 命名空间，覆盖 `LLMPipeline`、`WhisperPipeline` 和 `VLMPipeline`。这些示例强调可部署性：C# 项目通过 NuGet 恢复托管 API 和 native runtime，模型通过本地目录传入，命令行参数明确，适合从文章直接复制到本地验证。
 
-- **模型加载** - 加载 OpenVINO IR 格式模型 (.xml/.bin)
-- **图片预处理** - 使用 OpenCvSharp 进行图像预处理
-- **同步推理** - 基础同步推理模式
-- **异步推理** - 异步推理与回调机制
-- **批量处理** - 批量图片推理
-- **性能分析** - 详细的性能计时分析
+GenAI runtime 是可选依赖。只使用 `Core`、`Model`、`Tensor`、`CompiledModel`、`InferRequest` 等传统推理 API 时，不会加载 `openvino_genai_c`。
 
-## 框架特性对比 / Framework Feature Comparison
+## YOLO 示例亮点
 
-```
-┌─────────────────────┬─────────┬─────────┬─────────┬─────────────┐
-│ 特性 / Feature      │ net4.6  │ net4.8  │ netcore │ net10.0     │
-├─────────────────────┼─────────┼─────────┼─────────┼─────────────┤
-│ Span<T>             │   ✗     │   ✓     │   ✓     │   ✓         │
-│ Memory<T>           │   ✗     │   ✓     │   ✓     │   ✓         │
-│ async/await         │   ✓     │   ✓     │   ✓     │   ✓         │
-│ IAsyncEnumerable    │   ✗     │   ✗     │   ✓     │   ✓         │
-│ Parallel.ForEachAsync│  ✗     │   ✗     │   ✗     │   ✓         │
-│ NativeLibrary       │   ✗     │   ✗     │   ✓     │   ✓         │
-└─────────────────────┴─────────┴─────────┴─────────┴─────────────┘
-```
+YOLO 示例展示 OpenVINO C# API 在不同 .NET 版本中的使用方式：
 
-## 运行案例 / Running Samples
+- 加载 OpenVINO IR 格式模型。
+- 使用 OpenCvSharp 进行图片预处理。
+- 执行同步推理、异步推理和批量推理。
+- 输出检测结果和性能计时。
+- 对比 .NET Framework、.NET Core 和现代 .NET 的语言特性差异。
 
-### 先决条件 / Prerequisites
+## 框架特性对比
 
-- 安装 [.NET SDK](https://dotnet.microsoft.com/download) (根据案例选择对应版本)
-- 下载 YOLO 模型文件 (`yolo26n.xml` 和 `yolo26n.bin`)
-- 准备测试图片
-
-### 运行步骤 / Steps
-
-```bash
-# 进入案例目录
-cd samples/Yolo26Det-net10.0
-
-# 运行案例
-dotnet run
-
-# 或指定模型和图片路径
-dotnet run -- --model ../../model/yolo26n.xml --image ../../images/bus.jpg
+```text
+Feature                net4.6   net4.8   netcoreapp3.1   net10.0
+Span<T>                no       yes      yes             yes
+Memory<T>              no       yes      yes             yes
+async/await            yes      yes      yes             yes
+IAsyncEnumerable       no       no       yes             yes
+Parallel.ForEachAsync  no       no       no              yes
+NativeLibrary          no       no       yes             yes
 ```
 
-## 了解更多 / Learn More
+## 推荐阅读路径
+
+想了解 3.3 新能力，先读 GenAI 总览，再分别阅读文本生成、Whisper 和 VLM 三篇文章。想了解传统推理和跨框架兼容，按 .NET 10.0、.NET 4.8、.NET Core 3.1、.NET 4.6 的顺序阅读 YOLO 示例。
+
+## 了解更多
 
 - [API 参考文档](../../api/OpenVinoSharp.yml)
+- [安装指南](../installation/index.md)
+- [问题排查](../troubleshooting/index.md)
 - [GitHub 仓库](https://github.com/guojin-yan/OpenVINO-CSharp-API)

@@ -8,6 +8,10 @@
   href: samples/
   homepage: samples/index.md
 
+- name: 升级指南 / Upgrade
+  href: upgrade/
+  homepage: upgrade/openvino-csharp-3.3.md
+
 - name: 问题排查 / Troubleshooting
   href: troubleshooting/
   homepage: troubleshooting/index.md

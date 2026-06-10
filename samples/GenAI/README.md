@@ -44,13 +44,14 @@ Set the prepared model and media paths:
 设置准备好的模型和媒体路径：
 
 ```powershell
-cd E:\OpenVINOSharp\OpenVINO-CSharp-API-csharp3.3
+cd E:\GitSpace\OpenVINO-CSharp-API-csharp3.3\OpenVINO-CSharp-API
 
-$llm = "E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov"
-$whisper = "E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov"
-$vlm = "E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov"
-$audio = "E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav"
-$image = "E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm"
+$modelRoot = "E:\LlmModel"
+$llm = Join-Path $modelRoot "TinyLlama-1.1B-Chat-v1.0-int4-ov"
+$whisper = Join-Path $modelRoot "whisper-tiny-int8-ov"
+$vlm = Join-Path $modelRoot "InternVL2-1B-int4-ov"
+$audio = Join-Path $modelRoot "assets\how_are_you_doing_today.wav"
+$image = Join-Path $modelRoot "assets\color_blocks_30.ppm"
 ```
 
 Run all samples and write one log per scenario. The script publishes each sample
@@ -78,14 +79,11 @@ Logs are written to `out\genai-samples-validation`.
 ## Minimal Commands / 最小运行命令
 
 When running from source on Windows, the sample projects install the published
-GenAI runtime NuGet package automatically. Set only the device and model/media
-paths:
+GenAI runtime NuGet package automatically. Prefer explicit command-line paths
+for sample projects so the commands remain easy to copy between machines:
 
-从源码运行时设置：
-
-```powershell
-$env:OPENVINO_GENAI_DEVICE = "CPU"
-```
+从源码运行时，示例项目会自动还原已发布的 GenAI runtime NuGet 包。案例文档优先使用
+显式命令行路径，便于在不同设备上复制和替换。
 
 To validate a local native runtime instead of the published NuGet package, pass
 `-RuntimeDir` to `RunAllSamples.ps1` or set `OPENVINO_GENAI_RUNTIME_DIR`.
@@ -95,14 +93,14 @@ Then run individual samples:
 然后运行单个示例：
 
 ```powershell
-dotnet run --project samples/GenAI/TextGeneration/Greedy/Greedy.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
-dotnet run --project samples/GenAI/TextGeneration/BeamSearch/BeamSearch.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --beams 4
-dotnet run --project samples/GenAI/TextGeneration/Multinomial/Multinomial.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --temperature 0.8 --top-p 0.95 --top-k 50
-dotnet run --project samples/GenAI/TextGeneration/Streaming/Streaming.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
-dotnet run --project samples/GenAI/TextGeneration/Chat/Chat.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
-dotnet run --project samples/GenAI/TextGeneration/Benchmark/Benchmark.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --iterations 3 --warmup 1
-dotnet run --project samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_WHISPER_MODEL_DIR" --audio "$env:OPENVINO_GENAI_AUDIO_PATH" --timestamps true
-dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_VLM_MODEL_DIR" --image "$env:OPENVINO_GENAI_IMAGE_PATH" --interactive true
+dotnet run --project samples/GenAI/TextGeneration/Greedy/Greedy.csproj --framework net8.0 -- --model $llm --device CPU
+dotnet run --project samples/GenAI/TextGeneration/BeamSearch/BeamSearch.csproj --framework net8.0 -- --model $llm --device CPU --beams 4
+dotnet run --project samples/GenAI/TextGeneration/Multinomial/Multinomial.csproj --framework net8.0 -- --model $llm --device CPU --temperature 0.8 --top-p 0.95 --top-k 50
+dotnet run --project samples/GenAI/TextGeneration/Streaming/Streaming.csproj --framework net8.0 -- --model $llm --device CPU
+dotnet run --project samples/GenAI/TextGeneration/Chat/Chat.csproj --framework net8.0 -- --model $llm --device CPU
+dotnet run --project samples/GenAI/TextGeneration/Benchmark/Benchmark.csproj --framework net8.0 -- --model $llm --device CPU --iterations 3 --warmup 1
+dotnet run --project samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj --framework net8.0 -- --model $whisper --audio $audio --device CPU --timestamps true
+dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- --model $vlm --image $image --device CPU --interactive true
 ```
 
 ## Notes / 说明
