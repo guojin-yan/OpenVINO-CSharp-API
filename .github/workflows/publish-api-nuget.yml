@@ -1,0 +1,172 @@
+name: Publish OpenVINO CSharp API NuGet
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version override. Leave blank to use the version in OpenVINO.CSharp.API.csproj."
+        required: false
+        type: string
+      dry_run:
+        description: "Build package but skip publish and GitHub release."
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: publish-openvino-csharp-api
+  cancel-in-progress: false
+
+env:
+  PROJECT_PATH: src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj
+  ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
+  TARGET_FRAMEWORKS: net46;net461;net462;net47;net471;net472;net48;net481;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net9.0;net10.0
+
+jobs:
+  pack:
+    name: Pack JYPPX.OpenVINO.CSharp.API
+    runs-on: windows-latest
+    outputs:
+      package_version: ${{ steps.version.outputs.package_version }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - id: version
+        name: Resolve package version
+        shell: pwsh
+        run: |
+          $requested = '${{ inputs.version }}'.Trim()
+          if ($requested) {
+            $version = $requested
+          } else {
+            [xml]$project = Get-Content $env:PROJECT_PATH
+            $version = $project.Project.PropertyGroup |
+              ForEach-Object { $_.Version } |
+              Where-Object { $_ } |
+              Select-Object -First 1
+          }
+
+          if (-not $version) {
+            throw "Could not resolve package version."
+          }
+
+          "package_version=$version" >> $env:GITHUB_OUTPUT
+          "PACKAGE_VERSION=$version" >> $env:GITHUB_ENV
+          Write-Host "Package version: $version"
+
+      - name: Validate target frameworks
+        shell: pwsh
+        run: |
+          [xml]$project = Get-Content $env:PROJECT_PATH
+          $actual = $project.Project.PropertyGroup |
+            ForEach-Object { $_.TargetFrameworks } |
+            Where-Object { $_ } |
+            Select-Object -First 1
+
+          if ($actual -ne $env:TARGET_FRAMEWORKS) {
+            Write-Host "Expected: $env:TARGET_FRAMEWORKS"
+            Write-Host "Actual:   $actual"
+            throw "TargetFrameworks in $env:PROJECT_PATH do not match the package workflow."
+          }
+
+          Write-Host "Target frameworks: $actual"
+
+      - name: Restore
+        run: >
+          dotnet restore $env:PROJECT_PATH
+          -p:CheckEolTargetFramework=false
+          -p:SuppressTfmSupportBuildWarnings=true
+
+      - name: Build
+        run: >
+          dotnet build $env:PROJECT_PATH
+          --configuration Release
+          --no-restore
+          -p:Version=$env:PACKAGE_VERSION
+          -p:PackageVersion=$env:PACKAGE_VERSION
+          -p:GeneratePackageOnBuild=false
+          -p:ContinuousIntegrationBuild=true
+          -p:CheckEolTargetFramework=false
+          -p:SuppressTfmSupportBuildWarnings=true
+
+      - name: Pack
+        run: >
+          dotnet pack $env:PROJECT_PATH
+          --configuration Release
+          --no-build
+          --no-restore
+          -p:Version=$env:PACKAGE_VERSION
+          -p:PackageVersion=$env:PACKAGE_VERSION
+          -p:PackageOutputPath=$env:ARTIFACTS_DIR
+          -p:ContinuousIntegrationBuild=true
+          -p:CheckEolTargetFramework=false
+          -p:SuppressTfmSupportBuildWarnings=true
+
+      - name: Upload nupkg artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: openvino-csharp-api-nupkg
+          path: artifacts/*.nupkg
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Publish to NuGet feed
+    needs: pack
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Download nupkg artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: openvino-csharp-api-nupkg
+          path: artifacts
+
+      - name: Publish
+        env:
+          NUPKG_DIR: ${{ github.workspace }}/artifacts
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+        run: bash .github/scripts/publish.sh
+
+  release:
+    name: Attach to GitHub Release
+    needs: [pack, publish]
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: openvino-csharp-api-nupkg
+          path: artifacts
+
+      - name: Create or update release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: openvino-csharp-api-v${{ needs.pack.outputs.package_version }}
+          name: OpenVINO CSharp API ${{ needs.pack.outputs.package_version }}
+          body: |
+            JYPPX.OpenVINO.CSharp.API NuGet package built from
+            `src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj`.
+          files: artifacts/*.nupkg
+          fail_on_unmatched_files: true
+          make_latest: false
