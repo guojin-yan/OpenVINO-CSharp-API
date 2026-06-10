@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <!-- Default GenAI samples to the published Windows runtime package.
+         默认让 GenAI 示例安装已发布的 Windows runtime NuGet 包。 -->
+    <OpenVINOGenAIRuntimeVersion Condition="'$(OpenVINOGenAIRuntimeVersion)' == ''">2026.2.0</OpenVINOGenAIRuntimeVersion>
+    <OpenVINOGenAIRuntimePackageId Condition="'$(OpenVINOGenAIRuntimePackageId)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">JYPPX.OpenVINO.GenAI.runtime.win</OpenVINOGenAIRuntimePackageId>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(OpenVINOGenAIRuntimePackageId)' != ''">
+    <PackageReference Include="$(OpenVINOGenAIRuntimePackageId)" Version="$(OpenVINOGenAIRuntimeVersion)" />
+  </ItemGroup>
+</Project>

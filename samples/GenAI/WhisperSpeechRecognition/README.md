@@ -32,8 +32,6 @@ ffmpeg -i input.mp3 -ac 1 -ar 16000 speech.wav
 ## Run / 运行
 
 ```powershell
-$env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
-
 dotnet run --project samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj --framework net8.0 -- `
   --model E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov `
   --audio E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav `

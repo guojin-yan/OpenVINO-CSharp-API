@@ -54,8 +54,6 @@ python -c "from PIL import Image; Image.open(r'input.jpg').convert('RGB').save(r
 ## Run Single Turn / 运行单轮问答
 
 ```powershell
-$env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
-
 dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- `
   --model E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov `
   --image E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm `

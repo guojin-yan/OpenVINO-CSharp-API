@@ -136,7 +136,7 @@ For local development and diagnostics, you may also set:
 本地开发和诊断时，也可以设置：
 
 ```powershell
-$env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64"
+$env:OPENVINO_GENAI_RUNTIME_DIR = "D:\local-runtimes\openvino_genai"
 ```
 
 or initialize with an explicit library path:
@@ -145,7 +145,7 @@ or initialize with an explicit library path:
 
 ```csharp
 OpenVinoSharp.GenAI.GenAI.Initialize(
-    @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release\openvino_genai_c.dll");
+    @"D:\local-runtimes\openvino_genai\runtime\bin\intel64\Release\openvino_genai_c.dll");
 ```
 
 The fallback paths above are only for development and diagnostics. NuGet runtime packages should be produced from official archives in GitHub Actions.

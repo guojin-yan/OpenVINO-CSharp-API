@@ -17,14 +17,14 @@ Official OpenVINO GenAI sample reference:
 ## 1. Local Validation Matrix / 本地验证矩阵
 
 The following setup was used to verify that the sample code path is runnable
-without publishing NuGet packages.
+with the published GenAI runtime NuGet package.
 
-以下环境已经用于验证示例代码路径可以在本地直接跑通，不依赖正式发布 NuGet 包。
+以下环境已经用于验证示例代码路径可以在本地直接跑通，并默认使用已发布的 GenAI runtime NuGet 包。
 
 | Item / 项目 | Local value / 本地值 |
 |---|---|
 | Repository / 仓库 | `E:\OpenVINOSharp\OpenVINO-CSharp-API-csharp3.3` |
-| Native runtime / 原生运行时 | `E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release` |
+| Native runtime package / 原生运行时包 | `JYPPX.OpenVINO.GenAI.runtime.win` `2026.2.0` |
 | LLM model / 文本模型 | `E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov` |
 | Whisper model / Whisper 模型 | `E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov` |
 | VLM model / VLM 模型 | `E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov` |
@@ -37,22 +37,26 @@ Validation logs are written by `RunAllSamples.ps1` to
 
 批量验证脚本会把日志写入 `out\genai-samples-validation`。
 
-## 2. Prepare Native Runtime / 准备原生运行时
+## 2. Prepare Runtime Package / 准备运行时包
 
-When running from the repository source tree, point the GenAI loader to the
-directory that contains `openvino_genai_c.dll`.
+When running from the repository source tree on Windows, the sample projects
+restore `JYPPX.OpenVINO.GenAI.runtime.win` 2026.2.0 automatically through
+`samples/GenAI/Directory.Build.props`. No local native runtime directory is
+required for the normal reproduction path.
 
-从源码目录运行时，需要把 GenAI loader 指向包含 `openvino_genai_c.dll` 的目录。
+从源码目录在 Windows 上运行时，示例项目会自动安装 GenAI runtime NuGet 包，不需要手动设置本地 native runtime 目录。
 
 ```powershell
 cd E:\OpenVINOSharp\OpenVINO-CSharp-API-csharp3.3
 
-$env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
 $env:OPENVINO_GENAI_DEVICE = "CPU"
 Remove-Item Env:OPENVINO_GENAI_C_LIBRARY -ErrorAction SilentlyContinue
+Remove-Item Env:OPENVINO_GENAI_RUNTIME_DIR -ErrorAction SilentlyContinue
 ```
 
-The runtime directory should contain at least:
+If you need to validate a local native runtime instead of the published NuGet
+package, pass `-RuntimeDir` to `RunAllSamples.ps1` or set
+`OPENVINO_GENAI_RUNTIME_DIR`. That directory should contain at least:
 
 运行时目录至少应包含：
 
@@ -64,12 +68,6 @@ The runtime directory should contain at least:
 - `tbb12.dll`
 - OpenVINO plugins and frontends such as `openvino_intel_cpu_plugin.dll`.
 
-After the GenAI runtime NuGet packages are officially published, application
-developers can install `JYPPX.OpenVINO.GenAI.runtime.win` instead of setting
-`OPENVINO_GENAI_RUNTIME_DIR` manually.
-
-GenAI runtime NuGet 包正式发布后，应用开发者可以安装
-`JYPPX.OpenVINO.GenAI.runtime.win`，不必再手动设置 `OPENVINO_GENAI_RUNTIME_DIR`。
 
 ## 3. Prepare Conda Tools / 准备 Conda 工具环境
 
@@ -249,7 +247,6 @@ Use the validation script after all paths are ready:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File samples\GenAI\RunAllSamples.ps1 `
-  -RuntimeDir "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release" `
   -LlmModelDir "E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov" `
   -WhisperModelDir "E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov" `
   -VlmModelDir "E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov" `

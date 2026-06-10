@@ -30,15 +30,21 @@ dotnet add package JYPPX.OpenVINO.CSharp.API
 dotnet add package JYPPX.OpenVINO.GenAI.runtime.win
 ```
 
-For local development, set `OPENVINO_GENAI_RUNTIME_DIR` or initialize with an explicit library path:
+Use the platform-specific GenAI runtime package for normal applications. Set
+`OPENVINO_GENAI_RUNTIME_DIR` or initialize with an explicit library path only
+when validating a local native runtime build.
+
+正常应用请安装对应平台的 GenAI runtime NuGet 包。只有在验证本地 native runtime 构建时，
+才需要设置 `OPENVINO_GENAI_RUNTIME_DIR` 或传入显式库路径。
 
 ```csharp
 using OpenVinoSharp.GenAI;
 
 GenAI.Initialize();
 
+// Optional local native runtime override for diagnostics only.
 GenAI.Initialize(
-    @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release\openvino_genai_c.dll");
+    @"D:\local-runtimes\openvino_genai\runtime\bin\intel64\Release\openvino_genai_c.dll");
 ```
 
 ## Text Generation / 文本生成

@@ -55,10 +55,13 @@ When running from the repository source tree, set:
 
 从源码目录运行时设置：
 
-```powershell
-$env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
-$env:OPENVINO_GENAI_DEVICE = "CPU"
-```
+The sample projects restore `JYPPX.OpenVINO.GenAI.runtime.win` 2026.2.0 by
+default on Windows. Set `OPENVINO_GENAI_RUNTIME_DIR` only when validating a
+local native runtime build instead of the published NuGet package.
+
+示例项目在 Windows 上默认安装 `JYPPX.OpenVINO.GenAI.runtime.win` 2026.2.0。只有在
+验证本地 native runtime 构建、而不是已发布 NuGet 包时，才需要设置
+`OPENVINO_GENAI_RUNTIME_DIR`。
 
 ## Validated Local Assets / 已验证本地资源
 
@@ -85,7 +88,6 @@ Run all samples with:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File samples\GenAI\RunAllSamples.ps1 `
-  -RuntimeDir "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release" `
   -LlmModelDir "E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov" `
   -WhisperModelDir "E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov" `
   -VlmModelDir "E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov" `

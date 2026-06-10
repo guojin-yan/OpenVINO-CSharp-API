@@ -6,19 +6,21 @@
 Runs all OpenVINO GenAI C# samples and writes one log per sample.
 
 .DESCRIPTION
-Use this script after preparing the native GenAI runtime, LLM model, Whisper
-model, VLM model, WAV audio, and RGB BMP/PPM image. It executes every GenAI
-sample in a deterministic order and writes one log file per scenario.
+Use this script after preparing the LLM model, Whisper model, VLM model, WAV
+audio, and RGB BMP/PPM image. By default, samples restore the published GenAI
+runtime NuGet package. Pass -RuntimeDir only when validating a local native
+runtime build. The script executes every GenAI sample in a deterministic order
+and writes one log file per scenario.
 
-准备好 GenAI 原生运行时、LLM 模型、Whisper 模型、VLM 模型、WAV 音频和 RGB
-BMP/PPM 图片后运行该脚本。脚本会按固定顺序执行全部 GenAI 示例，并为每个场景保存
+准备好 LLM 模型、Whisper 模型、VLM 模型、WAV 音频和 RGB BMP/PPM 图片后运行该脚本。
+默认情况下，示例会还原已发布的 GenAI runtime NuGet 包；只有验证本地 native runtime
+构建时才需要传入 -RuntimeDir。脚本会按固定顺序执行全部 GenAI 示例，并为每个场景保存
 一份日志。
 #>
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)]
-    [string]$RuntimeDir,
+    [string]$RuntimeDir = "",
 
     [Parameter(Mandatory = $true)]
     [string]$LlmModelDir,
@@ -53,13 +55,24 @@ if (Test-Path -LiteralPath $outputRoot) {
 New-Item -ItemType Directory -Force -Path $outputRoot | Out-Null
 $publishRoot = Join-Path $outputRoot "publish"
 
-foreach ($path in @($RuntimeDir, $LlmModelDir, $WhisperModelDir, $VlmModelDir, $AudioPath, $ImagePath)) {
+$requiredPaths = @($LlmModelDir, $WhisperModelDir, $VlmModelDir, $AudioPath, $ImagePath)
+if (-not [string]::IsNullOrWhiteSpace($RuntimeDir)) {
+    $requiredPaths = @($RuntimeDir) + $requiredPaths
+}
+
+foreach ($path in $requiredPaths) {
     if (-not (Test-Path -LiteralPath $path)) {
         throw "Required path does not exist: $path"
     }
 }
 
-$env:OPENVINO_GENAI_RUNTIME_DIR = (Resolve-Path -LiteralPath $RuntimeDir).Path
+if (-not [string]::IsNullOrWhiteSpace($RuntimeDir)) {
+    $env:OPENVINO_GENAI_RUNTIME_DIR = (Resolve-Path -LiteralPath $RuntimeDir).Path
+}
+else {
+    Remove-Item Env:OPENVINO_GENAI_RUNTIME_DIR -ErrorAction SilentlyContinue
+}
+
 $env:OPENVINO_GENAI_LLM_MODEL_DIR = (Resolve-Path -LiteralPath $LlmModelDir).Path
 $env:OPENVINO_GENAI_WHISPER_MODEL_DIR = (Resolve-Path -LiteralPath $WhisperModelDir).Path
 $env:OPENVINO_GENAI_VLM_MODEL_DIR = (Resolve-Path -LiteralPath $VlmModelDir).Path

@@ -39,14 +39,13 @@ C# 示例，因为这些 pipeline 的托管封装还没有完成。
 
 ## Quick Local Validation / 快速本地验证
 
-Set the native runtime and prepared model paths:
+Set the prepared model and media paths:
 
-设置原生运行时和准备好的模型路径：
+设置准备好的模型和媒体路径：
 
 ```powershell
 cd E:\OpenVINOSharp\OpenVINO-CSharp-API-csharp3.3
 
-$runtime = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
 $llm = "E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov"
 $whisper = "E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov"
 $vlm = "E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov"
@@ -56,14 +55,14 @@ $image = "E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm"
 
 Run all samples and write one log per scenario. The script publishes each sample
 to `out\genai-samples-validation\publish` first, then runs the generated exe so
-the validation path matches a real consumer app more closely.
+the validation path matches a real consumer app more closely. The projects
+restore `JYPPX.OpenVINO.GenAI.runtime.win` 2026.2.0 by default on Windows.
 
 运行全部示例，并为每个场景保存一份日志。脚本会先把每个 sample publish 到
 `out\genai-samples-validation\publish`，再运行生成的 exe，使验证路径更接近真实应用。
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File samples\GenAI\RunAllSamples.ps1 `
-  -RuntimeDir $runtime `
   -LlmModelDir $llm `
   -WhisperModelDir $whisper `
   -VlmModelDir $vlm `
@@ -78,14 +77,18 @@ Logs are written to `out\genai-samples-validation`.
 
 ## Minimal Commands / 最小运行命令
 
-When running from source, set:
+When running from source on Windows, the sample projects install the published
+GenAI runtime NuGet package automatically. Set only the device and model/media
+paths:
 
 从源码运行时设置：
 
 ```powershell
-$env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
 $env:OPENVINO_GENAI_DEVICE = "CPU"
 ```
+
+To validate a local native runtime instead of the published NuGet package, pass
+`-RuntimeDir` to `RunAllSamples.ps1` or set `OPENVINO_GENAI_RUNTIME_DIR`.
 
 Then run individual samples:
 
