@@ -8,20 +8,24 @@ loading, single-turn VLM generation, interactive chat mode, and metrics.
 
 ## Prepare Model / 准备模型
 
-For smoke tests, use a tiny random OpenVINO LLaVA model:
+For full local validation, use the real `OpenVINO/InternVL2-1B-int4-ov` model:
 
-烟测可以使用 tiny random OpenVINO LLaVA 模型：
+完整本地验证使用真实的 `OpenVINO/InternVL2-1B-int4-ov` 模型：
 
 ```powershell
-hf download katuni4ka/tiny-random-llava-ov `
-  --local-dir E:\OpenVINOSharp\models\genai-smoke\tiny-random-llava-ov
+hf download OpenVINO/InternVL2-1B-int4-ov `
+  --local-dir E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov
 ```
 
-This tiny model validates ABI and sample flow, but it may return empty or
-meaningless text. For a technical article, use a real VLM model:
+If direct Hugging Face access is slow, use the same model from
+`https://hf-mirror.com/OpenVINO/InternVL2-1B-int4-ov`.
 
-该 tiny 模型用于验证 ABI 和示例流程，但可能返回空文本或无意义文本。写技术文章时建议
-使用真实 VLM 模型：
+如果 Hugging Face 直连较慢，可以从
+`https://hf-mirror.com/OpenVINO/InternVL2-1B-int4-ov` 下载同一模型。
+
+For larger article demos, you can also export Qwen VL:
+
+如需更大的文章演示模型，也可以导出 Qwen VL：
 
 ```powershell
 conda activate ov-genai-samples
@@ -53,22 +57,22 @@ python -c "from PIL import Image; Image.open(r'input.jpg').convert('RGB').save(r
 $env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
 
 dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- `
-  --model E:\OpenVINOSharp\models\genai-smoke\tiny-random-llava-ov `
+  --model E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov `
   --image E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm `
   --device CPU `
-  --prompt "What colors are visible?" `
-  --max-new-tokens 8
+  --prompt "What colors are visible in this image? Answer with color names only." `
+  --max-new-tokens 48
 ```
 
 ## Run Interactive Chat / 运行交互式聊天
 
 ```powershell
 dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- `
-  --model E:\OpenVINOSharp\models\genai-smoke\tiny-random-llava-ov `
+  --model E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov `
   --image E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm `
   --device CPU `
   --interactive true `
-  --max-new-tokens 8
+  --max-new-tokens 48
 ```
 
 Interactive commands:
@@ -84,17 +88,22 @@ Interactive commands:
 
 - The validated OpenVINO GenAI 2026.2 Windows C runtime does not export
   `ov_genai_vlm_pipeline_generate_with_history`.
-- The sample therefore uses `StartChat()` plus `Generate()` instead of the C
-  history entry point.
-- The VLM streamer path returned native error `-17` with the tiny random smoke
-  model during validation, so this sample uses non-streaming generation.
-- Empty text from `tiny-random-llava-ov` is acceptable for smoke validation.
-  Use a real model for screenshots and article-quality answers.
+- The sample therefore uses `StartChat()` plus streamed `Generate()` instead of
+  the C history entry point.
+- Empty output is treated as a failure by default. Pass `--allow-empty true`
+  only when intentionally running tiny random ABI smoke models.
+- Full local validation uses `OpenVINO/InternVL2-1B-int4-ov` and produces
+  non-empty text.
 
 - 已验证的 OpenVINO GenAI 2026.2 Windows C runtime 未导出
   `ov_genai_vlm_pipeline_generate_with_history`。
-- 因此示例使用 `StartChat()` 加 `Generate()`，不依赖 C history 入口点。
-- tiny random 烟测模型验证时，VLM streamer 路径返回 native `-17`，因此该示例使用
-  非流式生成。
-- `tiny-random-llava-ov` 返回空文本是可接受的烟测结果。文章截图和语义效果展示请使用
-  真实模型。
+- 因此示例使用 `StartChat()` 加流式 `Generate()`，不依赖 C history 入口点。
+- 默认会把空输出视为失败。只有明确运行 tiny random ABI 烟测模型时才传入
+  `--allow-empty true`。
+- 完整本地验证使用 `OpenVINO/InternVL2-1B-int4-ov`，并能生成非空文本。
+
+Validated output / 已验证输出：
+
+```text
+This image is in the color spectrum of the visible colors.
+```

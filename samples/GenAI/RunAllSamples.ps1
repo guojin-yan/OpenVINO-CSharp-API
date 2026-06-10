@@ -37,13 +37,21 @@ param(
 
     [string]$Device = "CPU",
 
-    [string]$OutputDir = "out/genai-samples-validation"
+    [string]$OutputDir = "out/genai-samples-validation",
+
+    [string]$Configuration = "Release",
+
+    [string]$RuntimeIdentifier = "win-x64"
 )
 
 $ErrorActionPreference = "Stop"
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 $outputRoot = Join-Path $repoRoot $OutputDir
+if (Test-Path -LiteralPath $outputRoot) {
+    Remove-Item -LiteralPath $outputRoot -Recurse -Force
+}
 New-Item -ItemType Directory -Force -Path $outputRoot | Out-Null
+$publishRoot = Join-Path $outputRoot "publish"
 
 foreach ($path in @($RuntimeDir, $LlmModelDir, $WhisperModelDir, $VlmModelDir, $AudioPath, $ImagePath)) {
     if (-not (Test-Path -LiteralPath $path)) {
@@ -66,20 +74,47 @@ function Invoke-Sample {
         [string]$Name,
 
         [Parameter(Mandatory = $true)]
+        [string]$Project,
+
+        [Parameter(Mandatory = $true)]
         [string[]]$Arguments,
 
         [string[]]$InputLines = @()
     )
 
     $logPath = Join-Path $outputRoot "$Name.log"
-    "===== $Name =====" | Tee-Object -FilePath $logPath
-    "dotnet $($Arguments -join ' ')" | Tee-Object -FilePath $logPath -Append
+    $samplePublishDir = Join-Path $publishRoot $Name
+    New-Item -ItemType Directory -Force -Path $samplePublishDir | Out-Null
 
-    if ($InputLines.Count -gt 0) {
-        $InputLines | & dotnet @Arguments 2>&1 | Tee-Object -FilePath $logPath -Append
+    "===== $Name =====" | Tee-Object -FilePath $logPath
+    "dotnet publish $Project --framework net8.0 -c $Configuration -r $RuntimeIdentifier --self-contained false -o $samplePublishDir" | Tee-Object -FilePath $logPath -Append
+    & dotnet publish $Project --framework net8.0 -c $Configuration -r $RuntimeIdentifier --self-contained false -o $samplePublishDir 2>&1 | Tee-Object -FilePath $logPath -Append
+    if ($LASTEXITCODE -ne 0) {
+        throw "$Name publish failed with exit code $LASTEXITCODE. See $logPath"
+    }
+
+    $exeName = [System.IO.Path]::GetFileNameWithoutExtension($Project)
+    $exePath = Join-Path $samplePublishDir "$exeName.exe"
+    if (-not (Test-Path -LiteralPath $exePath)) {
+        $dllPath = Join-Path $samplePublishDir "$exeName.dll"
+        if (-not (Test-Path -LiteralPath $dllPath)) {
+            throw "$Name publish output was not found in $samplePublishDir"
+        }
+        $command = "dotnet"
+        $invokeArguments = @($dllPath) + $Arguments
     }
     else {
-        & dotnet @Arguments 2>&1 | Tee-Object -FilePath $logPath -Append
+        $command = $exePath
+        $invokeArguments = $Arguments
+    }
+
+    "$command $($Arguments -join ' ')" | Tee-Object -FilePath $logPath -Append
+
+    if ($InputLines.Count -gt 0) {
+        $InputLines | & $command @invokeArguments 2>&1 | Tee-Object -FilePath $logPath -Append
+    }
+    else {
+        & $command @invokeArguments 2>&1 | Tee-Object -FilePath $logPath -Append
     }
 
     if ($LASTEXITCODE -ne 0) {
@@ -89,16 +124,14 @@ function Invoke-Sample {
 
 Push-Location $repoRoot
 try {
-    Invoke-Sample "01-greedy" @(
-        "run", "--project", "samples/GenAI/TextGeneration/Greedy/Greedy.csproj", "--framework", "net8.0", "--",
+    Invoke-Sample "01-greedy" "samples/GenAI/TextGeneration/Greedy/Greedy.csproj" @(
         "--model", $env:OPENVINO_GENAI_LLM_MODEL_DIR,
         "--prompt", "What is OpenVINO?",
         "--device", $Device,
         "--max-new-tokens", "8"
     )
 
-    Invoke-Sample "02-beam-search" @(
-        "run", "--project", "samples/GenAI/TextGeneration/BeamSearch/BeamSearch.csproj", "--framework", "net8.0", "--",
+    Invoke-Sample "02-beam-search" "samples/GenAI/TextGeneration/BeamSearch/BeamSearch.csproj" @(
         "--model", $env:OPENVINO_GENAI_LLM_MODEL_DIR,
         "--prompt", "OpenVINO is",
         "--device", $Device,
@@ -106,8 +139,7 @@ try {
         "--beams", "2"
     )
 
-    Invoke-Sample "03-multinomial" @(
-        "run", "--project", "samples/GenAI/TextGeneration/Multinomial/Multinomial.csproj", "--framework", "net8.0", "--",
+    Invoke-Sample "03-multinomial" "samples/GenAI/TextGeneration/Multinomial/Multinomial.csproj" @(
         "--model", $env:OPENVINO_GENAI_LLM_MODEL_DIR,
         "--prompt", "OpenVINO helps developers",
         "--device", $Device,
@@ -118,16 +150,14 @@ try {
         "--seed", "7"
     )
 
-    Invoke-Sample "04-streaming" @(
-        "run", "--project", "samples/GenAI/TextGeneration/Streaming/Streaming.csproj", "--framework", "net8.0", "--",
+    Invoke-Sample "04-streaming" "samples/GenAI/TextGeneration/Streaming/Streaming.csproj" @(
         "--model", $env:OPENVINO_GENAI_LLM_MODEL_DIR,
         "--prompt", "List one OpenVINO benefit.",
         "--device", $Device,
         "--max-new-tokens", "8"
     )
 
-    Invoke-Sample "05-benchmark" @(
-        "run", "--project", "samples/GenAI/TextGeneration/Benchmark/Benchmark.csproj", "--framework", "net8.0", "--",
+    Invoke-Sample "05-benchmark" "samples/GenAI/TextGeneration/Benchmark/Benchmark.csproj" @(
         "--model", $env:OPENVINO_GENAI_LLM_MODEL_DIR,
         "--prompt", "OpenVINO is",
         "--device", $Device,
@@ -136,15 +166,13 @@ try {
         "--warmup", "0"
     )
 
-    Invoke-Sample "06-chat" @(
-        "run", "--project", "samples/GenAI/TextGeneration/Chat/Chat.csproj", "--framework", "net8.0", "--",
+    Invoke-Sample "06-chat" "samples/GenAI/TextGeneration/Chat/Chat.csproj" @(
         "--model", $env:OPENVINO_GENAI_LLM_MODEL_DIR,
         "--device", $Device,
         "--max-new-tokens", "8"
     ) -InputLines @("What is OpenVINO?", "/exit")
 
-    Invoke-Sample "07-whisper" @(
-        "run", "--project", "samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj", "--framework", "net8.0", "--",
+    Invoke-Sample "07-whisper" "samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj" @(
         "--model", $env:OPENVINO_GENAI_WHISPER_MODEL_DIR,
         "--audio", $env:OPENVINO_GENAI_AUDIO_PATH,
         "--device", $Device,
@@ -153,23 +181,21 @@ try {
         "--timestamps", "true"
     )
 
-    Invoke-Sample "08-vlm-single" @(
-        "run", "--project", "samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj", "--framework", "net8.0", "--",
+    Invoke-Sample "08-vlm-single" "samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj" @(
         "--model", $env:OPENVINO_GENAI_VLM_MODEL_DIR,
         "--image", $env:OPENVINO_GENAI_IMAGE_PATH,
         "--device", $Device,
-        "--prompt", "What colors are visible?",
-        "--max-new-tokens", "8"
+        "--prompt", "What colors are visible in this image? Answer with color names only.",
+        "--max-new-tokens", "48"
     )
 
-    Invoke-Sample "09-vlm-interactive" @(
-        "run", "--project", "samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj", "--framework", "net8.0", "--",
+    Invoke-Sample "09-vlm-interactive" "samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj" @(
         "--model", $env:OPENVINO_GENAI_VLM_MODEL_DIR,
         "--image", $env:OPENVINO_GENAI_IMAGE_PATH,
         "--device", $Device,
         "--interactive", "true",
-        "--max-new-tokens", "8"
-    ) -InputLines @("Describe the image.", "/exit")
+        "--max-new-tokens", "48"
+    ) -InputLines @("What colors are visible in this image? Answer with color names only.", "/exit")
 }
 finally {
     Pop-Location

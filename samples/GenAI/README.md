@@ -49,14 +49,17 @@ cd E:\OpenVINOSharp\OpenVINO-CSharp-API-csharp3.3
 $runtime = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
 $llm = "E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov"
 $whisper = "E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov"
-$vlm = "E:\OpenVINOSharp\models\genai-smoke\tiny-random-llava-ov"
+$vlm = "E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov"
 $audio = "E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav"
 $image = "E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm"
 ```
 
-Run all samples and write one log per scenario:
+Run all samples and write one log per scenario. The script publishes each sample
+to `out\genai-samples-validation\publish` first, then runs the generated exe so
+the validation path matches a real consumer app more closely.
 
-运行全部示例，并为每个场景保存一份日志：
+运行全部示例，并为每个场景保存一份日志。脚本会先把每个 sample publish 到
+`out\genai-samples-validation\publish`，再运行生成的 exe，使验证路径更接近真实应用。
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File samples\GenAI\RunAllSamples.ps1 `
@@ -105,18 +108,18 @@ dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj 
   sample code.
 - `WhisperSpeechRecognition` accepts `--language en`; the sample normalizes it
   to the Whisper token form `<|en|>` before calling the C API.
-- `VisualLanguageChat` uses non-streaming `Generate` because the validated
-  OpenVINO GenAI 2026.2 Windows C runtime does not export
-  `ov_genai_vlm_pipeline_generate_with_history`, and the VLM streamer path
-  returned native error `-17` with the tiny random smoke model.
-- The tiny random VLM model validates the pipeline flow but may return empty
-  text. Use a real VLM model for article-quality output.
+- `VisualLanguageChat` uses `StartChat()` plus streamed `Generate()` because the
+  validated OpenVINO GenAI 2026.2 Windows C runtime does not export
+  `ov_genai_vlm_pipeline_generate_with_history`.
+- Full local validation uses `OpenVINO/InternVL2-1B-int4-ov` and requires
+  non-empty VLM output. Tiny random VLM models are only useful for ABI smoke
+  tests and should be run with `--allow-empty true`.
 
 - 修改示例代码前，建议先通过 `RunAllSamples.ps1` 完整验证。
 - `WhisperSpeechRecognition` 支持 `--language en`；示例会在调用 C API 前自动转成
   Whisper token 写法 `<|en|>`。
-- `VisualLanguageChat` 使用非流式 `Generate`，因为已验证的 OpenVINO GenAI 2026.2
-  Windows C runtime 未导出 `ov_genai_vlm_pipeline_generate_with_history`，并且 tiny
-  random 烟测模型下 VLM streamer 路径返回 native `-17`。
-- tiny random VLM 模型用于验证 pipeline 流程，可能返回空文本。文章级效果展示请使用
-  真实 VLM 模型。
+- `VisualLanguageChat` 使用 `StartChat()` 加流式 `Generate()`，因为已验证的
+  OpenVINO GenAI 2026.2 Windows C runtime 未导出
+  `ov_genai_vlm_pipeline_generate_with_history`。
+- 完整本地验证使用 `OpenVINO/InternVL2-1B-int4-ov`，并要求 VLM 产生非空输出。tiny
+  random VLM 模型只适合 ABI 烟测，运行时应显式传入 `--allow-empty true`。

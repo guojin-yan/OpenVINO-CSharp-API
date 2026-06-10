@@ -4,6 +4,7 @@
 using GenAI.Common;
 using OpenVinoSharp;
 using OpenVinoSharp.GenAI;
+using System.Text;
 
 return GenAISample.Run(() =>
 {
@@ -27,26 +28,40 @@ return GenAISample.Run(() =>
     string prompt = options.Get("prompt", "Describe this image in detail.")!;
     ulong maxNewTokens = options.GetUInt64("max-new-tokens", 120);
     bool interactive = options.GetBool("interactive", false);
+    bool stream = options.GetBool("stream", true);
+    bool allowEmpty = options.GetBool("allow-empty", false);
 
     using Tensor imageTensor = ImageTensorLoader.LoadRgbTensor(image);
     using GenerationConfig config = GenAISample.CreateTextConfig(maxNewTokens);
     using VLMPipeline pipeline = new(model, device);
 
     if (interactive)
-        return RunInteractive(pipeline, config, imageTensor);
+        return RunInteractive(pipeline, config, imageTensor, stream, allowEmpty);
 
-    using VLMDecodedResults results = pipeline.Generate(prompt, new[] { imageTensor }, config);
     Console.WriteLine("Answer / 回答:");
-    Console.WriteLine(results.GetText());
+    using VLMDecodedResults results = Generate(pipeline, prompt, new[] { imageTensor }, config, stream, out string answer);
+    if (!stream)
+        Console.WriteLine(answer);
+    else
+        Console.WriteLine();
 
     using PerformanceMetrics metrics = results.GetPerformanceMetrics();
     GenAISample.PrintMetrics(metrics);
+
+    if (!allowEmpty && string.IsNullOrWhiteSpace(answer))
+    {
+        Console.Error.WriteLine("No VLM text was generated. Use a real VLM model or pass --allow-empty true for ABI smoke tests.");
+        Console.Error.WriteLine("VLM 未生成文本。请使用真实 VLM 模型，或在 ABI 烟测时传入 --allow-empty true。");
+        return 3;
+    }
+
     return 0;
 });
 
-static int RunInteractive(VLMPipeline pipeline, GenerationConfig config, Tensor imageTensor)
+static int RunInteractive(VLMPipeline pipeline, GenerationConfig config, Tensor imageTensor, bool stream, bool allowEmpty)
 {
     bool firstTurn = true;
+    bool hasEmptyAnswer = false;
 
     pipeline.StartChat();
     try
@@ -64,14 +79,14 @@ static int RunInteractive(VLMPipeline pipeline, GenerationConfig config, Tensor 
 
             Tensor[]? turnImages = firstTurn ? new[] { imageTensor } : null;
 
-            // OpenVINO GenAI 2026.2 Windows runtime does not export the C
-            // generate_with_history entry point yet. Use chat mode plus
-            // Generate so the sample stays runnable with the released runtime.
-            // OpenVINO GenAI 2026.2 Windows runtime 尚未导出 C 版
-            // generate_with_history，因此这里使用 chat mode + Generate。
-            using VLMDecodedResults results = pipeline.Generate(prompt, turnImages, config);
-            string answer = results.GetText();
-            Console.WriteLine("answer> " + answer);
+            Console.Write("answer> ");
+            using VLMDecodedResults results = Generate(pipeline, prompt, turnImages, config, stream, out string answer);
+            if (!stream)
+                Console.Write(answer);
+            Console.WriteLine();
+
+            if (string.IsNullOrWhiteSpace(answer))
+                hasEmptyAnswer = true;
             firstTurn = false;
         }
     }
@@ -80,13 +95,42 @@ static int RunInteractive(VLMPipeline pipeline, GenerationConfig config, Tensor 
         pipeline.FinishChat();
     }
 
+    if (!allowEmpty && hasEmptyAnswer)
+    {
+        Console.Error.WriteLine("At least one VLM turn generated empty text. Use a real VLM model or pass --allow-empty true for ABI smoke tests.");
+        Console.Error.WriteLine("至少一轮 VLM 对话未生成文本。请使用真实 VLM 模型，或在 ABI 烟测时传入 --allow-empty true。");
+        return 3;
+    }
+
     return 0;
+}
+
+static VLMDecodedResults Generate(VLMPipeline pipeline, string prompt, Tensor[]? images, GenerationConfig config, bool stream, out string answer)
+{
+    if (!stream)
+    {
+        VLMDecodedResults results = pipeline.Generate(prompt, images, config);
+        answer = results.GetText();
+        return results;
+    }
+
+    StringBuilder builder = new();
+    VLMDecodedResults streamedResults = pipeline.Generate(prompt, images, config, text =>
+    {
+        Console.Write(text);
+        builder.Append(text);
+        return StreamingStatus.Running;
+    });
+
+    string streamedText = builder.ToString();
+    answer = string.IsNullOrEmpty(streamedText) ? streamedResults.GetText() : streamedText;
+    return streamedResults;
 }
 
 static void PrintUsage()
 {
     Console.WriteLine("Usage:");
-    Console.WriteLine("  dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj -- --model <MODEL_DIR> --image <BMP_OR_PPM> [--prompt <TEXT>] [--interactive true]");
+    Console.WriteLine("  dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj -- --model <MODEL_DIR> --image <BMP_OR_PPM> [--prompt <TEXT>] [--interactive true] [--stream true] [--allow-empty false]");
     Console.WriteLine();
     Console.WriteLine("Environment fallback / 环境变量:");
     Console.WriteLine("  OPENVINO_GENAI_VLM_MODEL_DIR, OPENVINO_GENAI_IMAGE_PATH, OPENVINO_GENAI_DEVICE");

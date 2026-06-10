@@ -27,7 +27,7 @@ without publishing NuGet packages.
 | Native runtime / 原生运行时 | `E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release` |
 | LLM model / 文本模型 | `E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov` |
 | Whisper model / Whisper 模型 | `E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov` |
-| VLM smoke model / VLM 烟测模型 | `E:\OpenVINOSharp\models\genai-smoke\tiny-random-llava-ov` |
+| VLM model / VLM 模型 | `E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov` |
 | Audio / 音频 | `E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav` |
 | Image / 图片 | `E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm` |
 | Device / 推理设备 | `CPU` |
@@ -155,23 +155,31 @@ optimum-cli export openvino `
 
 ### 4.3 VLM Model / 视觉语言模型
 
-For API smoke tests, the local validation uses a tiny random LLaVA OpenVINO
-model. This model is useful for checking ABI, tensor shape, image loading, and
-pipeline lifetime. It is not suitable for article-quality semantic answers.
+For full local validation, use the real `OpenVINO/InternVL2-1B-int4-ov` model.
+It is small enough for local CPU validation and produces non-empty semantic text.
 
-API 烟测使用 tiny random LLaVA OpenVINO 模型。该模型适合验证 ABI、Tensor 形状、
-图片加载和 pipeline 生命周期，但不适合用于文章中的语义效果展示。
+完整本地验证使用真实的 `OpenVINO/InternVL2-1B-int4-ov` 模型。它足够小，适合 CPU
+本地验证，并能生成非空语义文本。
 
 ```powershell
-hf download katuni4ka/tiny-random-llava-ov `
-  --local-dir E:\OpenVINOSharp\models\genai-smoke\tiny-random-llava-ov
+hf download OpenVINO/InternVL2-1B-int4-ov `
+  --local-dir E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov
 
-$env:OPENVINO_GENAI_VLM_MODEL_DIR = "E:\OpenVINOSharp\models\genai-smoke\tiny-random-llava-ov"
+$env:OPENVINO_GENAI_VLM_MODEL_DIR = "E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov"
 ```
 
-For technical articles, use a real VLM model. Examples:
+If direct Hugging Face access is slow or blocked, use a mirror and download the
+same files from:
 
-写技术文章时建议换成真实 VLM 模型。例如：
+如果 Hugging Face 直连较慢或不可用，可使用镜像下载同一模型文件：
+
+```text
+https://hf-mirror.com/OpenVINO/InternVL2-1B-int4-ov
+```
+
+For larger article demos, you can also export Qwen VL:
+
+如需更大的文章演示模型，也可以导出 Qwen VL：
 
 ```powershell
 optimum-cli export openvino `
@@ -180,12 +188,11 @@ optimum-cli export openvino `
   E:\OpenVINOSharp\models\genai-samples\Qwen3-VL-2B-Instruct-ov
 ```
 
-Real VLM models are much larger and may require more memory and disk space.
-Keep the tiny model for CI or local smoke tests, and use a real model for
-screenshots and article output.
+Tiny random VLM models are useful only for ABI smoke tests. They may return
+empty text and should be run with `--allow-empty true`.
 
-真实 VLM 模型体积较大，对内存和磁盘空间要求更高。建议保留 tiny 模型用于 CI 或本地
-烟测，用真实模型生成文章截图和效果输出。
+tiny random VLM 模型只适合 ABI 烟测，可能返回空文本；运行这类模型时应显式传入
+`--allow-empty true`。
 
 ## 5. Prepare Media / 准备音频和图片
 
@@ -245,15 +252,15 @@ powershell -ExecutionPolicy Bypass -File samples\GenAI\RunAllSamples.ps1 `
   -RuntimeDir "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release" `
   -LlmModelDir "E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov" `
   -WhisperModelDir "E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov" `
-  -VlmModelDir "E:\OpenVINOSharp\models\genai-smoke\tiny-random-llava-ov" `
+  -VlmModelDir "E:\OpenVINOSharp\models\genai-samples\InternVL2-1B-int4-ov" `
   -AudioPath "E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav" `
   -ImagePath "E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm" `
   -Device CPU
 ```
 
-The script runs:
+The script publishes each sample, runs the generated exe, and records:
 
-脚本会运行：
+脚本会先 publish 每个 sample，再运行生成的 exe，并记录：
 
 1. Greedy text generation.
 2. Beam search text generation.
@@ -280,6 +287,15 @@ Logs are saved in `out\genai-samples-validation`:
 08-vlm-single.log
 09-vlm-interactive.log
 ```
+
+On some Windows machines, application control policies may block direct
+`dotnet run` DLL loading for newly built assemblies. `RunAllSamples.ps1`
+publishes each sample and runs the generated exe, which was the validated local
+path on this machine.
+
+部分 Windows 机器的应用控制策略可能会拦截 `dotnet run` 直接加载新构建的 DLL。
+`RunAllSamples.ps1` 会先 publish 每个 sample，再运行生成的 exe；这是本机已验证的
+本地跑通路径。
 
 ## 7. Individual Sample Commands / 单个示例命令
 
@@ -456,21 +472,20 @@ dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj 
 
 Note: OpenVINO GenAI 2026.2 Windows C runtime used in local validation does not
 export `ov_genai_vlm_pipeline_generate_with_history`. The C# sample uses
-`StartChat()` plus `Generate()` so it remains runnable with the released C
-runtime. The VLM streamer path also returned a native `-17` error with the tiny
-random model during validation, so this sample uses non-streaming generation.
+`StartChat()` plus streamed `Generate()` so it remains runnable with the
+released C runtime while still producing text with real VLM models.
 
 注意：本地验证使用的 OpenVINO GenAI 2026.2 Windows C runtime 未导出
-`ov_genai_vlm_pipeline_generate_with_history`。C# 示例使用 `StartChat()` 加
-`Generate()`，以保证可在当前发布版 C runtime 上运行。tiny random VLM 模型验证时
-streamer 路径返回 native `-17`，因此该示例使用非流式生成。
+`ov_genai_vlm_pipeline_generate_with_history`。C# 示例使用 `StartChat()` 加流式
+`Generate()`，以保证可在当前发布版 C runtime 上运行，并能用真实 VLM 模型生成文本。
 
-The tiny random VLM model may return empty text. That is acceptable for ABI and
-sample-flow validation. Use a real VLM model for article screenshots and
-meaningful answers.
+Validated VLM output with `OpenVINO/InternVL2-1B-int4-ov`:
 
-tiny random VLM 模型可能返回空文本。这对 ABI 和示例流程验证是可接受的。文章截图和
-语义效果展示应使用真实 VLM 模型。
+使用 `OpenVINO/InternVL2-1B-int4-ov` 验证得到的 VLM 输出：
+
+```text
+This image is in the color spectrum of the visible colors.
+```
 
 ## 8. Article Planning / 技术文章拆分建议
 
@@ -511,8 +526,8 @@ For each article, include:
   `<|en|>`.
 - Whisper empty output: confirm WAV is mono 16 kHz and contains clear speech.
 - VLM image load failure: convert images to RGB BMP or binary PPM/PNM.
-- VLM empty output with tiny random model: use a real VLM model for semantic
-  results.
+- VLM empty output: use a real VLM model. If you intentionally run a tiny random
+  ABI smoke model, pass `--allow-empty true`.
 - Very slow first run: model compilation and CPU cache warmup can dominate the
   first iteration.
 
@@ -523,5 +538,6 @@ For each article, include:
 - Whisper 语言参数错误：使用 `--language en`，示例会自动转换为 `<|en|>`。
 - Whisper 输出为空：确认 WAV 是 mono 16 kHz 且包含清晰语音。
 - VLM 图片加载失败：把图片转换为 RGB BMP 或二进制 PPM/PNM。
-- tiny random VLM 输出为空：语义效果展示请使用真实 VLM 模型。
+- VLM 输出为空：请使用真实 VLM 模型。如果有意运行 tiny random ABI 烟测模型，传入
+  `--allow-empty true`。
 - 首次运行很慢：模型编译和 CPU cache warmup 会影响第一次迭代。
