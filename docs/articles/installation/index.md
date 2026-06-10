@@ -29,9 +29,9 @@ dotnet add package JYPPX.OpenVINO.CSharp.API
 dotnet add package OpenVINO.runtime.win
 ```
 
-If your application calls `OpenVinoSharp.GenAI`, install a GenAI runtime package instead of, or in addition to, the normal runtime package:
+If your application calls `OpenVinoSharp.GenAI`, install the matching GenAI runtime package. The GenAI runtime package already carries the OpenVINO native dependencies needed by GenAI, so do not reference both the normal runtime package and the GenAI runtime package in the same project:
 
-如果应用调用 `OpenVinoSharp.GenAI`，请安装 GenAI runtime 包。它可以替代或补充普通 runtime 包：
+如果应用调用 `OpenVinoSharp.GenAI`，请安装对应平台的 GenAI runtime 包。GenAI runtime 包已经包含 GenAI 所需的 OpenVINO native 依赖，不要在同一个项目里同时引用普通 runtime 包和 GenAI runtime 包：
 
 ```bash
 dotnet add package JYPPX.OpenVINO.CSharp.API
