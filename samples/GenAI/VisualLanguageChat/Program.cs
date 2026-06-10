@@ -35,13 +35,10 @@ return GenAISample.Run(() =>
     if (interactive)
         return RunInteractive(pipeline, config, imageTensor);
 
-    using VLMDecodedResults results = pipeline.Generate(prompt, new[] { imageTensor }, config, text =>
-    {
-        Console.Write(text);
-        return StreamingStatus.Running;
-    });
+    using VLMDecodedResults results = pipeline.Generate(prompt, new[] { imageTensor }, config);
+    Console.WriteLine("Answer / 回答:");
+    Console.WriteLine(results.GetText());
 
-    Console.WriteLine();
     using PerformanceMetrics metrics = results.GetPerformanceMetrics();
     GenAISample.PrintMetrics(metrics);
     return 0;
@@ -49,7 +46,6 @@ return GenAISample.Run(() =>
 
 static int RunInteractive(VLMPipeline pipeline, GenerationConfig config, Tensor imageTensor)
 {
-    using ChatHistory history = new();
     bool firstTurn = true;
 
     pipeline.StartChat();
@@ -66,20 +62,17 @@ static int RunInteractive(VLMPipeline pipeline, GenerationConfig config, Tensor 
             if (string.IsNullOrWhiteSpace(prompt) || prompt.Equals("/exit", StringComparison.OrdinalIgnoreCase))
                 break;
 
-            history.AddUserMessage(prompt);
             Tensor[]? turnImages = firstTurn ? new[] { imageTensor } : null;
 
-            Console.Write("answer> ");
-            using VLMDecodedResults results = pipeline.GenerateWithHistory(history, turnImages, config, text =>
-            {
-                Console.Write(text);
-                return StreamingStatus.Running;
-            });
-
+            // OpenVINO GenAI 2026.2 Windows runtime does not export the C
+            // generate_with_history entry point yet. Use chat mode plus
+            // Generate so the sample stays runnable with the released runtime.
+            // OpenVINO GenAI 2026.2 Windows runtime 尚未导出 C 版
+            // generate_with_history，因此这里使用 chat mode + Generate。
+            using VLMDecodedResults results = pipeline.Generate(prompt, turnImages, config);
             string answer = results.GetText();
-            history.AddAssistantMessage(answer);
+            Console.WriteLine("answer> " + answer);
             firstTurn = false;
-            Console.WriteLine();
         }
     }
     finally

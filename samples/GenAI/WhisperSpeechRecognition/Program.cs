@@ -38,7 +38,7 @@ return GenAISample.Run(() =>
     if (!string.IsNullOrWhiteSpace(task))
         config.SetTask(task);
     if (!string.IsNullOrWhiteSpace(language))
-        config.SetLanguage(language);
+        config.SetLanguage(NormalizeWhisperLanguage(language));
     if (!string.IsNullOrWhiteSpace(initialPrompt))
         config.SetInitialPrompt(initialPrompt);
     if (!string.IsNullOrWhiteSpace(hotwords))
@@ -78,4 +78,13 @@ static void PrintUsage()
     Console.WriteLine();
     Console.WriteLine("Environment fallback / 环境变量:");
     Console.WriteLine("  OPENVINO_GENAI_WHISPER_MODEL_DIR, OPENVINO_GENAI_AUDIO_PATH, OPENVINO_GENAI_DEVICE");
+}
+
+static string NormalizeWhisperLanguage(string language)
+{
+    string value = language.Trim();
+    if (value.StartsWith("<|", StringComparison.Ordinal) && value.EndsWith("|>", StringComparison.Ordinal))
+        return value;
+
+    return "<|" + value.Trim('<', '|', '>') + "|>";
 }

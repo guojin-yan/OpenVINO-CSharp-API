@@ -1,12 +1,19 @@
-# OpenVINO GenAI Samples / OpenVINO GenAI 案例
+# OpenVINO GenAI Samples / OpenVINO GenAI 示例
 
-This folder contains C# sample projects that mirror the currently wrapped OpenVINO GenAI C API scenarios.
+This folder contains C# sample projects that mirror the currently wrapped
+OpenVINO GenAI C API scenarios. The structure follows the official GenAI sample
+idea, but keeps the projects grouped under `samples/GenAI` for easier browsing.
 
-本目录包含一组 C# 示例项目，用来复刻当前已经完成封装的 OpenVINO GenAI C API 场景。
+本目录包含一组 C# 示例项目，用来复刻当前已经完成封装的 OpenVINO GenAI C API
+场景。目录结构参考官方 GenAI samples，同时统一放在 `samples/GenAI` 下，便于开发者
+查找和复现。
 
-Official reference: <https://github.com/openvinotoolkit/openvino.genai/tree/master/samples>
+Official reference / 官方参考：
+<https://github.com/openvinotoolkit/openvino.genai/tree/master/samples>
 
-官方参考：<https://github.com/openvinotoolkit/openvino.genai/tree/master/samples>
+For the complete local reproduction flow, read [RUNBOOK.md](RUNBOOK.md).
+
+完整本地复现流程见 [RUNBOOK.md](RUNBOOK.md)。
 
 ## Project Layout / 项目结构
 
@@ -22,125 +29,94 @@ Official reference: <https://github.com/openvinotoolkit/openvino.genai/tree/mast
 | `WhisperSpeechRecognition` | `samples/c/whisper_speech_recognition/whisper_speech_recognition.c` | Whisper automatic speech recognition |
 | `VisualLanguageChat` | `samples/c/visual_language_chat/vlm_pipeline.c` | Image + text VLM chat |
 
-The official GenAI repository also contains image generation, RAG, speech generation, and video generation samples. Those are intentionally not added as empty C# samples yet because the corresponding managed wrappers are not complete.
+The official GenAI repository also contains image generation, RAG, speech
+generation, and video generation samples. They are intentionally not added as
+empty C# samples yet because the corresponding managed pipeline wrappers are
+not complete.
 
-官方 GenAI 仓库还包含图像生成、RAG、语音生成和视频生成示例。当前不会添加空壳 C# 示例，因为这些 pipeline 的托管封装还没有完成。
+官方 GenAI 仓库还包含图像生成、RAG、语音生成和视频生成示例。当前不会添加空壳
+C# 示例，因为这些 pipeline 的托管封装还没有完成。
 
-## Prerequisites / 前置条件
+## Quick Local Validation / 快速本地验证
 
-- .NET 8 SDK.
-- OpenVINO GenAI native runtime.
-- A converted or downloaded OpenVINO GenAI model directory.
-- Optional conda environment for model export and media conversion.
+Set the native runtime and prepared model paths:
+
+设置原生运行时和准备好的模型路径：
 
 ```powershell
 cd E:\OpenVINOSharp\OpenVINO-CSharp-API-csharp3.3
 
-# When running from source, point the loader to a native GenAI runtime directory.
-# 从源码运行时，指向本机 GenAI runtime 原生库目录。
+$runtime = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
+$llm = "E:\OpenVINOSharp\models\genai-samples\TinyLlama-1.1B-Chat-v1.0-int4-ov"
+$whisper = "E:\OpenVINOSharp\models\genai-smoke\whisper-tiny-int8-ov"
+$vlm = "E:\OpenVINOSharp\models\genai-smoke\tiny-random-llava-ov"
+$audio = "E:\OpenVINOSharp\models\genai-samples\assets\how_are_you_doing_today.wav"
+$image = "E:\OpenVINOSharp\models\genai-samples\assets\color_blocks_30.ppm"
+```
+
+Run all samples and write one log per scenario:
+
+运行全部示例，并为每个场景保存一份日志：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File samples\GenAI\RunAllSamples.ps1 `
+  -RuntimeDir $runtime `
+  -LlmModelDir $llm `
+  -WhisperModelDir $whisper `
+  -VlmModelDir $vlm `
+  -AudioPath $audio `
+  -ImagePath $image `
+  -Device CPU
+```
+
+Logs are written to `out\genai-samples-validation`.
+
+日志会写入 `out\genai-samples-validation`。
+
+## Minimal Commands / 最小运行命令
+
+When running from source, set:
+
+从源码运行时设置：
+
+```powershell
 $env:OPENVINO_GENAI_RUNTIME_DIR = "E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64\runtime\bin\intel64\Release"
 $env:OPENVINO_GENAI_DEVICE = "CPU"
 ```
 
-After the NuGet runtime packages are published, package consumers can install the matching runtime package instead of setting `OPENVINO_GENAI_RUNTIME_DIR`.
+Then run individual samples:
 
-正式发布 NuGet runtime 包后，包使用者可以安装匹配 runtime 包，而不必手动设置 `OPENVINO_GENAI_RUNTIME_DIR`。
-
-```powershell
-dotnet add package JYPPX.OpenVINO.CSharp.API --version 3.3.0
-dotnet add package JYPPX.OpenVINO.GenAI.runtime.win
-```
-
-## Conda Model Preparation / 使用 conda 准备模型
-
-The samples themselves are C# projects. Conda is only used to prepare models, download assets, and convert images/audio.
-
-示例本身是 C# 项目；conda 只用于准备模型、下载资源、转换图片或音频。
+然后运行单个示例：
 
 ```powershell
-conda create -n ov-genai-samples python=3.11 -y
-conda activate ov-genai-samples
-python -m pip install --upgrade pip
-python -m pip install --upgrade-strategy eager "optimum-intel[openvino]" openvino-genai huggingface_hub transformers pillow soundfile nncf
+dotnet run --project samples/GenAI/TextGeneration/Greedy/Greedy.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
+dotnet run --project samples/GenAI/TextGeneration/BeamSearch/BeamSearch.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --beams 4
+dotnet run --project samples/GenAI/TextGeneration/Multinomial/Multinomial.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --temperature 0.8 --top-p 0.95 --top-k 50
+dotnet run --project samples/GenAI/TextGeneration/Streaming/Streaming.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
+dotnet run --project samples/GenAI/TextGeneration/Chat/Chat.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
+dotnet run --project samples/GenAI/TextGeneration/Benchmark/Benchmark.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --iterations 3 --warmup 1
+dotnet run --project samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_WHISPER_MODEL_DIR" --audio "$env:OPENVINO_GENAI_AUDIO_PATH" --timestamps true
+dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj --framework net8.0 -- --model "$env:OPENVINO_GENAI_VLM_MODEL_DIR" --image "$env:OPENVINO_GENAI_IMAGE_PATH" --interactive true
 ```
 
-### LLM Model / 文本生成模型
+## Notes / 说明
 
-```powershell
-mkdir models
-optimum-cli export openvino --model TinyLlama/TinyLlama-1.1B-Chat-v1.0 --weight-format int4 --trust-remote-code models/TinyLlama-1.1B-Chat-v1.0-ov
-$env:OPENVINO_GENAI_LLM_MODEL_DIR = "$PWD\models\TinyLlama-1.1B-Chat-v1.0-ov"
-```
+- `RunAllSamples.ps1` is the recommended validation entry point before changing
+  sample code.
+- `WhisperSpeechRecognition` accepts `--language en`; the sample normalizes it
+  to the Whisper token form `<|en|>` before calling the C API.
+- `VisualLanguageChat` uses non-streaming `Generate` because the validated
+  OpenVINO GenAI 2026.2 Windows C runtime does not export
+  `ov_genai_vlm_pipeline_generate_with_history`, and the VLM streamer path
+  returned native error `-17` with the tiny random smoke model.
+- The tiny random VLM model validates the pipeline flow but may return empty
+  text. Use a real VLM model for article-quality output.
 
-If Hugging Face already provides a converted OpenVINO model, you can download it directly:
-
-如果 Hugging Face 已经提供转换好的 OpenVINO 模型，可以直接下载：
-
-```powershell
-hf download <openvino-model-id> --local-dir models\llm-ov
-```
-
-### Whisper Model and Audio / Whisper 模型和音频
-
-```powershell
-optimum-cli export openvino --trust-remote-code --model openai/whisper-tiny models/whisper-tiny
-# Alternative / 也可以直接下载 OpenVINO 优化模型:
-hf download OpenVINO/whisper-tiny-int8-ov --local-dir models/whisper-tiny-int8-ov
-
-$env:OPENVINO_GENAI_WHISPER_MODEL_DIR = "$PWD\models\whisper-tiny"
-```
-
-Whisper samples expect WAV input. Use conda `ffmpeg` when you need to convert an audio file:
-
-Whisper 示例需要 WAV 输入。如果需要转换音频，请用 conda 安装 `ffmpeg`：
-
-```powershell
-conda install -c conda-forge ffmpeg -y
-ffmpeg -i input.mp3 -ac 1 -ar 16000 speech.wav
-$env:OPENVINO_GENAI_AUDIO_PATH = "$PWD\speech.wav"
-```
-
-### VLM Model and Image / VLM 模型和图片
-
-```powershell
-optimum-cli export openvino --model Qwen/Qwen3-VL-2B-Instruct --trust-remote-code models/Qwen3-VL-2B-Instruct
-$env:OPENVINO_GENAI_VLM_MODEL_DIR = "$PWD\models\Qwen3-VL-2B-Instruct"
-```
-
-The C# sample image loader is dependency-free and supports BMP or binary PPM/PNM. Convert JPG/PNG with Pillow:
-
-C# 示例的图片读取器不引入额外 NuGet 依赖，支持 BMP 或二进制 PPM/PNM。JPG/PNG 可用 Pillow 转换：
-
-```powershell
-python -c "from PIL import Image; Image.open(r'input.jpg').convert('RGB').save(r'input.bmp')"
-$env:OPENVINO_GENAI_IMAGE_PATH = "$PWD\input.bmp"
-```
-
-## Run Samples / 运行示例
-
-Run from the repository root.
-
-请在仓库根目录运行。
-
-```powershell
-dotnet run --project samples/GenAI/TextGeneration/Greedy/Greedy.csproj -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --prompt "The sky is blue because"
-dotnet run --project samples/GenAI/TextGeneration/BeamSearch/BeamSearch.csproj -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --beams 4
-dotnet run --project samples/GenAI/TextGeneration/Multinomial/Multinomial.csproj -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --temperature 0.8 --top-p 0.95 --top-k 50
-dotnet run --project samples/GenAI/TextGeneration/Streaming/Streaming.csproj -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
-dotnet run --project samples/GenAI/TextGeneration/Chat/Chat.csproj -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR"
-dotnet run --project samples/GenAI/TextGeneration/Benchmark/Benchmark.csproj -- --model "$env:OPENVINO_GENAI_LLM_MODEL_DIR" --iterations 3 --warmup 1
-dotnet run --project samples/GenAI/WhisperSpeechRecognition/WhisperSpeechRecognition.csproj -- --model "$env:OPENVINO_GENAI_WHISPER_MODEL_DIR" --audio "$env:OPENVINO_GENAI_AUDIO_PATH" --timestamps true
-dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj -- --model "$env:OPENVINO_GENAI_VLM_MODEL_DIR" --image "$env:OPENVINO_GENAI_IMAGE_PATH" --interactive true
-```
-
-## Troubleshooting / 排错
-
-- If `openvino_genai_c` cannot be found, set `OPENVINO_GENAI_RUNTIME_DIR` to the directory that contains `openvino_genai_c.dll`, `openvino_genai.dll`, `openvino_tokenizers.dll`, `openvino.dll`, and `openvino_c.dll`.
-- If a model fails to load, verify the model directory contains a GenAI-compatible OpenVINO export and tokenizer files.
-- If VLM image loading fails, convert the image to RGB BMP or binary PPM first.
-- If Whisper output is empty or incorrect, confirm the audio contains clear speech and was converted to mono 16 kHz WAV.
-
-- 如果找不到 `openvino_genai_c`，请把 `OPENVINO_GENAI_RUNTIME_DIR` 指向包含 `openvino_genai_c.dll`、`openvino_genai.dll`、`openvino_tokenizers.dll`、`openvino.dll`、`openvino_c.dll` 的目录。
-- 如果模型加载失败，请确认模型目录是 GenAI 兼容的 OpenVINO 导出，并包含 tokenizer 文件。
-- 如果 VLM 图片读取失败，请先把图片转换为 RGB BMP 或二进制 PPM。
-- 如果 Whisper 输出为空或错误，请确认音频包含清晰语音，并已转换为 mono 16 kHz WAV。
+- 修改示例代码前，建议先通过 `RunAllSamples.ps1` 完整验证。
+- `WhisperSpeechRecognition` 支持 `--language en`；示例会在调用 C API 前自动转成
+  Whisper token 写法 `<|en|>`。
+- `VisualLanguageChat` 使用非流式 `Generate`，因为已验证的 OpenVINO GenAI 2026.2
+  Windows C runtime 未导出 `ov_genai_vlm_pipeline_generate_with_history`，并且 tiny
+  random 烟测模型下 VLM streamer 路径返回 native `-17`。
+- tiny random VLM 模型用于验证 pipeline 流程，可能返回空文本。文章级效果展示请使用
+  真实 VLM 模型。
