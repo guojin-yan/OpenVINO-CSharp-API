@@ -47,6 +47,8 @@ PLATFORM_LABELS = {
     "ubuntu.24-x86_64": "Ubuntu 24.04 (x86_64)",
     "ubuntu.22-x86_64": "Ubuntu 22.04 (x86_64)",
     "ubuntu.22-arm64": "Ubuntu 22.04 (arm64)",
+    "ubuntu.20-x86_64": "Ubuntu 20.04 (x86_64)",
+    "ubuntu.20-arm64": "Ubuntu 20.04 (arm64)",
     "rhel8-x86_64": "RHEL 8 (x86_64)",
     "macos-x86_64": "macOS (x86_64)",
     "macos-arm64": "macOS (arm64)",

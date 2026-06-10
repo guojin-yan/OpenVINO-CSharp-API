@@ -47,9 +47,9 @@ workflow 会从以下官方地址发现并下载 archive：
 https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/
 ```
 
-Each build downloads the official archive and the matching `.sha256` file, verifies the hash, extracts the archive, then builds the NuGet package. The formal GitHub workflow does not package a local runtime directory.
+Each build downloads the official archive and the matching `.sha256` file, verifies the hash, extracts the archive, then builds the NuGet package. The discovery step reads the official file tree and also probes deterministic archive URLs because some OpenVINO GenAI archives can be available on storage before they appear in `filetree.json`. The formal GitHub workflow does not package a local runtime directory.
 
-每次构建都会下载官方 archive 和匹配的 `.sha256` 文件，校验哈希后再解压并打包。正式 GitHub workflow 不使用本地 runtime 目录作为打包源。
+每次构建都会下载官方 archive 和匹配的 `.sha256` 文件，校验哈希后再解压并打包。发现步骤会读取官方 file tree，并额外探测确定性 archive URL，因为部分 OpenVINO GenAI archive 可能已经存在于 storage，但尚未出现在 `filetree.json` 中。正式 GitHub workflow 不使用本地 runtime 目录作为打包源。
 
 For OpenVINO GenAI 2026.2, the workflow builds these packages:
 
@@ -59,7 +59,10 @@ For OpenVINO GenAI 2026.2, the workflow builds these packages:
 - `JYPPX.OpenVINO.GenAI.runtime.ubuntu.24-x86_64`
 - `JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-x86_64`
 - `JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-arm64`
+- `JYPPX.OpenVINO.GenAI.runtime.ubuntu.20-x86_64`
+- `JYPPX.OpenVINO.GenAI.runtime.ubuntu.20-arm64`
 - `JYPPX.OpenVINO.GenAI.runtime.rhel8-x86_64`
+- `JYPPX.OpenVINO.GenAI.runtime.macos-x86_64`
 - `JYPPX.OpenVINO.GenAI.runtime.macos-arm64`
 
 If a future official release adds more platform archives, the discovery script can include them automatically.

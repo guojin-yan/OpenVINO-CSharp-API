@@ -129,7 +129,10 @@ dotnet run
 | **JYPPX.OpenVINO.GenAI.runtime.ubuntu.24-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 24 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 22 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-arm64** | Native OpenVINO GenAI runtime for Ubuntu 22 ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.20-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 20 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.20-arm64** | Native OpenVINO GenAI runtime for Ubuntu 20 ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **JYPPX.OpenVINO.GenAI.runtime.rhel8-x86_64** | Native OpenVINO GenAI runtime for RHEL 8 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
+| **JYPPX.OpenVINO.GenAI.runtime.macos-x86_64** | Native OpenVINO GenAI runtime for macOS x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **JYPPX.OpenVINO.GenAI.runtime.macos-arm64** | Native OpenVINO GenAI runtime for macOS ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **OpenVINO.runtime.ubuntu.24-x86_64** | Native bindings for ubuntu.24-x86_64 | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.24-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.24-x86_64/) |
 | **OpenVINO.runtime.ubuntu.22-x86_64** | Native bindings for ubuntu.22-x86_64 | [![NuGet Gallery](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.22-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.22-x86_64/) |

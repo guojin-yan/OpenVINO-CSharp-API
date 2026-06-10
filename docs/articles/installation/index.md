@@ -12,7 +12,10 @@ This guide explains how to install and configure OpenVINO C# API packages.
 | Ubuntu 24 x64 | Supported / 已支持 | Supported / 已支持 |
 | Ubuntu 22 x64 | Supported / 已支持 | Supported / 已支持 |
 | Ubuntu 22 ARM64 | Supported / 已支持 | Supported / 已支持 |
+| Ubuntu 20 x64 | Supported / 已支持 | Supported / 已支持 |
+| Ubuntu 20 ARM64 | Supported / 已支持 | Supported / 已支持 |
 | RHEL 8 x64 | Supported / 已支持 | Supported / 已支持 |
+| macOS x64 | Supported / 已支持 | Supported / 已支持 |
 | macOS ARM64 | Supported / 已支持 | Supported / 已支持 |
 
 ## Package Choice / 包选择

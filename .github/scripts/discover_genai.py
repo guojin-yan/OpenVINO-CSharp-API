@@ -27,16 +27,26 @@ LOCAL_TAG_PREFIX = "openvino-genai-runtime-v"
 # Each entry produces one NuGet package:
 # JYPPX.OpenVINO.GenAI.runtime.<id>
 #
+# `archive` is matched against filetree.json when the file tree lists the
+# archive. Some OpenVINO GenAI 2026.2 files are published on storage but are
+# missing from filetree.json, so `direct` contains deterministic filename
+# templates that are verified by probing both the archive URL and its .sha256
+# sibling.
+#
 # 每一项都会生成一个 GenAI runtime NuGet 包。包 ID 和基础 OpenVINO runtime
 # 保持同样的平台命名习惯，只是包名前缀改为 JYPPX.OpenVINO.GenAI.runtime。
+# `archive` 优先匹配 filetree.json；如果官方 storage 已发布但 filetree.json
+# 漏列，则用 `direct` 中的确定性文件名模板探测 archive 和 .sha256。
 PLATFORMS: list[dict[str, str]] = [
-    {"id": "win", "os_dir": "windows", "archive": r"^openvino_genai_windows_{archive_ver}_x86_64\.zip$", "rid": "win-x64", "kind": "zip"},
-    {"id": "ubuntu.24-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu24_{archive_ver}_x86_64\.tar\.gz$", "rid": "linux-x64", "kind": "tgz"},
-    {"id": "ubuntu.22-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu22_{archive_ver}_x86_64\.tar\.gz$", "rid": "linux-x64", "kind": "tgz"},
-    {"id": "ubuntu.22-arm64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu22_{archive_ver}_arm64\.tar\.gz$", "rid": "linux-arm64", "kind": "tgz"},
-    {"id": "rhel8-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_rhel8_{archive_ver}_x86_64\.tar\.gz$", "rid": "linux-x64", "kind": "tgz"},
-    {"id": "macos-x86_64", "os_dir": "macos", "archive": r"^openvino_genai_macos_\d+_\d+_{archive_ver}_x86_64\.tar\.gz$", "rid": "osx-x64", "kind": "tgz"},
-    {"id": "macos-arm64", "os_dir": "macos", "archive": r"^openvino_genai_macos_\d+_\d+_{archive_ver}_arm64\.tar\.gz$", "rid": "osx-arm64", "kind": "tgz"},
+    {"id": "win", "os_dir": "windows", "archive": r"^openvino_genai_windows_{archive_ver}_x86_64\.zip$", "direct": "openvino_genai_windows_{archive_ver}_x86_64.zip", "rid": "win-x64", "kind": "zip"},
+    {"id": "ubuntu.24-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu24_{archive_ver}_x86_64\.tar\.gz$", "direct": "openvino_genai_ubuntu24_{archive_ver}_x86_64.tar.gz", "rid": "linux-x64", "kind": "tgz"},
+    {"id": "ubuntu.22-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu22_{archive_ver}_x86_64\.tar\.gz$", "direct": "openvino_genai_ubuntu22_{archive_ver}_x86_64.tar.gz", "rid": "linux-x64", "kind": "tgz"},
+    {"id": "ubuntu.22-arm64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu22_{archive_ver}_arm64\.tar\.gz$", "direct": "openvino_genai_ubuntu22_{archive_ver}_arm64.tar.gz", "rid": "linux-arm64", "kind": "tgz"},
+    {"id": "ubuntu.20-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu20_{archive_ver}_x86_64\.tar\.gz$", "direct": "openvino_genai_ubuntu20_{archive_ver}_x86_64.tar.gz", "rid": "linux-x64", "kind": "tgz"},
+    {"id": "ubuntu.20-arm64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu20_{archive_ver}_arm64\.tar\.gz$", "direct": "openvino_genai_ubuntu20_{archive_ver}_arm64.tar.gz", "rid": "linux-arm64", "kind": "tgz"},
+    {"id": "rhel8-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_rhel8_{archive_ver}_x86_64\.tar\.gz$", "direct": "openvino_genai_rhel8_{archive_ver}_x86_64.tar.gz", "rid": "linux-x64", "kind": "tgz"},
+    {"id": "macos-x86_64", "os_dir": "macos", "archive": r"^openvino_genai_macos_\d+_\d+_{archive_ver}_x86_64\.tar\.gz$", "direct": "openvino_genai_macos_12_6_{archive_ver}_x86_64.tar.gz", "rid": "osx-x64", "kind": "tgz"},
+    {"id": "macos-arm64", "os_dir": "macos", "archive": r"^openvino_genai_macos_\d+_\d+_{archive_ver}_arm64\.tar\.gz$", "direct": "openvino_genai_macos_12_6_{archive_ver}_arm64.tar.gz", "rid": "osx-arm64", "kind": "tgz"},
 ]
 
 # A complete GenAI release should have all major OS directories. Individual
@@ -57,6 +67,32 @@ def http_get(url: str) -> bytes:
         req.add_header("Accept", "application/vnd.github+json")
     with urllib.request.urlopen(req, timeout=60) as resp:
         return resp.read()
+
+
+def http_url_exists(url: str) -> bool:
+    """Return True if the official CDN URL exists.
+
+    HEAD is used first because these archives are large. If a CDN endpoint does
+    not allow HEAD, retry with a tiny GET range.
+    """
+    headers = {"User-Agent": "openvino-csharp-genai-runtime-bot"}
+    try:
+        req = urllib.request.Request(url, headers=headers, method="HEAD")
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return 200 <= resp.status < 400
+    except urllib.error.HTTPError as e:
+        if e.code == 405:
+            try:
+                req = urllib.request.Request(url, headers={**headers, "Range": "bytes=0-0"})
+                with urllib.request.urlopen(req, timeout=30) as resp:
+                    return 200 <= resp.status < 400
+            except urllib.error.HTTPError:
+                return False
+            except urllib.error.URLError:
+                return False
+        return False
+    except urllib.error.URLError:
+        return False
 
 
 def normalize_version(name: str) -> str | None:
@@ -163,17 +199,27 @@ def collect_archives(version_node: dict[str, Any], version: str, dir_name: str) 
 
     items: list[dict[str, str]] = []
     archive_ver = re.escape(archive_version(version))
+    archive_ver_text = archive_version(version)
     for platform in PLATFORMS:
         files = by_os.get(platform["os_dir"], [])
         pattern = re.compile(platform["archive"].format(archive_ver=archive_ver))
         match = next((f for f in files if pattern.match(f)), None)
-        if match is None:
-            print(f"  skipping {platform['id']}: archive not found", file=sys.stderr)
-            continue
-        if f"{match}.sha256" not in files:
+        if match is not None and f"{match}.sha256" not in files:
             print(f"  skipping {platform['id']}: no .sha256 sibling for {match}", file=sys.stderr)
             continue
-        archive_url = f"{CDN_ROOT}/repositories/openvino_genai/packages/{dir_name}/{platform['os_dir']}/{match}"
+
+        if match is None:
+            direct_template = platform.get("direct")
+            direct_match = direct_template.format(archive_ver=archive_ver_text) if direct_template else ""
+            archive_url = f"{CDN_ROOT}/repositories/openvino_genai/packages/{dir_name}/{platform['os_dir']}/{direct_match}"
+            if not direct_match or not http_url_exists(archive_url) or not http_url_exists(f"{archive_url}.sha256"):
+                print(f"  skipping {platform['id']}: archive not found", file=sys.stderr)
+                continue
+            match = direct_match
+            print(f"  using direct CDN probe for {platform['id']}: {match}", file=sys.stderr)
+        else:
+            archive_url = f"{CDN_ROOT}/repositories/openvino_genai/packages/{dir_name}/{platform['os_dir']}/{match}"
+
         items.append({
             "id": platform["id"],
             "archive_url": archive_url,
