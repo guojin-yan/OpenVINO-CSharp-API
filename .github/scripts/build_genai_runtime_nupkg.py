@@ -92,6 +92,12 @@ def sha256_of(path: Path) -> str:
 
 def parse_expected_sha256(sha_text: str, archive_name: str) -> str:
     """Parse sha256sum text: '<hex> *<name>', '<hex>  <name>', or '<hex>'."""
+    if "<html" in sha_text.lower() or "<!doctype html" in sha_text.lower():
+        sys.exit(
+            f"sha256 sidecar for {archive_name} is not a checksum file; "
+            "the server returned an HTML directory page instead"
+        )
+
     for line in sha_text.splitlines():
         line = line.strip()
         if not line:

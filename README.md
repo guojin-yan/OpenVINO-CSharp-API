@@ -129,10 +129,7 @@ dotnet run
 | **JYPPX.OpenVINO.GenAI.runtime.ubuntu.24-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 24 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 22 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-arm64** | Native OpenVINO GenAI runtime for Ubuntu 22 ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
-| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.20-x86_64** | Native OpenVINO GenAI runtime for Ubuntu 20 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
-| **JYPPX.OpenVINO.GenAI.runtime.ubuntu.20-arm64** | Native OpenVINO GenAI runtime for Ubuntu 20 ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **JYPPX.OpenVINO.GenAI.runtime.rhel8-x86_64** | Native OpenVINO GenAI runtime for RHEL 8 x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
-| **JYPPX.OpenVINO.GenAI.runtime.macos-x86_64** | Native OpenVINO GenAI runtime for macOS x86_64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **JYPPX.OpenVINO.GenAI.runtime.macos-arm64** | Native OpenVINO GenAI runtime for macOS ARM64 | GitHub workflow: `docs/articles/installation/genai-runtime.md` |
 | **OpenVINO.runtime.ubuntu.24-x86_64** | Native bindings for ubuntu.24-x86_64                  | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.24-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.24-x86_64/) |
 | **OpenVINO.runtime.ubuntu.22-x86_64** | Native bindings for ubuntu.22-x86_64                  | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.ubuntu.22-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.ubuntu.22-x86_64/) |
@@ -147,6 +144,11 @@ dotnet run
 | **OpenVINO.runtime.rhel8-x86_64**     | Native bindings for rhel8-x86_64                      | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.rhel8-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.rhel8-x86_64/) |
 | **OpenVINO.runtime.macos-x86_64**     | Native bindings for macos-x86_64                      | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.macos-x86_64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.macos-x86_64/) |
 | **OpenVINO.runtime.macos-arm64**      | Native bindings for macos-arm64                       | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.macos-arm64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.macos-arm64/) |
+
+GenAI runtime packages are published only for official archives that also have
+a valid `.sha256` sidecar. OpenVINO GenAI 2026.2.0 does not currently provide
+packageable Ubuntu 20.04 or macOS x86_64 GenAI archives, even though the core
+OpenVINO runtime still has packages for those platforms.
 
 
 ### Integration Library

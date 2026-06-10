@@ -57,6 +57,7 @@ PLATFORMS: list[dict[str, str]] = [
 CORE_PRESENCE_OS_DIRS = {"windows", "linux", "macos"}
 
 VERSION_DIR_RE = re.compile(r"^(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\d+))?$")
+SHA256_RE = re.compile(r"\b[0-9a-fA-F]{64}\b")
 
 
 def http_get(url: str) -> bytes:
@@ -93,6 +94,49 @@ def http_url_exists(url: str) -> bool:
         return False
     except urllib.error.URLError:
         return False
+
+
+def parse_sha256_text(sha_text: str, archive_name: str) -> str | None:
+    """Return a sha256 from a checksum sidecar, or None for non-checksum text."""
+    text = sha_text.strip()
+    if not text or "<html" in text.lower() or "<!doctype html" in text.lower():
+        return None
+
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+
+        matches = SHA256_RE.findall(line)
+        if not matches:
+            continue
+
+        if archive_name in line or len(matches) == 1:
+            return matches[0].lower()
+
+    return None
+
+
+def http_sha256_exists(url: str, archive_name: str) -> bool:
+    """Return True only when the CDN sidecar contains a parseable SHA-256.
+
+    Some missing storage objects return an HTML directory listing with HTTP 200,
+    so a plain URL existence probe is not enough for release publishing.
+    """
+    try:
+        raw = http_get(url)
+        text = raw.decode("utf-8", errors="replace")
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as exc:
+        print(f"  skipping checksum probe {url}: {exc}", file=sys.stderr)
+        return False
+
+    digest = parse_sha256_text(text, archive_name)
+    if digest is None:
+        preview = " ".join(text.strip().split())[:120]
+        print(f"  skipping checksum probe {url}: not a sha256 sidecar ({preview})", file=sys.stderr)
+        return False
+
+    return True
 
 
 def normalize_version(name: str) -> str | None:
@@ -212,13 +256,20 @@ def collect_archives(version_node: dict[str, Any], version: str, dir_name: str) 
             direct_template = platform.get("direct")
             direct_match = direct_template.format(archive_ver=archive_ver_text) if direct_template else ""
             archive_url = f"{CDN_ROOT}/repositories/openvino_genai/packages/{dir_name}/{platform['os_dir']}/{direct_match}"
-            if not direct_match or not http_url_exists(archive_url) or not http_url_exists(f"{archive_url}.sha256"):
-                print(f"  skipping {platform['id']}: archive not found", file=sys.stderr)
+            if (
+                not direct_match
+                or not http_url_exists(archive_url)
+                or not http_sha256_exists(f"{archive_url}.sha256", direct_match)
+            ):
+                print(f"  skipping {platform['id']}: archive or valid .sha256 not found", file=sys.stderr)
                 continue
             match = direct_match
             print(f"  using direct CDN probe for {platform['id']}: {match}", file=sys.stderr)
         else:
             archive_url = f"{CDN_ROOT}/repositories/openvino_genai/packages/{dir_name}/{platform['os_dir']}/{match}"
+            if not http_sha256_exists(f"{archive_url}.sha256", match):
+                print(f"  skipping {platform['id']}: invalid .sha256 sibling for {match}", file=sys.stderr)
+                continue
 
         items.append({
             "id": platform["id"],
