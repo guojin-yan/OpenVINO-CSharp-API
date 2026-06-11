@@ -22,7 +22,7 @@ CDN_ROOT = "https://storage.openvinotoolkit.org"
 FILETREE_URL = f"{CDN_ROOT}/filetree.json"
 PACKAGES_PATH = ("repositories", "openvino_genai", "packages")
 GH_RELEASES_API = "https://api.github.com/repos/openvinotoolkit/openvino.genai/releases?per_page=100"
-LOCAL_TAG_PREFIX = "openvino-genai-runtime-v"
+LOCAL_TAG_PREFIX = os.environ.get("LOCAL_TAG_PREFIX") or "openvino-genai-runtime-v"
 
 # Each entry produces one NuGet package:
 # JYPPX.OpenVINO.GenAI.runtime.<id>

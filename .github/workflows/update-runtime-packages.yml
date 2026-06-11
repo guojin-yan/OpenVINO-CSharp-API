@@ -1,7 +1,9 @@
 name: Update OpenVINO Runtime Packages
 
-# Builds the OpenVINO.runtime.<platform> NuGet packages from Intel's
-# official binary CDN (storage.openvinotoolkit.org) and publishes them.
+# Builds the OpenVINO.runtime.<platform> and
+# JYPPX.OpenVINO.GenAI.runtime.<platform> NuGet packages from Intel's
+# official binary CDN (storage.openvinotoolkit.org) and publishes them
+# together.
 #
 # Publishing target:
 #   - If the repo has a NUGET_API_KEY secret -> pushes to NuGet.org
@@ -53,38 +55,70 @@ jobs:
     name: Discover latest OpenVINO release
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.find.outputs.version }}
-      matrix: ${{ steps.find.outputs.matrix }}
-      skip: ${{ steps.find.outputs.skip }}
-      reason: ${{ steps.find.outputs.reason }}
+      version: ${{ steps.runtime.outputs.version }}
+      runtime_matrix: ${{ steps.runtime.outputs.matrix }}
+      runtime_skip: ${{ steps.runtime.outputs.skip }}
+      runtime_reason: ${{ steps.runtime.outputs.reason }}
+      genai_version: ${{ steps.genai.outputs.version || '' }}
+      genai_matrix: ${{ steps.genai.outputs.matrix || '{"include":[]}' }}
+      genai_skip: ${{ steps.genai.outputs.skip || 'true' }}
+      genai_reason: ${{ steps.genai.outputs.reason || '' }}
+      skip: ${{ steps.runtime.outputs.skip }}
+      reason: ${{ steps.runtime.outputs.reason }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: "3.x"
-      - id: find
-        name: Resolve target version and platform matrix
+      - id: runtime
+        name: Resolve target OpenVINO runtime version and matrix
         env:
           REQUESTED_VERSION: ${{ inputs.version }}
           FORCE_REPUBLISH: ${{ inputs.force_republish }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 .github/scripts/discover.py
+      - id: genai
+        name: Resolve matching OpenVINO GenAI runtime matrix
+        if: steps.runtime.outputs.skip != 'true'
+        env:
+          REQUESTED_VERSION: ${{ steps.runtime.outputs.version }}
+          FORCE_REPUBLISH: ${{ inputs.force_republish }}
+          LOCAL_TAG_PREFIX: openvino-runtime-v
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/discover_genai.py
+      - name: Verify matching runtime releases
+        if: steps.runtime.outputs.skip != 'true'
+        env:
+          RUNTIME_VERSION: ${{ steps.runtime.outputs.version }}
+          GENAI_VERSION: ${{ steps.genai.outputs.version }}
+          GENAI_SKIP: ${{ steps.genai.outputs.skip }}
+          GENAI_REASON: ${{ steps.genai.outputs.reason }}
+        run: |
+          if [ "$GENAI_SKIP" = "true" ]; then
+            echo "GenAI runtime discovery skipped: $GENAI_REASON" >&2
+            exit 1
+          fi
+          if [ "$GENAI_VERSION" != "$RUNTIME_VERSION" ]; then
+            echo "OpenVINO runtime version ($RUNTIME_VERSION) and GenAI runtime version ($GENAI_VERSION) do not match." >&2
+            exit 1
+          fi
 
-  build:
-    name: Build ${{ matrix.id }}
+  build-runtime:
+    name: Build Runtime ${{ matrix.id }}
     needs: discover
     if: needs.discover.outputs.skip != 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.discover.outputs.runtime_matrix) }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
-      - name: Build NuGet package
+      - name: Build OpenVINO runtime NuGet package
         env:
           PKG_ID: ${{ matrix.id }}
           PKG_VERSION: ${{ needs.discover.outputs.version }}
@@ -98,14 +132,46 @@ jobs:
       - name: Upload nupkg artifact
         uses: actions/upload-artifact@v7
         with:
-          name: nupkg-${{ matrix.id }}
+          name: nupkg-runtime-${{ matrix.id }}
+          path: out/*.nupkg
+          if-no-files-found: error
+          retention-days: 30
+
+  build-genai:
+    name: Build GenAI Runtime ${{ matrix.id }}
+    needs: discover
+    if: needs.discover.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover.outputs.genai_matrix) }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+      - name: Build OpenVINO GenAI runtime NuGet package
+        env:
+          PKG_ID: ${{ matrix.id }}
+          PKG_VERSION: ${{ needs.discover.outputs.genai_version }}
+          ARCHIVE_URL: ${{ matrix.archive_url }}
+          SHA256_URL: ${{ matrix.sha256_url }}
+          RID: ${{ matrix.rid }}
+          KIND: ${{ matrix.kind }}
+          OUT_DIR: ${{ github.workspace }}/out
+          REPO_ROOT: ${{ github.workspace }}
+        run: python3 .github/scripts/build_genai_runtime_nupkg.py
+      - name: Upload GenAI nupkg artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: nupkg-genai-${{ matrix.id }}
           path: out/*.nupkg
           if-no-files-found: error
           retention-days: 30
 
   publish:
     name: Publish to NuGet feed
-    needs: [discover, build]
+    needs: [discover, build-runtime, build-genai]
     if: ${{ needs.discover.outputs.skip != 'true' && !inputs.dry_run }}
     runs-on: ubuntu-latest
     steps:
@@ -129,7 +195,7 @@ jobs:
 
   release:
     name: Attach to GitHub Release
-    needs: [discover, build, publish]
+    needs: [discover, build-runtime, build-genai, publish]
     if: ${{ needs.discover.outputs.skip != 'true' && !inputs.dry_run }}
     runs-on: ubuntu-latest
     permissions:
@@ -146,9 +212,10 @@ jobs:
           tag_name: openvino-runtime-v${{ needs.discover.outputs.version }}
           name: OpenVINO Runtime ${{ needs.discover.outputs.version }}
           body: |
-            Native OpenVINO runtime NuGet packages built from
+            Native OpenVINO runtime and OpenVINO GenAI runtime NuGet packages built from
             [openvino_toolkit ${{ needs.discover.outputs.version }}](https://github.com/openvinotoolkit/openvino/releases/tag/${{ needs.discover.outputs.version }})
-            on Intel's official CDN at storage.openvinotoolkit.org.
+            and the matching OpenVINO GenAI release on Intel's official CDN
+            at storage.openvinotoolkit.org.
 
             Each archive's SHA-256 was verified against its `.sha256` sidecar
             before packaging.

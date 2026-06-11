@@ -1,6 +1,11 @@
 name: Publish OpenVINO CSharp API NuGet
 
 on:
+  push:
+    branches: [ csharp3.3 ]
+    paths:
+      - 'src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj'
+
   workflow_dispatch:
     inputs:
       version:
@@ -9,6 +14,11 @@ on:
         type: string
       dry_run:
         description: "Build package but skip publish and GitHub release."
+        required: false
+        type: boolean
+        default: false
+      force_republish:
+        description: "Re-run even if the openvino-csharp-api-v<version> tag already exists in this repo."
         required: false
         type: boolean
         default: false
@@ -27,23 +37,18 @@ env:
   TARGET_FRAMEWORKS: net46;net461;net462;net47;net471;net472;net48;net481;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net9.0;net10.0
 
 jobs:
-  pack:
-    name: Pack JYPPX.OpenVINO.CSharp.API
-    runs-on: windows-latest
+  resolve:
+    name: Resolve package version
+    runs-on: ubuntu-latest
     outputs:
       package_version: ${{ steps.version.outputs.package_version }}
+      skip: ${{ steps.version.outputs.skip }}
+      reason: ${{ steps.version.outputs.reason }}
     steps:
       - uses: actions/checkout@v6
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: |
-            8.0.x
-            10.0.x
-
       - id: version
-        name: Resolve package version
+        name: Read project version and check release tag
         shell: pwsh
         run: |
           $requested = '${{ inputs.version }}'.Trim()
@@ -58,12 +63,53 @@ jobs:
           }
 
           if (-not $version) {
-            throw "Could not resolve package version."
+            throw "Could not resolve package version from $env:PROJECT_PATH."
+          }
+
+          $force = '${{ inputs.force_republish }}'.Trim().ToLowerInvariant() -eq 'true'
+          $dryRun = '${{ inputs.dry_run }}'.Trim().ToLowerInvariant() -eq 'true'
+          $tag = "openvino-csharp-api-v$version"
+          $tagMatch = git ls-remote --tags origin "refs/tags/$tag"
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not query remote tags."
+          }
+
+          $tagExists = -not [string]::IsNullOrWhiteSpace($tagMatch)
+          $skip = "false"
+          $reason = ""
+          if ($tagExists -and -not $force -and -not $dryRun) {
+            $skip = "true"
+            $reason = "tag $tag already exists; package version $version has already been published"
           }
 
           "package_version=$version" >> $env:GITHUB_OUTPUT
-          "PACKAGE_VERSION=$version" >> $env:GITHUB_ENV
+          "skip=$skip" >> $env:GITHUB_OUTPUT
+          "reason=$reason" >> $env:GITHUB_OUTPUT
           Write-Host "Package version: $version"
+          if ($skip -eq "true") {
+            Write-Host "Skipping publish: $reason"
+          } elseif ($tagExists) {
+            Write-Host "Tag $tag exists, but force_republish or dry_run allows this run to continue."
+          } else {
+            Write-Host "Tag $tag does not exist; package will be built."
+          }
+
+  pack:
+    name: Pack JYPPX.OpenVINO.CSharp.API
+    needs: resolve
+    if: needs.resolve.outputs.skip != 'true'
+    runs-on: windows-latest
+    env:
+      PACKAGE_VERSION: ${{ needs.resolve.outputs.package_version }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
 
       - name: Validate target frameworks
         shell: pwsh
@@ -123,8 +169,8 @@ jobs:
 
   publish:
     name: Publish to NuGet feed
-    needs: pack
-    if: ${{ !inputs.dry_run }}
+    needs: [resolve, pack]
+    if: ${{ needs.resolve.outputs.skip != 'true' && !inputs.dry_run }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -148,8 +194,8 @@ jobs:
 
   release:
     name: Attach to GitHub Release
-    needs: [pack, publish]
-    if: ${{ !inputs.dry_run }}
+    needs: [resolve, pack, publish]
+    if: ${{ needs.resolve.outputs.skip != 'true' && !inputs.dry_run }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -162,8 +208,8 @@ jobs:
       - name: Create or update release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: openvino-csharp-api-v${{ needs.pack.outputs.package_version }}
-          name: OpenVINO CSharp API ${{ needs.pack.outputs.package_version }}
+          tag_name: openvino-csharp-api-v${{ needs.resolve.outputs.package_version }}
+          name: OpenVINO CSharp API ${{ needs.resolve.outputs.package_version }}
           body: |
             JYPPX.OpenVINO.CSharp.API NuGet package built from
             `src/OpenVINO.CSharp.API/OpenVINO.CSharp.API.csproj`.

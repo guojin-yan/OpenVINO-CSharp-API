@@ -4,16 +4,10 @@
 name: Documentation
 
 on:
-  push:
+  workflow_run:
+    workflows: [ "Publish OpenVINO CSharp API NuGet" ]
     branches: [ csharp3.3 ]
-    paths:
-      - '**.cs'
-      - '**.csproj'
-      - 'docs/**'
-      - 'README.md'
-      - 'README_EN.md'
-      - 'LICENSE.txt'
-      - '.github/workflows/docs.yml'
+    types: [ completed ]
 
   workflow_dispatch:
 
@@ -29,11 +23,14 @@ concurrency:
 jobs:
   build:
     name: Build documentation
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v6
+      with:
+        ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
