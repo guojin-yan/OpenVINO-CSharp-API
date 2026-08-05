@@ -65,10 +65,10 @@ namespace OpenVinoSharp.GenAI
         /// 获取性能指标 / Gets performance metrics.
         /// </summary>
         /// <remarks>
-        /// 返回的 <see cref="PerformanceMetrics"/> 是新建原生对象的拥有包装。OpenVINO GenAI 2026.2 未导出通用 metrics free，
+        /// 返回的 <see cref="PerformanceMetrics"/> 是新建原生对象的拥有包装。OpenVINO GenAI 2026.3 未导出通用 metrics free，
         /// 因此使用已导出的 <c>ov_genai_decoded_results_perf_metrics_free</c> 释放同类型指针。
         /// The returned <see cref="PerformanceMetrics"/> owns a newly created native object and releases it with the exported
-        /// <c>ov_genai_decoded_results_perf_metrics_free</c> because OpenVINO GenAI 2026.2 does not export a generic metrics free function.
+        /// <c>ov_genai_decoded_results_perf_metrics_free</c> because OpenVINO GenAI 2026.3 does not export a generic metrics free function.
         /// </remarks>
         public PerformanceMetrics GetPerformanceMetrics()
         {

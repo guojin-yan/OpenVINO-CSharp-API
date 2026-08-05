@@ -11,9 +11,11 @@ Outputs (to $GITHUB_OUTPUT when present, otherwise stdout):
 from __future__ import annotations
 
 import json
+import http.client
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 from typing import Any
@@ -22,6 +24,7 @@ CDN_ROOT = "https://storage.openvinotoolkit.org"
 FILETREE_URL = f"{CDN_ROOT}/filetree.json"
 PACKAGES_PATH = ("repositories", "openvino_genai", "packages")
 GH_RELEASES_API = "https://api.github.com/repos/openvinotoolkit/openvino.genai/releases?per_page=100"
+GH_TAGS_API = "https://api.github.com/repos/openvinotoolkit/openvino.genai/tags?per_page=100"
 LOCAL_TAG_PREFIX = os.environ.get("LOCAL_TAG_PREFIX") or "openvino-genai-runtime-v"
 
 # Each entry produces one NuGet package:
@@ -60,14 +63,36 @@ VERSION_DIR_RE = re.compile(r"^(\d+)\.(\d+)(?:\.(\d+))?(?:\.(\d+))?$")
 SHA256_RE = re.compile(r"\b[0-9a-fA-F]{64}\b")
 
 
-def http_get(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": "openvino-csharp-genai-runtime-bot"})
-    token = os.environ.get("GITHUB_TOKEN")
-    if token and url.startswith("https://api.github.com/"):
-        req.add_header("Authorization", f"Bearer {token}")
-        req.add_header("Accept", "application/vnd.github+json")
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        return resp.read()
+def http_get(url: str, attempts: int = 4) -> bytes:
+    """Read a discovery endpoint with bounded retries for transient failures."""
+    transient_statuses = {408, 429, 500, 502, 503, 504}
+    for attempt in range(1, attempts + 1):
+        req = urllib.request.Request(url, headers={"User-Agent": "openvino-csharp-genai-runtime-bot"})
+        token = os.environ.get("GITHUB_TOKEN")
+        if token and url.startswith("https://api.github.com/"):
+            req.add_header("Authorization", f"Bearer {token}")
+            req.add_header("Accept", "application/vnd.github+json")
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code not in transient_statuses or attempt == attempts:
+                raise
+            error: Exception = exc
+        except (urllib.error.URLError, TimeoutError, http.client.IncompleteRead) as exc:
+            if attempt == attempts:
+                raise
+            error = exc
+
+        delay = min(2 ** (attempt - 1), 8)
+        print(
+            f"  transient read failure ({attempt}/{attempts}) for {url}: {error}; "
+            f"retrying in {delay}s",
+            file=sys.stderr,
+        )
+        time.sleep(delay)
+
+    raise RuntimeError(f"failed to read {url}")
 
 
 def http_url_exists(url: str) -> bool:
@@ -173,10 +198,9 @@ def fetch_filetree() -> dict[str, Any]:
     return json.loads(http_get(FILETREE_URL))
 
 
-def fetch_official_release_tags() -> set[str]:
-    print("fetching openvinotoolkit/openvino.genai release tags", file=sys.stderr)
-    raw = http_get(GH_RELEASES_API)
-    releases = json.loads(raw)
+def fetch_official_tags() -> set[str]:
+    print("fetching openvinotoolkit/openvino.genai stable tags", file=sys.stderr)
+    releases = json.loads(http_get(GH_RELEASES_API))
     tags: set[str] = set()
     for release in releases:
         if release.get("draft") or release.get("prerelease"):
@@ -186,7 +210,17 @@ def fetch_official_release_tags() -> set[str]:
             normalized = normalize_version(tag.lstrip("vV"))
             if normalized:
                 tags.add(normalized)
-    print(f"  found {len(tags)} non-prerelease release tags", file=sys.stderr)
+
+    # A stable upstream tag can precede its GitHub Release page. This is safe
+    # to accept because archive existence and SHA-256 validity are checked too.
+    for item in json.loads(http_get(GH_TAGS_API)):
+        tag = item.get("name")
+        if not isinstance(tag, str):
+            continue
+        normalized = normalize_version(tag.lstrip("vV"))
+        if normalized:
+            tags.add(normalized)
+    print(f"  found {len(tags)} stable tags", file=sys.stderr)
     return tags
 
 
@@ -310,7 +344,7 @@ def main() -> int:
         emit_skip("openvino_genai packages node not found")
         return 0
 
-    official_tags = fetch_official_release_tags()
+    official_tags = fetch_official_tags()
     versions = list_stable_versions(packages_node)
     if requested:
         versions = [v for v in versions if v[0] == requested]
@@ -320,7 +354,7 @@ def main() -> int:
     selected: tuple[str, str, dict[str, Any], list[dict[str, str]]] | None = None
     for version, dir_name, node in versions:
         if official_tags and version not in official_tags:
-            print(f"  skipping {version}: not found in official openvino.genai releases", file=sys.stderr)
+            print(f"  skipping {version}: not found in official openvino.genai stable tags", file=sys.stderr)
             continue
         present = os_dirs_present(node)
         if not CORE_PRESENCE_OS_DIRS.issubset(present):

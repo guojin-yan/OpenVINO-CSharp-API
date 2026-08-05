@@ -15,7 +15,7 @@ For publishable technical articles, see:
 | Repository | `E:\GitSpace\OpenVINO-CSharp-API-csharp3.3\OpenVINO-CSharp-API` |
 | Target framework | `net8.0` |
 | Device | `CPU` |
-| GenAI runtime package | `JYPPX.OpenVINO.GenAI.runtime.win` `2026.2.0` |
+| GenAI runtime package | `JYPPX.OpenVINO.GenAI.runtime.win` `2026.3.0` |
 | Model root | `E:\LlmModel` |
 | LLM model | `E:\LlmModel\TinyLlama-1.1B-Chat-v1.0-int4-ov` |
 | Whisper model | `E:\LlmModel\whisper-tiny-int8-ov` |

@@ -53,7 +53,7 @@ namespace OpenVinoSharp.Tests
 
         private static void ConfigureLocalRuntimeHint()
         {
-            const string localRuntimeRoot = @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64";
+            const string localRuntimeRoot = @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.3.0.0_x86_64";
             string? current = Environment.GetEnvironmentVariable("OPENVINO_GENAI_RUNTIME_DIR");
             if (string.IsNullOrEmpty(current) && Directory.Exists(localRuntimeRoot))
                 Environment.SetEnvironmentVariable("OPENVINO_GENAI_RUNTIME_DIR", localRuntimeRoot);

@@ -30,9 +30,11 @@ release for 2026.x.
 from __future__ import annotations
 
 import json
+import http.client
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 from typing import Any
@@ -43,6 +45,7 @@ PACKAGES_PATH = ("repositories", "openvino", "packages")
 GH_RELEASES_API = (
     "https://api.github.com/repos/openvinotoolkit/openvino/releases?per_page=100"
 )
+GH_TAGS_API = "https://api.github.com/repos/openvinotoolkit/openvino/tags?per_page=100"
 # Tag the release job creates after a successful publish. Used as the
 # "have we already shipped this version?" marker.
 LOCAL_TAG_PREFIX = "openvino-runtime-v"
@@ -77,14 +80,36 @@ CORE_PRESENCE_OS_DIRS = {"windows", "linux", "macos"}
 VERSION_DIR_RE = re.compile(r"^(\d+)\.(\d+)(?:\.(\d+))?$")
 
 
-def http_get(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": "openvino-csharp-runtime-bot"})
-    token = os.environ.get("GITHUB_TOKEN")
-    if token and url.startswith("https://api.github.com/"):
-        req.add_header("Authorization", f"Bearer {token}")
-        req.add_header("Accept", "application/vnd.github+json")
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        return resp.read()
+def http_get(url: str, attempts: int = 4) -> bytes:
+    """Read a discovery endpoint with bounded retries for transient failures."""
+    transient_statuses = {408, 429, 500, 502, 503, 504}
+    for attempt in range(1, attempts + 1):
+        req = urllib.request.Request(url, headers={"User-Agent": "openvino-csharp-runtime-bot"})
+        token = os.environ.get("GITHUB_TOKEN")
+        if token and url.startswith("https://api.github.com/"):
+            req.add_header("Authorization", f"Bearer {token}")
+            req.add_header("Accept", "application/vnd.github+json")
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code not in transient_statuses or attempt == attempts:
+                raise
+            error: Exception = exc
+        except (urllib.error.URLError, TimeoutError, http.client.IncompleteRead) as exc:
+            if attempt == attempts:
+                raise
+            error = exc
+
+        delay = min(2 ** (attempt - 1), 8)
+        print(
+            f"  transient read failure ({attempt}/{attempts}) for {url}: {error}; "
+            f"retrying in {delay}s",
+            file=sys.stderr,
+        )
+        time.sleep(delay)
+
+    raise RuntimeError(f"failed to read {url}")
 
 
 def local_tag_exists(repo: str, tag: str) -> bool:
@@ -133,10 +158,9 @@ def fetch_filetree() -> dict[str, Any]:
     return json.loads(raw)
 
 
-def fetch_official_release_tags() -> set[str]:
-    """Return the set of non-prerelease, non-draft release tag names."""
-    raw = http_get(GH_RELEASES_API)
-    releases = json.loads(raw)
+def fetch_official_tags() -> set[str]:
+    """Return stable upstream tags, including tags awaiting a Release page."""
+    releases = json.loads(http_get(GH_RELEASES_API))
     tags: set[str] = set()
     for r in releases:
         if r.get("draft") or r.get("prerelease"):
@@ -144,7 +168,19 @@ def fetch_official_release_tags() -> set[str]:
         tag = r.get("tag_name")
         if isinstance(tag, str):
             # Normalize "v2026.1.0" -> "2026.1.0"
-            tags.add(tag.lstrip("vV"))
+            normalized = normalize_version(tag.lstrip("vV"))
+            if parse_version(normalized) is not None:
+                tags.add(normalized)
+
+    # Upstream sometimes pushes a stable tag before GitHub creates the Release
+    # page. The CDN archive plus SHA-256 sidecar still remain mandatory.
+    for item in json.loads(http_get(GH_TAGS_API)):
+        tag = item.get("name")
+        if not isinstance(tag, str):
+            continue
+        normalized = normalize_version(tag.lstrip("vV"))
+        if parse_version(normalized) is not None:
+            tags.add(normalized)
     return tags
 
 
@@ -249,9 +285,9 @@ def main() -> int:
         emit_skip(f"packages path not found in filetree")
         return 0
 
-    print("fetching openvinotoolkit/openvino release tags", file=sys.stderr)
-    official_tags = fetch_official_release_tags()
-    print(f"  found {len(official_tags)} non-prerelease release tags", file=sys.stderr)
+    print("fetching openvinotoolkit/openvino stable tags", file=sys.stderr)
+    official_tags = fetch_official_tags()
+    print(f"  found {len(official_tags)} stable tags", file=sys.stderr)
 
     version_dirs = list_version_dirs(packages_node)
     if not version_dirs:

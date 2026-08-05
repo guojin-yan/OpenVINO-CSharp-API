@@ -51,9 +51,9 @@ Each build downloads the official archive and the matching `.sha256` file, verif
 
 每次构建都会下载官方 archive 和匹配的 `.sha256` 文件，校验哈希后再解压并打包。发现步骤会读取官方 file tree，并额外探测确定性 archive URL，因为部分 OpenVINO GenAI archive 可能已经存在于 storage，但尚未出现在 `filetree.json` 中。正式 GitHub workflow 不使用本地 runtime 目录作为打包源。
 
-For OpenVINO GenAI 2026.2.0, the workflow builds the packages that have both an official archive and a valid `.sha256` sidecar:
+For OpenVINO GenAI 2026.3.0, the workflow builds the packages that have both an official archive and a valid `.sha256` sidecar:
 
-以 OpenVINO GenAI 2026.2.0 为例，workflow 只会构建同时具备官方 archive 和有效 `.sha256` 校验文件的平台包：
+以 OpenVINO GenAI 2026.3.0 为例，workflow 只会构建同时具备官方 archive 和有效 `.sha256` 校验文件的平台包：
 
 - `JYPPX.OpenVINO.GenAI.runtime.win`
 - `JYPPX.OpenVINO.GenAI.runtime.ubuntu.24-x86_64`
@@ -62,9 +62,9 @@ For OpenVINO GenAI 2026.2.0, the workflow builds the packages that have both an 
 - `JYPPX.OpenVINO.GenAI.runtime.rhel8-x86_64`
 - `JYPPX.OpenVINO.GenAI.runtime.macos-arm64`
 
-OpenVINO GenAI 2026.2.0 currently returns an HTML directory page instead of a checksum sidecar for the Ubuntu 20.04 and macOS x86_64 GenAI archives, so those platforms are intentionally skipped. This differs from the core OpenVINO runtime package set because the upstream GenAI release artifacts are different.
+OpenVINO GenAI 2026.3.0 still returns an HTML directory page instead of a checksum sidecar for the Ubuntu 20.04 and macOS x86_64 GenAI archives, so those platforms are intentionally skipped. This differs from the core OpenVINO runtime package set because the upstream GenAI release artifacts are different.
 
-OpenVINO GenAI 2026.2.0 当前在 Ubuntu 20.04 和 macOS x86_64 GenAI archive 的 `.sha256` 地址上返回 HTML 目录页，而不是校验文件，因此这些平台会被有意跳过。它与基础 OpenVINO runtime 包数量不同，原因是官方 GenAI 发布物本身不同。
+OpenVINO GenAI 2026.3.0 当前在 Ubuntu 20.04 和 macOS x86_64 GenAI archive 的 `.sha256` 地址上返回 HTML 目录页，而不是校验文件，因此这些平台会被有意跳过。它与基础 OpenVINO runtime 包数量不同，原因是官方 GenAI 发布物本身不同。
 
 If a future official release adds more platform archives with valid `.sha256` sidecars, the discovery script can include them automatically.
 
@@ -161,5 +161,5 @@ If loading fails, check:
 - `openvino_genai_c` exists under `runtimes/<rid>/native`.
 - Runtime dependencies exist in the same native directory.
 - The process architecture matches the installed runtime package.
-- The GenAI runtime package version matches the OpenVINO GenAI native version expected by this wrapper, for example 2026.2.x for the csharp3.3 release. / GenAI runtime 包版本应匹配当前封装期望的 OpenVINO GenAI 原生版本，例如 csharp3.3 对应 2026.2.x。
+- The GenAI runtime package version matches the OpenVINO GenAI native version expected by this wrapper, for example 2026.3.x for the csharp3.3 release. / GenAI runtime 包版本应匹配当前封装期望的 OpenVINO GenAI 原生版本，例如 csharp3.3 对应 2026.3.x。
 - The exception message includes searched paths and native load errors.

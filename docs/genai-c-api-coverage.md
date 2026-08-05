@@ -16,7 +16,7 @@ E:\OpenVINOSharp\openvino\openvino.genai-master\src\c\include\openvino\genai\c
 | `json_container.h` | `JsonContainer` | JSON strings use the two-call UTF-8 buffer pattern. |
 | `chat_history.h` | `ChatHistory` | Message JSON containers returned from native are owned by managed wrappers. |
 | `whisper_generation_config.h` | `WhisperGenerationConfig` | Optional native strings map `NOT_FOUND` to `null`; token arrays are pinned only for the native call. |
-| `whisper_pipeline.h` | `WhisperPipeline`, `WhisperDecodedResults`, `WhisperDecodedResultChunk` | Raw audio buffers are pinned for `generate`; result chunks and metrics are owned by returned wrappers. Whisper metrics use the exported decoded-results metrics free function because 2026.2 does not export a generic metrics free symbol. |
+| `whisper_pipeline.h` | `WhisperPipeline`, `WhisperDecodedResults`, `WhisperDecodedResultChunk` | Raw audio buffers are pinned for `generate`; result chunks and metrics are owned by returned wrappers. Whisper metrics use the exported decoded-results metrics free function because 2026.3 does not export a generic metrics free symbol. |
 | `vlm_pipeline.h` | `VLMPipeline`, `VLMDecodedResults` | Image tensors are borrowed from callers; only the pointer array is pinned during native calls. |
 | `visibility.h` | No managed wrapper required | Macro-only export/visibility header. |
 
@@ -34,6 +34,7 @@ E:\OpenVINOSharp\openvino\openvino.genai-master\src\c\include\openvino\genai\c
 - `char**` and arrays are pinned or allocated for the shortest possible native call scope.
 - Owned native pointers use `DisposableOvObject` and matching `*_free` functions.
 - Borrowed native pointers, such as VLM input tensors, remain owned by the caller and are documented in XML comments.
+- OpenVINO GenAI 2026.3 exports `ov_genai_vlm_pipeline_generate_with_history`; the managed VLM sample uses this history-based API. The older `start_chat`/`finish_chat` entry points remain available but are marked obsolete by the managed wrapper.
 
 ## Test Coverage / 测试覆盖
 

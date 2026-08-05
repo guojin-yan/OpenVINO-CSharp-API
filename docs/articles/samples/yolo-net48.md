@@ -136,7 +136,7 @@ public class InferRequestPool
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="JYPPX.OpenVINO.CSharp.API" Version="3.3.0" />
+    <PackageReference Include="JYPPX.OpenVINO.CSharp.API" Version="3.3.1" />
     <PackageReference Include="OpenCvSharp4" Version="4.10.0" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0" />
     <!-- Span<T> 和 Memory<T> 支持 -->

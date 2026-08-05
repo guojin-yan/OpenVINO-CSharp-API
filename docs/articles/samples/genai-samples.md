@@ -95,7 +95,7 @@ dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj 
 
 `TextGeneration/Chat` 支持 `--turn`，可重复传入多轮问题，用于稳定复现中文或英文对话。C# 字符串到 native GenAI 的链路使用 UTF-8，中文 prompt 可以正常传递；最终回答质量取决于模型本身，正式中文对话建议使用中文或多语模型。
 
-`WhisperSpeechRecognition` 支持 `--language en` 这类普通语言代码，示例会在调用 native C API 前转换为 `<|en|>`。`VisualLanguageChat` 使用 `StartChat()` 加 `Generate()` 的方式实现交互流程，因为已验证的 OpenVINO GenAI 2026.2 Windows C runtime 未导出 `ov_genai_vlm_pipeline_generate_with_history`。VLM 示例已验证中文 prompt，可以返回中文图片描述。
+`WhisperSpeechRecognition` 支持 `--language en` 这类普通语言代码，示例会在调用 native C API 前转换为 `<|en|>`。`VisualLanguageChat` 使用 `ChatHistory` 加 `GenerateWithHistory()` 的方式实现交互流程，适配 OpenVINO GenAI 2026.3 新增的 VLM history 导出。VLM 示例已验证中文 prompt，可以返回中文图片描述。
 
 VLM 示例默认把空输出视为失败。只有明确做 ABI smoke test 时，才使用 `--allow-empty true`。
 

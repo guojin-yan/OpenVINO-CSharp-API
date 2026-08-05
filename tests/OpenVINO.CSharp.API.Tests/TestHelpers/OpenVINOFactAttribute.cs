@@ -54,7 +54,7 @@ namespace OpenVinoSharp.Tests
         {
             // 只为基础 OpenVINO runtime 设置搜索提示，不设置 GenAI 环境变量。
             // Only configure the core OpenVINO runtime hint here; GenAI tests use OpenVINOGenAIFactAttribute.
-            const string localRuntimeRoot = @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.2.0.0_x86_64";
+            const string localRuntimeRoot = @"E:\OpenVINOSharp\openvino\openvino_genai_windows_2026.3.0.0_x86_64";
             if (!Directory.Exists(localRuntimeRoot))
                 return;
 

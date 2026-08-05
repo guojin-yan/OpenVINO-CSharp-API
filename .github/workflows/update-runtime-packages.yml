@@ -70,6 +70,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.x"
+      - name: Test release automation helpers
+        run: python3 .github/scripts/test_discovery_and_email.py
       - id: runtime
         name: Resolve target OpenVINO runtime version and matrix
         env:
@@ -222,3 +224,35 @@ jobs:
           files: artifacts/*.nupkg
           fail_on_unmatched_files: true
           make_latest: false
+
+  notify:
+    name: Email runtime publication report
+    needs: [discover, build-runtime, build-genai, publish, release]
+    if: ${{ always() && needs.discover.result == 'success' && needs.discover.outputs.skip != 'true' }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+      - name: Send release report
+        env:
+          SMTP_HOST: ${{ secrets.OPENVINO_RELEASE_SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.OPENVINO_RELEASE_SMTP_PORT }}
+          SMTP_SECURITY: ${{ secrets.OPENVINO_RELEASE_SMTP_SECURITY }}
+          SMTP_USERNAME: ${{ secrets.OPENVINO_RELEASE_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.OPENVINO_RELEASE_SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.OPENVINO_RELEASE_EMAIL_FROM }}
+          SMTP_TO: ${{ secrets.OPENVINO_RELEASE_EMAIL_TO }}
+          RUNTIME_VERSION: ${{ needs.discover.outputs.version }}
+          RUNTIME_MATRIX: ${{ needs.discover.outputs.runtime_matrix }}
+          GENAI_MATRIX: ${{ needs.discover.outputs.genai_matrix }}
+          DISCOVER_RESULT: ${{ needs.discover.result }}
+          BUILD_RUNTIME_RESULT: ${{ needs.build-runtime.result }}
+          BUILD_GENAI_RESULT: ${{ needs.build-genai.result }}
+          PUBLISH_RESULT: ${{ needs.publish.result }}
+          RELEASE_RESULT: ${{ needs.release.result }}
+          RELEASE_URL: https://github.com/${{ github.repository }}/releases/tag/openvino-runtime-v${{ needs.discover.outputs.version }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python3 .github/scripts/send_release_email.py

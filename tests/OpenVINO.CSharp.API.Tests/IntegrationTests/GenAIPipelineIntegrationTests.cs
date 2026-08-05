@@ -55,8 +55,6 @@ namespace OpenVinoSharp.Tests.IntegrationTests
             {
                 config.SetMaxNewTokens(1);
                 pipeline.SetGenerationConfig(config);
-                pipeline.StartChat();
-                pipeline.FinishChat();
 
                 Assert.Throws<ArgumentException>(() => pipeline.Generate("Describe this image.", new Tensor[] { null! }, config));
 

@@ -145,7 +145,7 @@ flowchart LR
 
 ## Runtime 兼容说明
 
-当前已验证的 OpenVINO GenAI 2026.2 Windows C runtime 未导出 `ov_genai_vlm_pipeline_generate_with_history`。因此 C# 示例使用 `StartChat()` 加 `Generate()` 的方式实现交互流程，确保它可以在已发布 runtime 上运行。
+OpenVINO GenAI 2026.3 Windows C runtime 已导出 `ov_genai_vlm_pipeline_generate_with_history`。因此 C# 示例使用 `ChatHistory` 加 `GenerateWithHistory()` 的方式实现交互流程，不再依赖已弃用的 `StartChat()`/`FinishChat()`。
 
 这不影响单轮 VLM 生成，也不影响把示例扩展成应用。应用层可以维护自己的历史记录，并按模型支持的上下文方式组织 prompt。
 

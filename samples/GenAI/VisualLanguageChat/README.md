@@ -92,18 +92,18 @@ Interactive commands:
 
 ## Runtime Notes / 运行时说明
 
-- The validated OpenVINO GenAI 2026.2 Windows C runtime does not export
+- OpenVINO GenAI 2026.3 Windows C runtime exports
   `ov_genai_vlm_pipeline_generate_with_history`.
-- The sample therefore uses `StartChat()` plus streamed `Generate()` instead of
-  the C history entry point.
+- The sample therefore uses `ChatHistory` plus streamed `GenerateWithHistory()`;
+  the deprecated stateful chat entry points are not required.
 - Empty output is treated as a failure by default. Pass `--allow-empty true`
   only when intentionally running tiny random ABI smoke models.
 - Full local validation uses `OpenVINO/InternVL2-1B-int4-ov` and produces
   non-empty text.
 
-- 已验证的 OpenVINO GenAI 2026.2 Windows C runtime 未导出
+- OpenVINO GenAI 2026.3 Windows C runtime 已导出
   `ov_genai_vlm_pipeline_generate_with_history`。
-- 因此示例使用 `StartChat()` 加流式 `Generate()`，不依赖 C history 入口点。
+- 因此示例使用 `ChatHistory` 加流式 `GenerateWithHistory()`，不依赖已弃用的状态聊天入口点。
 - 默认会把空输出视为失败。只有明确运行 tiny random ABI 烟测模型时才传入
   `--allow-empty true`。
 - 完整本地验证使用 `OpenVINO/InternVL2-1B-int4-ov`，并能生成非空文本。

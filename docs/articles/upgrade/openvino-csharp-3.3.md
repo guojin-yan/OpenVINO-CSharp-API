@@ -3,6 +3,11 @@
 OpenVINO C# API 3.3 keeps the core inference APIs compatible with 3.2 and adds
 managed OpenVINO GenAI support for .NET applications.
 
+The 3.3.1 maintenance update aligns runtime automation and documentation with
+OpenVINO 2026.3. The core C ABI is unchanged. OpenVINO GenAI 2026.3 adds the
+VLM history export already exposed by `GenerateWithHistory`; `StartChat()` and
+`FinishChat()` remain compatibility helpers but are now marked obsolete.
+
 ## What changed
 
 | Area | 3.2 | 3.3 |
@@ -24,15 +29,15 @@ only when calling APIs under `OpenVinoSharp.GenAI`.
 For core inference:
 
 ```xml
-<PackageReference Include="JYPPX.OpenVINO.CSharp.API" Version="3.3.0" />
-<PackageReference Include="OpenVINO.runtime.win" Version="2026.2.0" />
+<PackageReference Include="JYPPX.OpenVINO.CSharp.API" Version="3.3.1" />
+<PackageReference Include="OpenVINO.runtime.win" Version="2026.3.0" />
 ```
 
 For GenAI on Windows:
 
 ```xml
-<PackageReference Include="JYPPX.OpenVINO.CSharp.API" Version="3.3.0" />
-<PackageReference Include="JYPPX.OpenVINO.GenAI.runtime.win" Version="2026.2.0" />
+<PackageReference Include="JYPPX.OpenVINO.CSharp.API" Version="3.3.1" />
+<PackageReference Include="JYPPX.OpenVINO.GenAI.runtime.win" Version="2026.3.0" />
 ```
 
 ## Model paths in samples
@@ -51,9 +56,10 @@ dotnet run --project samples/GenAI/TextGeneration/Greedy/Greedy.csproj --framewo
 
 ## Migration checklist
 
-1. Upgrade `JYPPX.OpenVINO.CSharp.API` to `3.3.0`.
+1. Upgrade `JYPPX.OpenVINO.CSharp.API` to `3.3.1` and the native runtime to `2026.3.0`.
 2. Keep existing core inference code unchanged and run your current tests.
 3. Use the new PascalCase APIs for new code where convenient.
-4. Add `JYPPX.OpenVINO.GenAI.runtime.*` only for GenAI scenarios.
+4. Add `JYPPX.OpenVINO.GenAI.runtime.*` only for GenAI scenarios. Prefer
+   `ChatHistory` plus `GenerateWithHistory()` for multi-turn VLM/LLM code.
 5. Pass model and media paths explicitly in sample commands or application
    configuration; avoid hard-coded developer-machine paths.

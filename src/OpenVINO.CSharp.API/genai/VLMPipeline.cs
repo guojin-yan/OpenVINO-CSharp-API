@@ -128,6 +128,7 @@ namespace OpenVinoSharp.GenAI
         /// <summary>
         /// 开始聊天模式并保留 KV cache / Starts chat mode and keeps KV cache.
         /// </summary>
+        [Obsolete("OpenVINO GenAI deprecated stateful chat mode. Use GenerateWithHistory(ChatHistory, ...) instead.")]
         public void StartChat()
         {
             ThrowIfDisposed();
@@ -137,6 +138,7 @@ namespace OpenVinoSharp.GenAI
         /// <summary>
         /// 结束聊天模式并清理 KV cache / Finishes chat mode and clears KV cache.
         /// </summary>
+        [Obsolete("OpenVINO GenAI deprecated stateful chat mode. Use GenerateWithHistory(ChatHistory, ...) instead.")]
         public void FinishChat()
         {
             ThrowIfDisposed();
@@ -176,9 +178,11 @@ namespace OpenVinoSharp.GenAI
         public VLMDecodedResults generate_with_history(ChatHistory history, Tensor[]? images = null, GenerationConfig? config = null) => GenerateWithHistory(history, images, config);
 
         /// <summary>兼容 C 风格别名 / C-style alias.</summary>
+        [Obsolete("OpenVINO GenAI deprecated stateful chat mode. Use generate_with_history(...) instead.")]
         public void start_chat() => StartChat();
 
         /// <summary>兼容 C 风格别名 / C-style alias.</summary>
+        [Obsolete("OpenVINO GenAI deprecated stateful chat mode. Use generate_with_history(...) instead.")]
         public void finish_chat() => FinishChat();
 
         /// <summary>兼容 C 风格别名 / C-style alias.</summary>

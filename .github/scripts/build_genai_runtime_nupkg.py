@@ -25,12 +25,15 @@ from __future__ import annotations
 import argparse
 import datetime as _datetime
 import hashlib
+import http.client
 import os
 import re
 import shutil
 import sys
 import tarfile
 import tempfile
+import time
+import urllib.error
 import urllib.request
 import uuid
 import zipfile
@@ -77,9 +80,22 @@ def truthy(value: str | None) -> bool:
 
 def download(url: str, dest: Path) -> None:
     print(f"  GET  {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "openvino-csharp-genai-runtime-bot"})
-    with urllib.request.urlopen(req, timeout=300) as resp, open(dest, "wb") as fh:
-        shutil.copyfileobj(resp, fh, length=1 << 20)
+    partial = dest.with_name(dest.name + ".part")
+    for attempt in range(1, 4):
+        req = urllib.request.Request(url, headers={"User-Agent": "openvino-csharp-genai-runtime-bot"})
+        try:
+            with urllib.request.urlopen(req, timeout=300) as resp, open(partial, "wb") as fh:
+                shutil.copyfileobj(resp, fh, length=1 << 20)
+            os.replace(partial, dest)
+            return
+        except (urllib.error.URLError, TimeoutError, http.client.IncompleteRead, OSError):
+            if partial.exists():
+                partial.unlink()
+            if attempt == 3:
+                raise
+            delay = 2 ** (attempt - 1)
+            print(f"  transient download failure; retrying in {delay}s", file=sys.stderr, flush=True)
+            time.sleep(delay)
 
 
 def sha256_of(path: Path) -> str:

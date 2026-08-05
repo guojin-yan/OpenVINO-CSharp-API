@@ -57,7 +57,7 @@ $image = Join-Path $modelRoot "assets\color_blocks_30.ppm"
 Run all samples and write one log per scenario. The script publishes each sample
 to `out\genai-samples-validation\publish` first, then runs the generated exe so
 the validation path matches a real consumer app more closely. The projects
-restore `JYPPX.OpenVINO.GenAI.runtime.win` 2026.2.0 by default on Windows.
+restore `JYPPX.OpenVINO.GenAI.runtime.win` 2026.3.0 by default on Windows.
 
 运行全部示例，并为每个场景保存一份日志。脚本会先把每个 sample publish 到
 `out\genai-samples-validation\publish`，再运行生成的 exe，使验证路径更接近真实应用。
@@ -109,9 +109,8 @@ dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj 
   sample code.
 - `WhisperSpeechRecognition` accepts `--language en`; the sample normalizes it
   to the Whisper token form `<|en|>` before calling the C API.
-- `VisualLanguageChat` uses `StartChat()` plus streamed `Generate()` because the
-  validated OpenVINO GenAI 2026.2 Windows C runtime does not export
-  `ov_genai_vlm_pipeline_generate_with_history`.
+- `VisualLanguageChat` uses `ChatHistory` plus streamed `GenerateWithHistory()`;
+  OpenVINO GenAI 2026.3 exports the VLM history entry point.
 - Full local validation uses `OpenVINO/InternVL2-1B-int4-ov` and requires
   non-empty VLM output. Tiny random VLM models are only useful for ABI smoke
   tests and should be run with `--allow-empty true`.
@@ -119,8 +118,7 @@ dotnet run --project samples/GenAI/VisualLanguageChat/VisualLanguageChat.csproj 
 - 修改示例代码前，建议先通过 `RunAllSamples.ps1` 完整验证。
 - `WhisperSpeechRecognition` 支持 `--language en`；示例会在调用 C API 前自动转成
   Whisper token 写法 `<|en|>`。
-- `VisualLanguageChat` 使用 `StartChat()` 加流式 `Generate()`，因为已验证的
-  OpenVINO GenAI 2026.2 Windows C runtime 未导出
-  `ov_genai_vlm_pipeline_generate_with_history`。
+- `VisualLanguageChat` 使用 `ChatHistory` 加流式 `GenerateWithHistory()`；
+  OpenVINO GenAI 2026.3 已导出 VLM history 入口点。
 - 完整本地验证使用 `OpenVINO/InternVL2-1B-int4-ov`，并要求 VLM 产生非空输出。tiny
   random VLM 模型只适合 ABI 烟测，运行时应显式传入 `--allow-empty true`。

@@ -39,7 +39,8 @@ return GenAISample.Run(() =>
         return RunInteractive(pipeline, config, imageTensor, stream, allowEmpty);
 
     Console.WriteLine("Answer / 回答:");
-    using VLMDecodedResults results = Generate(pipeline, prompt, new[] { imageTensor }, config, stream, out string answer);
+    using ChatHistory history = new ChatHistory().AddUserMessage(prompt);
+    using VLMDecodedResults results = Generate(pipeline, history, new[] { imageTensor }, config, stream, out string answer);
     if (!stream)
         Console.WriteLine(answer);
     else
@@ -62,37 +63,32 @@ static int RunInteractive(VLMPipeline pipeline, GenerationConfig config, Tensor 
 {
     bool firstTurn = true;
     bool hasEmptyAnswer = false;
+    using ChatHistory history = new();
 
-    pipeline.StartChat();
-    try
+    Console.WriteLine("Type questions about the image, empty line, or /exit to quit.");
+    Console.WriteLine("输入关于图片的问题，空行或 /exit 退出。");
+
+    while (true)
     {
-        Console.WriteLine("Type questions about the image, empty line, or /exit to quit.");
-        Console.WriteLine("输入关于图片的问题，空行或 /exit 退出。");
+        Console.WriteLine();
+        Console.Write("question> ");
+        string? prompt = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(prompt) || prompt.Equals("/exit", StringComparison.OrdinalIgnoreCase))
+            break;
 
-        while (true)
-        {
-            Console.WriteLine();
-            Console.Write("question> ");
-            string? prompt = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(prompt) || prompt.Equals("/exit", StringComparison.OrdinalIgnoreCase))
-                break;
+        history.AddUserMessage(prompt);
+        Tensor[]? turnImages = firstTurn ? new[] { imageTensor } : null;
 
-            Tensor[]? turnImages = firstTurn ? new[] { imageTensor } : null;
+        Console.Write("answer> ");
+        using VLMDecodedResults results = Generate(pipeline, history, turnImages, config, stream, out string answer);
+        if (!stream)
+            Console.Write(answer);
+        Console.WriteLine();
 
-            Console.Write("answer> ");
-            using VLMDecodedResults results = Generate(pipeline, prompt, turnImages, config, stream, out string answer);
-            if (!stream)
-                Console.Write(answer);
-            Console.WriteLine();
-
-            if (string.IsNullOrWhiteSpace(answer))
-                hasEmptyAnswer = true;
-            firstTurn = false;
-        }
-    }
-    finally
-    {
-        pipeline.FinishChat();
+        if (string.IsNullOrWhiteSpace(answer))
+            hasEmptyAnswer = true;
+        history.AddAssistantMessage(answer);
+        firstTurn = false;
     }
 
     if (!allowEmpty && hasEmptyAnswer)
@@ -105,17 +101,17 @@ static int RunInteractive(VLMPipeline pipeline, GenerationConfig config, Tensor 
     return 0;
 }
 
-static VLMDecodedResults Generate(VLMPipeline pipeline, string prompt, Tensor[]? images, GenerationConfig config, bool stream, out string answer)
+static VLMDecodedResults Generate(VLMPipeline pipeline, ChatHistory history, Tensor[]? images, GenerationConfig config, bool stream, out string answer)
 {
     if (!stream)
     {
-        VLMDecodedResults results = pipeline.Generate(prompt, images, config);
+        VLMDecodedResults results = pipeline.GenerateWithHistory(history, images, config);
         answer = results.GetText();
         return results;
     }
 
     StringBuilder builder = new();
-    VLMDecodedResults streamedResults = pipeline.Generate(prompt, images, config, text =>
+    VLMDecodedResults streamedResults = pipeline.GenerateWithHistory(history, images, config, text =>
     {
         Console.Write(text);
         builder.Append(text);

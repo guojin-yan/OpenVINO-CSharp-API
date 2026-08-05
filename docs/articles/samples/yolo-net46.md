@@ -153,7 +153,7 @@ static void PreprocessImage(string imagePath, Size targetSize,
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="JYPPX.OpenVINO.CSharp.API" Version="3.3.0" />
+    <PackageReference Include="JYPPX.OpenVINO.CSharp.API" Version="3.3.1" />
     <!-- 使用 4.5.3 版本支持 net461 -->
     <PackageReference Include="OpenCvSharp4" Version="4.5.3.20211228" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.3.20211228" />

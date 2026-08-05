@@ -6,7 +6,7 @@
 [![NuGet](https://img.shields.io/nuget/v/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![Downloads](https://img.shields.io/nuget/dt/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![.NET](https://img.shields.io/badge/.NET-4.6%20%7C%205.0%20%7C%206.0%20%7C%207.0%20%7C%208.0%20%7C%209.0%20%7C%2010.0-blue)](https://dotnet.microsoft.com/)
-[![OpenVINO](https://img.shields.io/badge/OpenVINO-2026.2-orange)](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html)
+[![OpenVINO](https://img.shields.io/badge/OpenVINO-2026.3-orange)](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html)
 
 [English](README_EN.md) | 简体中文
 
@@ -14,14 +14,15 @@
 
 **OpenVINO C# API 是 Intel OpenVINO 的 .NET 封装库，让 C# 开发者能够在 Windows、Linux、macOS 上高性能运行深度学习模型推理，支持 YOLO、ResNet、BERT 等主流模型。**
 
-当前开发版本为 **OpenVINO™ C# API 3.3.0**，该版本继续保持已发布 API 兼容，并补齐 OpenVINO 2026.2 C API、OpenVINO GenAI C API、runtime 自动打包、测试和文档。
+当前开发版本为 **OpenVINO™ C# API 3.3.1**，该版本继续保持已发布 API 兼容，并对齐 OpenVINO 2026.3 C API、OpenVINO GenAI C API、runtime 自动打包、测试和文档。
 
-## 📢 3.3.0 发布要点
+## 📢 3.3.1 发布要点
 
-- 保持已发布基础 API 兼容，同时补齐 OpenVINO 2026.2 C API 封装并新增 PascalCase 友好接口。
+- 保持已发布基础 API 兼容；OpenVINO 2026.3 core C API 的 ABI 未变化，GenAI 新增的 VLM history 导出已完成封装。
 - 新增可选 `OpenVinoSharp.GenAI` 封装，覆盖 LLM、Whisper、VLM 等 OpenVINO GenAI C API。
 - GenAI runtime 保持可选加载：只使用 `Core`、`Model`、`Tensor`、`CompiledModel`、`InferRequest` 时不会加载 `openvino_genai_c`。
-- runtime NuGet 自动打包已支持基础 OpenVINO runtime 与 GenAI runtime；GenAI 2026.2 覆盖 Windows、Ubuntu、RHEL 和 macOS ARM64 平台包。
+- runtime NuGet 自动打包已支持基础 OpenVINO runtime 与 GenAI runtime；2026.3 实际发布矩阵覆盖 Windows、Ubuntu、CentOS/RHEL 和 macOS ARM64。
+- `StartChat()`/`FinishChat()` 已标记为弃用，VLM 示例改用 `ChatHistory` 与 `GenerateWithHistory()`。
 - 强化 UTF-8 字符串、Windows 中文路径、owned/borrowed native pointer 生命周期、测试、示例和文档。
 
 最后，如果各位在使用中有什么问题，可以与我沟通联系，也欢迎广大C#开发者加入到OpenVINO™ C# API 开发中。
@@ -146,9 +147,11 @@ dotnet run
 | **OpenVINO.runtime.macos-arm64**      | Native bindings for macos-arm64                       | [![NuGet Gallery ](https://badge.fury.io/nu/OpenVINO.runtime.macos-arm64.svg)](https://www.nuget.org/packages/OpenVINO.runtime.macos-arm64/) |
 
 GenAI runtime packages are published only for official archives that also have
-a valid `.sha256` sidecar. OpenVINO GenAI 2026.2.0 does not currently provide
-packageable Ubuntu 20.04 or macOS x86_64 GenAI archives, even though the core
-OpenVINO runtime still has packages for those platforms.
+a valid `.sha256` sidecar. For OpenVINO 2026.3, the core matrix currently
+contains Windows, Ubuntu 24/22 x86_64, Ubuntu 22 ARM64, CentOS 8, RHEL 8, and
+macOS ARM64. The GenAI matrix contains Windows, Ubuntu 24/22 x86_64, Ubuntu 22
+ARM64, RHEL 8, and macOS ARM64; platforms without a valid official checksum are
+intentionally skipped.
 
 
 ### Integration Library
@@ -250,7 +253,7 @@ OpenVINO.CSharp.API/
 ### 环境要求
 
 - .NET SDK 5.0 或更高版本（或 Visual Studio 2019+）
-- OpenVINO Runtime 2026.2+
+- OpenVINO Runtime 2026.3+
 
 ### 构建步骤
 
