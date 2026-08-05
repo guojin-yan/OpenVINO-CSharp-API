@@ -29,17 +29,49 @@ for p in "${pkgs[@]}"; do
 done
 
 published_any=false
+publish_failed=false
+
+push_with_retry() {
+  local package="$1"
+  local source="$2"
+  local api_key="$3"
+  local attempt=1
+  local max_attempts=3
+
+  while [ "$attempt" -le "$max_attempts" ]; do
+    echo "Pushing $(basename "$package") (attempt $attempt/$max_attempts)"
+    if dotnet nuget push "$package" \
+      --api-key "$api_key" \
+      --source "$source" \
+      --skip-duplicate \
+      --timeout 900; then
+      return 0
+    fi
+
+    if [ "$attempt" -lt "$max_attempts" ]; then
+      delay=$((attempt * 20))
+      echo "Push failed; retrying in ${delay}s" >&2
+      sleep "$delay"
+    fi
+    attempt=$((attempt + 1))
+  done
+
+  echo "Failed to publish $(basename "$package") after $max_attempts attempts" >&2
+  return 1
+}
 
 if [ -n "${NUGET_API_KEY:-}" ]; then
   source="https://api.nuget.org/v3/index.json"
   echo
   echo "Publishing to NuGet.org ($source)"
+  failed=()
   for p in "${pkgs[@]}"; do
-    dotnet nuget push "$p" \
-      --api-key "$NUGET_API_KEY" \
-      --source "$source" \
-      --skip-duplicate
+    push_with_retry "$p" "$source" "$NUGET_API_KEY" || failed+=("$(basename "$p")")
   done
+  if [ "${#failed[@]}" -gt 0 ]; then
+    printf 'NuGet.org publish failures:\n  - %s\n' "${failed[@]}" >&2
+    publish_failed=true
+  fi
   published_any=true
 else
   echo
@@ -65,16 +97,22 @@ else
     --store-password-in-clear-text \
     >/dev/null 2>&1 || true
 
+  failed=()
   for p in "${pkgs[@]}"; do
-    dotnet nuget push "$p" \
-      --api-key "${GITHUB_TOKEN}" \
-      --source "$source" \
-      --skip-duplicate
+    push_with_retry "$p" "$source" "${GITHUB_TOKEN}" || failed+=("$(basename "$p")")
   done
+  if [ "${#failed[@]}" -gt 0 ]; then
+    printf 'GitHub Packages publish failures:\n  - %s\n' "${failed[@]}" >&2
+    publish_failed=true
+  fi
   published_any=true
 fi
 
 if [ "$published_any" != true ]; then
   echo "neither NUGET_API_KEY nor (GITHUB_TOKEN + OWNER) are set; cannot publish" >&2
+  exit 1
+fi
+
+if [ "$publish_failed" = true ]; then
   exit 1
 fi
