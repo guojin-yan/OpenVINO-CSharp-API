@@ -2,7 +2,7 @@
 
 # OpenVINO C# API
 
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/LICENSE.txt)
 [![NuGet](https://img.shields.io/nuget/v/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![Downloads](https://img.shields.io/nuget/dt/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![.NET](https://img.shields.io/badge/.NET-4.6%20%7C%205.0%20%7C%206.0%20%7C%207.0%20%7C%208.0%20%7C%209.0%20%7C%2010.0-blue)](https://dotnet.microsoft.com/)
@@ -14,16 +14,16 @@
 
 **OpenVINO C# API 是 Intel OpenVINO 的 .NET 封装库，让 C# 开发者能够在 Windows、Linux、macOS 上高性能运行深度学习模型推理，支持 YOLO、ResNet、BERT 等主流模型。**
 
-当前开发版本为 **OpenVINO™ C# API 3.3.1**，该版本继续保持已发布 API 兼容，并对齐 OpenVINO 2026.3 C API、OpenVINO GenAI C API、runtime 自动打包、测试和文档。
+当前稳定版本为 **OpenVINO™ C# API 3.3.1**，配套 OpenVINO 2026.3 runtime。
 
-## 📢 3.3.1 发布要点
+## 📢 3.3.1 更新摘要
 
-- 保持已发布基础 API 兼容；OpenVINO 2026.3 core C API 的 ABI 未变化，GenAI 新增的 VLM history 导出已完成封装。
-- 新增可选 `OpenVinoSharp.GenAI` 封装，覆盖 LLM、Whisper、VLM 等 OpenVINO GenAI C API。
-- GenAI runtime 保持可选加载：只使用 `Core`、`Model`、`Tensor`、`CompiledModel`、`InferRequest` 时不会加载 `openvino_genai_c`。
-- runtime NuGet 自动打包已支持基础 OpenVINO runtime 与 GenAI runtime；2026.3 实际发布矩阵覆盖 Windows、Ubuntu、CentOS/RHEL 和 macOS ARM64。
-- `StartChat()`/`FinishChat()` 已标记为弃用，VLM 示例改用 `ChatHistory` 与 `GenerateWithHistory()`。
-- 强化 UTF-8 字符串、Windows 中文路径、owned/borrowed native pointer 生命周期、测试、示例和文档。
+- 对齐 OpenVINO Core 2026.3，现有 Core 推理 API 保持兼容；
+- 提供可选 `OpenVinoSharp.GenAI` 封装，覆盖 LLM、Whisper 和 VLM；
+- VLM 多轮对话使用 `ChatHistory` 与 `GenerateWithHistory()`；
+- 提供 Windows、Linux 和 macOS 对应的 Core/GenAI 2026.3 runtime 包。
+
+[查看 3.3.1 完整版本说明](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/docs/release-notes/3.3.1.md) · [查看全部版本记录](https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/docs/release-notes)
 
 最后，如果各位在使用中有什么问题，可以与我沟通联系，也欢迎广大C#开发者加入到OpenVINO™ C# API 开发中。
 
@@ -318,7 +318,7 @@ OvLogger.SetCallback((level, message) =>
 
 ## 📄 许可证
 
-本项目采用 [Apache-2.0 License](LICENSE) 开源。
+本项目采用 [Apache-2.0 License](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/LICENSE.txt) 开源。
 
 ## 🙏 致谢
 

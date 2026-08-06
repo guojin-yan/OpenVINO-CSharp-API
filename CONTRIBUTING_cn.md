@@ -18,6 +18,23 @@
 
   如果你对 OpenVINO™ C# API 感兴趣，并接受该项目工作，有余力协助 OpenVINO™ C# API 库开发，可以与我联系[guojin_yjs@cumt.edu.cn](mailto:guojin_yjs@cumt.edu.cn)。
 
+## ⭕版本迭代文档要求
+
+凡是修改 `JYPPX.OpenVINO.CSharp.API` 版本号、对齐的 OpenVINO/OpenVINO GenAI 版本，
+或对外兼容性说明的版本发布 PR，必须同时更新版本文档。该要求属于发布完成条件，
+缺少任一项时不得合并或发布：
+
+1. 在 `README.md` 和 `README_EN.md` 中更新当前版本号与 3 至 6 条简要更新摘要；
+2. 以 `docs/release-notes/TEMPLATE.md` 为模板新增 `docs/release-notes/<version>.md`；
+3. 更新 `docs/release-notes/README.md` 的版本总索引，最新版本放在最前；
+4. 在详细说明中写明版本映射、用户可见变更、兼容性、弃用 API、升级步骤、支持平台和已知限制；
+5. 检查 README、项目文件、NuGet 包版本和版本说明中的数字一致；
+6. 在 PR 描述中勾选版本文档检查项，并列出本次执行的构建或测试。
+
+纯内部重构或不随新版本发布的普通 PR 不要求创建版本文件；一旦 PR 修改包版本或对外版本
+承诺，就必须遵守上述规则。详细维护方式见
+[`docs/release-notes/README.md`](docs/release-notes/README.md)。
+
 
 
 ## ⭕提交拉取请求 (PR)

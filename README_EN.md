@@ -2,7 +2,7 @@
 
 # OpenVINO C# API
 
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/LICENSE.txt)
 [![NuGet](https://img.shields.io/nuget/v/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![Downloads](https://img.shields.io/nuget/dt/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![.NET](https://img.shields.io/badge/.NET-4.6%20%7C%205.0%20%7C%206.0%20%7C%207.0%20%7C%208.0%20%7C%209.0%20%7C%2010.0-blue)](https://dotnet.microsoft.com/)
@@ -14,16 +14,16 @@ Intel Distribution [OpenVINO™](https://www.intel.com/content/www/us/en/develop
 
 **OpenVINO C# API is a .NET wrapper library for Intel OpenVINO, enabling C# developers to run deep learning model inference with high performance on Windows, Linux, and macOS. Supports mainstream models like YOLO, ResNet, BERT, etc.**
 
-The current development version is **OpenVINO™ C# API 3.3.1**. This release keeps the published API compatible, aligns the wrapper and packaging with OpenVINO 2026.3, and updates the runtime packaging, tests, samples, and documentation.
+The current stable version is **OpenVINO™ C# API 3.3.1**, paired with the OpenVINO 2026.3 runtime.
 
-## 📢 3.3.1 Release Highlights
+## 📢 3.3.1 Update Summary
 
-- Keeps the published core API compatible. OpenVINO 2026.3 core C API has no ABI changes, and the new GenAI VLM history export is covered by the wrapper.
-- Adds optional `OpenVinoSharp.GenAI` wrappers for LLM, Whisper, VLM, and related OpenVINO GenAI C APIs.
-- Keeps GenAI runtime optional: applications that only use `Core`, `Model`, `Tensor`, `CompiledModel`, or `InferRequest` do not load `openvino_genai_c`.
-- Updates runtime NuGet automation for both core OpenVINO runtime and GenAI runtime. The 2026.3 matrix covers Windows, Ubuntu, CentOS/RHEL, and macOS ARM64 where official checksums are available.
-- Marks `StartChat()`/`FinishChat()` obsolete and moves the VLM sample to `ChatHistory` plus `GenerateWithHistory()`.
-- Strengthens UTF-8 strings, Windows Unicode paths, owned/borrowed native pointer lifetimes, tests, samples, and documentation.
+- Aligns with OpenVINO Core 2026.3 while keeping existing Core inference APIs compatible.
+- Provides optional `OpenVinoSharp.GenAI` wrappers for LLM, Whisper, and VLM scenarios.
+- Uses `ChatHistory` and `GenerateWithHistory()` for multi-turn VLM conversations.
+- Provides matching OpenVINO 2026.3 Core and GenAI runtime packages for Windows, Linux, and macOS.
+
+[Read the complete 3.3.1 release notes](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/docs/release-notes/3.3.1.md) · [Browse all releases](https://github.com/guojin-yan/OpenVINO-CSharp-API/tree/csharp3.3/docs/release-notes)
 
 Finally, if you have any questions during use, you can communicate and contact me. We also welcome C# developers to join OpenVINO™ C# API development.
 
@@ -313,7 +313,7 @@ Contributions via Issue and Pull Request are welcome!
 
 ## 📄 License
 
-This project is open-sourced under the [Apache-2.0 License](LICENSE).
+This project is open-sourced under the [Apache-2.0 License](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/LICENSE.txt).
 
 ## 🙏 Acknowledgments
 

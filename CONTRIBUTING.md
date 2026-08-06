@@ -18,6 +18,32 @@
 
   If you are interested in OpenVINO™ C# API and accept the project work, and have the spare time to assist in the development of the OpenVINO™ C# API library, you can contact me by [guojin_yjs@cumt.edu.cn](mailto:guojin_yjs@cumt.edu.cn)。
 
+## ⭕Release Documentation Requirements
+
+Any release PR that changes the `JYPPX.OpenVINO.CSharp.API` package version,
+the aligned OpenVINO/OpenVINO GenAI version, or the published compatibility
+contract must update the release documentation. These items are release
+completion criteria; a release must not be merged or published while any item
+is missing:
+
+1. Update the current version and a three-to-six-item summary in `README.md`
+   and `README_EN.md`.
+2. Copy `docs/release-notes/TEMPLATE.md` to a new
+   `docs/release-notes/<version>.md` file.
+3. Add the new version to `docs/release-notes/README.md`, newest first.
+4. Document version mapping, user-visible changes, compatibility,
+   deprecations, migration, supported platforms, and known limitations.
+5. Verify that the README, project file, NuGet package versions, and release
+   notes use consistent version numbers.
+6. Complete the release-documentation checklist in the PR description and
+   list the builds or tests executed for the release.
+
+Internal refactoring and ordinary PRs that do not ship a new version do not
+need a new release file. Once a PR changes a package version or public version
+contract, all requirements above apply. See
+[`docs/release-notes/README.md`](docs/release-notes/README.md) for the complete
+maintenance convention.
+
 
 
 ## ⭕Submit Pull Request (PR)
@@ -166,4 +192,4 @@ git push origin main
 
 ## ⭕Licence
 
-&emsp;   The contribution you submitted assumes that you agree to adopt the [Apache-2.0 license](https://github.com/PaddlePaddle/Paddle/blob/develop/LICENSE) 
+&emsp;   The contribution you submitted assumes that you agree to adopt the [Apache-2.0 license](https://github.com/PaddlePaddle/Paddle/blob/develop/LICENSE)

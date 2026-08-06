@@ -14,6 +14,10 @@ items:
 - name: GenAI C API 覆盖矩阵 / GenAI C API Coverage
   href: genai-c-api-coverage.md
 
+- name: 版本说明 / Release Notes
+  href: release-notes/
+  homepage: release-notes/README.md
+
 - name: 文章 / Articles
   href: articles/
   homepage: articles/index.md
