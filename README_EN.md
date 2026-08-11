@@ -1,10 +1,16 @@
-![OpenVINO™ C# API](https://socialify.git.ci/guojin-yan/OpenVINO-CSharp-API/image?description=1&descriptionEditable=💞%20Deploying%20Deep%20Learning%20Models%20On%20Multiple%20Platforms%20(OpenVINO/ONNX%20Runtime,%20etc.)%20💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme/hero-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/readme/hero-light.svg">
+  <img alt="OpenVINO C# API native inference" src="docs/images/readme/hero-light.svg">
+</picture>
 
 # OpenVINO C# API
 
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/LICENSE.txt)
 [![NuGet](https://img.shields.io/nuget/v/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![Downloads](https://img.shields.io/nuget/dt/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
+[![Build](https://github.com/guojin-yan/OpenVINO-CSharp-API/actions/workflows/build.yml/badge.svg?branch=csharp3.3)](https://github.com/guojin-yan/OpenVINO-CSharp-API/actions/workflows/build.yml)
+[![Stars](https://img.shields.io/github/stars/guojin-yan/OpenVINO-CSharp-API?style=flat&logo=github)](https://github.com/guojin-yan/OpenVINO-CSharp-API/stargazers)
 [![.NET](https://img.shields.io/badge/.NET-4.6%20%7C%205.0%20%7C%206.0%20%7C%207.0%20%7C%208.0%20%7C%209.0%20%7C%2010.0-blue)](https://dotnet.microsoft.com/)
 [![OpenVINO](https://img.shields.io/badge/OpenVINO-2026.3-orange)](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html)
 
@@ -319,42 +325,44 @@ This project is open-sourced under the [Apache-2.0 License](https://github.com/g
 
 - [Intel OpenVINO](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html) - Powerful inference framework
 
-## 📮 Contact
+## 📮 Contact and Support
 
 - GitHub: [@guojin-yan](https://github.com/guojin-yan)
 - NuGet: [JYPPX.OpenVINO.CSharp.API](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 
----
-
-## 📢 Software Statement
-
-**1. Open Source License Statement**
-
-All open-source project code from the author is released under the **Apache License 2.0**.
-
-*Special Note: This project integrates several third-party libraries. If any third-party library's license conflicts with or differs from the Apache 2.0 license, the original license of that third-party library shall prevail. This project does not contain nor represent authorization statements for these third-party libraries. Please be sure to read and comply with the relevant licenses of third-party libraries before use.*
-
-**2. Code Development and Quality Statement**
-
-- **AI-Assisted Development**: This code was generated and optimized using artificial intelligence (AI) assistance during development and was not entirely written manually line by line.
-- **Security Commitment**: **The author solemnly declares that there are absolutely no intentionally set backdoors, viruses, trojans, or malicious code designed to damage user devices or steal data in this code.**
-- **Technical Limitations**: Due to the author's personal technical level and capabilities, there may be low-level issues in the code caused by non-rigorous logic, insufficient optimization, or lack of experience (such as but not limited to memory leaks, occasional crashes, unreleased resources, etc.). These issues are purely due to insufficient capability and are not intentional.
-- **Test Coverage**: Due to limited author energy, this software has not undergone comprehensive testing covering all edge cases.
-
-**3. Disclaimer (Important)**
-
-**Please be sure to conduct thorough and rigorous testing and verification before applying this code to any actual projects (especially commercial, industrial, or mission-critical environments).** Given the potential code defects and insufficient test coverage mentioned above, **the author is not responsible for any direct or indirect losses caused by using this code (including but not limited to equipment failure, data loss, system paralysis, or profit loss, etc.)**. Once you start using this code, it means you are aware of the above risks and agree to bear all consequences yourself. Related issues have nothing to do with this author.
-
-**4. Code Open Source Scope**
-
-This project promises that the core logic code is completely open source, but the binary files, source code, or related resources of the aforementioned "third-party libraries" are not within the open source obligations of this project. Please obtain them according to their respective guidelines.
-
-**5. Community and Feedback**
-
-Despite the above shortcomings, we still welcome everyone to download and use, submit Issues, or participate in testing to jointly improve the project. If you discover bugs, memory overflow, or have improvement suggestions during use, please contact the author through the contact information provided on the project homepage. We will try our best to provide assistance within limited time.
+<p align="center">
+  <img src="docs/images/readme/contact-support-en.png" width="100%" alt="Developer contact map, community channels, and WeChat Pay and Alipay sponsorship QR codes">
+</p>
 
 ---
 
-![image-20250224211044113](https://ygj-images-container.oss-cn-nanjing.aliyuncs.com/BlogGallery/202502242110187.png)
+## ⚠️ Software Statement and Disclaimer
+
+### 📜 1. Open-Source License Notice
+
+All code in the author's open-source projects is made available under the **Apache License 2.0**.
+
+*Special note: This project integrates several third-party libraries. If the license of any third-party library conflicts with or differs from the Apache License 2.0, that library's original license takes precedence. This project neither includes nor represents any licensing authorization on behalf of those third-party libraries. Before use, you must read and comply with each third-party library's applicable license terms.*
+
+### 🤖 2. Development and Quality Notice
+
+- **AI-assisted development**: Artificial intelligence (AI) was used to assist with generating and optimizing portions of this code. The code was not written entirely by hand, line by line.
+- **Security commitment**: **The author solemnly declares that this code contains no intentionally introduced backdoors, viruses, trojans, or other malicious code designed to damage user devices or steal data.**
+- **Technical limitations**: Because the project is limited by the author's individual technical experience and capabilities, the code may contain defects caused by incomplete logic, insufficient optimization, or lack of experience, including but not limited to memory leaks, intermittent crashes, or unreleased resources. Such issues are unintentional and arise from technical limitations rather than malicious intent.
+- **Test scope**: Due to limited time and resources, the software has not been comprehensively tested across every possible edge case.
+
+### 🚨 3. Disclaimer (Important)
+
+**Before applying this code to any real-world project, especially in commercial, industrial, or mission-critical environments, you must perform thorough and rigorous independent testing and validation.** In view of the possible defects and incomplete test coverage described above, **the author assumes no responsibility for any direct or indirect loss arising from use of this code, including but not limited to equipment failure, data loss, system outages, or loss of profit.** By using this code, you acknowledge these risks and agree to assume all resulting consequences.
+
+### 🔓 4. Scope of Open-Source Code
+
+This project commits to making its core logic fully open source. However, binaries, source code, and related resources belonging to the third-party libraries mentioned above are outside the scope of this project's open-source obligations. Obtain those materials according to the respective third-party providers' instructions.
+
+### 🤝 5. Community and Feedback
+
+Despite these limitations, everyone is welcome to download and use the project, submit Issues, and participate in testing so that the project can continue to improve. If you encounter bugs, out-of-memory conditions, or opportunities for improvement, contact the author through the channels listed on the project homepage. We will provide assistance as time permits.
+
+---
 
 *Copyright © 2026 Guojin Yan. All Rights Reserved.*

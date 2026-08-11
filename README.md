@@ -1,10 +1,16 @@
-![OpenVINO™ C# API](https://socialify.git.ci/guojin-yan/OpenVINO-CSharp-API/image?description=1&descriptionEditable=💞%20Deploying%20Deep%20Learning%20Models%20On%20Multiple%20Platforms%20(OpenVINO/ONNX%20Runtime,%20etc.)%20💞%20&forks=1&issues=1&logo=https%3A%2F%2Fs2.loli.net%2F2023%2F01%2F26%2FylE1K5JPogMqGSW.png&name=1&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/readme/hero-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/readme/hero-light.svg">
+  <img alt="OpenVINO C# API native inference" src="docs/images/readme/hero-light.svg">
+</picture>
 
 # OpenVINO C# API
 
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/LICENSE.txt)
 [![NuGet](https://img.shields.io/nuget/v/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 [![Downloads](https://img.shields.io/nuget/dt/JYPPX.OpenVINO.CSharp.API.svg)](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
+[![Build](https://github.com/guojin-yan/OpenVINO-CSharp-API/actions/workflows/build.yml/badge.svg?branch=csharp3.3)](https://github.com/guojin-yan/OpenVINO-CSharp-API/actions/workflows/build.yml)
+[![Stars](https://img.shields.io/github/stars/guojin-yan/OpenVINO-CSharp-API?style=flat&logo=github)](https://github.com/guojin-yan/OpenVINO-CSharp-API/stargazers)
 [![.NET](https://img.shields.io/badge/.NET-4.6%20%7C%205.0%20%7C%206.0%20%7C%207.0%20%7C%208.0%20%7C%209.0%20%7C%2010.0-blue)](https://dotnet.microsoft.com/)
 [![OpenVINO](https://img.shields.io/badge/OpenVINO-2026.3-orange)](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html)
 
@@ -324,42 +330,42 @@ OvLogger.SetCallback((level, message) =>
 
 - [Intel OpenVINO](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html) - 强大的推理框架
 
-## 📮 联系方式
+## 📮 联系与赞助
 
 - GitHub: [@guojin-yan](https://github.com/guojin-yan)
 - NuGet: [JYPPX.OpenVINO.CSharp.API](https://www.nuget.org/packages/JYPPX.OpenVINO.CSharp.API/)
 
+<p align="center">
+  <img src="docs/images/readme/contact-support-zh.png" width="100%" alt="开发者联系地图、社区入口与微信和支付宝赞助二维码">
+</p>
+
 ---
 
-## 📢软件声明
+## ⚠️ 软件声明与免责声明
 
-**1. 开源协议声明** 
+### 📜 1. 开源协议声明
 
 作者所有开源项目代码均遵循 **Apache License 2.0** 开源协议。 
 
 *特别说明：本项目集成了若干第三方库。若任何第三方库的许可协议与 Apache 2.0 协议存在冲突或不一致，均以该第三方库的原始许可协议为准。本项目不包含也不代表这些第三方库的授权声明，使用前请务必阅读并遵守第三方库的相关许可。*
 
-**2. 代码开发与质量说明**
+### 🤖 2. 代码开发与质量说明
 
 - **AI 辅助开发**：本代码在开发过程中使用了人工智能（AI）辅助生成与优化，并非完全由人工逐行编写。
 - **安全性承诺**：**作者郑重声明，本代码中绝无任何有意设置的后门、病毒、木马或旨在破坏用户设备、窃取数据的恶意代码。**
 - **技术局限性**：受限于作者个人的技术水平与能力，代码中可能存在因逻辑不严谨、优化不足或经验欠缺导致的低级问题（例如但不限于内存泄漏、偶发崩溃、资源未释放等）。这些问题纯属能力不足所致，并非主观故意。
 - **测试范围**：由于作者精力有限，未对本软件进行全方位、覆盖所有边缘场景的完整测试。
 
-**3. 免责声明（重要）** 
+### 🚨 3. 免责声明（重要）
 
 **请在将本代码应用于任何实际项目（特别是商业、工业或关键任务环境）之前，务必进行详尽、严格的自行测试与验证。** 鉴于上述可能存在的代码缺陷及测试覆盖不足，**因使用本代码而导致的任何直接或间接损失（包括但不限于设备故障、数据丢失、系统瘫痪或利润损失等），本作者概不负责。** 一旦您开始使用本代码，即表示您已知晓上述风险并同意自行承担一切后果，相关问题与本作者无关。
 
-**4. 代码开源范围** 
+### 🔓 4. 代码开源范围
 
 本项目承诺核心逻辑代码完全开源，但上述提到的“第三方库”的二进制文件、源代码或相关资源不在本项目的开源义务范围内，请根据其各自的指引获取。
 
-**5. 社区与反馈** 
+### 🤝 5. 社区与反馈
 
 尽管存在上述不足，我们仍欢迎大家下载使用、提交 Issue 或参与测试，共同完善项目。如果您在使用过程中发现 Bug、内存溢出或有改进建议，欢迎通过项目主页提供的联系方式与作者取得联系，我们将尽力在有限的时间内提供协助。
-
-
-
-![image-20250224211044113](https://ygj-images-container.oss-cn-nanjing.aliyuncs.com/BlogGallery/202502242110187.png)
 
 *Copyright © 2026 Guojin Yan. All Rights Reserved.*
