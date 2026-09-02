@@ -249,20 +249,11 @@ namespace OpenVinoSharp.GenAI
                         callback_func = Marshal.GetFunctionPointerForDelegate(nativeCallback),
                         args = IntPtr.Zero
                     };
-                    IntPtr callbackPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(GenAINativeMethods.streamer_callback)));
-                    try
-                    {
-                        Marshal.StructureToPtr(callback, callbackPtr, false);
-                        ExceptionStatus status = StringUtils.WithUtf8Ptr(
-                            prompt,
-                            promptPtr => GenAINativeMethods.ov_genai_vlm_pipeline_generate(_ptr, promptPtr, imageArrayPtr, imageCount, configPtr, callbackPtr, ref resultsPtr));
-                        GC.KeepAlive(nativeCallback);
-                        ExceptionHandler.ThrowOnError(status);
-                    }
-                    finally
-                    {
-                        Marshal.FreeHGlobal(callbackPtr);
-                    }
+                    ExceptionStatus status = StringUtils.WithUtf8Ptr(
+                        prompt,
+                        promptPtr => GenAINativeMethods.ov_genai_vlm_pipeline_generate(_ptr, promptPtr, imageArrayPtr, imageCount, configPtr, ref callback, ref resultsPtr));
+                    GC.KeepAlive(nativeCallback);
+                    ExceptionHandler.ThrowOnError(status);
                 }
             });
 
@@ -299,24 +290,15 @@ namespace OpenVinoSharp.GenAI
                         callback_func = Marshal.GetFunctionPointerForDelegate(nativeCallback),
                         args = IntPtr.Zero
                     };
-                    IntPtr callbackPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(GenAINativeMethods.streamer_callback)));
-                    try
-                    {
-                        Marshal.StructureToPtr(callback, callbackPtr, false);
-                        ExceptionHandler.ThrowOnError(GenAINativeMethods.ov_genai_vlm_pipeline_generate_with_history(
-                            _ptr,
-                            history.OvPtr,
-                            imageArrayPtr,
-                            imageCount,
-                            configPtr,
-                            callbackPtr,
-                            ref resultsPtr));
-                        GC.KeepAlive(nativeCallback);
-                    }
-                    finally
-                    {
-                        Marshal.FreeHGlobal(callbackPtr);
-                    }
+                    ExceptionHandler.ThrowOnError(GenAINativeMethods.ov_genai_vlm_pipeline_generate_with_history(
+                        _ptr,
+                        history.OvPtr,
+                        imageArrayPtr,
+                        imageCount,
+                        configPtr,
+                        ref callback,
+                        ref resultsPtr));
+                    GC.KeepAlive(nativeCallback);
                 }
             });
 
