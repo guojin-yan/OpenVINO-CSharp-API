@@ -47,6 +47,7 @@ DEFAULT_RID = "win-x64"
 # 平台显示名称与基础 OpenVINO runtime 打包流程保持一致，便于用户理解和检索。
 PLATFORM_LABELS = {
     "win": "Windows (x86_64)",
+    "ubuntu.26-x86_64": "Ubuntu 26.04 (x86_64)",
     "ubuntu.24-x86_64": "Ubuntu 24.04 (x86_64)",
     "ubuntu.22-x86_64": "Ubuntu 22.04 (x86_64)",
     "ubuntu.22-arm64": "Ubuntu 22.04 (arm64)",

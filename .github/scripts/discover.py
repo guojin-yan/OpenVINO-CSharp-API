@@ -55,6 +55,7 @@ LOCAL_TAG_PREFIX = "openvino-runtime-v"
 # `{ver}` is substituted with the OpenVINO release version (e.g. "2026.1.0").
 PLATFORMS: list[dict[str, str]] = [
     {"id": "win",              "os_dir": "windows", "archive": r"^openvino_toolkit_windows_{ver}\.\d+\.[0-9a-f]+_x86_64\.zip$", "rid": "win-x64",     "kind": "zip"},
+    {"id": "ubuntu.26-x86_64", "os_dir": "linux",   "archive": r"^openvino_toolkit_ubuntu26_{ver}\.\d+\.[0-9a-f]+_x86_64\.tgz$", "rid": "linux-x64",   "kind": "tgz"},
     {"id": "ubuntu.24-x86_64", "os_dir": "linux",   "archive": r"^openvino_toolkit_ubuntu24_{ver}\.\d+\.[0-9a-f]+_x86_64\.tgz$", "rid": "linux-x64",   "kind": "tgz"},
     {"id": "ubuntu.22-x86_64", "os_dir": "linux",   "archive": r"^openvino_toolkit_ubuntu22_{ver}\.\d+\.[0-9a-f]+_x86_64\.tgz$", "rid": "linux-x64",   "kind": "tgz"},
     {"id": "ubuntu.22-arm64",  "os_dir": "linux",   "archive": r"^openvino_toolkit_ubuntu22_{ver}\.\d+\.[0-9a-f]+_arm64\.tgz$",  "rid": "linux-arm64", "kind": "tgz"},
