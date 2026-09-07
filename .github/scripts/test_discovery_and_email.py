@@ -27,6 +27,19 @@ email_report = load("send_release_email")
 
 
 class DiscoveryTests(unittest.TestCase):
+    def test_core_platforms_include_ubuntu26_x86_64(self) -> None:
+        platform = next(item for item in discover.PLATFORMS if item["id"] == "ubuntu.26-x86_64")
+        self.assertEqual(platform["rid"], "linux-x64")
+        self.assertRegex(
+            "openvino_toolkit_ubuntu26_2026.3.1.22476.56d9685302d_x86_64.tgz",
+            platform["archive"].format(ver="2026\\.3\\.1"),
+        )
+
+    def test_genai_platforms_include_ubuntu26_x86_64(self) -> None:
+        platform = next(item for item in discover_genai.PLATFORMS if item["id"] == "ubuntu.26-x86_64")
+        self.assertEqual(platform["rid"], "linux-x64")
+        self.assertEqual(platform["direct"].format(archive_ver="2026.3.1.0"), "openvino_genai_ubuntu26_2026.3.1.0_x86_64.tar.gz")
+
     def test_core_tags_include_release_and_stable_git_tag(self) -> None:
         releases = json.dumps([{"tag_name": "2026.2.0", "draft": False, "prerelease": False}]).encode()
         tags = json.dumps([{"name": "2026.3.0"}]).encode()

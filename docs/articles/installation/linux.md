@@ -12,6 +12,7 @@
 
 | 平台 | 基础 runtime 包 | GenAI runtime 包 |
 |---|---|---|
+| Ubuntu 26 x64 | `OpenVINO.runtime.ubuntu.26-x86_64` | `JYPPX.OpenVINO.GenAI.runtime.ubuntu.26-x86_64` |
 | Ubuntu 24 x64 | `OpenVINO.runtime.ubuntu.24-x86_64` | `JYPPX.OpenVINO.GenAI.runtime.ubuntu.24-x86_64` |
 | Ubuntu 22 x64 | `OpenVINO.runtime.ubuntu.22-x86_64` | `JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-x86_64` |
 | Ubuntu 22 ARM64 | `OpenVINO.runtime.ubuntu.22-arm64` | `JYPPX.OpenVINO.GenAI.runtime.ubuntu.22-arm64` |

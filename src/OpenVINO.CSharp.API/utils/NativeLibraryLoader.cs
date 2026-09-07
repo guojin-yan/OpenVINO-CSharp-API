@@ -77,6 +77,7 @@ namespace OpenVinoSharp
             "openvino.runtime.linux-arm64",
             "openvino.runtime.osx-x64",
             "openvino.runtime.osx-arm64",
+            "openvino.runtime.ubuntu.26-x86_64",
             "openvino.runtime.ubuntu.24-x86_64",
             "openvino.runtime.ubuntu.22-x86_64",
             "openvino.runtime.ubuntu.22-arm64",

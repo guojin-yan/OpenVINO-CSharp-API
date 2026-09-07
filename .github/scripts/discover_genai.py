@@ -42,6 +42,7 @@ LOCAL_TAG_PREFIX = os.environ.get("LOCAL_TAG_PREFIX") or "openvino-genai-runtime
 # 漏列，则用 `direct` 中的确定性文件名模板探测 archive 和 .sha256。
 PLATFORMS: list[dict[str, str]] = [
     {"id": "win", "os_dir": "windows", "archive": r"^openvino_genai_windows_{archive_ver}_x86_64\.zip$", "direct": "openvino_genai_windows_{archive_ver}_x86_64.zip", "rid": "win-x64", "kind": "zip"},
+    {"id": "ubuntu.26-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu26_{archive_ver}_x86_64\.tar\.gz$", "direct": "openvino_genai_ubuntu26_{archive_ver}_x86_64.tar.gz", "rid": "linux-x64", "kind": "tgz"},
     {"id": "ubuntu.24-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu24_{archive_ver}_x86_64\.tar\.gz$", "direct": "openvino_genai_ubuntu24_{archive_ver}_x86_64.tar.gz", "rid": "linux-x64", "kind": "tgz"},
     {"id": "ubuntu.22-x86_64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu22_{archive_ver}_x86_64\.tar\.gz$", "direct": "openvino_genai_ubuntu22_{archive_ver}_x86_64.tar.gz", "rid": "linux-x64", "kind": "tgz"},
     {"id": "ubuntu.22-arm64", "os_dir": "linux", "archive": r"^openvino_genai_ubuntu22_{archive_ver}_arm64\.tar\.gz$", "direct": "openvino_genai_ubuntu22_{archive_ver}_arm64.tar.gz", "rid": "linux-arm64", "kind": "tgz"},
