@@ -6,11 +6,12 @@ name: Update OpenVINO Runtime Packages
 # together.
 #
 # Publishing target:
-#   - If the repo has a NUGET_API_KEY secret -> pushes to NuGet.org
-#     (the upstream maintainer's path; one-time secret configuration).
-#   - Otherwise -> pushes to GitHub Packages on the current repo owner's
-#     namespace, authenticated by the built-in GITHUB_TOKEN
-#     (the fork-testing path; no setup required).
+#   - NuGet.org uses NuGet/login and GitHub OIDC (Trusted Publishing).
+#     Set the NUGET_USER Actions variable and create the two policies in
+#     docs/maintainers/nuget-trusted-publishing.md. No long-lived key is used.
+#   - GitHub Packages uses the built-in GITHUB_TOKEN. Forks without
+#     NUGET_USER can publish exclusively to their owner's namespace.
+#   - The upstream repository must successfully publish to NuGet.org.
 #
 # Source-of-truth checks:
 #   1. Binary archives come from storage.openvinotoolkit.org/repositories/openvino/packages/
@@ -44,7 +45,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 concurrency:
   group: update-runtime-packages
@@ -71,7 +71,9 @@ jobs:
         with:
           python-version: "3.x"
       - name: Test release automation helpers
-        run: python3 .github/scripts/test_discovery_and_email.py
+        run: |
+          python3 .github/scripts/test_discovery_and_email.py
+          python3 .github/scripts/test_publish.py
       - id: runtime
         name: Resolve target OpenVINO runtime version and matrix
         env:
@@ -174,23 +176,44 @@ jobs:
   publish:
     name: Publish to NuGet feed
     needs: [discover, build-runtime, build-genai]
-    if: ${{ needs.discover.outputs.skip != 'true' && !inputs.dry_run }}
+    if: ${{ github.ref == 'refs/heads/csharp3.3' && needs.discover.outputs.skip != 'true' && !inputs.dry_run }}
     runs-on: ubuntu-latest
+    environment: nuget
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    env:
+      NUGET_USER: ${{ vars.NUGET_USER }}
+      REQUIRE_NUGET: ${{ github.repository == 'guojin-yan/OpenVINO-CSharp-API' || vars.NUGET_USER != '' }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
+      - name: Validate Trusted Publishing configuration
+        if: env.REQUIRE_NUGET == 'true'
+        run: |
+          if [ -z "$NUGET_USER" ]; then
+            echo "::error::Set the Actions repository variable NUGET_USER to your nuget.org username and configure Trusted Publishing. See docs/maintainers/nuget-trusted-publishing.md."
+            exit 1
+          fi
       - name: Download all nupkg artifacts
         uses: actions/download-artifact@v8
         with:
           path: artifacts
           pattern: nupkg-*
           merge-multiple: true
+      - name: NuGet login with GitHub OIDC
+        id: nuget-login
+        if: env.NUGET_USER != ''
+        uses: NuGet/login@v1
+        with:
+          user: ${{ env.NUGET_USER }}
       - name: Publish
         env:
           NUPKG_DIR: ${{ github.workspace }}/artifacts
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
         run: bash .github/scripts/publish.sh

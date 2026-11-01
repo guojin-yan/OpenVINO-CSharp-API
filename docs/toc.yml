@@ -18,6 +18,9 @@ items:
   href: release-notes/
   homepage: release-notes/README.md
 
+- name: NuGet 发布维护 / NuGet Publishing
+  href: maintainers/nuget-trusted-publishing.md
+
 - name: 文章 / Articles
   href: articles/
   homepage: articles/index.md

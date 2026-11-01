@@ -319,6 +319,12 @@ Contributions via Issue and Pull Request are welcome!
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+## 🔐 NuGet Publishing Maintenance
+
+Managed API and Core/GenAI runtime publishing now use GitHub Actions OIDC / Trusted Publishing.
+See the [publishing setup guide](docs/maintainers/nuget-trusted-publishing.md)
+for the GitHub variable, Environment, and exact NuGet.org trust policy fields.
+
 ## 📄 License
 
 This project is open-sourced under the [Apache-2.0 License](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/LICENSE.txt).

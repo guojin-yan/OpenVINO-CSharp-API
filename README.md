@@ -324,6 +324,12 @@ OvLogger.SetCallback((level, message) =>
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 打开 Pull Request
 
+## 🔐 NuGet 发布维护
+
+托管 API 和 Core/GenAI runtime 的发布流程已改用 GitHub Actions OIDC / Trusted Publishing。
+首次配置所需的 GitHub 变量、Environment 和 NuGet.org 信任策略字段见
+[发布配置说明](docs/maintainers/nuget-trusted-publishing.md)。
+
 ## 📄 许可证
 
 本项目采用 [Apache-2.0 License](https://github.com/guojin-yan/OpenVINO-CSharp-API/blob/csharp3.3/LICENSE.txt) 开源。

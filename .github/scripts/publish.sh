@@ -2,10 +2,13 @@
 # Publish all .nupkg files in $NUPKG_DIR to configured NuGet feeds.
 #
 # Destination selection:
-#   1. If NUGET_API_KEY is set -> push to https://api.nuget.org/v3/index.json
-#      (the public NuGet Gallery).
+#   1. NUGET_API_KEY is a temporary key returned by NuGet/login via OIDC,
+#      not a repository secret. If set, publish to NuGet.org.
 #   2. If GITHUB_TOKEN + OWNER are set -> push to GitHub Packages at the
 #      current repo owner's feed.
+# Both feeds are used when both credentials are present. REQUIRE_NUGET=true
+# rejects a missing OIDC key before publishing anything, so an upstream
+# release cannot silently succeed by publishing only to GitHub Packages.
 #
 # `--skip-duplicate` is set for both feeds so re-runs of the same version
 # fail soft instead of failing the whole workflow.
@@ -14,13 +17,18 @@ set -euo pipefail
 NUPKG_DIR="${NUPKG_DIR:-artifacts}"
 OWNER="${OWNER:-${GITHUB_REPOSITORY_OWNER:-}}"
 
+if [ "${REQUIRE_NUGET:-false}" = true ] && [ -z "${NUGET_API_KEY:-}" ]; then
+  echo "NuGet.org publishing is required, but NuGet/login did not supply a temporary API key. Check NUGET_USER and the Trusted Publishing policy." >&2
+  exit 1
+fi
+
 shopt -s nullglob
 pkgs=( "$NUPKG_DIR"/*.nupkg )
 shopt -u nullglob
 
 if [ "${#pkgs[@]}" -eq 0 ]; then
-  echo "no .nupkg files found in $NUPKG_DIR; nothing to publish" >&2
-  exit 0
+  echo "no .nupkg files found in $NUPKG_DIR; cannot publish" >&2
+  exit 1
 fi
 
 echo "Found ${#pkgs[@]} packages in $NUPKG_DIR:"
@@ -75,7 +83,7 @@ if [ -n "${NUGET_API_KEY:-}" ]; then
   published_any=true
 else
   echo
-  echo "NUGET_API_KEY is not set; skipping NuGet.org publish" >&2
+  echo "No NuGet OIDC credential was supplied; skipping NuGet.org publish" >&2
 fi
 
 if [ -z "${GITHUB_TOKEN:-}" ] || [ -z "$OWNER" ]; then
@@ -109,7 +117,7 @@ else
 fi
 
 if [ "$published_any" != true ]; then
-  echo "neither NUGET_API_KEY nor (GITHUB_TOKEN + OWNER) are set; cannot publish" >&2
+  echo "Neither a NuGet OIDC credential nor (GITHUB_TOKEN + OWNER) was supplied; cannot publish" >&2
   exit 1
 fi
 
